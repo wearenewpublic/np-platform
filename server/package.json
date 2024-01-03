@@ -1,0 +1,35 @@
+{
+  "name": "np-platform-server",
+  "description": "Back end for the New Public Platform",
+  "version": "0.0.1",
+  "scripts": {
+    "lint": "eslint .",
+    "emulate": "firebase emulators:start",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "16"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "busboy": "^1.6.0",
+    "firebase-admin": "^11.5.0",
+    "firebase-functions": "^4.2.0",
+    "form-data": "^4.0.0",
+    "fs": "^0.0.1-security",
+    "json5": "^2.2.3",
+    "mustache": "^4.2.0",
+    "node-fetch": "^3.3.1",
+    "path": "^0.12.7",
+    "unfluff": "^3.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.15.0",
+    "eslint-config-google": "^0.14.0",
+    "firebase-functions-test": "^3.0.0"
+  },
+  "private": true
+}

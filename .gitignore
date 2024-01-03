@@ -128,3 +128,11 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+public_out/
+.firebase/
+.vscode
+.DS_Store
+.expo
+
+keys.js 

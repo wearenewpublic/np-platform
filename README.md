@@ -1,2 +1,4 @@
-# np-platform
-Modular platform for creating many kinds of online social spaces.
+# New Public Platform
+
+This is a flexible modular platform for creating lots of different kinds of social product.
+

@@ -1,0 +1,43 @@
+{
+  "name": "np-platform-client",
+  "version": "0.0.1",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "web-clear": "expo start -c --web",
+    "webbuild": "npx expo export:web",
+    "test": "jest",
+    "coverage": "jest --coverage"
+  },
+  "jest": {
+    "preset": "jest-expo"
+  },
+  "peerDependencies": {
+    "react": ">=16.13.1",
+    "react-dom": ">=16.13.1",
+    "react-native": ">=0.71.7",
+    "react-native-web": ">=0.18.11",
+    "expo": ">=48.0.1"
+  },
+  "dependencies": {
+    "@expo-google-fonts/ibm-plex-mono": "^0.2.3",
+    "@expo/vector-icons": "^13.0.0",
+    "@expo/webpack-config": "^18.0.1",
+    "expo-font": "~11.1.1",
+    "expo-linking": "~4.0.1",
+    "expo-status-bar": "~1.4.4",
+    "firebase": "^9.22.2",
+    "jest-expo": "^48.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@babel/preset-env": "^7.22.4",
+    "babel-jest": "^29.5.0",
+    "jest": "^29.5.0",
+    "react-test-renderer": "^18.2.0"
+  },
+  "private": true
+}
