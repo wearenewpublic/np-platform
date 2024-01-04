@@ -1,22 +1,15 @@
-const functions = require('firebase-functions');
+
 const admin = require('firebase-admin');
-admin.initializeApp({
-    credential: admin.credential.applicationDefault(),
-    databaseURL: 'https://np-psi-dev-default-rtdb.europe-west1.firebasedatabase.app',
-    storageBucket: 'gs://np-psi-dev.appspot.com'
-});
 
 const Busboy = require('busboy');
 const os = require('os');
 const path = require('path');
 const fs = require('fs');
-const { components } = require("./component");
 const cors = require('cors')({origin: true})
 
+console.log('NP server API system');
 
-console.log('initializing functions');
-
-exports.api = functions.https.onRequest((req, res) => {
+function handleApiRequest(req, res, components) {
     const contentType = req.headers['content-type'] || '';
 
     console.log('api request', req.method, req.path, contentType);
@@ -27,18 +20,22 @@ exports.api = functions.https.onRequest((req, res) => {
         return;
     } else if (req.method === 'POST') {  
         if (contentType.includes('multipart/form-data')) {
-            handleMultipartRequest(req, res);
+            handleMultipartRequest(req, res, components);
         } else if (contentType.includes('application/json')) {
-            handleJsonRequest(req, res);
+            handleJsonRequest(req, res, components);
         } else {
             res.status(415).send({error: 'Unsupported Content-Type'});
         }
     } else {
         res.status(415).send({error: 'Unsupported HTTP Method'});
-    }
-})
+    }   
+}
+
+exports.handleApiRequest = handleApiRequest;
+
+
  
-function handleMultipartRequest(req, res) {
+function handleMultipartRequest(req, res, components) {
     const busboy = Busboy({ headers: req.headers });
     const tmpdir = os.tmpdir();
 
@@ -65,7 +62,7 @@ function handleMultipartRequest(req, res) {
     busboy.on('finish', async () => {
         await Promise.all(fileWrites);
 
-        const {statusCode, result} = await callApiFunctionAsync(req, fields);
+        const {statusCode, result} = await callApiFunctionAsync(req, fields, components);
 
         cors(req, res, () => {
             res.status(statusCode);
@@ -76,15 +73,15 @@ function handleMultipartRequest(req, res) {
     busboy.end(req.rawBody);
 };
 
-async function handleJsonRequest(request, response) {
+async function handleJsonRequest(request, response, components) {
     const fields = {...request.query, ...request.body};
-    const {statusCode, result} = await callApiFunctionAsync(request, fields);
+    const {statusCode, result} = await callApiFunctionAsync(request, fields, components);
     cors(request, response, () => {
         response.status(statusCode);
         response.send(result);
     })
 }
-    
+
 
 async function getValidatedUser(req) {
     const tokenId = req.headers.authorization && req.headers.authorization.split('Bearer ')[1];
@@ -93,7 +90,6 @@ async function getValidatedUser(req) {
     } 
     try {
         const decodedToken = await admin.auth().verifyIdToken(tokenId);
-        // console.log('decodedToken', decodedToken);
         return decodedToken;
     } catch (error) {
         console.error('Error verifying Firebase ID token:', error);
@@ -102,9 +98,11 @@ async function getValidatedUser(req) {
 }
 
 
-async function callApiFunctionAsync(request, fields) {
+async function callApiFunctionAsync(request, fields, components) {
     console.log('callApiFunctionAsync', request.path, fields);
     const {componentId, apiId} = parsePath(request.path);
+
+    console.log('components', components);
 
     const component = components[componentId];
     const apiFunction = component?.apiFunctions?.[apiId];
@@ -142,6 +140,9 @@ async function callApiFunctionAsync(request, fields) {
 
 function parsePath(path) {
     var parts = path.split('/').filter(x => x);
+    if (parts[0] == 'api') {
+        parts = parts.slice(1);
+    }
     return {
         componentId: parts[0],
         apiId: parts[1],
