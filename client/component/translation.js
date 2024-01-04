@@ -1,6 +1,5 @@
 import { useContext } from "react";
-import { ui_translations_french } from "../translations/french/ui_french";
-import { ui_translations_german } from "../translations/german/ui_german";
+import { translations } from "../translations";
 import { PrototypeContext } from "../organizer/PrototypeContext";
 import { Text } from "react-native";
 import { formatString } from "../util/util";
@@ -11,8 +10,8 @@ export const languageGerman = 'German';
 export const languageFrench = 'French';
 
 const ui_translations_for_language = {
-    German: ui_translations_german,
-    French: ui_translations_french
+    German: translations.german,
+    French: translations.french
 }
 
 export function translateLabel({label, language, formatParams}) {

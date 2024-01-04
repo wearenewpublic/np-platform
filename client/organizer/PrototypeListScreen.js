@@ -1,5 +1,5 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native"
-import { prototypes } from "../structure"
+import { structures } from "../structure"
 import { Entypo } from "@expo/vector-icons";
 import React, { useState } from 'react'
 import { WebLink } from "../platform-specific/url";
@@ -10,7 +10,7 @@ import { Card, Narrow, Pad, PadBox } from "../component/basics";
 
 export function PrototypeListScreen() {
     const s = PrototypeListScreenStyle;
-    const sortedPrototypes = prototypes.sort((a, b) => new Date(b.date).valueOf() -  new Date(a.date).valueOf());
+    const sortedPrototypes = structures.sort((a, b) => new Date(b.date).valueOf() -  new Date(a.date).valueOf());
 
     function onOpenUrl(url) {
         window.open(url, '_blank');

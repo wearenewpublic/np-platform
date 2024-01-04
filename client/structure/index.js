@@ -1,11 +1,11 @@
-import { ComponentDemoPrototype } from "./componentdemo";
-import { SimpleCommentsPrototype } from "./simplecomments";
+import { ComponentDemoStructure } from "./componentdemo";
+import { SimpleCommentsStructure } from "./simplecomments";
 
-export var prototypes = [
-    SimpleCommentsPrototype,
-    ComponentDemoPrototype,
+export var structures = [
+    SimpleCommentsStructure,
+    ComponentDemoStructure,
 ]
 
-export function addPrototypes(newPrototypes) {
-    prototypes = prototypes.concat(newPrototypes);
+export function addStructures(newStructures) {
+    structures = structures.concat(newStructures);
 }

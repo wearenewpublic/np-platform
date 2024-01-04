@@ -7,7 +7,7 @@ import { useCollection } from "../util/datastore";
 import { pushSubscreen } from "../util/navigate";
 import { expandDataList } from "../util/util";
 
-export const SimpleCommentsPrototype = {
+export const SimpleCommentsStructure = {
     key: 'simplecomments',
     name: 'Simple Comments',
     screen: SimpleCommentsScreen,

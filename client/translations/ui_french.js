@@ -1,5 +1,5 @@
 
-export const ui_translations_french = {
+export var ui_translations_french = {
     'Like': "J'aime",
     'Unlike': "Je n'aime pas",
     'Reply': 'Répondre',
@@ -107,9 +107,5 @@ export const ui_translations_french = {
     'You wrote this post': 'Vous avez écrit ce message',
     'As post author, you can see all comments about your post': 'En tant qu\'auteur du message, vous pouvez voir tous les commentaires sur votre message',
     'Analyze': 'Analyser',
-    '🤔 The comment bouncer is judging you...': '🤔 Le commentateur vous juge...',
-    '😡 The comment bouncer is not happy. Your comment needs improvement.': '😡 Le commentateur n\'est pas content. Votre commentaire doit être amélioré.',
-    '😊 The comment bouncer is happy with your comment.': '😊 Le commentateur est content de votre commentaire.',
-    '💖 The comment bouncer is overjoyed! Contributions like yours are greatly appreciated!': '💖 Le commentateur est ravi! Les contributions comme la vôtre sont grandement appréciées!',
     'Group Conversations related to this Article': 'Conversations de groupe liées à cet article',
 }

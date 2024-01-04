@@ -13,7 +13,7 @@ import { RichText, wrapLinks } from "../component/richtext";
 import { ConversationScreen, Narrow, Pad, PadBox, TeaserScreen } from "../component/basics";
 import { BasicTeaser } from "../component/teaser";
 
-export const ComponentDemoPrototype = {
+export const ComponentDemoStructure = {
     key: 'componentdemo',
     name: 'Component Demo',
     screen: ComponentDemoScreen,

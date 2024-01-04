@@ -1,5 +1,5 @@
 
-export const ui_translations_german = {
+export var ui_translations_german = {
     'Like': 'Gefällt mir',
     'Unlike': 'Gefällt mir nicht',
     'Reply': 'Antworten',
@@ -71,8 +71,4 @@ export const ui_translations_german = {
     'Other': 'Andere',
     'What do you want to contribute?': 'Was möchten Sie beitragen?',
     'Analyze': 'Analysieren',
-    '🤔 The comment bouncer is judging you...': '🤔 Der Kommentar-Bouncer beurteilt Sie...',
-    '😡 The comment bouncer is not happy. Your comment needs improvement.': '😡 Der Kommentar-Bouncer ist nicht glücklich. Ihr Kommentar muss verbessert werden.',
-    '😊 The comment bouncer is happy with your comment.': '😊 Der Kommentar-Bouncer ist mit Ihrem Kommentar zufrieden.',
-    '💖 The comment bouncer is overjoyed! Contributions like yours are greatly appreciated!': '💖 Der Kommentar-Bouncer ist überglücklich! Beiträge wie Ihrer werden sehr geschätzt!',
 };
