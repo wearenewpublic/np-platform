@@ -1,7 +1,14 @@
 const { readFileSync, existsSync } = require('fs');
-const keys = require('../keys');
+// const keys = require('../keys');
 const Mustache = require('mustache');
-const { extractAndParseJSON } = require('./messyjson');
+const { extractAndParseJSON } = require('../util/messyjson');
+
+var openai_key = null;
+
+function setGptKey(key) {
+    openai_key = key;
+}
+exports.setGptKey = setGptKey;
 
 async function callOpenAIAsync({action, data}) {
     const fetch = await import('node-fetch');
@@ -9,7 +16,7 @@ async function callOpenAIAsync({action, data}) {
     const url = 'https://api.openai.com/v1/' + action;
     const response = await fetch.default(url, {
         headers: {
-            'Authorization': 'Bearer ' + keys.OPENAI_KEY,
+            'Authorization': 'Bearer ' + openai_key,
             'Content-Type': 'application/json'
         },
         method: 'POST',
