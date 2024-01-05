@@ -1,7 +1,7 @@
 {
   "name": "np-platform-server",
   "description": "Back end for the New Public Platform",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "lint": "eslint .",
     "emulate": "firebase emulators:start",
@@ -9,6 +9,10 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wearenewpublic/np-platform"
   },
   "engines": {
     "node": "16"
@@ -30,6 +34,5 @@
     "eslint": "^8.15.0",
     "eslint-config-google": "^0.14.0",
     "firebase-functions-test": "^3.0.0"
-  },
-  "private": true
+  }
 }
