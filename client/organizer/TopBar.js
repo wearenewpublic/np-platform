@@ -13,12 +13,13 @@ import { Center, Clickable, HorizBox, Pad, PadBox, Separator } from "../componen
 import { emailIsAdmin } from "../util/config";
 import { colorGreyHover, colorGreyPopupBackground, colorTextGrey } from "../component/color";
 import { ObservableProvider, ObservableValue, useObservable } from "../util/observable";
+import { getAvailableFeaturesForPrototype } from "../util/features";
 
 const global_toolbarAction = new ObservableValue(null);
 
 export function TopBar({showPersonas}) {
     const s = TopBarStyle;
-    const {instanceKey} = useContext(PrototypeContext);
+    const {instance, instanceKey} = useContext(PrototypeContext);
     const toolbarAction = useObservable(global_toolbarAction);
     return <View style={s.topBox}>        
         <View style={s.leftRow}>    
@@ -74,28 +75,37 @@ const TopBarStyle = StyleSheet.create({
         marginLeft: 4,
         flexShrink: 1
     }
-
 })
 
 
 function FeatureToggles() {
-    const {prototype} = useContext(PrototypeContext);
-    console.log('prototype', prototype, prototype.features)
-    if (!prototype.features) return null;
+    const {prototype, prototypeKey} = useContext(PrototypeContext);
+    console.log('prototype', prototypeKey, prototype, prototype.features)
+    const features = getAvailableFeaturesForPrototype(prototypeKey)
+    if (!features) return null;
     return <PadBox top={20}>
         <Separator />
         <Pad/>
-        {prototype.features.map(feature => 
+        {features.map(feature => 
             <FeatureToggle key={feature.key} feature={feature} />
         )}
     </PadBox>
 }
 
 function FeatureToggle({feature}) {
-    const enabled = useGlobalProperty(feature.key);
+    const features = useGlobalProperty('features');
+    const enabled = features?.[feature.key];
     const datastore = useDatastore();
+
+    function onToggle() {
+        datastore.setGlobalProperty('features', {
+            ...features, 
+            [feature.key]: !enabled}
+        )
+    }
+
     return <Toggle label={feature.name} value={enabled || false} 
-        onChange={value => datastore.setGlobalProperty(feature.key, !enabled)} />
+        onChange={onToggle} />
 }
 
 function UserInfo() {

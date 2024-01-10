@@ -12,6 +12,7 @@ import { pushSubscreen } from "../util/navigate";
 import { RichText, wrapLinks } from "../component/richtext";
 import { ConversationScreen, Narrow, Pad, PadBox, TeaserScreen } from "../component/basics";
 import { BasicTeaser } from "../component/teaser";
+import { useConfig } from "../util/features";
 
 export const ComponentDemoStructure = {
     key: 'componentdemo',
@@ -23,7 +24,11 @@ export const ComponentDemoStructure = {
         button: ButtonScreen,
         comment: CommentScreen,
         teaserDemo: TeaserDemoScreen,
-        composer: params => <ComposerScreen {...params} intro={<CommentsIntro />} />,
+        feature: FeatureScreen,
+        composer: params => <ComposerScreen {...params} contentType='Public Comment' />,
+    },
+    defaultConfig: {
+        widgets: [DefaultWidget]
     },
     instance: [
         {key: 'demo', name: 'Demo', comment: expandDataList([
@@ -32,6 +37,10 @@ export const ComponentDemoStructure = {
             {key: 'c', from: 'c', replyTo: 'a', text: 'This is another reply. This reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\n '}
         ])}
     ]
+}
+
+function DefaultWidget() {
+    return <UtilityText label='Default Widget'/>
 }
 
 function TextScreen() {
@@ -73,6 +82,7 @@ function TextScreen() {
 
 function ProfileScreen() {
     const personaKey = usePersonaKey();
+    const p = personaKey;
     return <ConversationScreen >
         <Narrow>
             <DemoSection label='Profile Photo'>
@@ -86,8 +96,8 @@ function ProfileScreen() {
                 </SpacedArray>
             </DemoSection>
             <DemoSection label='Facepile'>
-                <FacePile userIdList={['a','b','c']} type='small' />
-                <FacePile userIdList={['a','b','c','d','e','f']} type='tiny' />
+                <FacePile userIdList={[p,p,p]} type='small' />
+                <FacePile userIdList={[p,p,p,p,p,p,p]} type='tiny' />
             </DemoSection>
             <DemoSection label='Byline'>
                 <Byline userId={personaKey} type='large' time={Date.now()} />
@@ -204,14 +214,14 @@ function ButtonScreen() {
 function CommentScreen() {
     return <ConversationScreen >
         <Narrow>
-            <DemoSection label='Comment'>
+            {/* <DemoSection label='Comment'>
                 <PadBox horiz={20} >
                     <Comment commentKey='a' />
                 </PadBox>
-            </DemoSection>
+            </DemoSection> */}
             <DemoSection label='Composer'>
                 <PadBox horiz={20}>
-                    <BasicComments about='foo' />
+                    <BasicComments intro={null} />
                 </PadBox>
             </DemoSection>
         </Narrow>
@@ -222,6 +232,17 @@ function TeaserDemoScreen() {
     return <ConversationScreen>
         <Narrow>
             <BasicTeaser formatParams={{count: 22, singular: 'comment', plural: 'comments'}} />
+        </Narrow>
+    </ConversationScreen>
+}
+
+function FeatureScreen() {
+    const config = useConfig();
+    return <ConversationScreen>
+        <Narrow>
+            <DemoSection label='Feature Widgets'>
+                {config.widgets.map((Widget, i) => <Widget key={i} />)}
+            </DemoSection>
         </Narrow>
     </ConversationScreen>
 }
@@ -237,10 +258,12 @@ function ComponentDemoScreen() {
                 <CTAButton label='Button' onPress={() => pushSubscreen('button')} />
                 <CTAButton label='Comment' onPress={() => pushSubscreen('comment')} />
                 <CTAButton label='Teaser' onPress={() => pushSubscreen('teaserDemo')} />
+                <CTAButton label='Feature Modules' onPress={() => pushSubscreen('feature')} />
             </SpacedArray>
         </Narrow>
     </ConversationScreen>
 }
+
 
 
 

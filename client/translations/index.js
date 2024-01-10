@@ -7,7 +7,6 @@ export var translations = {
 }
 
 export function addTranslations(newTranslations) {
-    console.log('Adding translations', newTranslations);
     Object.keys(newTranslations).forEach(language => {
         translations[language] = {...translations[language], ...newTranslations[language]};
     })

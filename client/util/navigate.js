@@ -106,18 +106,18 @@ export function getScreenStackForUrl(url) {
     const parsedUrl = new URL(url);
     const parts = parsedUrl.pathname.split('/').filter(x => x);
     const query = new URLSearchParams(parsedUrl.search);
-    var [prototypeKey, instanceKey, ...screenParts] = parts;
+    var [structureKey, instanceKey, ...screenParts] = parts;
 
-    if (!prototypeKey) return {}
-    if (!instanceKey) return {prototypeKey};
+    if (!structureKey) return {}
+    if (!instanceKey) return {structureKey};
 
-    var screenStack = [{prototypeKey, instanceKey, screenKey: null, params: {}}];
+    var screenStack = [{structureKey, instanceKey, screenKey: null, params: {}}];
 
     for (var i = 0; i < screenParts.length; i++) {
         const screenKey = screenParts[i];
         const params = getParamsWithSuffix(query, getParamSuffixForIndex(i));
-        screenStack.push({prototypeKey, instanceKey, screenKey, params});
+        screenStack.push({structureKey, instanceKey, screenKey, params});
     }
     screenStack = removeInvisibleParentsFromScreenStack(screenStack);
-    return {prototypeKey, instanceKey, screenStack};
+    return {structureKey, instanceKey, screenStack};
 }
