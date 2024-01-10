@@ -6,6 +6,11 @@ export var features = {
     ]
 }
 
-export function addStructures(newStructures) {
-    structures = structures.concat(newStructures);
+export function addFeatures(newFeaturesForStructs) {
+    Object.keys(newFeaturesForStructs).forEach(structureKey => {
+        const oldFeatures = features[structureKey] || [];
+        const newFeatures = newFeaturesForStructs[structureKey];
+        features[structureKey] = [...oldFeatures, ...newFeatures]
+    })
 }
+

@@ -8,7 +8,7 @@ export const DemoFeature = {
     }   
 }
 
-export function DemoWidget() {
+function DemoWidget() {
     return <UtilityText label='Demo Widget' />
 }
 
