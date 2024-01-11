@@ -50,7 +50,7 @@ export function ScreenStack({url, screenStack, structureKey, instanceKey}) {
   
 
 
-function StackedScreen({screenInstance, index}) {
+export function StackedScreen({screenInstance, index}) {
     const {structureKey, instanceKey, screenKey, params} = screenInstance;
     
     if (structureKey == 'login' || instanceKey == 'login' || screenKey == 'login') {
