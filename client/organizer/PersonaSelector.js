@@ -3,7 +3,7 @@ import { PopupSelector } from "../platform-specific/popup";
 import { useDatastore, useGlobalProperty, usePersonaKey } from "../util/datastore";
 import { translateLabel, useLanguage } from "../component/translation";
 import { useContext } from "react";
-import { PrototypeContext } from "./PrototypeContext";
+import { InstanceContext } from "./InstanceContext";
 import { ProfilePhoto } from "../component/people";
 
 export function PersonaSelector() {
@@ -12,7 +12,7 @@ export function PersonaSelector() {
     const allPersonas = useGlobalProperty('persona');
     const language = useLanguage();
     const datastore = useDatastore();
-    const {instance} = useContext(PrototypeContext);
+    const {instance} = useContext(InstanceContext);
     const itemKeys = Object.keys(allPersonas || {});    
     const items = itemKeys.map(key => ({key, label: getPersonaName({language, instance, personas: allPersonas, personaKey: key})}));
     return <View style={s.row}>

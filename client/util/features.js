@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { AdminScreen } from "../component/admin";
 import { features } from "../feature";
-import { PrototypeContext } from "../organizer/PrototypeContext";
+import { InstanceContext } from "../organizer/InstanceContext";
 import { structures } from "../structure";
 import { Datastore } from "./datastore";
 import { deepClone } from "./util";
@@ -44,22 +44,22 @@ function cloneConfig(config) {
     return config;
 }
 
-export function getAvailableFeaturesForPrototype(prototypeKey) {
-    return features[prototypeKey] || [];
+export function getAvailableFeaturesForStructure(structureKey) {
+    return features[structureKey] || [];
 }
 
 export function StructureInstance({structureKey, instanceKey}) {
     const structure = chooseStructureByKey(structureKey);    
-    const screenSet = {...defaultScreens, ...prototype.subscreens};
-    var screen = getScreen({screenSet, prototype, screenKey, instanceKey});
-    var title = getScreenTitle({screenSet, prototype, screenKey, instance, params}); 
+    const screenSet = {...defaultScreens, ...structure.subscreens};
+    var screen = getScreen({screenSet, structure, screenKey, instanceKey});
+    var title = getScreenTitle({screenSet, structure, screenKey, instance, params}); 
   
     const instance = chooseInstanceByKey({structure, instanceKey});
 
-    return <PrototypeContext.Provider value={{prototype, prototypeKey, instance, instanceKey, isLive: true}}>
-        <Datastore instance={instance} instanceKey={instanceKey} prototype={prototype} prototypeKey={prototypeKey} isLive={true}>
+    return <InstanceContext.Provider value={{structure, structureKey, instance, instanceKey, isLive: true}}>
+        <Datastore instance={instance} instanceKey={instanceKey} structure={structure} structureKey={structureKey} isLive={true}>
         </Datastore>
-    </PrototypeContext.Provider>
+    </InstanceContext.Provider>
 }
 
 export function InstanceWithFeatures({}) {
@@ -80,11 +80,11 @@ function chooseInstanceByKey({structure, instanceKey}) {
     return {isLive: true}
 }
   
-function getScreen({screenSet, prototype, screenKey}) {
+function getScreen({screenSet, structure, screenKey}) {
     if (!screenKey) {
-        return prototype.screen;
+        return structure.screen;
     } else if (screenKey == 'teaser') {
-        return prototype.teaser;
+        return structure.teaser;
     } else {
         return screenSet[screenKey];
     }

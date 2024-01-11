@@ -1,12 +1,12 @@
 
 const ArticleQuestionsAnswerSummary = {
     input: {
-        prototype: 'question',
+        structure: 'question',
         triggerType: 'comment',
         inputCollections: ['comment', 'persona', 'derived_article']
     },
     output: {
-        prototype: 'articlequestions',
+        structure: 'articlequestions',
         type: 'derived_answerSummary',
     },
     dependencies: ['derived_article'],
@@ -25,7 +25,7 @@ function QuestionCommentTrigger({datastore, instanceKey: questionKey, value: com
     }
     datastore.getCollection('derived_article').forEach(article =>
         datastore.setObject({
-            prototypeKey: 'articlequestions',
+            structureKey: 'articlequestions',
             instanceKey: article.key, 
             type: 'derived_answerSummary',
             key: questionKey, 

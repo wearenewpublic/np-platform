@@ -1,12 +1,12 @@
 
 const QuestionArticleSummary = {
     input: {
-        prototype: 'articlequestions',
+        structure: 'articlequestions',
         triggerType: 'question',
         inputGlobals: ['name', 'from'],
     },
     output: {
-        prototype: 'question',
+        structure: 'question',
         type: 'derived_article',
     }
 }

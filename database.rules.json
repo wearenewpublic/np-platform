@@ -1,7 +1,7 @@
 {
     "rules": {
-        "prototype": {
-            "$prototype": {
+        "structure": {
+            "$structure": {
                 "instance": {
                     "$instance": {
                         ".read": true,
@@ -18,11 +18,11 @@
         },
         "userInstance": {
       		"$user": {
-            	".read": "$user == auth.uid",
-              ".write": "$user == auth.uid",
-            	"$prototype": {
-									"$instance": {
-                			".write": true
+                ".read": "$user == auth.uid",
+                ".write": "$user == auth.uid",
+            	    "$structure": {
+                        "$instance": {
+                            ".write": true
                   }                
               }
           }

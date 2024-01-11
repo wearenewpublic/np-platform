@@ -3,7 +3,7 @@ import { Entypo, FontAwesome } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Clickable, Pad, PrimaryButton, StatusButtonlikeMessage } from "../component/basics";
-import { PrototypeContext } from "../organizer/PrototypeContext";
+import { InstanceContext } from "../organizer/InstanceContext";
 import { makeStorageUrl, useDatastore, usePersonaKey } from "../util/datastore";
 import { callServerMultipartApiAsync } from "../util/servercall";
 import { getFirebaseUser } from "../util/firebase";
@@ -13,7 +13,7 @@ import { QuietSystemMessage } from "../component/message";
 export function AudioRecorder({action='Record Audio', onSubmitRecording}) {
     const s = VideoCameraStyle;
     const [recorderShown, setRecorderShown] = useState(false);
-    const {isLive} = useContext(PrototypeContext);
+    const {isLive} = useContext(InstanceContext);
     const [uploading, setUploding] = useState(false);
     const datastore = useDatastore();
 

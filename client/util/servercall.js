@@ -8,7 +8,7 @@ export async function callServerApiAsync({datastore, component, funcname, params
     console.log('callServerApi', component, funcname, params);
     const idToken = await getFirebaseIdTokenAsync();
     const expandedParams = {...params, 
-        prototypeKey: datastore?.getPrototypeKey() || null, 
+        structureKey: datastore?.getStructureKey() || null, 
         instanceKey: datastore?.getInstanceKey() || null,
         language: datastore?.getLanguage() || 'English'
     };
@@ -40,7 +40,7 @@ export async function callServerMultipartApiAsync({datastore, component, funcnam
     const idToken = await getFirebaseIdTokenAsync();
 
     const expandedParams = {...params, 
-        prototypeKey: datastore?.getPrototypeKey() || null, 
+        structureKey: datastore?.getStructureKey() || null, 
         instanceKey: datastore?.getInstanceKey() || null
     };
     try {

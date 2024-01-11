@@ -26,38 +26,38 @@ async function firebaseUpdateAsync(path, data) {
     return await ref.update(data);
 }
 
-async function readGlobalAsync({prototype, instance, key}) {
-    return firebaseReadAsync(['prototype', prototype, 'instance', instance, 'global', key]);
+async function readGlobalAsync({structure, instance, key}) {
+    return firebaseReadAsync(['structure', structure, 'instance', instance, 'global', key]);
 }
-async function writeGlobalAsync({prototype, instance, key, value}) {
-    return firebaseWriteAsync(['prototype', prototype, 'instance', instance, 'global', key], value);
+async function writeGlobalAsync({structure, instance, key, value}) {
+    return firebaseWriteAsync(['structure', structure, 'instance', instance, 'global', key], value);
 }
-async function readCollectionAsync({prototype, instance, type}) {
-    return firebaseReadAsync(['prototype', prototype, 'instance', instance, 'collection', type]);
+async function readCollectionAsync({structure, instance, type}) {
+    return firebaseReadAsync(['structure', structure, 'instance', instance, 'collection', type]);
 }
-async function readMultipleCollectionsAsync({prototype, instance, types}) {
-    const dataArray = await Promise.all(types.map(type => readCollectionAsync({prototype, instance, type:type})));
+async function readMultipleCollectionsAsync({structure, instance, types}) {
+    const dataArray = await Promise.all(types.map(type => readCollectionAsync({structure, instance, type:type})));
     var resultMap = {};
     types.forEach((typeName, i) => resultMap[typeName] = dataArray[i]);
     return resultMap;
 }
-async function writeCollectionAsync({prototype, instance, collection, items}) {
-    return firebaseWriteAsync(['prototype', prototype, 'instance', instance, 'collection', collection], items);
+async function writeCollectionAsync({structure, instance, collection, items}) {
+    return firebaseWriteAsync(['structure', structure, 'instance', instance, 'collection', collection], items);
 }
-async function updateCollectionAsync({prototype, instance, collection, updates}) {
-    return firebaseUpdateAsync(['prototype', prototype, 'instance', instance, 'collection', collection], updates);
+async function updateCollectionAsync({structure, instance, collection, updates}) {
+    return firebaseUpdateAsync(['structure', structure, 'instance', instance, 'collection', collection], updates);
 }
-async function setObjectAsync({prototype, instance, collection, key, value}) {
-    return firebaseWriteAsync(['prototype', prototype, 'instance', instance, 'collection', collection, key], value);
+async function setObjectAsync({structure, instance, collection, key, value}) {
+    return firebaseWriteAsync(['structure', structure, 'instance', instance, 'collection', collection, key], value);
 }
-async function readObjectAsync({prototype, instance, collection, key}) {
-    return firebaseReadAsync(['prototype', prototype, 'instance', instance, 'collection', collection, key]);
+async function readObjectAsync({structure, instance, collection, key}) {
+    return firebaseReadAsync(['structure', structure, 'instance', instance, 'collection', collection, key]);
 }
-async function createInstanceAsync({prototype, instance, collection, global}) {
-    return firebaseWriteAsync(['prototype', prototype, 'instance', instance], {collection, global});
+async function createInstanceAsync({structure, instance, collection, global}) {
+    return firebaseWriteAsync(['structure', structure, 'instance', instance], {collection, global});
 }
-async function readInstanceAsync({prototype, instance}) {
-    return firebaseReadAsync(['prototype', prototype, 'instance', instance]);
+async function readInstanceAsync({structure, instance}) {
+    return firebaseReadAsync(['structure', structure, 'instance', instance]);
 }
 
 function stringToFbKey(input) {

@@ -1,15 +1,15 @@
 import React, { useTransition } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { prototypes } from './structure';
-import { PrototypeContext } from './organizer/PrototypeContext';
-import { PrototypeInstanceListScreen } from './organizer/PrototypeInstanceListScreen';
-import { PrototypeListScreen } from './organizer/PrototypeListScreen';
+import { structures } from './structure';
+import { InstanceContext } from './organizer/InstanceContext';
+import { StructureInstanceListScreen } from './organizer/StructureInstanceListScreen';
+import { StructureListScreen } from './organizer/StructureListScreen';
 import { TopBar } from './organizer/TopBar';
 // import { useFonts, Montserrat_600SemiBold } from '@expo-google-fonts/montserrat';
 import { IBMPlexMono_400Regular, IBMPlexMono_500Medium, IBMPlexMono_600SemiBold } from '@expo-google-fonts/ibm-plex-mono'
 import { getIsLocalhost, setTitle } from './platform-specific/url';
 import { useLiveUrl } from './organizer/url';
-import { getScreenStackForUrl, gotoPrototype, gotoInstance } from './util/navigate';
+import { getScreenStackForUrl, gotoStructure, gotoInstance } from './util/navigate';
 import { LoginScreen } from './organizer/Login';
 import { Datastore, WaitForData, useGlobalProperty } from './util/datastore';
 import { NewLiveInstanceScreen } from './organizer/NewLiveInstance';
@@ -21,9 +21,9 @@ import { AdminScreen } from './component/admin';
 
 export default function App() {
   const url = useLiveUrl();
-  const {prototypeKey, instanceKey, screenStack} = getScreenStackForUrl(url);
-  const prototype = choosePrototypeByKey(prototypeKey);
-  const instance = prototype && instanceKey && chooseInstanceByKey({prototype, instanceKey});
+  const {structureKey, instanceKey, screenStack} = getScreenStackForUrl(url);
+  const structure = chooseStructureByKey(structureKey);
+  const instance = structure && instanceKey && chooseInstanceByKey({structure, instanceKey});
 
   let [fontsLoaded] = useFonts({
     IBMPlexMono_400Regular,
@@ -34,86 +34,86 @@ export default function App() {
   console.log('fontsLoaded', fontsLoaded);
 
   function onSelectInstance(newInstanceKey) {
-    gotoInstance({prototypeKey, instanceKey: newInstanceKey});
+    gotoInstance({structureKey, instanceKey: newInstanceKey});
   }
 
   if (window.NEWPUBLIC_CONFIG) {
-    return <EmbeddedPrototype />
-  } else if (!prototypeKey) {
+    return <EmbeddedStructure />
+  } else if (!structureKey) {
     return <FullScreen>
-      <Text>You need a prototype URL to see a prototype</Text>
+      <Text>You need a structure URL to see a structure</Text>
     </FullScreen>
-  } else if (prototypeKey == 'all' && getIsLocalhost()) {
-    setTitle('Prototype Organizer')
+  } else if (structureKey == 'all' && getIsLocalhost()) {
+    setTitle('Structure Organizer')
     return <FullScreen >
-      <PrototypeListScreen onSelectPrototype={newPrototype => gotoPrototype(newPrototype.key)}/>
+      <StructureListScreen onSelectStructure={newStructure => gotoStructure(newStructure.key)}/>
     </FullScreen>
-  } else if (!prototype) {
+  } else if (!structure) {
     return <FullScreen>
-      <TopBar title='Unknown Prototype' />
-      <Text>Unknown prototype: {prototypeKey}</Text>
+      <TopBar title='Unknown Structure' />
+      <Text>Unknown structure: {structureKey}</Text>
     </FullScreen>
   } else if (!instanceKey) {
     return <FullScreen >
-          {/* <TopBar title={prototype.name} showBack={false} /> */}
-          <PrototypeInstanceListScreen prototype={prototype} onSelectInstance={onSelectInstance}/>
+          {/* <TopBar title={structure.name} showBack={false} /> */}
+          <StructureInstanceListScreen structure={structure} onSelectInstance={onSelectInstance}/>
     </FullScreen>
   } else if (instanceKey == 'new') {
     return <FullScreen >
-      <TopBar title='New Live Instance' subtitle={prototype.name} />
-      <NewLiveInstanceScreen prototype={prototype} />
+      <TopBar title='New Live Instance' subtitle={structure.name} />
+      <NewLiveInstanceScreen structure={structure} />
     </FullScreen>
   } else {
     return <SharedData key={url}>
-      <ScreenStack screenStack={screenStack} prototypeKey={prototypeKey} instanceKey={instanceKey} />
+      <ScreenStack screenStack={screenStack} structureKey={structureKey} instanceKey={instanceKey} />
     </SharedData>
   }
 }
 
 
-export function EmbeddedPrototype() {
+export function EmbeddedStructure() {
   const config = window.NEWPUBLIC_CONFIG;
   const {instanceKey} = config;
-  const prototypeKey = config.prototype;
-  const prototype = choosePrototypeByKey(config.prototype);
-  const instance = chooseInstanceByKey({prototype, instanceKey: config.instanceKey});
-  const screenSet = {...defaultScreens, ...prototype.subscreens};
+  const structureKey = config.structure;
+  const structure = chooseStructureByKey(config.structure);
+  const instance = chooseInstanceByKey({structure, instanceKey: config.instanceKey});
+  const screenSet = {...defaultScreens, ...structure.subscreens};
   const screenKey = null;
   const params = {};
 
-  console.log('config', {config, prototype, instance});
+  console.log('config', {config, structure, instance});
 
   return <SharedData>
-    <PrototypeContext.Provider value={{prototype, prototypeKey, instance, instanceKey, isLive: instance.isLive}}>
-      <Datastore instance={instance} instanceKey={instanceKey} prototype={prototype} prototypeKey={prototypeKey} isLive={instance.isLive}>
-        <EmbeddedPrototypeScreen instance={instance} instanceKey={instanceKey} prototype={prototype} prototypeKey={prototypeKey} screenKey={screenKey} params={params} />
+    <InstanceContext.Provider value={{structure, structureKey, instance, instanceKey, isLive: instance.isLive}}>
+      <Datastore instance={instance} instanceKey={instanceKey} structure={structure} structureKey={structureKey} isLive={instance.isLive}>
+        <EmbeddedStructureScreen instance={instance} instanceKey={instanceKey} structure={structure} structureKey={structureKey} screenKey={screenKey} params={params} />
       </Datastore>
-    </PrototypeContext.Provider>
+    </InstanceContext.Provider>
   </SharedData>
-  // return <BodyText>Embedded Prototype</BodyText>
+  // return <BodyText>Embedded Structure</BodyText>
 }
 
-function EmbeddedPrototypeScreen({instance, instanceKey, prototype, prototypeKey, screenKey, params}) {
-  const screenSet = {...defaultScreens, ...prototype.subscreens};
-  var screen = getScreen({screenSet, prototype, screenKey, instanceKey});
-  var title = getScreenTitle({screenSet, prototype, screenKey, instance, params}); 
+function EmbeddedStructureScreen({instance, instanceKey, structure, structureKey, screenKey, params}) {
+  const screenSet = {...defaultScreens, ...structure.subscreens};
+  var screen = getScreen({screenSet, structure, screenKey, instanceKey});
+  var title = getScreenTitle({screenSet, structure, screenKey, instance, params}); 
 
   return React.createElement(screen, params);
 }
 
 
 
-function SideBySideStack({screenStack, prototypeKey, instanceKey}) {
+function SideBySideStack({screenStack, structureKey, instanceKey}) {
   const s = SideBySideStackStyle;
   return <View style={s.outer}>
     <View style={s.column}>
       <View style={s.columnInner}>   
-        <ScreenStack screenStack={screenStack} prototypeKey={prototypeKey} instanceKey={instanceKey} />
+        <ScreenStack screenStack={screenStack} structureKey={structureKey} instanceKey={instanceKey} />
       </View>
     </View>
     <View style={s.column}>
       <View style={s.columnInner}>
-        <ScreenStack screenStack={screenStack} prototypeKey={prototypeKey} instanceKey={instanceKey} />
+        <ScreenStack screenStack={screenStack} structureKey={structureKey} instanceKey={instanceKey} />
       </View>
     </View>
   </View>
@@ -142,21 +142,21 @@ const SideBySideStackStyle = StyleSheet.create({
 })
 
 
-function ScreenStack({screenStack, prototypeKey, instanceKey}) {
+function ScreenStack({screenStack, structureKey, instanceKey}) {
   const s = ScreenStackStyle;
 
   console.log('screen stack', screenStack);
 
-  const prototype = choosePrototypeByKey(prototypeKey);
+  const prototype = chooseStructureByKey(structureKey);
   const instance = chooseInstanceByKey({prototype, instanceKey});
   return <View style={s.stackHolder}>
-    <PrototypeContext.Provider value={{prototype, prototypeKey, instance, instanceKey, isLive: instance.isLive}}>
-      <Datastore instance={instance} instanceKey={instanceKey} prototype={prototype} prototypeKey={prototypeKey} isLive={instance.isLive}>
+    <InstanceContext.Provider value={{prototype, structureKey, instance, instanceKey, isLive: instance.isLive}}>
+      <Datastore instance={instance} instanceKey={instanceKey} prototype={prototype} structureKey={structureKey} isLive={instance.isLive}>
         {screenStack.map((screenInstance, index) => 
           <StackedScreen screenInstance={screenInstance} index={index} key={index} />
         )}
       </Datastore>
-    </PrototypeContext.Provider>
+    </InstanceContext.Provider>
   </View>
 }
 
@@ -170,16 +170,16 @@ const ScreenStackStyle = StyleSheet.create({
 
 
 function StackedScreen({screenInstance, index}) {
-  const {prototypeKey, instanceKey, screenKey, params} = screenInstance;
+  const {structureKey, instanceKey, screenKey, params} = screenInstance;
 
-  if (prototypeKey == 'login' || instanceKey == 'login' || screenKey == 'login') {
+  if (structureKey == 'login' || instanceKey == 'login' || screenKey == 'login') {
     return <FullScreen zIndex={index}>
         <TopBar title='Log In' />
         <LoginScreen {...params} />
     </FullScreen>
   }
 
-  const prototype = choosePrototypeByKey(prototypeKey);
+  const prototype = chooseStructureByKey(structureKey);
   const instance = chooseInstanceByKey({prototype, instanceKey});
   const screenSet = {...defaultScreens, ...prototype.subscreens};
 
@@ -247,7 +247,7 @@ const AppStyle = StyleSheet.create({
   }
 })
 
-function choosePrototypeByKey(key) {
+function chooseStructureByKey(key) {
   if (!key) return null;
   return prototypes.find(prototype => prototype.key === key);
 }

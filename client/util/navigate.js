@@ -37,20 +37,20 @@ export function gotoLogin() {
     pushSubscreen('login');
 }
 
-export function gotoPrototype(prototypeKey) {
-    gotoUrl(makeUrl([prototypeKey]));
+export function gotoStructure(structureKey) {
+    gotoUrl(makeUrl([structureKey]));
 }
 
-export function makePrototypeUrl(prototypeKey) {
-    return makeUrl([prototypeKey]);
+export function makeStructureUrl(structureKey) {
+    return makeUrl([structureKey]);
 }
 
-export function gotoInstance({prototypeKey, instanceKey}) {
-    gotoUrl(makeUrl([prototypeKey, instanceKey]));
+export function gotoInstance({structureKey, instanceKey}) {
+    gotoUrl(makeUrl([structureKey, instanceKey]));
 }
 
-export function replaceInstance({prototypeKey, instanceKey}) {
-    replaceUrl(makeUrl([prototypeKey, instanceKey]));
+export function replaceInstance({structureKey, instanceKey}) {
+    replaceUrl(makeUrl([structureKey, instanceKey]));
 }
 
 

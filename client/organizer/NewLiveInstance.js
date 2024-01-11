@@ -20,9 +20,9 @@ const languageParam = {key: 'language', name: 'Language', type: 'select', option
 ]}
 
 
-export function NewLiveInstanceScreen({prototype}) {
+export function NewLiveInstanceScreen({structure}) {
     const s = NewLiveInstanceScreenStyle;
-    const newInstanceParams = prototype.newInstanceParams || [];
+    const newInstanceParams = structure.newInstanceParams || [];
     const firebaseUser = useFirebaseUser();
     const [instanceGlobals, setInstanceGlobals] = useState({});
 
@@ -40,21 +40,21 @@ export function NewLiveInstanceScreen({prototype}) {
         const userData = {
             name: expandedGlobals.name, createTime, language: expandedGlobals.language ?? languageEnglish
         }
-        firebaseWriteAsync(['prototype', prototype.key, 'instance', key, 'global'], expandedGlobals);
-        firebaseWriteAsync(['prototype', prototype.key, 'userInstance', firebaseUser.uid, key], userData);
-        firebaseWriteAsync(['userInstance', firebaseUser.uid, prototype.key, key], userData);
+        firebaseWriteAsync(['structure', structure.key, 'instance', key, 'global'], expandedGlobals);
+        firebaseWriteAsync(['structure', structure.key, 'userInstance', firebaseUser.uid, key], userData);
+        firebaseWriteAsync(['userInstance', firebaseUser.uid, structure.key, key], userData);
         const fbUser = getFirebaseUser();
-        firebaseWriteAsync(['prototype', prototype.key, 'instance', key, 'collection', 'persona', fbUser.uid], {
+        firebaseWriteAsync(['structure', structure.key, 'instance', key, 'collection', 'persona', fbUser.uid], {
             photoUrl: fbUser.photoURL, 
             name: fbUser.displayName, 
             key: fbUser.uid,
             member: true
         });
     
-        if (prototype.newInstanceRoboPersonas) {
-            firebaseWriteAsync(['prototype', prototype.key, 'instance', key, 'collection', 'persona'], prototype.newInstanceRoboPersonas);            
+        if (structure.newInstanceRoboPersonas) {
+            firebaseWriteAsync(['structure', structure.key, 'instance', key, 'collection', 'persona'], structure.newInstanceRoboPersonas);            
         }
-        replaceInstance({prototypeKey: prototype.key, instanceKey: key});
+        replaceInstance({structureKey: structure.key, instanceKey: key});
     }
 
     if (!firebaseUser) {
@@ -63,7 +63,7 @@ export function NewLiveInstanceScreen({prototype}) {
 
     return <Narrow>
         <Card>
-            <Heading label='New Instance of {prototypeName}' formatParams={{prototypeName: prototype.name}}/>
+            <Heading label='New Instance of {structureName}' formatParams={{structureName: structure.name}}/>
             <Pad size={16} />
             <InstanceParamSetter param={nameParam} instanceGlobals={instanceGlobals} setInstanceGlobals={setInstanceGlobals} />
             <Pad/>

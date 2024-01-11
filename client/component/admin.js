@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Card, ConversationScreen, Pad, PadBox } from "./basics";
 import { Heading, UtilityText } from "./text";
-import { PrototypeContext } from "../organizer/PrototypeContext";
+import { InstanceContext } from "../organizer/InstanceContext";
 import { CatchList } from "./catcher";
 import { CTAButton, IconButton } from "./button";
 import { useDatastore } from "../util/datastore";
@@ -9,12 +9,12 @@ import { goBack } from "../util/navigate";
 import { View } from "react-native";
 
 export function AdminScreen() {
-    const {prototype} = useContext(PrototypeContext);
+    const {structure} = useContext(InstanceContext);
     return <ConversationScreen pad>
         <Card>
             <Heading label="Admin Actions" />
             <Pad />
-            <CatchList items={prototype.adminTools} renderItem={tool => 
+            <CatchList items={struture.adminTools} renderItem={tool => 
                 <AdminAction name={tool.name} action={tool.action} />
             } />
         </Card>

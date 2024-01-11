@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
 import { PersonaSelector } from "./PersonaSelector";
-import { closeSidebar, goBack, gotoPrototype, pushSubscreen } from "../util/navigate";
+import { closeSidebar, goBack, gotoStructure, pushSubscreen } from "../util/navigate";
 import { firebaseSignOut, useFirebaseUser } from "../util/firebase";
 import { Popup } from "../platform-specific/popup";
 import { useDatastore, useGlobalProperty, usePersonaKey, useSessionData } from "../util/datastore";
 import { useContext, useEffect, useState } from "react";
-import { PrototypeContext } from "./PrototypeContext";
+import { InstanceContext } from "./InstanceContext";
 import { IconChevronDown, IconClose, IconCloseBig, IconLeftArrowBig, IconSettings } from "../component/icon";
 import { Byline, FaceImage } from "../component/people";
 import { BreadCrumb, CTAButton, TextButton, Toggle } from "../component/button";
@@ -13,13 +13,13 @@ import { Center, Clickable, HorizBox, Pad, PadBox, Separator } from "../componen
 import { emailIsAdmin } from "../util/config";
 import { colorGreyHover, colorGreyPopupBackground, colorTextGrey } from "../component/color";
 import { ObservableProvider, ObservableValue, useObservable } from "../util/observable";
-import { getAvailableFeaturesForPrototype } from "../util/features";
+import { getAvailableFeaturesForStructure } from "../util/features";
 
 const global_toolbarAction = new ObservableValue(null);
 
 export function TopBar({showPersonas}) {
     const s = TopBarStyle;
-    const {instance, instanceKey} = useContext(PrototypeContext);
+    const {instance, instanceKey} = useContext(InstanceContext);
     const toolbarAction = useObservable(global_toolbarAction);
     return <View style={s.topBox}>        
         <View style={s.leftRow}>    
@@ -79,9 +79,9 @@ const TopBarStyle = StyleSheet.create({
 
 
 function FeatureToggles() {
-    const {prototype, prototypeKey} = useContext(PrototypeContext);
-    console.log('prototype', prototypeKey, prototype, prototype.features)
-    const features = getAvailableFeaturesForPrototype(prototypeKey)
+    const {structure, structureKey} = useContext(InstanceContext);
+    console.log('structure', structureKey, structure, structure.features)
+    const features = getAvailableFeaturesForStructure(structureKey)
     if (!features) return null;
     return <PadBox top={20}>
         <Separator />

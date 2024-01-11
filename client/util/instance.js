@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { PrototypeContext } from '../organizer/PrototypeContext';
+import { InstanceContext } from '../organizer/InstanceContext';
 import { TopBar } from '../organizer/TopBar';
 import { IBMPlexMono_400Regular, IBMPlexMono_500Medium, IBMPlexMono_600SemiBold } from '@expo-google-fonts/ibm-plex-mono'
 import { LoginScreen } from '../organizer/Login';
@@ -24,18 +24,18 @@ export function useStandardFonts() {
 export function ScreenStack({url, screenStack, structureKey, instanceKey}) {
     const s = ScreenStackStyle;
     
-    const prototype = getStructureForKey(structureKey);
+    const structure = getStructureForKey(structureKey);
     const instance = {isLive: true}
  
     return <View style={s.stackHolder}>
       <SharedData key={url}>
-        <PrototypeContext.Provider value={{prototype, prototypeKey: structureKey, instance, instanceKey, isLive: true}}>
-          <Datastore instance={instance} instanceKey={instanceKey} prototype={prototype} prototypeKey={structureKey} isLive={true}>
+        <InstanceContext.Provider value={{structure, structureKey: structureKey, instance, instanceKey, isLive: true}}>
+          <Datastore instance={instance} instanceKey={instanceKey} structure={structure} structureKey={structureKey} isLive={true}>
             {screenStack.map((screenInstance, index) => 
               <StackedScreen screenInstance={screenInstance} index={index} key={index} />
             )}
           </Datastore>
-        </PrototypeContext.Provider>
+        </InstanceContext.Provider>
       </SharedData>
     </View>
   }
@@ -71,7 +71,7 @@ function StackedScreen({screenInstance, index}) {
     const showTopBar = screenKey != 'teaser';
   
     if (!screen) {
-      console.error('Screen not found', {screenSet, prototype: structure, screenKey, instanceKey, screen});
+      console.error('Screen not found', {screenSet, structure: structure, screenKey, instanceKey, screen});
       return null;
     }
 
@@ -103,7 +103,7 @@ function getScreen({screenSet, structure, screenKey}) {
     }
   }
   
-function getScreenTitle({screenSet, prototype, instance, screenKey, params}) {
+function getScreenTitle({screenSet, structure, instance, screenKey, params}) {
     const name = useGlobalProperty('name');
     if (screenKey) {
       const title = screenSet?.[screenKey]?.title;
@@ -117,7 +117,7 @@ function getScreenTitle({screenSet, prototype, instance, screenKey, params}) {
     } else if (instance) {
       return name;
     } else {
-      return prototype.name
+      return structure.name
     }
   }
   
@@ -136,7 +136,7 @@ const FullScreenStyle = StyleSheet.create({
   
 export function getStructureForKey(key) {
     if (!key) return null;
-    return structures.find(prototype => prototype.key === key);
+    return structures.find(structure => structure.key === key);
   }
   
 function chooseInstanceByKey({structure, instanceKey}) {

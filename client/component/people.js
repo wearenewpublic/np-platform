@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { useObject, usePersonaKey, usePersonaObject } from "../util/datastore";
-import { PrototypeContext } from "../organizer/PrototypeContext";
+import { InstanceContext } from "../organizer/InstanceContext";
 import { getFirebaseUser } from "../util/firebase";
 import { Image, StyleSheet, View } from "react-native";
 import { IconCircleCheck } from "./icon";
@@ -14,7 +14,7 @@ export function ProfilePhoto({userId, type='large', faint=false, check=false, bo
     const persona = useObject('persona', userId);
 
 
-    const {instance} = useContext(PrototypeContext);
+    const {instance} = useContext(InstanceContext);
     const meKey = usePersonaKey();
 
     if (meKey == userId && instance.isLive) {

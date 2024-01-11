@@ -38,20 +38,20 @@ export class Datastore extends React.Component {
         this.fbDataWatchReleaser && this.fbDataWatchReleaser();
     }
     componentDidUpdate(prevProps) {
-        if (prevProps.instanceKey != this.props.instanceKey || prevProps.prototypeKey != this.props.prototypeKey) {
+        if (prevProps.instanceKey != this.props.instanceKey || prevProps.structureKey != this.props.structureKey) {
             this.resetData();
         }
     }
 
     getDefaultPersonaList() {
-        const {instance, prototype, isLive} = this.props;
+        const {instance, structure, isLive} = this.props;
         if (isLive) {
             return [];
         } else if (instance.personaList) {
             return instance.personaList;
-        } else if (prototype.hasMembers) {
+        } else if (structure.hasMembers) {
             return memberPersonaList;
-        } else if (prototype.hasAdmin) {
+        } else if (structure.hasAdmin) {
             return adminPersonaList;
         } else {
             return defaultPersonaList;
@@ -59,13 +59,13 @@ export class Datastore extends React.Component {
     }
 
     resetData() {
-        const {instance, instanceKey, prototype, prototypeKey, isLive} = this.props;
+        const {instance, instanceKey, structure, structureKey, isLive} = this.props;
 
         const personaKey = getInitialPersonaKey(instance);
         this.sessionData = {personaKey}
         if (isLive) {
             this.fbDataWatchReleaser && this.fbDataWatchReleaser();
-            this.fbDataWatchReleaser = firebaseWatchValue(['prototype', prototypeKey, 'instance', instanceKey], data => {
+            this.fbDataWatchReleaser = firebaseWatchValue(['structure', structureKey, 'instance', instanceKey], data => {
                 this.setData({...this.getData(), ...data?.collection, ...data?.global});
                 this.setState({loaded: true})
             });
@@ -102,7 +102,7 @@ export class Datastore extends React.Component {
         return this.getData()[typeName]?.[key];
     }
     async setObject(typeName, key, value) {
-        const {prototypeKey, instanceKey, isLive} = this.props;
+        const {structureKey, instanceKey, isLive} = this.props;
         if (!key || !typeName) {
             throw new Error('Missing key or typeName', key, typeName);
         }
@@ -114,8 +114,8 @@ export class Datastore extends React.Component {
         // this.notifyWatchers();
 
         if (isLive) {
-            addInstanceToMyInstancesAsync({prototypeKey, instanceKey, dataTree: this.getData()});
-            await firebaseWriteAsync(['prototype', prototypeKey, 'instance', instanceKey, 'collection', typeName, key], value);
+            addInstanceToMyInstancesAsync({structureKey, instanceKey, dataTree: this.getData()});
+            await firebaseWriteAsync(['structure', structureKey, 'instance', instanceKey, 'collection', typeName, key], value);
             await callServerApiAsync({datastore: this, component: 'derivedviews', funcname: 'runTriggers', params: {type: typeName, key}});
         }
     }
@@ -172,16 +172,16 @@ export class Datastore extends React.Component {
         return this.getData()[key];
     }
     setGlobalProperty(key, value) {
-        const {prototypeKey, instanceKey, isLive} = this.props;
+        const {structureKey, instanceKey, isLive} = this.props;
         this.setData({...this.getData(), [key]: value});
         
         // this.notifyWatchers();
         if (isLive) {
-            firebaseWriteAsync(['prototype', prototypeKey, 'instance', instanceKey, 'global', key], value);
+            firebaseWriteAsync(['structure', structureKey, 'instance', instanceKey, 'global', key], value);
         }
     }
 
-    getPrototypeKey() {return this.props.prototypeKey}
+    getStructureKey() {return this.props.structureKey}
     getInstanceKey() {return this.props.instanceKey}
     getLanguage() {return this.getGlobalProperty('language') || 'English'}
     getLoaded() {return this.state.loaded}
@@ -212,9 +212,9 @@ export function WaitForData({children}) {
     }
 }
 
-export async function addCurrentUserToInstanceAsync({prototypeKey, instanceKey, isMember}) {
+export async function addCurrentUserToInstanceAsync({structureKey, instanceKey, isMember}) {
     const fbUser = getFirebaseUser();
-    await firebaseWriteAsync(['prototype', prototypeKey, 'instance', instanceKey, 'collection', 'persona', fbUser.uid], {
+    await firebaseWriteAsync(['structure', structureKey, 'instance', instanceKey, 'collection', 'persona', fbUser.uid], {
         photoUrl: fbUser.photoURL, 
         name: fbUser.displayName, 
         key: personaKey,
@@ -222,11 +222,11 @@ export async function addCurrentUserToInstanceAsync({prototypeKey, instanceKey, 
     });
 }
 
-export async function addInstanceToMyInstancesAsync({prototypeKey, instanceKey, dataTree}) {
-    console.log('addInstanceToMyInstancesAsync', prototypeKey, instanceKey, dataTree);
+export async function addInstanceToMyInstancesAsync({structureKey, instanceKey, dataTree}) {
+    console.log('addInstanceToMyInstancesAsync', structureKey, instanceKey, dataTree);
     const firebaseUser = getFirebaseUser();
     console.log('firebaseUser', firebaseUser);
-    await firebaseWriteAsync(['userInstance', firebaseUser.uid, prototypeKey, instanceKey], {
+    await firebaseWriteAsync(['userInstance', firebaseUser.uid, structureKey, instanceKey], {
         name: dataTree.name, 
         language: dataTree.language || null,
         createTime: dataTree.createTime || Date.now(),
@@ -402,10 +402,10 @@ function makeFirebasePath(path) {
 }
 
 export function makeStorageUrl({datastore, userId, fileKey, extension}) {
-    const prototypeKey = datastore.getPrototypeKey();
+    const structureKey = datastore.getStructureKey();
     const instanceKey = datastore.getInstanceKey();
     const storagePrefix = 'https://firebasestorage.googleapis.com/v0/b/new-public-demo.appspot.com/o/';
-    const path = ['user', userId, prototypeKey, instanceKey, fileKey + '.' + extension];
+    const path = ['user', userId, structureKey, instanceKey, fileKey + '.' + extension];
     const pathString = makeFirebasePath(path);
     return storagePrefix + pathString + '?alt=media';
 }

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { translations } from "../translations";
-import { PrototypeContext } from "../organizer/PrototypeContext";
+import { InstanceContext } from "../organizer/InstanceContext";
 import { Text } from "react-native";
 import { formatString } from "../util/util";
 import { useFirebaseData } from "../util/firebase";
@@ -44,8 +44,8 @@ export function translatePlural({singular, plural, language, count}) {
 }
 
 export function useLanguage() {
-    const {prototypeKey, instanceKey, instance} = useContext(PrototypeContext);    
-    const globalLanguage = useFirebaseData(['prototype', prototypeKey, 'instance', instanceKey, 'global', 'language']);
+    const {structureKey, instanceKey, instance} = useContext(InstanceContext);    
+    const globalLanguage = useFirebaseData(['structure', structureKey, 'instance', instanceKey, 'global', 'language']);
 
     if (!instance) {
         return null;

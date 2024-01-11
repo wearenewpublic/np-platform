@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Clickable, Pad, PrimaryButton, StatusButtonlikeMessage } from "../component/basics";
 import { callServerMultipartApiAsync } from "../util/servercall";
 import { makeStorageUrl, useDatastore, usePersonaKey } from "../util/datastore";
-import { PrototypeContext } from "../organizer/PrototypeContext";
+import { InstanceContext } from "../organizer/InstanceContext";
 import { gotoLogin } from "../util/navigate";
 
 const video_mimetype = 'video/webm; codecs=vp9';  // this works for Chrome, and Firefox, but not Safari
@@ -12,7 +12,7 @@ const video_mimetype = 'video/webm; codecs=vp9';  // this works for Chrome, and 
 export function VideoCamera({size=200, action='Record Video', onSubmitRecording}) {
     const s = VideoCameraStyle;
     const [cameraShown, setCameraShown] = useState(false);
-    const {isLive} = useContext(PrototypeContext);
+    const {isLive} = useContext(InstanceContext);
     const [uploading, setUploding] = useState(false);
     const datastore = useDatastore();
     const personaKey = usePersonaKey();

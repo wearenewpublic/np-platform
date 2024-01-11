@@ -3,14 +3,14 @@ import { structures } from "../structure"
 import { Entypo } from "@expo/vector-icons";
 import React, { useState } from 'react'
 import { WebLink } from "../platform-specific/url";
-import { makePrototypeUrl } from "../util/navigate";
+import { makeStructureUrl } from "../util/navigate";
 import { TextButton } from "../component/button";
 import { Heading } from "../component/text";
 import { Card, Narrow, Pad, PadBox } from "../component/basics";
 
-export function PrototypeListScreen() {
-    const s = PrototypeListScreenStyle;
-    const sortedPrototypes = structures.sort((a, b) => new Date(b.date).valueOf() -  new Date(a.date).valueOf());
+export function StructureListScreen() {
+    const s = StructureListScreenStyle;
+    const sortedStructures = structures.sort((a, b) => new Date(b.date).valueOf() -  new Date(a.date).valueOf());
 
     function onOpenUrl(url) {
         window.open(url, '_blank');
@@ -22,21 +22,21 @@ export function PrototypeListScreen() {
             <Card>
                 <PadBox horiz={20} >
                     <Heading label='New_ Public' />
-                    <Heading label='Prototype Gardern' />
+                    <Heading label='Structure Gardern' />
                 </PadBox>
             </Card>
             <PadBox horiz={20}>
-                {sortedPrototypes.map(prototype => 
-                    <Card key={prototype.key}>
+                {sortedStructures.map(structure => 
+                    <Card key={structure.key}>
                         <Pad />
-                        <TextButton key={prototype.name} text={prototype.name} onPress={() => onOpenUrl(makePrototypeUrl(prototype.key))} />
+                        <TextButton key={structure.name} text={structure.name} onPress={() => onOpenUrl(makeStructureUrl(structure.key))} />
                     </Card>
-                    // <WebLink key={prototype.name} url={makePrototypeUrl(prototype.key)}>
+                    // <WebLink key={structure.name} url={makeStructureUrl(structure.key)}>
                     //     <Card>
                     //         <View style={s.authorLine}>
-                    //             <SmallTitleLabel label={prototype.name}/>
+                    //             <SmallTitleLabel label={structure.name}/>
                     //         </View>
-                    //         <PreviewText text={prototype.description} />
+                    //         <PreviewText text={structure.description} />
                     //     </Card>
                     // </WebLink>
                 )}
@@ -46,7 +46,7 @@ export function PrototypeListScreen() {
     )
 }
 
-const PrototypeListScreenStyle = StyleSheet.create({
+const StructureListScreenStyle = StyleSheet.create({
     authorLine: {
         flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4
     },
