@@ -14,6 +14,7 @@ import { emailIsAdmin } from "../util/config";
 import { colorGreyHover, colorGreyPopupBackground, colorTextGrey } from "../component/color";
 import { ObservableProvider, ObservableValue, useObservable } from "../util/observable";
 import { getAvailableFeaturesForStructure } from "../util/features";
+import { callServerApiAsync } from "../util/servercall";
 
 const global_toolbarAction = new ObservableValue(null);
 
@@ -98,10 +99,15 @@ function FeatureToggle({feature}) {
     const datastore = useDatastore();
 
     function onToggle() {
-        datastore.setGlobalProperty('features', {
-            ...features, 
-            [feature.key]: !enabled}
-        )
+        const newFeatures = {
+            ...features,
+            [feature.key]: !enabled
+        }
+        callServerApiAsync({
+            datastore, component: 'features', 
+            funcname: 'setFeatures', 
+            params: {features: newFeatures}
+        });  
     }
 
     return <Toggle label={feature.name} value={enabled || false} 
@@ -122,7 +128,8 @@ function UserInfo() {
             <TextButton type='small' onPress={() => pushSubscreen('profile')} label='Profile' />
             <Pad />
             <TextButton type='small' onPress={firebaseSignOut} label='Log Out' />
-            {isAdmin && <FeatureToggles />}
+            <FeatureToggles />
+            {/* {isAdmin && <FeatureToggles />} */}
         </View>
     }
 

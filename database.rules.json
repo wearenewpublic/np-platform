@@ -2,10 +2,23 @@
     "rules": {
         "structure": {
             "$structure": {
-                "instance": {
+                "instance": {                    
                     "$instance": {
                         ".read": true,
-                        ".write": true
+                        ".write": false,
+                        "collection": {
+                            "persona": {
+                                "$user": {
+                                    ".write" : "$user == auth.uid"
+                                }
+                            },
+                            "$type": {
+                                "$key": {
+                                    ".write": true,
+                                    ".validate": "newData.child('from').val() == auth.uid && (!data.exists() || data.child('from').val() == auth.uid)"
+                                }
+                            }
+                        }
                     }
                 },
                 "userInstance": {
@@ -19,13 +32,8 @@
         "userInstance": {
       		"$user": {
                 ".read": "$user == auth.uid",
-                ".write": "$user == auth.uid",
-            	    "$structure": {
-                        "$instance": {
-                            ".write": true
-                  }                
-              }
-          }
+                ".write": "$user == auth.uid"
+            }
         },
         ".read": false,
         ".write": false  
