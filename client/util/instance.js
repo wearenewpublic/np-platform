@@ -53,7 +53,7 @@ export function ScreenStack({url, screenStack, structureKey, instanceKey}) {
 function StackedScreen({screenInstance, index}) {
     const {structureKey, instanceKey, screenKey, params} = screenInstance;
     
-        if (structureKey == 'login' || instanceKey == 'login' || screenKey == 'login') {
+    if (structureKey == 'login' || instanceKey == 'login' || screenKey == 'login') {
       return <FullScreen zIndex={index}>
           <TopBar title='Log In' />
           <LoginScreen {...params} />

@@ -79,7 +79,7 @@ function getParamsWithSuffix(urlParams, suffix) {
 }
 
 
-function makeUrl(parts, query = new URLSearchParams()) {
+export function makeUrl(parts, query = new URLSearchParams()) {
     const url = new URL(window.location.href);
     url.pathname = parts.join('/');
     url.search = query.toString();

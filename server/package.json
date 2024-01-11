@@ -2,6 +2,7 @@
   "name": "np-platform-server",
   "description": "Back end for the New Public Platform",
   "version": "0.0.2",
+  "license": "Apache-2.0",
   "scripts": {
     "lint": "eslint .",
     "emulate": "firebase emulators:start",
