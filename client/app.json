@@ -1,8 +1,9 @@
 {
   "expo": {
-    "name": "new-public-demos",
-    "slug": "new-public-demos",
+    "name": "np-platform-demo",
+    "slug": "np-platform-demo",
     "version": "1.0.0",
+    "entryPoint": "./Demo.js",
     "orientation": "portrait",
     "icon": "./assets/icon_np.png",
     "userInterfaceStyle": "light",
