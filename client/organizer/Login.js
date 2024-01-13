@@ -8,6 +8,7 @@ import { Heading } from '../component/text';
 import { RichText } from '../component/richtext';
 import { colorLightGreen, colorTextGrey } from '../component/color';
 import { CTAButton } from '../component/button';
+import { expandUrl } from '../util/util';
 
 
 export function LoginScreen({action}) {
@@ -27,7 +28,11 @@ export function LoginScreen({action}) {
         <Pad/>
         <RichText color={colorTextGrey} label='By continuing, you agree to our [community guidelines](https://example.com) and [Privacy Policy](https://example.com).' />
         <Pad size={40} />
-        <CTAButton image={<Image source={require('../assets/google.png')} style={{width: 20, height: 20}} />} type='secondary' label='Continue with Google' onPress={handleGoogleSignIn} />
+        <CTAButton image={
+            <Image 
+                source={{uri: expandUrl({url: 'google.png', type: 'images'})}} 
+                style={{width: 20, height: 20}} />} 
+                type='secondary' label='Continue with Google' onPress={handleGoogleSignIn} />
         {/* <Clickable onPress={handleGoogleSignIn}>
             <Image source={require('../assets/google_signin.png')} style={{width: 200, height: 50}} />
         </Clickable> */}
