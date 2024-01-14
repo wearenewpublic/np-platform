@@ -1,5 +1,13 @@
 
-const admin = require('firebase-admin');
+var admin = null;
+
+function setFirebaseAdmin(newAdmin) {
+    admin = newAdmin;
+}
+
+function verifyIdTokenAsync(token) {
+    return admin.auth().verifyIdToken(token);
+}
 
 function expandPath(path) {
     if (typeof path == 'string') {
@@ -93,7 +101,11 @@ function fbKeyToString(input) {
 module.exports = {firebaseWriteAsync, firebaseReadAsync, firebaseUpdateAsync, stringToFbKey, fbKeyToString, 
     readGlobalAsync, writeGlobalAsync, readCollectionAsync, createInstanceAsync, writeCollectionAsync,
     readInstanceAsync, setObjectAsync, readMultipleCollectionsAsync, updateCollectionAsync,
-    readObjectAsync
+    readObjectAsync,
+
+    verifyIdTokenAsync,
+
+    setFirebaseAdmin
 };
 
 

@@ -1,10 +1,8 @@
-
-const admin = require('firebase-admin');
-
 const Busboy = require('busboy');
 const os = require('os');
 const path = require('path');
 const fs = require('fs');
+const { verifyIdTokenAsync } = require('./firebaseutil');
 const cors = require('cors')({origin: true})
 
 console.log('NP server API system');
@@ -89,7 +87,7 @@ async function getValidatedUser(req) {
         return null;
     } 
     try {
-        const decodedToken = await admin.auth().verifyIdToken(tokenId);
+        const decodedToken = await verifyIdTokenAsync(tokenId);
         return decodedToken;
     } catch (error) {
         console.error('Error verifying Firebase ID token:', error);

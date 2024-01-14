@@ -1,4 +1,3 @@
-
 const { readMultipleCollectionsAsync } = require('../util/firebaseutil');
 const {ArticleQuestionsAnswerSummary} = require('./articlequestions');
 

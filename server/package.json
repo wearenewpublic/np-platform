@@ -1,28 +1,26 @@
 {
   "name": "np-platform-server",
   "description": "Back end for the New Public Platform",
-  "version": "0.0.2",
+  "version": "0.1.4",
   "license": "Apache-2.0",
   "scripts": {
-    "lint": "eslint .",
-    "emulate": "firebase emulators:start",
-    "shell": "firebase functions:shell",
-    "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wearenewpublic/np-platform"
   },
   "engines": {
-    "node": "16"
+    "node": "20"
   },
-  "main": "index.js",
+  "exports": {
+    "./component/*": "./component/*.js",
+    "./component": "./component/index.js",
+    "./util/*": "./util/*.js"
+  },
   "dependencies": {
     "busboy": "^1.6.0",
-    "firebase-admin": "^11.5.0",
-    "firebase-functions": "^4.2.0",
+    "cors": "^2.8.5",
     "form-data": "^4.0.0",
     "fs": "^0.0.1-security",
     "json5": "^2.2.3",
@@ -33,7 +31,6 @@
   },
   "devDependencies": {
     "eslint": "^8.15.0",
-    "eslint-config-google": "^0.14.0",
-    "firebase-functions-test": "^3.0.0"
+    "eslint-config-google": "^0.14.0"
   }
 }
