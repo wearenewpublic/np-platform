@@ -8,9 +8,9 @@ import { BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, Phot
 import { useState } from "react";
 import { expandDataList } from "../util/util";
 import { BasicComments, Comment, CommentsIntro, ComposerScreen } from "../component/comment";
-import { pushSubscreen } from "../util/navigate";
+import { gotoInstance, pushSubscreen } from "../util/navigate";
 import { RichText, wrapLinks } from "../component/richtext";
-import { ConversationScreen, Narrow, Pad, PadBox, TeaserScreen } from "../component/basics";
+import { ConversationScreen, Narrow, Pad, PadBox, Separator, TeaserScreen } from "../component/basics";
 import { BasicTeaser } from "../component/teaser";
 import { useConfig } from "../util/features";
 
@@ -253,12 +253,17 @@ function ComponentDemoScreen() {
             {/* <ContentHeading label='Component Groups' /> */}
             <Pad size={20} />
             <SpacedArray>
+                <Heading label='Component Demos' />
                 <CTAButton label='Text' onPress={() => pushSubscreen('text')} />
                 <CTAButton label='Profile' onPress={() => pushSubscreen('profile')} />
                 <CTAButton label='Button' onPress={() => pushSubscreen('button')} />
                 <CTAButton label='Comment' onPress={() => pushSubscreen('comment')} />
                 <CTAButton label='Teaser' onPress={() => pushSubscreen('teaserDemo')} />
                 <CTAButton label='Feature Modules' onPress={() => pushSubscreen('feature')} />
+                <Pad />
+                <Heading label='Structure Demos' />
+                <CTAButton label='Simple Comments' onPress={() => gotoInstance({structureKey: 'simplecomments', instanceKey: 'demo'})} />
+                
             </SpacedArray>
         </Narrow>
     </ConversationScreen>

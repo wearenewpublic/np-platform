@@ -1,10 +1,7 @@
 import { ConversationScreen, Pad, PadBox, TeaserScreen } from "../component/basics";
-import { TextButton } from "../component/button";
-import { BasicComments, CommentsIntro, ComposerScreen } from "../component/comment";
+import { ActionEdit, ActionReply, ActionReport, ActionUpvote, BasicComments, CommentsIntro, ComposerScreen } from "../component/comment";
 import { BasicTeaser } from "../component/teaser";
-import { UtilityText } from "../component/text";
 import { useCollection } from "../util/datastore";
-import { pushSubscreen } from "../util/navigate";
 import { expandDataList } from "../util/util";
 
 export const SimpleCommentsStructure = {
@@ -14,6 +11,14 @@ export const SimpleCommentsStructure = {
     teaser: CommentTeaserScreen,
     subscreens: {
         composer: ({about}) => <ComposerScreen about={about} intro={null} contentType='Public Comment' />,
+    },
+    defaultConfig: {
+        commentActions: [ActionReply],
+        commentRightActions: [ActionReport, ActionEdit],
+        commentEditWidgets: [],
+        commentInputPlaceholder: 'Share your thoughts...',
+        commentReplyPlaceholder: 'Reply to {authorName}...',
+        commentInputLoginAction: 'comment',
     },
     instance: [
         {

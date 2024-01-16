@@ -13,15 +13,8 @@ import { RichText } from "./richtext";
 import { CatchList } from "./catcher";
 import { TopBarActionProvider } from "../organizer/TopBar";
 import { needsLogin } from "../organizer/Login";
+import { useConfig } from "../util/features";
 
-export const CommentContext = React.createContext({
-    actions: [ActionReply, ActionUpvote],
-    rightActions: [ActionReport, ActionEdit],
-    editWidgets: [],
-    replyPlaceholder: 'Reply to {authorName}...',
-    topLevelPlaceholder: 'Share your thoughts...',
-    topLevelAction: 'comment'
-})
 
 export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
@@ -113,12 +106,12 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
     const personaKey = usePersonaKey();
     const replyToComment = useObject('comment', comment.replyTo);
     const author = useObject('persona', replyToComment?.from);
-    const {replyPlaceholder, topLevelPlaceholder} = useContext(CommentContext);
+    const {commentReplyPlaceholder, commentInputPlaceholder} = useConfig();
 
     const goodLength = checkValidLength({text: comment.text, min, max});
     const canPost = comment.text && !comment.blockPost && goodLength;
     const action = comment.key ? 'Update' : 'Post';
-    const placeholder = comment.replyTo ? replyPlaceholder : topLevelPlaceholder;
+    const placeholder = comment.replyTo ? commentReplyPlaceholder : commentInputPlaceholder;
     
     return <View>
         {topLevel && <TopBarActionProvider label={action} disabled={!canPost} onPress={onEditingDone} />}
@@ -146,9 +139,9 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
 }
 
 function EditWidgets({comment, setComment}) {
-    const {editWidgets} = useContext(CommentContext);
+    const {commentEditWidgets} = useConfig();
     return <HorizBox>
-        {editWidgets.map((Widget, idx) => <View key={idx} style={{marginRight: 12}}>
+        {commentEditWidgets.map((Widget, idx) => <View key={idx} style={{marginRight: 12}}>
             <Widget comment={comment} setComment={setComment} />
         </View>)} 
     </HorizBox>
@@ -179,16 +172,15 @@ function CommentReplies({commentKey, depth=1}) {
 }
 
 
-
 function CommentActions({commentKey, depth}) {
     const s = CommentActionsStyle;
-    const {actions, rightActions} = useContext(CommentContext);
+    const {commentActions, commentRightActions} = useConfig();
     return <View style={s.actionBar}>
         <View style={s.mainActions}>
-            {actions.map((Action, idx) => <Action key={idx} commentKey={commentKey} depth={depth} />)}
+            {commentActions.map((Action, idx) => <Action key={idx} commentKey={commentKey} depth={depth} />)}
         </View>
         <View style={s.rightActions}>
-            {rightActions.map((Action, idx) => <Action key={idx} commentKey={commentKey} depth={depth} />)}
+            {commentRightActions.map((Action, idx) => <Action key={idx} commentKey={commentKey} depth={depth} />)}
         </View>
     </View>
 }
@@ -312,24 +304,22 @@ export function CommentsIntro() {
 }
 
 export function BasicComments({config={}, intro=null, about, canPost=true}) {
-    const [sortMode, setSortMode] = useState('time');
+    const {commentInputPlaceholder, commentInputLoginAction} = useConfig();
     const comments = useCollection('comment', {filter: {about, replyTo: null}, sortBy: 'time', reverse: true});
-    const oldConfig = useContext(CommentContext);
-    const newConfig = {...oldConfig, ...config};
-    return <CommentContext.Provider value={newConfig}>
+    return <View>
         {canPost && <Card>
             <PadBox horiz={20}>
-                <TextFieldButton placeholder={newConfig.topLevelPlaceholder} 
+                <TextFieldButton placeholder={commentInputPlaceholder} 
                     onPress={needsLogin(
                         () => pushSubscreen('composer', {about}), 
-                        newConfig.topLevelAction)} 
+                        commentInputLoginAction)} 
                 />
             </PadBox>
         </Card>}
         <CatchList items={comments} renderItem={comment =>
             <PadBox top={20} horiz={20}><Comment commentKey={comment.key} /></PadBox>
         } />
-    </CommentContext.Provider>
+    </View>
 }
 
 

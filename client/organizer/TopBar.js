@@ -15,6 +15,7 @@ import { colorGreyHover, colorGreyPopupBackground, colorTextGrey } from "../comp
 import { ObservableProvider, ObservableValue, useObservable } from "../util/observable";
 import { getAvailableFeaturesForStructure } from "../util/features";
 import { callServerApiAsync } from "../util/servercall";
+import { defaultFeatureConfig } from "../feature";
 
 const global_toolbarAction = new ObservableValue(null);
 
@@ -83,19 +84,20 @@ function FeatureToggles() {
     const {structure, structureKey} = useContext(InstanceContext);
     console.log('structure', structureKey, structure, structure.features)
     const features = getAvailableFeaturesForStructure(structureKey)
+    const defaultFeatures = defaultFeatureConfig[structureKey];
     if (!features) return null;
     return <PadBox top={20}>
         <Separator />
         <Pad/>
         {features.map(feature => 
-            <FeatureToggle key={feature.key} feature={feature} />
+            <FeatureToggle key={feature.key} defaultState={defaultFeatures[feature.key]} feature={feature} />
         )}
     </PadBox>
 }
 
-function FeatureToggle({feature}) {
+function FeatureToggle({feature, defaultState=false}) {
     const features = useGlobalProperty('features');
-    const enabled = features?.[feature.key];
+    const enabled = features?.[feature.key] ?? defaultState;
     const datastore = useDatastore();
 
     function onToggle() {

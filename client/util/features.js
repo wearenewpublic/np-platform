@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { AdminScreen } from "../component/admin";
-import { features } from "../feature";
+import { defaultFeatureConfig, features } from "../feature";
 import { InstanceContext } from "../organizer/InstanceContext";
 import { structures } from "../structure";
 import { Datastore } from "./datastore";
@@ -18,8 +18,13 @@ export function assembleConfig({structure, activeFeatures}) {
     var config = cloneConfig(structure.defaultConfig);
     const availableFeatures = features[structure.key] ?? [];
 
+    const defaultFeatures = defaultFeatureConfig[structure.key];
+    const mergedActiveFeatures = {...defaultFeatures, ...activeFeatures} 
+
+    console.log('assembleConfig', {structureKey: structure.key, availableFeatures, defaultFeatureConfig, defaultFeatures, activeFeatures, mergedActiveFeatures});
+
     availableFeatures.forEach(feature => {
-        if (activeFeatures[feature.key]) {
+        if (mergedActiveFeatures[feature.key]) {
             Object.keys(config).forEach(key => {
                 const featureParam = feature.config[key];
                 if (Array.isArray(featureParam)) {

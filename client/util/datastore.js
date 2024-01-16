@@ -114,7 +114,7 @@ export class Datastore extends React.Component {
         // this.notifyWatchers();
 
         if (isLive) {
-            addInstanceToMyInstancesAsync({structureKey, instanceKey, dataTree: this.getData()});
+            // addInstanceToMyInstancesAsync({structureKey, instanceKey, dataTree: this.getData()});
             await firebaseWriteAsync(['structure', structureKey, 'instance', instanceKey, 'collection', typeName, key], value);
             await callServerApiAsync({datastore: this, component: 'derivedviews', funcname: 'runTriggers', params: {type: typeName, key}});
         }
@@ -221,20 +221,6 @@ export async function addCurrentUserToInstanceAsync({structureKey, instanceKey, 
         member: isMember
     });
 }
-
-export async function addInstanceToMyInstancesAsync({structureKey, instanceKey, dataTree}) {
-    console.log('addInstanceToMyInstancesAsync', structureKey, instanceKey, dataTree);
-    const firebaseUser = getFirebaseUser();
-    console.log('firebaseUser', firebaseUser);
-    await firebaseWriteAsync(['userInstance', firebaseUser.uid, structureKey, instanceKey], {
-        name: dataTree.name, 
-        language: dataTree.language || null,
-        createTime: dataTree.createTime || Date.now(),
-        updateTime: Date.now()
-    });
-    console.log('wrote');
-}
-
 
 export function useDatastore() {
     return React.useContext(DatastoreContext);
