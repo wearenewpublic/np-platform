@@ -16,9 +16,11 @@ export const SimpleCommentsStructure = {
         commentActions: [ActionReply],
         commentRightActions: [ActionReport, ActionEdit],
         commentEditWidgets: [],
+        commentPostBlockers: [],
         commentInputPlaceholder: 'Share your thoughts...',
         commentReplyPlaceholder: 'Reply to {authorName}...',
         commentInputLoginAction: 'comment',
+        commentPostCheckers: []
     },
     instance: [
         {

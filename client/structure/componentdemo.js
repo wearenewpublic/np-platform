@@ -7,7 +7,7 @@ import { colorBlueBackgound, colorPink, colorTextBlue, colorTextGrey } from "../
 import { BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, PhotoPile, ReactionButton, SubtleButton, Tag, TextButton, Toggle } from "../component/button";
 import { useState } from "react";
 import { expandDataList } from "../util/util";
-import { BasicComments, Comment, CommentsIntro, ComposerScreen } from "../component/comment";
+import { ActionEdit, ActionReply, ActionReport, BasicComments, Comment, CommentsIntro, ComposerScreen } from "../component/comment";
 import { gotoInstance, pushSubscreen } from "../util/navigate";
 import { RichText, wrapLinks } from "../component/richtext";
 import { ConversationScreen, Narrow, Pad, PadBox, Separator, TeaserScreen } from "../component/basics";
@@ -28,7 +28,15 @@ export const ComponentDemoStructure = {
         composer: params => <ComposerScreen {...params} contentType='Public Comment' />,
     },
     defaultConfig: {
-        widgets: [DefaultWidget]
+        widgets: [DefaultWidget],
+        commentActions: [ActionReply],
+        commentRightActions: [ActionReport, ActionEdit],
+        commentEditWidgets: [],
+        commentPostBlockers: [],
+        commentPostCheckers: [],
+        commentInputPlaceholder: 'Share your thoughts...',
+        commentReplyPlaceholder: 'Reply to {authorName}...',
+        commentInputLoginAction: 'comment',
     },
     instance: [
         {key: 'demo', name: 'Demo', comment: expandDataList([

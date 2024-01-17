@@ -1,19 +1,27 @@
+import { LengthLimitFeature } from "./LengthLimitFeature";
+import { SimpleModerationFeature } from "./SimpleModerationFeature";
 import { UpvoteFeature } from "./UpvoteFeature";
 
 const { DemoFeature } = require("./DemoFeature");
 
 export var features = {
     componentdemo: [
-        DemoFeature
+        DemoFeature,
+        LengthLimitFeature,
+        UpvoteFeature,
+        SimpleModerationFeature
     ],
     simplecomments: [
-        UpvoteFeature
+        UpvoteFeature,
+        LengthLimitFeature,
+        SimpleModerationFeature,
     ]
 }
 
 export var defaultFeatureConfig = {
     componentdemo: {
         upvote: true,
+        lengthlimit: true
     },
     simplecomments: {
         upvote: true

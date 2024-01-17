@@ -198,3 +198,7 @@ export function questionToPathPart(question) {
 export function pathPartToQuestion(text) {
   return pathPartToText(text) + '?';
 }
+
+export async function pauseAsync(milliseconds) {
+  await new Promise(resolve => setTimeout(resolve, milliseconds));
+}

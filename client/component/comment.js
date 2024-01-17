@@ -104,32 +104,54 @@ function MaybeCommentReply({commentKey}) {
 
 function EditComment({comment, big=false, setComment, topLevel, onEditingDone, onCancel, min=100, max=1000}) {
     const personaKey = usePersonaKey();
+    const datastore = useDatastore();
     const replyToComment = useObject('comment', comment.replyTo);
     const author = useObject('persona', replyToComment?.from);
-    const {commentReplyPlaceholder, commentInputPlaceholder} = useConfig();
+    const [inProgress, setInProgress] = useState(false);
+    const {commentReplyPlaceholder, commentInputPlaceholder, 
+        commentPostBlockers, commentPostCheckers} = useConfig();
+
+    console.log('EditComment', {commentPostCheckers});
 
     const goodLength = checkValidLength({text: comment.text, min, max});
-    const canPost = comment.text && !comment.blockPost && goodLength;
-    const action = comment.key ? 'Update' : 'Post';
+    const isBlocked = commentPostBlockers.some(blocker => blocker({comment}));
+    const canPost = comment.text && !isBlocked;
+    const action = comment.key ? 
+          (inProgress ? 'Updating...' : 'Update') 
+        : (inProgress ? 'Posting...' : 'Post');
     const placeholder = comment.replyTo ? commentReplyPlaceholder : commentInputPlaceholder;
     
+    async function onPost() {
+        if (commentPostCheckers?.length) {
+            setInProgress(true);
+            const checkResults = await Promise.all(commentPostCheckers.map(checker =>
+                checker({datastore, comment, setComment})
+            ))
+            if (!checkResults.some(x => x)) {
+                onEditingDone();
+            }
+            setInProgress(false);
+        } else {
+            onEditingDone();
+        }
+    }
+
     return <View>
-        {topLevel && <TopBarActionProvider label={action} disabled={!canPost} onPress={onEditingDone} />}
+        {topLevel && <TopBarActionProvider label={action} disabled={!canPost || inProgress} onPress={onPost} />}
 
         <TextField value={comment.text} onChange={text => setComment({...comment, text})} 
             placeholder={placeholder} autoFocus big={big}
             placeholderParams={{authorName: getFirstName(author?.name)}} />
         <Pad size={12} />
-        <CharacterCounter text={comment.text} min={min} max={max} />
-        {!personaKey && comment.text && <PadBox top={20}><CTAButton type='primary' label='Sign in to post' onPress={() => pushSubscreen('login')} /></PadBox>}
+        <EditWidgets comment={comment} setComment={setComment} />
         {personaKey &&
             <PadBox top={20} >
                 <HorizBox center spread>
-                    <EditWidgets comment={comment} setComment={setComment} />
+                    <Pad />
                     {!topLevel && 
                         <HorizBox center right>
                             {onCancel && <PadBox right={20}><TextButton color={colorTextGrey} label='Cancel' onPress={onCancel} /></PadBox>}
-                            <CTAButton label={action} disabled={!canPost} type='primary' onPress={onEditingDone} />
+                            <CTAButton label={action} disabled={!canPost || inProgress} type='primary' onPress={onPost} />
                         </HorizBox>
                     }
                 </HorizBox>                        

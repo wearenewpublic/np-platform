@@ -112,8 +112,8 @@ function FeatureToggle({feature, defaultState=false}) {
         });  
     }
 
-    return <Toggle label={feature.name} value={enabled || false} 
-        onChange={onToggle} />
+    return <View style={{paddingVertical: 2, alignSelf: 'flex-end'}}><Toggle label={feature.name} value={enabled || false} 
+        onChange={onToggle} /></View>
 }
 
 function UserInfo() {
