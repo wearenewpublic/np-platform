@@ -1,5 +1,6 @@
+import { DemoFilterFeature } from "./DemoFilter";
 import { LengthLimitFeature } from "./LengthLimitFeature";
-import { SimpleModerationFeature } from "./SimpleModerationFeature";
+import { DemoModerationFeature } from "./DemoModeration";
 import { UpvoteFeature } from "./UpvoteFeature";
 
 const { DemoFeature } = require("./DemoFeature");
@@ -9,12 +10,13 @@ export var features = {
         DemoFeature,
         LengthLimitFeature,
         UpvoteFeature,
-        SimpleModerationFeature
+        DemoModerationFeature
     ],
     simplecomments: [
         UpvoteFeature,
         LengthLimitFeature,
-        SimpleModerationFeature,
+        DemoModerationFeature,
+        DemoFilterFeature,
     ]
 }
 

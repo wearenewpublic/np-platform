@@ -15,12 +15,16 @@ export const SimpleCommentsStructure = {
     defaultConfig: {
         commentActions: [ActionReply],
         commentRightActions: [ActionReport, ActionEdit],
-        commentEditWidgets: [],
+        commentTopWidgets: [],
+        commentEditBottomWidgets: [],
+        commentEditTopWidgets: [],
         commentPostBlockers: [],
         commentInputPlaceholder: 'Share your thoughts...',
         commentReplyPlaceholder: 'Reply to {authorName}...',
         commentInputLoginAction: 'comment',
-        commentPostCheckers: []
+        commentPostCheckers: [],
+        commentFilters: [],
+        pageTopWidgets: [],
     },
     instance: [
         {

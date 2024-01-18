@@ -31,7 +31,7 @@ export const ComponentDemoStructure = {
         widgets: [DefaultWidget],
         commentActions: [ActionReply],
         commentRightActions: [ActionReport, ActionEdit],
-        commentEditWidgets: [],
+        commentEditBottomWidgets: [],
         commentPostBlockers: [],
         commentPostCheckers: [],
         commentInputPlaceholder: 'Share your thoughts...',

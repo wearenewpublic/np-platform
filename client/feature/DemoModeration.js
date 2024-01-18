@@ -1,12 +1,12 @@
 import { UtilityText } from "../component/text";
 import { pauseAsync } from "../util/util";
 
-export const SimpleModerationFeature = {
-    name: 'Simple Moderation',
-    key: 'simplemoderation',
+export const DemoModerationFeature = {
+    name: 'Demo Moderation',
+    key: 'demomoderation',
     config: {
         commentPostCheckers: [checkPostAsync],
-        commentEditWidgets: [BadWords]
+        commentEditBottomWidgets: [BadWords]
     }
 }
 

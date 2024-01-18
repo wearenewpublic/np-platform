@@ -4,7 +4,7 @@ export const LengthLimitFeature = {
     name: 'Comment Length Limit',
     key: 'lengthlimit',
     config: {
-        commentEditWidgets: [CommentLengthLimit],
+        commentEditBottomWidgets: [CommentLengthLimit],
         commentPostBlockers: [isCommentLengthBlocked]
     }
 }

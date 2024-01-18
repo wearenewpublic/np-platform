@@ -53,6 +53,7 @@ function CommentBody({commentKey}) {
     const editing = useSessionData(['editComment', commentKey]);
     const [editedComment, setEditedComment] = useState(null);
     const datastore = useDatastore();
+    const {commentTopWidgets} = useConfig();
 
     function onEditingDone() {
         setEditedComment(null);
@@ -67,10 +68,13 @@ function CommentBody({commentKey}) {
 
     if (editing) {
         return <EditComment comment={editedComment ?? comment} 
-            setComment={setEditedComment} 
-            onCancel={onCancel} onEditingDone={onEditingDone} />
+                setComment={setEditedComment} 
+                onCancel={onCancel} onEditingDone={onEditingDone} />
     } else {
-        return <Paragraph text={comment.text.trim()} />
+        return <View>
+            {commentTopWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
+            <Paragraph text={comment.text.trim()} />
+        </View>
     }
 }
 
@@ -109,11 +113,10 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
     const author = useObject('persona', replyToComment?.from);
     const [inProgress, setInProgress] = useState(false);
     const {commentReplyPlaceholder, commentInputPlaceholder, 
-        commentPostBlockers, commentPostCheckers} = useConfig();
+        commentPostBlockers, commentPostCheckers,
+        commentEditBottomWidgets, commentEditTopWidgets
+        } = useConfig();
 
-    console.log('EditComment', {commentPostCheckers});
-
-    const goodLength = checkValidLength({text: comment.text, min, max});
     const isBlocked = commentPostBlockers.some(blocker => blocker({comment}));
     const canPost = comment.text && !isBlocked;
     const action = comment.key ? 
@@ -138,12 +141,12 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
 
     return <View>
         {topLevel && <TopBarActionProvider label={action} disabled={!canPost || inProgress} onPress={onPost} />}
-
+        <EditWidgets widgets={commentEditTopWidgets} comment={comment} setComment={setComment} />
         <TextField value={comment.text} onChange={text => setComment({...comment, text})} 
             placeholder={placeholder} autoFocus big={big}
             placeholderParams={{authorName: getFirstName(author?.name)}} />
         <Pad size={12} />
-        <EditWidgets comment={comment} setComment={setComment} />
+        <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} />
         {personaKey &&
             <PadBox top={20} >
                 <HorizBox center spread>
@@ -160,13 +163,12 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
     </View>
 }
 
-function EditWidgets({comment, setComment}) {
-    const {commentEditWidgets} = useConfig();
-    return <HorizBox>
-        {commentEditWidgets.map((Widget, idx) => <View key={idx} style={{marginRight: 12}}>
+function EditWidgets({widgets, comment, setComment}) {
+    return <View>
+        {widgets?.map((Widget, idx) => <View key={idx} style={{marginRight: 12}}>
             <Widget comment={comment} setComment={setComment} />
         </View>)} 
-    </HorizBox>
+    </View>
 }
 
 function CommentReplies({commentKey, depth=1}) {
@@ -325,9 +327,17 @@ export function CommentsIntro() {
     </PadBox>
 }
 
+function filterComments({datastore, comments, commentFilters}) {
+    return comments.filter(comment => 
+        commentFilters.every(filter => filter({datastore, comment}))
+    )
+}
+
 export function BasicComments({config={}, intro=null, about, canPost=true}) {
-    const {commentInputPlaceholder, commentInputLoginAction} = useConfig();
+    const datastore = useDatastore();
+    const {commentInputPlaceholder, commentInputLoginAction, pageTopWidgets, commentFilters} = useConfig();
     const comments = useCollection('comment', {filter: {about, replyTo: null}, sortBy: 'time', reverse: true});
+    const filteredComments = filterComments({datastore, comments, commentFilters});
     return <View>
         {canPost && <Card>
             <PadBox horiz={20}>
@@ -338,7 +348,12 @@ export function BasicComments({config={}, intro=null, about, canPost=true}) {
                 />
             </PadBox>
         </Card>}
-        <CatchList items={comments} renderItem={comment =>
+        <View>
+        {pageTopWidgets.map((Widget,i) => 
+            <Widget key={i} comments={comments} />
+        )}
+        </View>
+        <CatchList items={filteredComments} renderItem={comment =>
             <PadBox top={20} horiz={20}><Comment commentKey={comment.key} /></PadBox>
         } />
     </View>
