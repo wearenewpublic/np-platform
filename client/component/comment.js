@@ -201,10 +201,10 @@ function CommentActions({commentKey, depth}) {
     const {commentActions, commentRightActions} = useConfig();
     return <View style={s.actionBar}>
         <View style={s.mainActions}>
-            {commentActions.map((Action, idx) => <Action key={idx} commentKey={commentKey} depth={depth} />)}
+            {commentActions?.map((Action, idx) => <Action key={idx} commentKey={commentKey} depth={depth} />)}
         </View>
         <View style={s.rightActions}>
-            {commentRightActions.map((Action, idx) => <Action key={idx} commentKey={commentKey} depth={depth} />)}
+            {commentRightActions?.map((Action, idx) => <Action key={idx} commentKey={commentKey} depth={depth} />)}
         </View>
     </View>
 }
@@ -328,9 +328,13 @@ export function CommentsIntro() {
 }
 
 function filterComments({datastore, comments, commentFilters}) {
-    return comments.filter(comment => 
-        commentFilters.every(filter => filter({datastore, comment}))
-    )
+    if (commentFilters) {
+        return comments.filter(comment => 
+            commentFilters.every(filter => filter({datastore, comment}))
+        )
+    } else {
+        return comments;
+    }
 }
 
 export function BasicComments({config={}, intro=null, about, canPost=true}) {
@@ -349,7 +353,7 @@ export function BasicComments({config={}, intro=null, about, canPost=true}) {
             </PadBox>
         </Card>}
         <View>
-        {pageTopWidgets.map((Widget,i) => 
+        {pageTopWidgets?.map((Widget,i) => 
             <Widget key={i} comments={comments} />
         )}
         </View>

@@ -16,6 +16,7 @@ import { ObservableProvider, ObservableValue, useObservable } from "../util/obse
 import { getAvailableFeaturesForStructure } from "../util/features";
 import { callServerApiAsync } from "../util/servercall";
 import { defaultFeatureConfig } from "../feature";
+import { Catcher } from "../component/catcher";
 
 const global_toolbarAction = new ObservableValue(null);
 
@@ -31,15 +32,17 @@ export function TopBar({showPersonas}) {
                 <BreadCrumb icon={IconCloseBig} onPress={closeSidebar} />
             }
         </View>
-        <HorizBox center>
-            {toolbarAction ? 
-                <PadBox right={12}><CTAButton compact label={toolbarAction.label} disabled={toolbarAction.disabled} onPress={toolbarAction.onPress} /></PadBox>
-            : showPersonas ? 
-                <PersonaSelector />
-            : 
-                instanceKey && <UserInfo />
-            }
-        </HorizBox>
+        <Catcher>
+            <HorizBox center>
+                {toolbarAction ? 
+                    <PadBox right={12}><CTAButton compact label={toolbarAction.label} disabled={toolbarAction.disabled} onPress={toolbarAction.onPress} /></PadBox>
+                : showPersonas ? 
+                    <PersonaSelector />
+                : 
+                    instanceKey && <UserInfo />
+                }
+            </HorizBox>
+        </Catcher>
     </View>
 }
 
@@ -82,9 +85,9 @@ const TopBarStyle = StyleSheet.create({
 
 function FeatureToggles() {
     const {structure, structureKey} = useContext(InstanceContext);
-    console.log('structure', structureKey, structure, structure.features)
     const features = getAvailableFeaturesForStructure(structureKey)
-    const defaultFeatures = defaultFeatureConfig[structureKey];
+    const defaultFeatures = defaultFeatureConfig[structureKey] ?? {};
+    console.log('structure', {structureKey, structure, features, defaultFeatures})
     if (!features) return null;
     return <PadBox top={20}>
         <Separator />
@@ -130,7 +133,7 @@ function UserInfo() {
             <TextButton type='small' onPress={() => pushSubscreen('profile')} label='Profile' />
             <Pad />
             <TextButton type='small' onPress={firebaseSignOut} label='Log Out' />
-            <FeatureToggles />
+            <Catcher><FeatureToggles /></Catcher>
             {/* {isAdmin && <FeatureToggles />} */}
         </View>
     }

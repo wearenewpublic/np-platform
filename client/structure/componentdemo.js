@@ -270,8 +270,7 @@ function ComponentDemoScreen() {
                 <CTAButton label='Feature Modules' onPress={() => pushSubscreen('feature')} />
                 <Pad />
                 <Heading label='Structure Demos' />
-                <CTAButton label='Simple Comments' onPress={() => gotoInstance({structureKey: 'simplecomments', instanceKey: 'demo'})} />
-                
+                <CTAButton label='Simple Comments' onPress={() => gotoInstance({structureKey: 'simplecomments', instanceKey: 'demo'})} />                
             </SpacedArray>
         </Narrow>
     </ConversationScreen>
