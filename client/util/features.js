@@ -21,8 +21,6 @@ export function assembleConfig({structure, activeFeatures}) {
     const defaultFeatures = defaultFeatureConfig[structure.key];
     const mergedActiveFeatures = {...defaultFeatures, ...activeFeatures} 
 
-    console.log('assembleConfig', {structureKey: structure.key, availableFeatures, defaultFeatureConfig, defaultFeatures, activeFeatures, mergedActiveFeatures});
-
     availableFeatures.forEach(feature => {
         if (mergedActiveFeatures[feature.key]) {
             Object.keys(config).forEach(key => {

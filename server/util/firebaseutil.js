@@ -34,6 +34,10 @@ async function firebaseUpdateAsync(path, data) {
     return await ref.update(data);
 }
 
+function createNewKey() {
+    return admin.database().ref().push().key;
+}
+
 async function readGlobalAsync({structure, instance, key}) {
     return firebaseReadAsync(['structure', structure, 'instance', instance, 'global', key]);
 }
@@ -103,7 +107,7 @@ module.exports = {firebaseWriteAsync, firebaseReadAsync, firebaseUpdateAsync, st
     readInstanceAsync, setObjectAsync, readMultipleCollectionsAsync, updateCollectionAsync,
     readObjectAsync,
 
-    verifyIdTokenAsync,
+    verifyIdTokenAsync, createNewKey,
 
     setFirebaseAdmin
 };

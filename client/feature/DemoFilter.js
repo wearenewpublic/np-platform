@@ -14,8 +14,6 @@ export const DemoFilterFeature = {
     }
 } 
 
-const categories = ['Fact', 'Experience', 'Proposal', 'Opinion']
-
 function TypeFilter({comments}) {
     const datastore = useDatastore();
     const enabled = useSessionData(['demofilter', 'enabled']);

@@ -7,7 +7,7 @@ import { CTAButton, ExpandButton, IconButton, SubtleButton, TextButton } from ".
 import { IconEdit, IconReply, IconReport, IconUpvote, IconUpvoted } from "./icon";
 import { goBack, pushSubscreen } from "../util/navigate";
 import { StyleSheet, Text, View } from "react-native";
-import { getFirstName } from "../util/util";
+import { deepClone, getFirstName } from "../util/util";
 import { colorDisabledText, colorTextBlue, colorTextGrey } from "./color";
 import { RichText } from "./richtext";
 import { CatchList } from "./catcher";
@@ -55,9 +55,9 @@ function CommentBody({commentKey}) {
     const datastore = useDatastore();
     const {commentTopWidgets} = useConfig();
 
-    function onEditingDone() {
+    function onEditingDone(finalComment) {
         setEditedComment(null);
-        datastore.updateObject('comment', comment.key, {...editedComment, edited: Date.now()});
+        datastore.updateObject('comment', comment.key, {...finalComment, edited: Date.now()});
         datastore.setSessionData(['editComment', comment.key], false);
     }
 
@@ -85,10 +85,10 @@ function MaybeCommentReply({commentKey}) {
     const datastore = useDatastore();
     if (!replyEnabled) return null;
 
-    function onEditingDone() {
+    function onEditingDone(finalComment) {
         datastore.setSessionData(['replyToComment', comment.replyTo], false);
         datastore.setSessionData(['showReplies', comment.replyTo], true);
-        datastore.addObject('comment', comment);
+        datastore.addObject('comment', finalComment);
         setComment({text: '', replyTo: commentKey})
     }
 
@@ -128,10 +128,17 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
         if (commentPostCheckers?.length) {
             setInProgress(true);
             const checkResults = await Promise.all(commentPostCheckers.map(checker =>
-                checker({datastore, comment, setComment})
+                checker({datastore, comment})
             ))
-            if (!checkResults.some(x => x)) {
-                onEditingDone();
+            var finalComment = {...comment};
+            checkResults.forEach(judgement => {
+                finalComment = {...finalComment, ...judgement.commentProps}
+            })
+            console.log('finalComment', finalComment);
+            if (checkResults.every(x => x.allow)) {
+                onEditingDone(finalComment);
+            } else {
+                setComment(finalComment);
             }
             setInProgress(false);
         } else {

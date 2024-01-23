@@ -12,17 +12,15 @@ export const DemoModerationFeature = {
 
 const badwords = 'cat,dog,carrot';
 
-async function checkPostAsync({datastore, comment, setComment}) {
+async function checkPostAsync({datastore, comment}) {
     await pauseAsync(1000);
     const badwordList = badwords.split(',');
     for (let word of badwordList) {
         if (comment.text.includes(word)) {
-            setComment({...comment, badWord: word});
-            return true;
+            return {allow:false, commentProps: {badWord: word}};
         }
     };
-    setComment({...comment, badWord: null});
-    return false;
+    return {allow: true, commentProps: {badWord: null}};
 }
 
 function BadWords({comment}) {
@@ -31,5 +29,4 @@ function BadWords({comment}) {
     } else {
         return <UtilityText label='Your post contains a bad word: {badWord}' formatParams={{badWord: comment.badWord}} />
     }
-
 }
