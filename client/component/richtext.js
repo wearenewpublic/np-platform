@@ -6,11 +6,11 @@ import { colorTextBlue, colorBlack } from './color';
 import { LinkText, Paragraph } from './text';
 import { useTranslation } from './translation';
 
-const baseColer = colorTextBlue;
-
 const urlRegex = /((http:\/\/)|(https:\/\/))?[-a-zA-Z0-9.-]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_+.~#?&//=]*)?/gi;
 
 const markdownLinkRegex = /\[([^\]]+)\]\(([^\)]+)\)/;
+
+const markdownBoldRegex = /\*\*([^\*]+)\*\*/;
 
 function LinkTextLink({url, children, linkColor}) {
   if (Platform.OS != 'web') {
@@ -61,25 +61,37 @@ function RichTextPart({text, color, type='small', linkColor}) {
                 <RichTextPart color={color} type={type} text={after} />
             </Text>
         )
-    } else {
-        const m = text.match(urlRegex);
-        if (m && m.length > 0) {
-            const url = m[0];
-            const linkUrl = removeTrailingPeriod(addPrefixToUrl(url));
-            const start = text.indexOf(url);
-            const before = text.slice(0,start);
-            const after = text.slice(start + url.length);
-            return (
+    }
+    const mUrl = text.match(urlRegex);
+    if (mUrl && mUrl.length > 0) {
+        const url = mUrl[0];
+        const linkUrl = removeTrailingPeriod(addPrefixToUrl(url));
+        const start = text.indexOf(url);
+        const before = text.slice(0,start);
+        const after = text.slice(start + url.length);
+        return (
+        <Text>
+            <Paragraph color={color} type={type} text={before} />
+            <LinkText type={type} url={linkUrl} text={trimUrl(url)} />
+            <RichTextPart color={color} type={type} text={after} />
+        </Text>
+        )
+    } 
+    const mBold = text.match(markdownBoldRegex);
+    if (mBold && mBold.length > 0) {
+        const boldText = mBold[1];
+        const start = text.indexOf(mBold[0]);
+        const before = text.slice(0,start);
+        const after = text.slice(start + mBold[0].length);
+        return (
             <Text>
                 <Paragraph color={color} type={type} text={before} />
-                <LinkText type={type} url={linkUrl} text={trimUrl(url)} />
+                <Paragraph color={color} type={type} text={boldText} strong />
                 <RichTextPart color={color} type={type} text={after} />
             </Text>
-            )
-        } else {
-            return <Paragraph color={color} type={type} text={text} />
-        } 
+        )
     }
+    return <Paragraph color={color} type={type} text={text} />
 }
 
 export function RichText({text, type, color={colorBlack}, label, formatParams}) {

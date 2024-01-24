@@ -1,7 +1,7 @@
 import { StyleSheet, Switch, Text, TextBase, View } from "react-native";
 import { Byline, FacePile, Persona, ProfilePhoto } from "../component/people";
 import { usePersonaKey } from "../util/datastore";
-import { IconAudio, IconChevronDown, IconCircleCheck, IconClose, IconCloseBig, IconComment, IconCommentBig, IconEdit, IconEmoji, IconImage, IconLeftArrow, IconLeftArrowBig, IconReply, IconReport, IconSave, IconUpvote, IconUpvoted, IconVideo } from "../component/icon";
+import { IconAudio, IconChevronDown, IconCircleCheck, IconClose, IconCloseBig, IconComment, IconCommentBig, IconEdit, IconEmoji, IconImage, IconInfo, IconLeftArrow, IconLeftArrowBig, IconReply, IconReport, IconSave, IconUpvote, IconUpvoted, IconVideo } from "../component/icon";
 import { CharacterCounter, ContentHeading, ContentParagraph, Heading, LinkText, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
 import { colorBlueBackgound, colorPink, colorTextBlue, colorTextGrey } from "../component/color";
 import { BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, PhotoPile, ReactionButton, SubtleButton, Tag, TextButton, Toggle } from "../component/button";
@@ -13,6 +13,7 @@ import { RichText, wrapLinks } from "../component/richtext";
 import { ConversationScreen, Narrow, Pad, PadBox, Separator, TeaserScreen } from "../component/basics";
 import { BasicTeaser } from "../component/teaser";
 import { useConfig } from "../util/features";
+import { Banner, TopBanner } from "../component/banner";
 
 export const ComponentDemoStructure = {
     key: 'componentdemo',
@@ -24,6 +25,7 @@ export const ComponentDemoStructure = {
         button: ButtonScreen,
         comment: CommentScreen,
         teaserDemo: TeaserDemoScreen,
+        banner: BannerDemoScreen,
         feature: FeatureScreen,
         composer: params => <ComposerScreen {...params} contentType='Public Comment' />,
     },
@@ -244,6 +246,34 @@ function TeaserDemoScreen() {
     </ConversationScreen>
 }
 
+function BannerDemoScreen() {
+    return <ConversationScreen>
+            <DemoSection label='Top Banner'>
+                <TopBanner rightIcon={<IconInfo />}>
+                    <RichText label='🚧 **Moderation under construction:** We are still tuning auto-moderator triggering' />
+                </TopBanner>
+            </DemoSection>
+            <DemoSection label='Banner'>
+                <Narrow>
+                    <Banner>
+                        <Heading label='This is a warning' />
+                        <Pad size={16} />
+                        <RichText label='This is a **very** important problem'/>
+                    </Banner>
+                </Narrow>
+                <Narrow>
+                    <Banner>
+                        <Tag type='subtle' label='Recommendation' />
+                        <Pad size={16} />
+                        <Heading label='This is a a recommendation' />
+                        <Pad size={16} />
+                        <RichText label='This is a **very** important problem'/>
+                    </Banner>
+                </Narrow>
+            </DemoSection>
+    </ConversationScreen>
+} 
+
 function FeatureScreen() {
     const config = useConfig();
     return <ConversationScreen>
@@ -266,6 +296,7 @@ function ComponentDemoScreen() {
                 <CTAButton label='Profile' onPress={() => pushSubscreen('profile')} />
                 <CTAButton label='Button' onPress={() => pushSubscreen('button')} />
                 <CTAButton label='Comment' onPress={() => pushSubscreen('comment')} />
+                <CTAButton label='Banner' onPress={() => pushSubscreen('banner')} />
                 <CTAButton label='Teaser' onPress={() => pushSubscreen('teaserDemo')} />
                 <CTAButton label='Feature Modules' onPress={() => pushSubscreen('feature')} />
                 <Pad />

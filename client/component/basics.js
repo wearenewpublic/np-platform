@@ -77,7 +77,6 @@ export function ConversationScreen({children, pad=false}) {
 }
 const ConversationScreenStyle = StyleSheet.create({
     scroller: {
-        // backgroundColor: colorBlueBackgound,
         backgroundColor: colorWhite,
         flex: 1,
         overscrollBehavior: 'none'
@@ -86,13 +85,10 @@ const ConversationScreenStyle = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         backgroundColor: colorWhite,
-        // backgroundColor: colorBlueBackgound,
-        paddingTop: 20,
         flex: 1
     },
     screen: {
         maxWidth: 600,
-// h        marginHorizontal: 20,
         flex: 1
     },
 })

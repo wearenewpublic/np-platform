@@ -142,7 +142,7 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
             }
             setInProgress(false);
         } else {
-            onEditingDone();
+            onEditingDone(comment);
         }
     }
 
@@ -305,9 +305,9 @@ export function Composer({about=null, goBackAfterPost=false, topLevel=false, con
     const [comment, setComment] = useState({text: '', about});
     const personaKey = usePersonaKey();
     const datastore = useDatastore();
-    function onEditingDone() {
-        datastore.addObject('comment', comment);
-        console.log('added comment', comment);
+    function onEditingDone(finalComment) {
+        datastore.addObject('comment', finalComment);
+        console.log('added comment', finalComment);
         setComment({text: '', about});
         if (goBackAfterPost) {
             goBack();
@@ -344,7 +344,7 @@ function filterComments({datastore, comments, commentFilters}) {
     }
 }
 
-export function BasicComments({config={}, intro=null, about, canPost=true}) {
+export function BasicComments({about, canPost=true}) {
     const datastore = useDatastore();
     const {commentInputPlaceholder, commentInputLoginAction, pageTopWidgets, commentFilters} = useConfig();
     const comments = useCollection('comment', {filter: {about, replyTo: null}, sortBy: 'time', reverse: true});
@@ -372,10 +372,12 @@ export function BasicComments({config={}, intro=null, about, canPost=true}) {
 
 
 export function ComposerScreen({about, intro=null, contentType}) {
+    const {composerTopBanners} = useConfig();
     return <ConversationScreen>
+        {composerTopBanners?.map((Banner, i) => <Banner key={i} about={about} />)}
         {intro}
         {/* <Pad size={20} /> */}
-        <PadBox horiz={20}>
+        <PadBox horiz={20} top={20}>
             <Composer about={about} goBackAfterPost topLevel contentType={contentType} />
         </PadBox>  
     </ConversationScreen>

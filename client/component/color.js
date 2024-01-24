@@ -31,3 +31,4 @@ export const colorGreen = '#00af87';
 export const colorLightGreen = '#B8EBDC';
 
 export const colorBlueBackgound = '#CDE1FF';
+export const colorPinkBackground = '#FEF7F2';

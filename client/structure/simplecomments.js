@@ -1,8 +1,12 @@
+import React from "react";
 import { ConversationScreen, Pad, PadBox, TeaserScreen } from "../component/basics";
 import { ActionEdit, ActionReply, ActionReport, ActionUpvote, BasicComments, CommentsIntro, ComposerScreen } from "../component/comment";
 import { BasicTeaser } from "../component/teaser";
+import { UtilityText } from "../component/text";
 import { useCollection } from "../util/datastore";
+import { useConfig } from "../util/features";
 import { expandDataList } from "../util/util";
+import { Banner } from "../component/banner";
 
 export const SimpleCommentsStructure = {
     key: 'simplecomments',
@@ -24,7 +28,10 @@ export const SimpleCommentsStructure = {
         commentInputLoginAction: 'comment',
         commentPostCheckers: [],
         commentFilters: [],
+        composerTopBanners: [],
+        topBanners: [],
         pageTopWidgets: [],
+        teaserScreen: null
     },
     instance: [
         {
@@ -40,7 +47,10 @@ export const SimpleCommentsStructure = {
 }
 
 function SimpleCommentsScreen() {
+    const {topBanners} = useConfig();
     return <ConversationScreen>
+        {topBanners?.map((Banner, i) => <Banner key={i} />)}
+        <Pad />
         <CommentsIntro />
         <Pad />
         <BasicComments />
@@ -48,9 +58,11 @@ function SimpleCommentsScreen() {
 }
 
 function CommentTeaserScreen() {
-    const comments = useCollection('comment');    
-    return <TeaserScreen>
-        <BasicTeaser formatParams={{count: comments.length, singular: 'comment', plural: 'comments'}}/>
-    </TeaserScreen>
+    const {teaserScreen} = useConfig();
+    if (teaserScreen) {
+        return React.createElement(teaserScreen);
+    } else {
+        return <Banner><UtilityText label='No teaser screen configured' /></Banner>
+    }
 }
 

@@ -2,6 +2,7 @@ import { DemoFilterFeature } from "./DemoFilter";
 import { LengthLimitFeature } from "./LengthLimitFeature";
 import { DemoModerationFeature } from "./DemoModeration";
 import { UpvoteFeature } from "./UpvoteFeature";
+import { BasicTeaserFeature } from "./BasicTeaserFeature";
 
 const { DemoFeature } = require("./DemoFeature");
 
@@ -17,6 +18,7 @@ export var features = {
         LengthLimitFeature,
         DemoModerationFeature,
         DemoFilterFeature,
+        BasicTeaserFeature
     ]
 }
 

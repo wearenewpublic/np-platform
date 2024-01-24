@@ -45,6 +45,7 @@ const CTAButtonStyle = StyleSheet.create({
     },
     secondary: {
         borderColor: colorGreyBorder,
+        backgroundColor: colorWhite,
     },
     secondaryPressed: {
         backgroundColor: colorSecondaryPress,
@@ -181,7 +182,7 @@ const ExpanderButtonStyle = StyleSheet.create({
     }
 })
 
-export function Tag({label, text, type='emphasized', formatParams, color=null, onPress}) {
+export function Tag({label, text, type='emphasized', formatParams, color=colorWhite, onPress}) {
     const s = TagStyle;
     return <View style={[s.button, type == 'emphasized' && s.emphasized, 
                 color && {borderColor: color, backgroundColor: color}]} 
