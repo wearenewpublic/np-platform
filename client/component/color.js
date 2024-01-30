@@ -29,6 +29,7 @@ export const colorPink = '#FCEBEA';
 export const colorRed = '#F53C19';
 export const colorGreen = '#00af87';
 export const colorLightGreen = '#B8EBDC';
+export const colorPurpleBackground = '#ECECFF';
 
 export const colorBlueBackgound = '#CDE1FF';
 export const colorPinkBackground = '#FEF7F2';

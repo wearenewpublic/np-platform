@@ -103,7 +103,7 @@ export function Byline({type='small', userId, name=null, time, subtitle, underli
             <View style={s.right}>
                 <UtilityText strong text={name ?? persona?.name} />
                 <Pad size={2} />
-                <UtilityText color={colorTextGrey} text={subtitle ?? (formatDate(time) + (edited ? ' • edited' : ''))} underline={underline}/>
+                <UtilityText color={colorTextGrey} text={subtitle ?? (formatDate(time) + (edited ? ' • Edited' : ''))} underline={underline}/>
             </View>
         </View>
     } else {
@@ -111,8 +111,8 @@ export function Byline({type='small', userId, name=null, time, subtitle, underli
             <ProfilePhoto userId={userId} type='small' /> 
             <Pad size={8} />
             <UtilityText strong text={name ?? persona?.name} underline={underline} />
-            <Pad size={6} />
-            {time && <UtilityText color={colorTextGrey} text={formatMiniDate(time) + (edited ? ' • edited' : '')} />}
+            {time && <Pad size={6} />}
+            {time && <UtilityText color={colorTextGrey} text={formatMiniDate(time) + (edited ? ' • Edited' : '')} />}
         </View>
     }
 }

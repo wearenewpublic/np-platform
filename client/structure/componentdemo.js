@@ -1,7 +1,7 @@
 import { StyleSheet, Switch, Text, TextBase, View } from "react-native";
 import { Byline, FacePile, Persona, ProfilePhoto } from "../component/people";
 import { usePersonaKey } from "../util/datastore";
-import { IconAudio, IconChevronDown, IconCircleCheck, IconClose, IconCloseBig, IconComment, IconCommentBig, IconEdit, IconEmoji, IconImage, IconInfo, IconLeftArrow, IconLeftArrowBig, IconReply, IconReport, IconSave, IconUpvote, IconUpvoted, IconVideo } from "../component/icon";
+import { IconAudio, IconChevronDown, IconCircleCheck, IconClose, IconCloseBig, IconComment, IconCommentBig, IconEdit, IconEmoji, IconImage, IconInfo, IconLeftArrow, IconLeftArrowBig, IconList, IconReply, IconReport, IconSave, IconUpvote, IconUpvoted, IconVideo } from "../component/icon";
 import { CharacterCounter, ContentHeading, ContentParagraph, Heading, LinkText, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
 import { colorBlueBackgound, colorPink, colorTextBlue, colorTextGrey } from "../component/color";
 import { BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, PhotoPile, ReactionButton, SubtleButton, Tag, TextButton, Toggle } from "../component/button";
@@ -39,6 +39,7 @@ export const ComponentDemoStructure = {
         commentInputPlaceholder: 'Share your thoughts...',
         commentReplyPlaceholder: 'Reply to {authorName}...',
         commentInputLoginAction: 'comment',
+        noCommentsMessage: 'No answers yet. Be the first to answer!'
     },
     instance: [
         {key: 'demo', name: 'Demo', comment: expandDataList([
@@ -152,6 +153,7 @@ function ButtonScreen() {
                     <IconButton icon={IconVideo} label='Video' />
                     <IconButton icon={IconEmoji} label='Emoji' />
                 </SpacedArray>
+                <IconButton wide icon={IconComment} label='Wide Button' />
             </DemoSection>
             <DemoSection label='Subtle Button'>
                 <SpacedArray horiz>
@@ -161,6 +163,7 @@ function ButtonScreen() {
                     <SubtleButton icon={IconReport} label='Report' />
                     <SubtleButton icon={IconComment} label='{count} {noun}' 
                         formatParams={{singular: 'comment', plural: 'comments', count: 12}} />
+                    <SubtleButton icon={IconList} label='Community Guidelines' color={colorTextBlue} />
                 </SpacedArray>
             </DemoSection>
             <DemoSection label='Text Button'>

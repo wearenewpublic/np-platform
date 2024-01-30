@@ -6,7 +6,7 @@ import { Popup } from "../platform-specific/popup";
 import { useDatastore, useGlobalProperty, usePersonaKey, useSessionData } from "../util/datastore";
 import { useContext, useEffect, useState } from "react";
 import { InstanceContext } from "./InstanceContext";
-import { IconChevronDown, IconClose, IconCloseBig, IconLeftArrowBig, IconSettings } from "../component/icon";
+import { IconChevronDown, IconChevronDownSmall, IconClose, IconCloseBig, IconLeftArrowBig, IconSettings } from "../component/icon";
 import { Byline, FaceImage } from "../component/people";
 import { BreadCrumb, CTAButton, TextButton, Toggle } from "../component/button";
 import { Center, Clickable, HorizBox, Pad, PadBox, Separator } from "../component/basics";
@@ -143,7 +143,8 @@ function UserInfo() {
             <PadBox vert={6} right={20}>
                 <HorizBox center>
                     <Byline userId={personaKey} name={fbUser.displayName} underline={hover} />
-                    <IconChevronDown />
+                    <Pad size={8} />
+                    <IconChevronDownSmall />
                 </HorizBox>
             </PadBox>
         </Popup>

@@ -90,9 +90,9 @@ const CTAButtonStyle = StyleSheet.create({
 })
 
 
-export function IconButton({label, icon=null, onPress}) {
+export function IconButton({label, icon=null, wide=false, onPress}) {
     const s = IconReplyStyle;
-    return <HoverView style={s.button} hoverStyle={s.hover} pressedStyle={s.pressed} onPress={onPress}>
+    return <HoverView style={[s.button, wide ? s.wide : null]} hoverStyle={s.hover} pressedStyle={s.pressed} onPress={onPress}>
         {icon && React.createElement(icon)} 
         {icon && <Pad size={8} />}
         <UtilityText label={label} />
@@ -108,6 +108,10 @@ const IconReplyStyle = StyleSheet.create({
         borderRadius: 100,
         backgroundColor: colorGreyHover
     },
+    wide: {
+        alignSelf: 'stretch',
+        justifyContent: 'center'
+    },  
     hover: {
         backgroundColor: colorGreyBorder,
     },
@@ -131,6 +135,7 @@ export function SubtleButton({label, text, disabled, formatParams, color=colorTe
 const SubtleButtonStyle = StyleSheet.create({
     button: {
         flexDirection: 'row',
+        alignItems: 'center',
     }
 });
 
@@ -281,7 +286,7 @@ export function Toggle({label, value, onChange}) {
     const s = ToggleStyle;
     return <HoverView style={s.outer} hoverStyle={s.hover}
             onPress={() => onChange(!value)}>
-        <UtilityText label={label} type='large' />
+        <UtilityText label={label} />
         <Pad size={12} />
         <View style={value ? s.toggleZoneSelected : s.toggleZone} onPress={() => onChange(!value)}>
             <View style={value ? s.toggleBallSelected : s.toggleBall} />

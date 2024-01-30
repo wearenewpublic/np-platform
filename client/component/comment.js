@@ -8,12 +8,13 @@ import { IconEdit, IconReply, IconReport, IconUpvote, IconUpvoted } from "./icon
 import { goBack, pushSubscreen } from "../util/navigate";
 import { StyleSheet, Text, View } from "react-native";
 import { deepClone, getFirstName } from "../util/util";
-import { colorDisabledText, colorTextBlue, colorTextGrey } from "./color";
+import { colorBlueBackgound, colorDisabledText, colorPurpleBackground, colorTextBlue, colorTextGrey } from "./color";
 import { RichText } from "./richtext";
 import { CatchList } from "./catcher";
 import { TopBarActionProvider } from "../organizer/TopBar";
 import { needsLogin } from "../organizer/Login";
 import { useConfig } from "../util/features";
+import { Banner } from "./banner";
 
 
 export function Comment({commentKey}) {
@@ -344,6 +345,13 @@ function filterComments({datastore, comments, commentFilters}) {
     }
 }
 
+function NoCommentsBanner() {
+    const {noCommentsMessage} = useConfig();
+    return <Banner color={colorPurpleBackground}>
+        <RichText label={noCommentsMessage} />
+    </Banner>
+}
+
 export function BasicComments({about, canPost=true}) {
     const datastore = useDatastore();
     const {commentInputPlaceholder, commentInputLoginAction, pageTopWidgets, commentFilters} = useConfig();
@@ -364,6 +372,7 @@ export function BasicComments({about, canPost=true}) {
             <Widget key={i} comments={comments} />
         )}
         </View>
+        {comments?.length == 0 && <PadBox vert={20} horiz={20}><NoCommentsBanner /></PadBox>}
         <CatchList items={filteredComments} renderItem={comment =>
             <PadBox top={20} horiz={20}><Comment commentKey={comment.key} /></PadBox>
         } />
