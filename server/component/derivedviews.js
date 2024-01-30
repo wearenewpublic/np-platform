@@ -1,4 +1,4 @@
-const { derived_views } = require("../derived-views");
+const { getDerivedViews } = require("../derived-views");
 const { firebaseUpdateAsync, readMultipleCollectionsAsync, readObjectAsync } = require("../util/firebaseutil");
 
 class TriggerDatastore{
@@ -27,7 +27,7 @@ exports.TriggerDatastore = TriggerDatastore;
 
 
 async function runSingleTriggerAsync({view, structureKey, instanceKey, key, value}) {
-    console.log('runSingleTrigger', view);
+    // console.log('runSingleTrigger', view);
     const collections = await readMultipleCollectionsAsync({
         structure: view.input.structure, 
         instance: instanceKey, types: view.input.inputCollections});
@@ -38,6 +38,7 @@ async function runSingleTriggerAsync({view, structureKey, instanceKey, key, valu
 }
 
 async function runDerivedViewTriggersAsync({structureKey, instanceKey, type, key, value}) {
+    const derived_views = getDerivedViews();
     // console.log('Run Triggers Async', {structureKey, type});    
     // console.log('all triggers', derived_views);
     const triggers = derived_views.filter(dv => dv.input.structure === structureKey && dv.input.triggerType === type);
