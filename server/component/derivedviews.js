@@ -33,7 +33,7 @@ async function runSingleTriggerAsync({view, structureKey, instanceKey, key, valu
         instance: instanceKey, types: view.input.inputCollections});
     // console.log('collections', collections);
     const datastore = new TriggerDatastore(collections);
-    view.trigger({structureKey, instanceKey, key, value, datastore});
+    await view.trigger({structureKey, instanceKey, key, value, datastore});
     await datastore.commitDataAsync();
 }
 

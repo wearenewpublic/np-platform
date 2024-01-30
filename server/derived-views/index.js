@@ -1,7 +1,8 @@
-const { readMultipleCollectionsAsync } = require('../util/firebaseutil');
-const {ArticleQuestionsAnswerSummary} = require('./articlequestions');
-
-const derived_views = [
-    ArticleQuestionsAnswerSummary,
-]
+var derived_views = []
 exports.derived_views = derived_views;
+
+function addDerivedViews(newViews) {
+    derived_views = [...derived_views, ...newViews];
+}
+exports.addDerivedViews = addDerivedViews;
+

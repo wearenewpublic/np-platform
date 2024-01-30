@@ -5,8 +5,6 @@ const fs = require('fs');
 const { verifyIdTokenAsync } = require('./firebaseutil');
 const cors = require('cors')({origin: true})
 
-console.log('NP server API system');
-
 function handleApiRequest(req, res, components) {
     const contentType = req.headers['content-type'] || '';
 
@@ -97,10 +95,8 @@ async function getValidatedUser(req) {
 
 
 async function callApiFunctionAsync(request, fields, components) {
-    console.log('callApiFunctionAsync', request.path, fields);
+    console.log('callApiFunctionAsync', request.path);
     const {componentId, apiId} = parsePath(request.path);
-
-    console.log('components', components);
 
     const component = components[componentId];
     const apiFunction = component?.apiFunctions?.[apiId];
@@ -108,8 +104,6 @@ async function callApiFunctionAsync(request, fields, components) {
     const userId = user?.uid ?? null;
     const userEmail = user?.email ?? null;
     const params = {...request.query, ...fields, userId, userEmail};
-
-    console.log('setup', {userId, componentId, apiId});
 
     if (userId == 'error') {
         return ({statusCode: 500, result: JSON.stringify({success: false, error: 'Error validating user'})});
