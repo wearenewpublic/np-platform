@@ -132,7 +132,7 @@ function UserInfo() {
             {isAdmin && <PadBox bottom={20}><TextButton type='small' onPress={() => pushSubscreen('admin')} label='Admin Tools' /></PadBox>}
             <TextButton type='small' onPress={() => pushSubscreen('profile')} label='Profile' />
             <Pad />
-            <TextButton type='small' onPress={firebaseSignOut} label='Log Out' />
+            <TextButton type='small' onPress={firebaseSignOut} label='Log out' />
             <Catcher><FeatureToggles /></Catcher>
             {/* {isAdmin && <FeatureToggles />} */}
         </View>

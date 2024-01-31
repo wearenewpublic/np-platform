@@ -259,7 +259,7 @@ export function usePersonaKey() {
 
 export function usePersona() {
     const personaKey = usePersonaKey();
-    return useObject('persona', personaKey);
+    return usePersonaObject('persona', personaKey);
 }
 
 export function usePersonaObject(key) {

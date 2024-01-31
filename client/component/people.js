@@ -10,7 +10,7 @@ import { formatDate, formatMiniDate } from "./date";
 import { colorTextGrey, colorWhite } from "./color";
 
 
-export function ProfilePhoto({userId, type='large', faint=false, check=false, border=false}) {
+export function ProfilePhoto({userId, type='large', photo=null, faint=false, check=false, border=false}) {
     const persona = useObject('persona', userId);
 
 
@@ -20,14 +20,14 @@ export function ProfilePhoto({userId, type='large', faint=false, check=false, bo
     if (meKey == userId && instance.isLive) {
         const fbUser = getFirebaseUser();
         if (fbUser) {
-            return <FaceImage photoUrl={fbUser.photoURL} type={type} faint={faint} 
+            return <FaceImage photoUrl={photo ?? fbUser.photoURL} type={type} faint={faint} 
                 border={border} check={check} />
         } else {
             return <AnonymousFace faint={faint} type={type} border={border} />
         }
     } else {
         const face = persona?.face;
-        return <FaceImage face={face} photoUrl={persona?.photoUrl} type={type} 
+        return <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} 
             border={border} faint={faint} check={check} />
     }
 }
@@ -94,12 +94,12 @@ const FacePileStyle = StyleSheet.create({
 
 
 
-export function Byline({type='small', userId, name=null, time, subtitle, underline=false, edited=false}) {
+export function Byline({type='small', userId, name=null, photo=null, time, subtitle, underline=false, edited=false}) {
     const s = BylineStyle
     const persona = usePersonaObject(userId);
     if (type == 'large') {
         return <View style={s.outer}>
-            <ProfilePhoto userId={userId} type='large' /> 
+            <ProfilePhoto userId={userId} photo={photo} type='large' /> 
             <View style={s.right}>
                 <UtilityText strong text={name ?? persona?.name} />
                 <Pad size={2} />
@@ -108,7 +108,7 @@ export function Byline({type='small', userId, name=null, time, subtitle, underli
         </View>
     } else {
         return <View style={s.smallOuter}>
-            <ProfilePhoto userId={userId} type='small' /> 
+            <ProfilePhoto userId={userId} photo={photo} type='small' /> 
             <Pad size={8} />
             <UtilityText strong text={name ?? persona?.name} underline={underline} />
             {time && <Pad size={6} />}

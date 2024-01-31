@@ -5,6 +5,10 @@ function setFirebaseAdmin(newAdmin) {
     admin = newAdmin;
 }
 
+function getFirebaseAdmin() {
+    return admin;
+}
+
 function verifyIdTokenAsync(token) {
     return admin.auth().verifyIdToken(token);
 }
@@ -32,6 +36,11 @@ async function firebaseReadAsync(path) {
 async function firebaseUpdateAsync(path, data) {
     const ref = admin.database().ref(expandPath(path));
     return await ref.update(data);
+}
+
+async function firebaseGetUserAsync(userId) {
+    console.log('getUserAsync2', userId, admin, admin?.auth());
+    return await admin.auth().getUser(userId);
 }
 
 function createNewKey() {
@@ -107,9 +116,9 @@ module.exports = {firebaseWriteAsync, firebaseReadAsync, firebaseUpdateAsync, st
     readInstanceAsync, setObjectAsync, readMultipleCollectionsAsync, updateCollectionAsync,
     readObjectAsync,
 
-    verifyIdTokenAsync, createNewKey,
+    verifyIdTokenAsync, createNewKey, firebaseGetUserAsync,
 
-    setFirebaseAdmin
+    setFirebaseAdmin, getFirebaseAdmin
 };
 
 
