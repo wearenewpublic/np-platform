@@ -20,7 +20,9 @@ import { Banner } from "./banner";
 export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
+    const {commentAboveWidgets} = useConfig();
     return <Card>
+        {commentAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
         <Byline type='large' userId={comment.from} time={comment.time} edited={comment.edited} />
         <Pad size={20} />
         <CommentBody commentKey={commentKey} />

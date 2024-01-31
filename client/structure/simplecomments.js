@@ -20,6 +20,7 @@ export const SimpleCommentsStructure = {
         commentActions: [ActionReply],
         commentRightActions: [ActionReport, ActionEdit],
         commentTopWidgets: [],
+        commentAboveWidgets: [],
         commentEditBottomWidgets: [],
         commentEditTopWidgets: [],
         commentPostBlockers: [],

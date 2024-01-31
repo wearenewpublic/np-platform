@@ -187,7 +187,7 @@ const ExpanderButtonStyle = StyleSheet.create({
     }
 })
 
-export function Tag({label, text, type='emphasized', formatParams, color=colorWhite, onPress}) {
+export function Tag({label, text, type='emphasized', formatParams, color=null, onPress}) {
     const s = TagStyle;
     return <View style={[s.button, type == 'emphasized' && s.emphasized, 
                 color && {borderColor: color, backgroundColor: color}]} 
@@ -202,6 +202,7 @@ const TagStyle = StyleSheet.create({
         paddingVertical: 6,
         borderWidth: 1,
         borderRadius: 4,
+        // borderColor: 'red',
         borderColor: colorGreyBorder
     },
     emphasized: {
