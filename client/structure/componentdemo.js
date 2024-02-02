@@ -41,13 +41,13 @@ export const ComponentDemoStructure = {
         commentInputLoginAction: 'comment',
         noCommentsMessage: 'No answers yet. Be the first to answer!'
     },
-    instance: [
-        {key: 'demo', name: 'Demo', comment: expandDataList([
-            {key: 'a', from: 'd', text: 'This is a comment'},
-            {key: 'b', from: 'b', replyTo: 'a', text: 'This is a reply'},
-            {key: 'c', from: 'c', replyTo: 'a', text: 'This is another reply. This reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\n '}
-        ])}
-    ]
+    // instance: [
+    //     {key: 'test', name: 'Test', comment: expandDataList([
+    //         {key: 'a', from: 'd', text: 'This is a comment'},
+    //         {key: 'b', from: 'b', replyTo: 'a', text: 'This is a reply'},
+    //         {key: 'c', from: 'c', replyTo: 'a', text: 'This is another reply. This reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\nThis reply contains a lot of text so that it tests the challenge of a comment being too long.\n '}
+    //     ])}
+    // ]
 }
 
 function DefaultWidget() {

@@ -21,7 +21,7 @@ export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
     const {commentAboveWidgets} = useConfig();
-    return <Card>
+    return <Card testID={commentKey}>
         {commentAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
         <Byline type='large' userId={comment.from} time={comment.time} edited={comment.edited} />
         <Pad size={20} />
@@ -308,9 +308,9 @@ export function Composer({about=null, goBackAfterPost=false, topLevel=false, con
     const [comment, setComment] = useState({text: '', about});
     const personaKey = usePersonaKey();
     const datastore = useDatastore();
+
     function onEditingDone(finalComment) {
         datastore.addObject('comment', finalComment);
-        console.log('added comment', finalComment);
         setComment({text: '', about});
         if (goBackAfterPost) {
             goBack();

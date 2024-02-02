@@ -21,7 +21,7 @@ export function CTAButton({label, image, type='primary', disabled, compact=false
     const {normal, hover, pressed} = styleMap[disabled ? 'disabled' : type] ?? styleMap.primary;
     const textColor = disabled ? colorDisabledText : type == 'secondary' ? colorBlack : colorWhite;
     
-    return <HoverView disabled={disabled}
+    return <HoverView disabled={disabled} role='button'
             style={[compact ? s.compactButton : s.button, normal]} hoverStyle={[s.hover, hover]} 
             pressedStyle={pressed} onPress={onPress} >
         {image && <PadBox right={8}>{image}</PadBox>}
@@ -92,7 +92,8 @@ const CTAButtonStyle = StyleSheet.create({
 
 export function IconButton({label, icon=null, wide=false, onPress}) {
     const s = IconReplyStyle;
-    return <HoverView style={[s.button, wide ? s.wide : null]} hoverStyle={s.hover} pressedStyle={s.pressed} onPress={onPress}>
+    return <HoverView style={[s.button, wide ? s.wide : null]} hoverStyle={s.hover} 
+            pressedStyle={s.pressed} onPress={onPress} role='button'>
         {icon && React.createElement(icon)} 
         {icon && <Pad size={8} />}
         <UtilityText label={label} />
@@ -124,7 +125,7 @@ export function SubtleButton({label, text, disabled, formatParams, color=colorTe
     const s = SubtleButtonStyle;
     const [hover, setHover] = useState(false);
     return <HoverView style={[s.button, padRight && {marginRight: 20}]} 
-            disabled={disabled}
+            disabled={disabled} role={!disabled ? 'button' : null}
             onPress={onPress} setHover={setHover}>
         {React.createElement(icon, {color})}
         {(label || text) && <Pad size={4} />}
@@ -143,7 +144,7 @@ const SubtleButtonStyle = StyleSheet.create({
 export function TextButton({label, text, type='large', paragraph=false, underline, strong, formatParams, leftIcon, rightIcon, color=colorBlack, onPress}) {
     const s = TextButtonStyle;
     const [hover, setHover] = useState(false);
-    return <HoverView shrink style={s.button} setHover={setHover} onPress={onPress} >
+    return <HoverView shrink style={s.button} setHover={setHover} onPress={onPress} role='button'>
         {leftIcon && React.createElement(leftIcon, {color})}
         {leftIcon && <Pad size={8} />}        
         {paragraph ? 
@@ -169,7 +170,8 @@ export function ExpandButton({userList, photoUrlList, label, text, type='tiny', 
     const s = ExpanderButtonStyle;
     const [hover, setHover] = useState(false);
 
-    return <HoverView style={s.button} setHover={setHover} onPress={() => setExpanded(!expanded)}>        
+    return <HoverView style={s.button} setHover={setHover} role='button'
+            onPress={() => setExpanded(!expanded)}>        
         {userList && <FacePile type={type} userIdList={userList} />}
         {photoUrlList && <PhotoPile photoUrlList={photoUrlList} />}
         {(userList || photoUrlList) && <Pad size={4} />}
@@ -213,8 +215,10 @@ const TagStyle = StyleSheet.create({
 export function ReactionButton({label, count, selected}){
     const s = ReactionButtonStyle;
     const [pressed, setPressed] = useState(false);
-    return <HoverView style={[s.button, selected && s.pressed]} hoverStyle={s.hover} pressedStyle={s.pressed} setPressed={setPressed}>
-        <UtilityText label={label} type='tiny' strong color={(pressed || selected) ? colorTextBlue : colorBlack} />
+    return <HoverView style={[s.button, selected && s.pressed]} hoverStyle={s.hover} 
+            pressedStyle={s.pressed} setPressed={setPressed} role='button'>
+        <UtilityText label={label} type='tiny' strong 
+            color={(pressed || selected) ? colorTextBlue : colorBlack} />
         <Pad size={8} />
         <UtilityText text={count} type='tiny' strong color={colorRed} />
     </HoverView>
@@ -286,7 +290,7 @@ const DropDownSelectorStyle = StyleSheet.create({
 export function Toggle({label, value, onChange}) {
     const s = ToggleStyle;
     return <HoverView style={s.outer} hoverStyle={s.hover}
-            onPress={() => onChange(!value)}>
+            onPress={() => onChange(!value)} role='checkbox'>
         <UtilityText label={label} />
         <Pad size={12} />
         <View style={value ? s.toggleZoneSelected : s.toggleZone} onPress={() => onChange(!value)}>
@@ -308,10 +312,11 @@ const ToggleStyle = StyleSheet.create({
         transition: 'background-color 0.2s ease-in-out'
     },
     toggleBall: {
-        shadowOffset: { width: 2, height: 0 },
-        shadowOpacity: 0.50,
-        shadowRadius: 10,
-        shadowColor: 'rgba(0, 0, 0, 0.30)',
+        boxShadow: '2px 0px 10px rgba(0, 0, 0, 0.30)',
+        // shadowOffset: { width: 2, height: 0 },
+        // shadowOpacity: 0.50,
+        // shadowRadius: 10,
+        // shadowColor: 'rgba(0, 0, 0, 0.30)',
         elevation: 5,  // for Android,
         position: 'absolute',
         left: 2,

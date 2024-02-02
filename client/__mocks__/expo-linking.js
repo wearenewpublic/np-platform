@@ -1,0 +1,4 @@
+
+exports.openURL = jest.fn();
+
+

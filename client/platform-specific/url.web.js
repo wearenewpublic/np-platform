@@ -4,8 +4,11 @@ export function historyPushState({state, url}) {
 }
 
 export function historyReplaceState({state, url}) {
-    console.log('historyReplaceState', {state, url});
     history.replaceState(state, '', url);
+}
+
+export function historyGetState() {
+    return history.state;
 }
  
 

@@ -9,13 +9,14 @@ export function Pad({size=20}) {
     return <View style={{height: size, width: size}}/>
 }
 
-export function HoverView({style, hoverStyle, pressedStyle, children, disabled=false, onPress, shrink, setHover=()=>{}, setPressed=()=>{}}) {
+export function HoverView({style, role, hoverStyle, pressedStyle, children, disabled=false, onPress, shrink, setHover=()=>{}, setPressed=()=>{}}) {
     const [localHover, setLocalHover] = useState(false);
     const [localPressed, setLocalPressed] = useState(false);
     if (disabled) {
         return <View style={style}>{children}</View>
     }
     return <Pressable
+        role={role}
         style={[style, localHover ? hoverStyle : null, localPressed ? pressedStyle : null, shrink ? {flexShrink: 1} : null]}
         onPressIn={() => {setLocalPressed(true); setPressed(true)}}
         onPressOut={() => {setLocalPressed(false); setPressed(false)}}
@@ -27,9 +28,9 @@ export function HoverView({style, hoverStyle, pressedStyle, children, disabled=f
     </Pressable>
 }
 
-export function Card({children}) {
+export function Card({testID, children}) {
     const s = CardStyle;
-    return <View style={s.card}>
+    return <View style={s.card} testID={testID}>
         {children}
     </View>
 }

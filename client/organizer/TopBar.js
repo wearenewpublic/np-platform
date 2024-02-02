@@ -17,6 +17,7 @@ import { getAvailableFeaturesForStructure } from "../util/features";
 import { callServerApiAsync } from "../util/servercall";
 import { defaultFeatureConfig } from "../feature";
 import { Catcher } from "../component/catcher";
+import { historyGetState } from "../platform-specific/url";
 
 const global_toolbarAction = new ObservableValue(null);
 
@@ -26,7 +27,7 @@ export function TopBar({showPersonas}) {
     const toolbarAction = useObservable(global_toolbarAction);
     return <View style={s.topBox}>        
         <View style={s.leftRow}>    
-            {history.state ? 
+            {historyGetState() ? 
                 <BreadCrumb icon={IconLeftArrowBig} onPress={goBack} />
             : 
                 <BreadCrumb icon={IconCloseBig} onPress={closeSidebar} />
