@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, signInWithEmailAndPassword, onAuthStateChanged, connectAuthEmulator } from 'firebase/auth';
 import { connectDatabaseEmulator, getDatabase, onValue, push, ref, set } from "firebase/database";
 import { useEffect, useState } from 'react';
 
@@ -18,8 +18,9 @@ const auth = getAuth(app);
 const database = getDatabase(app);
 
 if (window.location.hostname === "localhost") {
-    console.log('Using local database emulator');
+    console.log('Using local database and auth emulator');
     connectDatabaseEmulator(database, "localhost", 9000);
+    connectAuthEmulator(auth, "http://localhost:9099");
 }
 
 var global_firebaseUser = null;
