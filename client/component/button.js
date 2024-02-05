@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { colorAccent, colorAccentHover, colorAccentPress, colorBlack, colorBlackHover, colorDisabledBackground, colorDisabledText, colorGreen, colorGreyBorder, colorGreyHover, colorGreyPopupBackground, colorIconButtonPress, colorLightGreen, colorNearBlack, colorPrimaryPress, colorRed, colorSecondaryPress, colorTextBlue, colorTextGrey, colorWhite } from "./color";
 import { Paragraph, UtilityText } from "./text";
-import { HoverView, Clickable, Pad, PadBox } from "./basics";
+import { HoverView, Pad, PadBox } from "./basics";
 import { IconChevronDown, IconChevronUpSmall, IconChevronUp, IconCircleCheck, IconSwitchOff, IconSwitchOn, IconChevronDownSmall } from "./icon";
 import { FacePile } from "./people";
 import { Popup } from "../platform-specific/popup";
+import { closeActivePopup } from "../platform-specific/popup";
 
 
 
@@ -242,13 +243,6 @@ const ReactionButtonStyle = StyleSheet.create({
     }
 })
 
-export function ClickableText({type, text, label, formatParams, onPress}) {
-    const [hover, setHover] = useState(false);
-    return <Clickable onPress={onPress} onHoverChange={setHover}>
-        <UtilityText type={type} text={text} label={label} underline={hover} formatParams={formatParams} />
-    </Clickable>
-}
-
 export function DropDownSelector({label, options, value, onChange=()=>{}}) {
     const s = DropDownSelectorStyle;
     const [hover, setHover] = useState(false);
@@ -258,7 +252,7 @@ export function DropDownSelector({label, options, value, onChange=()=>{}}) {
         return <View >
             {options.map((o, i) => <View key={i}>
                 {i != 0 && <Pad size={20} />}
-                <ClickableText label={o.label} type='tiny' onPress={() => {console.log('o',o.key); onChange(o.key)}} />
+                <TextButton label={o.label} type='tiny' onPress={() => {onChange(o.key); closeActivePopup()}} />
             </View>)}
         </View>
     }

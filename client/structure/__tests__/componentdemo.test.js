@@ -1,8 +1,16 @@
 const { TestInstance } = require("../../util/testutil")
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { pushSubscreen } from '../../util/navigate';
+
+jest.mock("../../util/navigate");
 
 test('Menu', async () => {
     render(<TestInstance structureKey='componentdemo' />);
+    fireEvent.click(screen.getByRole('button', {name: 'Text'}));
+    fireEvent.click(screen.getByRole('button', {name: 'Profile'}));
+
+    expect(pushSubscreen).toHaveBeenCalledWith('text');
+    expect(pushSubscreen).toHaveBeenNthCalledWith(2, 'profile');
 });
 
 test('Text', async () => {

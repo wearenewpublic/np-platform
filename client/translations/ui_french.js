@@ -1,5 +1,13 @@
 
 export var ui_translations_french = {
+    '{count} {noun}': '{count} {noun}',
+    '{count} {noun} {isAre} here': '{count} {noun} {isAre} ici',
+    'Hello {name}': 'Bonjour {name}',
+    'comment': 'commentaire',
+    'comments': 'commentaires',
+    'person': 'personne',
+    'people': 'personnes',
+    'is': 'est',
     'Like': "J'aime",
     'Unlike': "Je n'aime pas",
     'Reply': 'Répondre',

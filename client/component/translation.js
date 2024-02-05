@@ -14,13 +14,19 @@ const ui_translations_for_language = {
     French: translations.french
 }
 
-export function translateLabel({label, language, formatParams}) {
+export function translateLabel({label, language, formatParams={}}) {
     var extra = {};
     if (formatParams?.singular && formatParams?.plural) {
         if (formatParams.count == 1) {
-            extra = {noun: translateLabel({label: formatParams.singular, language}), isAre: 'is'}
+            extra = {
+                noun: translateLabel({label: formatParams.singular, language}), 
+                isAre: translateLabel({label: 'is', language})
+            }
         } else {
-            extra = {noun: translateLabel({label: formatParams.plural, language}), isAre: 'are'}
+            extra = {
+                noun: translateLabel({label: formatParams.plural, language}), 
+                isAre: translateLabel({label: 'are', language})
+            }
         }
     }
     const translations = ui_translations_for_language[language];
@@ -33,14 +39,6 @@ export function translateLabel({label, language, formatParams}) {
         translatedText = formatString(translatedText || label, {...formatParams, ...extra});
     }
     return translatedText || label;
-}
-
-export function translatePlural({singular, plural, language, count}) {
-    if (count == 1) {
-        return count + ' ' + translateLabel({label: singular, language});
-    } else {
-        return count + ' ' + translateLabel({label: plural, language});
-    }
 }
 
 export function useLanguage() {
@@ -60,17 +58,6 @@ export function useTranslation(label, formatParams) {
     const language = useLanguage();
     if (label == null) return null;
     return translateLabel({label, language, formatParams});
-}
-
-export function TranslatableLabel({label, formatParams, style, ...props}) {
-    try {
-        const translatedLabel = useTranslation(label, formatParams);
-        return <Text style={style} {...props}>{translatedLabel || label}</Text>
-    } catch (e) {
-        console.log('Error translating ' + label, e);
-        throw Error('Error translating ' + label + ': ' + e);
-        // return <Text style={style} {...props}>{label}</Text>
-    }
 }
 
 export function TranslatableText({text, label, formatParams, style, ...props}) {

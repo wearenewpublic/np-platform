@@ -137,7 +137,7 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
             checkResults.forEach(judgement => {
                 finalComment = {...finalComment, ...judgement.commentProps}
             })
-            console.log('finalComment', finalComment);
+            // console.log('finalComment', finalComment);
             if (checkResults.every(x => x.allow)) {
                 onEditingDone(finalComment);
             } else {

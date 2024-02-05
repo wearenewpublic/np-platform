@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Entypo, FontAwesome } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Clickable, Pad, PrimaryButton, StatusButtonlikeMessage } from "../component/basics";
+import { PrimaryButton, StatusButtonlikeMessage } from "../component/basics";
 import { InstanceContext } from "../organizer/InstanceContext";
 import { makeStorageUrl, useDatastore, usePersonaKey } from "../util/datastore";
 import { callServerMultipartApiAsync } from "../util/servercall";

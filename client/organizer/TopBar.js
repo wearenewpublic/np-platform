@@ -9,7 +9,7 @@ import { InstanceContext } from "./InstanceContext";
 import { IconChevronDown, IconChevronDownSmall, IconClose, IconCloseBig, IconLeftArrowBig, IconSettings } from "../component/icon";
 import { Byline, FaceImage } from "../component/people";
 import { BreadCrumb, CTAButton, TextButton, Toggle } from "../component/button";
-import { Center, Clickable, HorizBox, Pad, PadBox, Separator } from "../component/basics";
+import { HorizBox, Pad, PadBox, Separator } from "../component/basics";
 import { emailIsAdmin } from "../util/config";
 import { colorGreyHover, colorGreyPopupBackground, colorTextGrey } from "../component/color";
 import { ObservableProvider, ObservableValue, useObservable } from "../util/observable";

@@ -1,4 +1,4 @@
-import { addKey, collapseDoubleSpaces, isNonEmpty, removeKey, removeNullProperties, stripSuffix } from "../util";
+import { addKey, boolToString, forEachAsync, isNonEmpty, removeKey, removeNullProperties, stringToBool, stripSuffix } from "../util";
 
 jest.mock('../firebase');
 
@@ -30,3 +30,25 @@ test('stripSuffix', () => {
     expect(stripSuffix('hello.txt', '.jpg')).toBe('hello.txt');
 });
 
+test('forEachAsync', async () => {
+    const array = [1, 2, 3];
+    let result = [];
+    await forEachAsync(array, async (item, index, array) => {
+        result.push(item);
+    });
+    expect(result).toEqual(array);
+})
+
+test('boolToString', () => {
+    expect(boolToString(true)).toBe('true');
+    expect(boolToString(false)).toBe('false');
+    expect(boolToString(null)).toBe('false');
+})
+
+test('stringToBool', () => {
+    expect(stringToBool('true')).toBe(true);
+    expect(stringToBool('false')).toBe(false);
+    expect(stringToBool(null)).toBe(false);
+})
+
+    

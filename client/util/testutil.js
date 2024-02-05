@@ -2,11 +2,7 @@ import { InstanceContext } from '../organizer/InstanceContext';
 import { StackedScreen, getStructureForKey } from './instance';
 import { SharedData, SharedDataContext } from './shareddata';
 import { Datastore } from './datastore';
-import { render, screen } from '@testing-library/react';
 import { ConfigContext, assembleConfig } from './features';
-
-jest.mock('./firebase');
-// jest.mock('@expo-google-fonts/ibm-plex-mono', () => ({}));
 
 var global_sharedData = new SharedData();
 
@@ -86,3 +82,15 @@ export function addObject(type, data) {
         }
     });
 }
+
+export function setGlobal(key, value) {
+    global_sharedData.setData({
+        ...global_sharedData.data,
+        [key]: value
+    });
+}
+
+export function setFeatures(features) {
+    setGlobal('features', features);
+}
+

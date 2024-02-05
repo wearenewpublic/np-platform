@@ -18,7 +18,7 @@ export const DemoModerationFeature = {
 const badwords = 'cat,dog,carrot';
 
 async function checkPostAsync({datastore, comment}) {
-    await pauseAsync(1000);
+    // await pauseAsync(1000);
     const badwordList = badwords.split(',');
     for (let word of badwordList) {
         if (comment.text?.toLowerCase()?.includes(word)) {
@@ -39,7 +39,7 @@ function BadWords({comment}) {
 }
 
 function DemoBanner() {
-    return <TopBanner rightIcon={IconInfo}>
+    return <TopBanner >
         <RichText label='This moderation demo blocks the words **cat**, **dog**, and **carrot**.' />
     </TopBanner>
 }

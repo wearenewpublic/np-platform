@@ -1,5 +1,13 @@
 
 export var ui_translations_german = {
+    '{count} {noun}': '{count} {noun}',
+    '{count} {noun} {isAre} here': '{count} {noun} {isAre} hier',
+    'Hello {name}': 'Hallo {name}',
+    'comments': 'Kommentare',
+    'comment': 'Kommentar',
+    'people': 'Personen',
+    'person': 'Person',
+    'is': 'ist',
     'Like': 'Gefällt mir',
     'Unlike': 'Gefällt mir nicht',
     'Reply': 'Antworten',

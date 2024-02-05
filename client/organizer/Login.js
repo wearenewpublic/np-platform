@@ -1,7 +1,7 @@
 import React from 'react';
 import { GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, auth, getFirebaseUser } from '../util/firebase';
 import { goBack, pushSubscreen } from '../util/navigate';
-import { Center, Clickable, Pad, PadBox } from '../component/basics';
+import { Pad, PadBox } from '../component/basics';
 import { Image, View } from 'react-native';
 import { usePersonaKey } from '../util/datastore';
 import { Heading } from '../component/text';
@@ -28,14 +28,12 @@ export function LoginScreen({action}) {
         <Pad/>
         <RichText color={colorTextGrey} label='By continuing, you agree to our [community guidelines](https://example.com) and [Privacy Policy](https://example.com).' />
         <Pad size={40} />
-        <CTAButton image={
-            <Image 
-                source={{uri: expandUrl({url: 'google.png', type: 'images'})}} 
-                style={{width: 20, height: 20}} />} 
-                type='secondary' label='Continue with Google' onPress={handleGoogleSignIn} />
-        {/* <Clickable onPress={handleGoogleSignIn}>
-            <Image source={require('../assets/google_signin.png')} style={{width: 200, height: 50}} />
-        </Clickable> */}
+        <CTAButton 
+            image={
+                <Image source={{uri: expandUrl({url: 'google.png', type: 'images'})}} 
+                    style={{width: 20, height: 20}} />
+            } 
+            type='secondary' label='Continue with Google' onPress={handleGoogleSignIn} />
     </PadBox>
   );
 };

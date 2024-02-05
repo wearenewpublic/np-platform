@@ -48,32 +48,12 @@ export function removeNullProperties(obj) {
   return clone;
 }
 
-export function getHuesForNamedList(list) {
-    const hues = {};
-    list.forEach((item, index) => {
-        hues[item.name] = (index / list.length) * 360;
-    });
-    return hues;
-}
-
 export function stripSuffix(str, suffix) {
     if (str.endsWith(suffix)) {
         return str.substring(0, str.length - suffix.length);
     } else {
         return str;
     }
-}
-
-export function stripSingleLineBreaks(text) {
-    let result = text.replace(/\n\n/g, '<DOUBLE_LINE_BREAK>');
-    result = result.replace(/\n/g, ' ');
-    result = result.replace(/<DOUBLE_LINE_BREAK>/g, '\n\n');
-    return result;
-}
-
-export function collapseDoubleSpaces(text) {
-    let result = text.replace(/  /g, ' ');
-    return result;
 }
 
 export async function forEachAsync(array, callback) {
@@ -91,22 +71,6 @@ export function formatString(template, values) {
       return values.hasOwnProperty(key) ? values[key] : match;
     });
 }
-
-export function toTitleCase(text) {
-    // Split the text into an array of words using space as the delimiter
-    const words = text.split(' ');
-  
-    // Capitalize the first letter of each word and convert the rest to lowercase
-    const titleCaseText = words.map(word => {
-      if (word.length > 0) {
-        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-      }
-      return word;
-    });
-  
-    // Join the words back together to form the final title case text
-    return titleCaseText.join(' ');
-  }
   
   export function generateRandomKey(length) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

@@ -1,7 +1,7 @@
 import { Entypo } from "@expo/vector-icons";
 import { useContext, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { Clickable, Pad, PrimaryButton, StatusButtonlikeMessage } from "../component/basics";
+import { Pad, PrimaryButton, StatusButtonlikeMessage } from "../component/basics";
 import { callServerMultipartApiAsync } from "../util/servercall";
 import { makeStorageUrl, useDatastore, usePersonaKey } from "../util/datastore";
 import { InstanceContext } from "../organizer/InstanceContext";

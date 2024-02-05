@@ -138,26 +138,6 @@ const LoadingScreenStyle = StyleSheet.create({
     }
 });
 
-export function Clickable({onPress, onHoverChange, children, style, hoverStyle=null}) {
-    const [hover, setHover] = useState(false);
-    function onPressInner() {
-        if (onPress) {
-            closeActivePopup();
-            onPress();
-        }
-    }
-    function onHover(hover) {
-        setHover(hover);
-        onHoverChange && onHoverChange(hover);
-    }
-    return <TouchableOpacity onPress={onPressInner} 
-            onMouseEnter={() => onHover(true)}
-            onMouseLeave={() => onHover(false)}
-            style={hover ? [style, hoverStyle] : style} pointerEvents="box-none">
-        {children}
-    </TouchableOpacity>
-}
-
 export function Narrow({children, pad=true}) {
     return <View style={{flexDirection: 'row', justifyContent: 'space-around', paddingVertical: pad && 16}}>
         <View style={{maxWidth: 500, flexShrink: 1, flexGrow: 1, marginHorizontal: pad && 8}}>
