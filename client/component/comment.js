@@ -10,7 +10,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { deepClone, getFirstName } from "../util/util";
 import { colorBlueBackgound, colorDisabledText, colorPurpleBackground, colorTextBlue, colorTextGrey } from "./color";
 import { RichText } from "./richtext";
-import { CatchList } from "./catcher";
+import { CatchList, Catcher } from "./catcher";
 import { TopBarActionProvider } from "../organizer/TopBar";
 import { needsLogin } from "../organizer/Login";
 import { useConfig } from "../util/features";
@@ -360,18 +360,20 @@ export function BasicComments({about, canPost=true}) {
     const comments = useCollection('comment', {filter: {about, replyTo: null}, sortBy: 'time', reverse: true});
     const filteredComments = filterComments({datastore, comments, commentFilters});
     return <View>
-        {canPost && <Card>
-            <PadBox horiz={20}>
-                <TextFieldButton placeholder={commentInputPlaceholder} 
-                    onPress={needsLogin(
-                        () => pushSubscreen('composer', {about}), 
-                        commentInputLoginAction)} 
-                />
-            </PadBox>
-        </Card>}
+        <Catcher>
+            {canPost && <Card>
+                <PadBox horiz={20}>
+                    <TextFieldButton placeholder={commentInputPlaceholder} 
+                        onPress={needsLogin(
+                            () => pushSubscreen('composer', {about}), 
+                            commentInputLoginAction)} 
+                    />
+                </PadBox>
+            </Card>}
+        </Catcher>
         <View>
         {pageTopWidgets?.map((Widget,i) => 
-            <Widget key={i} comments={comments} />
+            <Catcher key={i}><Widget comments={comments} /></Catcher>
         )}
         </View>
         {comments?.length == 0 && <PadBox vert={20} horiz={20}><NoCommentsBanner /></PadBox>}

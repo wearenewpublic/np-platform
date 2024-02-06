@@ -66,7 +66,8 @@ export function TranslatableText({text, label, formatParams, style, ...props}) {
         return <Text style={style} {...props}>{translatedLabel || label || text}</Text>
     } catch (e) {
         console.log('Error translating ' + label, e);
-        throw Error('Error translating ' + label + ': ' + e);
+        return <Text style={style} {...props}>{label || text}</Text>
+        // throw Error('Error translating ' + label + ': ' + e);
         // return <Text style={style} {...props}>{label}</Text>
     }
 }
