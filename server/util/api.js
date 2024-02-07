@@ -11,7 +11,7 @@ function handleApiRequest(req, res, components) {
     console.log('api request', req.method, req.path, contentType);
     if (req.method == 'OPTIONS') {
         cors(req, res, () => {
-            response.status(200);
+            res.status(200);
         });
         return;
     } else if (req.method === 'POST') {  
@@ -67,7 +67,7 @@ function handleMultipartRequest(req, res, components) {
     });
 
     busboy.end(req.rawBody);
-};
+}
 
 async function handleJsonRequest(request, response, components) {
     const fields = {...request.query, ...request.body};

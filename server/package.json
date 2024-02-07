@@ -16,6 +16,8 @@
   "exports": {
     "./component/*": "./component/*.js",
     "./component": "./component/index.js",
+    "./constructor/*": "./constructor/*.js",
+    "./constructor": "./constructor/index.js",
     "./derived-views/*": "./derived-views/*.js",
     "./derived-views": "./derived-views/index.js",
     "./util/*": "./util/*.js"

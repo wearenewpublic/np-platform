@@ -4,13 +4,14 @@ module.exports = {
     node: true,
   },
   parserOptions: {
-    "ecmaVersion": 2018,
+    "ecmaVersion": 2020,
   },
   extends: [
     "eslint:recommended",
   ],
   rules: {
-
+    "no-unused-vars": "off",
+    "no-useless-escape": "off",
   },
   globals: {},
 };

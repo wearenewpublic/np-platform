@@ -1,7 +1,7 @@
 const { NullConstructor } = require("./null-constructor");
 const { ProfileConstructor } = require("./profile-constructor");
 
-const constructors = {   
+var constructors = {   
     simplecomments: NullConstructor,
     componentdemo: NullConstructor,
     profile: ProfileConstructor

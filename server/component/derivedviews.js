@@ -2,10 +2,11 @@ const { getDerivedViews } = require("../derived-views");
 const { firebaseUpdateAsync, readMultipleCollectionsAsync, readObjectAsync } = require("../util/firebaseutil");
 
 class TriggerDatastore{
-    output = {};
+    // output = {};
 
     constructor(collections) {
         this.collections = collections;
+        this.output = {};
     }
 
     getCollection(type) {
