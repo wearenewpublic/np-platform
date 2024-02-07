@@ -8,6 +8,8 @@ import { UtilityText } from "./text";
 import { Pad } from "./basics";
 import { formatDate, formatMiniDate } from "./date";
 import { colorTextGrey, colorWhite } from "./color";
+import { TextButton } from "./button";
+import { gotoInstance } from "../util/navigate";
 
 
 export function ProfilePhoto({userId, type='large', photo=null, faint=false, check=false, border=false}) {
@@ -34,6 +36,7 @@ export function ProfilePhoto({userId, type='large', photo=null, faint=false, che
 
 export function FaceImage({face, photoUrl=null, type='small', faint=false, check=false, border=false}) {
     const sizeMap = {
+        huge: 80,
         large: 40,
         small: 32,
         tiny: 24,
@@ -97,11 +100,15 @@ const FacePileStyle = StyleSheet.create({
 export function Byline({type='small', userId, name=null, photo=null, time, subtitle, underline=false, edited=false}) {
     const s = BylineStyle
     const persona = usePersonaObject(userId);
+    function onProfile() {
+        gotoInstance({structureKey: 'profile', instanceKey: userId});
+    }
     if (type == 'large') {
         return <View style={s.outer}>
             <ProfilePhoto userId={userId} photo={photo} type='large' /> 
             <View style={s.right}>
-                <UtilityText strong text={name ?? persona?.name} />
+                {/* <UtilityText strong text={name ?? persona?.name} /> */}
+                <TextButton type='small' text={name ?? persona?.name} strong onPress={onProfile} />
                 <Pad size={2} />
                 <UtilityText color={colorTextGrey} text={subtitle ?? (formatDate(time) + (edited ? ' • Edited' : ''))} underline={underline}/>
             </View>
@@ -110,7 +117,7 @@ export function Byline({type='small', userId, name=null, photo=null, time, subti
         return <View style={s.smallOuter}>
             <ProfilePhoto userId={userId} photo={photo} type='small' /> 
             <Pad size={8} />
-            <UtilityText strong text={name ?? persona?.name} underline={underline} />
+            <TextButton type='small' strong text={name ?? persona?.name} underline={underline} onPress={onProfile} />
             {time && <Pad size={6} />}
             {time && <UtilityText color={colorTextGrey} text={formatMiniDate(time) + (edited ? ' • Edited' : '')} />}
         </View>

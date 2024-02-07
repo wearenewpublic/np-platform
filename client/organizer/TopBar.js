@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import { PersonaSelector } from "./PersonaSelector";
-import { closeSidebar, goBack, gotoStructure, pushSubscreen } from "../util/navigate";
+import { closeSidebar, goBack, gotoInstance, gotoStructure, pushSubscreen } from "../util/navigate";
 import { firebaseSignOut, useFirebaseUser } from "../util/firebase";
 import { Popup } from "../platform-specific/popup";
 import { useDatastore, useGlobalProperty, usePersonaKey, useSessionData } from "../util/datastore";
@@ -131,7 +131,7 @@ function UserInfo() {
     function popup() {
         return <View>
             {isAdmin && <PadBox bottom={20}><TextButton type='small' onPress={() => pushSubscreen('admin')} label='Admin Tools' /></PadBox>}
-            <TextButton type='small' onPress={() => pushSubscreen('profile')} label='Profile' />
+            <TextButton type='small' onPress={() => gotoInstance({structureKey:'profile', instanceKey: personaKey})} label='Profile' />
             <Pad />
             <TextButton type='small' onPress={firebaseSignOut} label='Log out' />
             <Catcher><FeatureToggles /></Catcher>

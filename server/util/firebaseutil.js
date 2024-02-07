@@ -39,7 +39,6 @@ async function firebaseUpdateAsync(path, data) {
 }
 
 async function firebaseGetUserAsync(userId) {
-    console.log('getUserAsync2', userId, admin, admin?.auth());
     return await admin.auth().getUser(userId);
 }
 

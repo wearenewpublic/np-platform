@@ -174,8 +174,7 @@ const PopupButtonStyle = StyleSheet.create({
     },
     popupFrame: {
         borderWidth: 1, borderColor: '#ddd', borderRadius: 8, padding: 10,
-        shadowRadius: 4, shadowColor: '#555', shadowOffset: {width: 0, height: 4},
-        shadowOpacity: 0.5, elevation: 1,
+        boxShadow: '0 4px 4px 0 rgba(85, 85, 85, 0.5',
         backgroundColor: '#fff'
     },
     up: {

@@ -123,9 +123,9 @@ export function HorizBox({children, center=false, right=false, spread=false}) {
     </View>
 }
 
-export function LoadingScreen() {
+export function LoadingScreen({label = 'Loading...'}) {
     const s = LoadingScreenStyle;
-    return <View style={s.outer}><UtilityText style={s.text} label='Loading...' /></View>
+    return <View style={s.outer}><UtilityText style={s.text} label={label} /></View>
 }
 const LoadingScreenStyle = StyleSheet.create({
     outer: {

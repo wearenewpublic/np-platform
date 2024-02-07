@@ -110,6 +110,7 @@ async function callApiFunctionAsync(request, fields, components) {
     } else if (!component) {
         return ({statusCode: 400, result: JSON.stringify({success: false, error: 'Unknown component', path: request.path, componentId, apiId})});
     } else if (!apiFunction) {
+        console.error('Unknown API', apiId, "expected one of", Object.keys(component.apiFunctions));
         return ({statusCode: 400, result: JSON.stringify({success: false, error: 'Unknown api', path: request.path, componentId, apiId})});
     }
 

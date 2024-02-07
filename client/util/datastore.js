@@ -7,6 +7,7 @@ import { Text } from 'react-native';
 import { LoadingScreen } from '../component/basics';
 import { SharedDataContext } from './shareddata';
 import { callServerApiAsync } from './servercall';
+import { useInstanceContext, useInstanceKey } from '../organizer/InstanceContext';
 
 const DatastoreContext = React.createContext({});
 
@@ -203,14 +204,27 @@ export class Datastore extends React.Component {
 }
 
 export function WaitForData({children}) {
+    const {structureKey, instanceKey} = useInstanceContext();
+    const loaded = useLoaded();
+    const constructed = useGlobalProperty('initialized');
     const datastore = useDatastore();
-    const loaded = datastore.getLoaded();
-    if (loaded) {
+
+    useEffect(() => {
+        if (!loaded) {
+            console.log('initializing instance', {structureKey, instanceKey})
+            callServerApiAsync({datastore, component: 'constructor', funcname: 'runConstructor', params: {structureKey, instanceKey}});    
+        }
+    }, [loaded, instanceKey, structureKey]);
+
+    if (loaded && constructed) {
         return children;
+    } else if (loaded && !constructed) {
+        return <LoadingScreen label='Initializing Instance...' />
     } else {
         return <LoadingScreen />
     }
 }
+
 
 export async function addCurrentUserToInstanceAsync({structureKey, instanceKey, isMember}) {
     const fbUser = getFirebaseUser();
@@ -226,6 +240,11 @@ export function useDatastore() {
     return React.useContext(DatastoreContext);
 }
 
+
+function useLoaded() {
+    const datastore = useDatastore();
+    return datastore.getLoaded();
+}
 
 export function useData() {
     const datastore = useDatastore();
