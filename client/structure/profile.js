@@ -1,4 +1,4 @@
-import { ConversationScreen, HorizBox, LoadingScreen, Pad } from "../component/basics";
+import { ConversationScreen, HorizBox, LoadingScreen, Pad, PadBox } from "../component/basics";
 import { Catcher } from "../component/catcher";
 import { useServersideConstructor } from "../component/constructor";
 import { FaceImage } from "../component/people";
@@ -29,12 +29,13 @@ function ProfileScreen() {
 
     return <ConversationScreen>
         <Pad/>
-        <HorizBox center>
-            <FaceImage type='huge' photoUrl={photoUrl} />  
-            <Pad />      
-            <Heading level={1} label={userName} />            
-        </HorizBox>
-        <Pad/>
-        {profileWidgets.map((Widget, i) => <Catcher key={i}><Widget /></Catcher>)}
+        <PadBox horiz={20}>
+            <HorizBox center>
+                <FaceImage type='huge' photoUrl={photoUrl} />  
+                <Pad />      
+                <Heading level={1} label={userName} />            
+            </HorizBox>
+            {profileWidgets.map((Widget, i) => <Catcher key={i}><Widget /></Catcher>)}
+        </PadBox>
     </ConversationScreen>
 }

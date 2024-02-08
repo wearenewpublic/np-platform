@@ -1,4 +1,3 @@
-import { func } from "prop-types"
 import { Heading, Paragraph, UtilityText } from "../component/text"
 import { View } from "react-native";
 import { useDerivedCollection } from "../util/datastore";
@@ -27,9 +26,9 @@ function ProfileCommentsWidget() {
     const comments = useDerivedCollection('comment');
     console.log('ProfileCommentsWidget', comments);
 
-    return <View>
+    return <PadBox top={20}>
         <Heading level='1' label='Comments' />
         {comments.map(comment => <DerivedComment key={comment.key} comment={comment} />)}
-    </View>    
+    </PadBox>    
 }
 
