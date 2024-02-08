@@ -61,6 +61,11 @@ async function readMultipleCollectionsAsync({structure, instance, types}) {
     types.forEach((typeName, i) => resultMap[typeName] = dataArray[i]);
     return resultMap;
 }
+
+async function readAllGlobalsAsync({structure, instance}) {
+    return firebaseReadAsync(['structure', structure, 'instance', instance, 'global']);
+}
+
 async function writeCollectionAsync({structure, instance, collection, items}) {
     return firebaseWriteAsync(['structure', structure, 'instance', instance, 'collection', collection], items);
 }
@@ -113,7 +118,7 @@ function fbKeyToString(input) {
 module.exports = {firebaseWriteAsync, firebaseReadAsync, firebaseUpdateAsync, stringToFbKey, fbKeyToString, 
     readGlobalAsync, writeGlobalAsync, readCollectionAsync, createInstanceAsync, writeCollectionAsync,
     readInstanceAsync, setObjectAsync, readMultipleCollectionsAsync, updateCollectionAsync,
-    readObjectAsync,
+    readObjectAsync, readAllGlobalsAsync,
 
     verifyIdTokenAsync, createNewKey, firebaseGetUserAsync,
 

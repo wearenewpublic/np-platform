@@ -4,6 +4,7 @@ import { DemoModerationFeature } from "./DemoModeration";
 import { UpvoteFeature } from "./UpvoteFeature";
 import { BasicTeaserFeature } from "./BasicTeaserFeature";
 import { DemoProfileFeature } from "./DemoProfileFeature";
+import { ProfileCommentsFeature } from "./ProfileCommentsFeature";
 
 const { DemoFeature } = require("./DemoFeature");
 
@@ -22,7 +23,8 @@ export var features = {
         BasicTeaserFeature
     ],
     profile: [
-        DemoProfileFeature
+        DemoProfileFeature,
+        ProfileCommentsFeature
     ]
 }
 

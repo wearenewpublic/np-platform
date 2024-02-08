@@ -7,3 +7,7 @@ export function useInstanceContext() {
     return {structureKey, instanceKey};
 }
 
+export function useInstanceKey() { 
+    const {instanceKey} = useContext(InstanceContext);
+    return instanceKey;
+}

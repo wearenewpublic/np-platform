@@ -294,6 +294,10 @@ export function useCollection(typeName, props = {}) {
     return result;
 }
 
+export function useDerivedCollection(typeName, props = {}) {
+    return useCollection('derived_' + typeName, props);
+}
+
 function processObjectList(collection, {sortBy, reverse, limit, filter}) {
     var result = sortMapValuesByProp(collection ?? [], sortBy || 'key');
     if (reverse) {

@@ -1,11 +1,12 @@
 const { getDerivedViews } = require("../derived-views");
-const { firebaseUpdateAsync, readMultipleCollectionsAsync, readObjectAsync } = require("../util/firebaseutil");
+const { firebaseUpdateAsync, readMultipleCollectionsAsync, readObjectAsync, readAllGlobalsAsync } = require("../util/firebaseutil");
 
 class TriggerDatastore{
     // output = {};
 
-    constructor(collections) {
+    constructor(collections, globals) {
         this.collections = collections;
+        this.globals = globals;
         this.output = {};
     }
 
@@ -15,8 +16,12 @@ class TriggerDatastore{
         return keys.map(key => collection[key]);
     }
 
-    setObject({structureKey, instanceKey, type, key, value}) {
-        this.output['structure/' + structureKey + '/instance/' + instanceKey + '/collection/' + type + '/' + key] = value;     
+    getGlobal(key) {
+        return this.globals[key];
+    }
+
+    setDerivedObject({structureKey, instanceKey, type, key, value}) {
+        this.output['structure/' + structureKey + '/instance/' + instanceKey + '/collection/derived_' + type + '/' + key] = value;     
     }
     
     async commitDataAsync() {
@@ -29,11 +34,11 @@ exports.TriggerDatastore = TriggerDatastore;
 
 async function runSingleTriggerAsync({view, structureKey, instanceKey, key, value}) {
     // console.log('runSingleTrigger', view);
+    const pGlobals = await readAllGlobalsAsync({structure: structureKey, instance: instanceKey});
     const collections = await readMultipleCollectionsAsync({
         structure: view.input.structure, 
-        instance: instanceKey, types: view.input.inputCollections});
-    // console.log('collections', collections);
-    const datastore = new TriggerDatastore(collections);
+        instance: instanceKey, types: view.input.inputCollections ?? []});
+    const datastore = new TriggerDatastore(collections, await pGlobals);
     await view.trigger({structureKey, instanceKey, key, value, datastore});
     await datastore.commitDataAsync();
 }

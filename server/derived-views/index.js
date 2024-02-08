@@ -1,4 +1,6 @@
-var derived_views = []
+const { ProfileComment } = require("./profile-comment");
+
+var derived_views = [ProfileComment]
 
 function getDerivedViews() {
     return derived_views;

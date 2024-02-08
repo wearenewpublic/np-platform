@@ -1,4 +1,4 @@
-const {firebaseGetUserAsync, writeGlobalAsync} = require('../util/firebaseutil');
+const {firebaseGetUserAsync, writeGlobalAsync, setObjectAsync} = require('../util/firebaseutil');
 
 const ProfileConstructor = {
     constructor: constructorAsync
@@ -12,12 +12,10 @@ async function constructorAsync({instanceKey}) {
     if (!fbUser) {
         throw new Error('User not found');
     }
-    const pName = writeGlobalAsync({
-        structure: 'profile', instance: instanceKey, 
-        key: 'name', value: fbUser.displayName});
-    const pPhotoUrl = writeGlobalAsync({
-        structure: 'profile', instance: instanceKey, 
-        key: 'photoUrl', value: fbUser.photoURL});
-    await Promise.all([pName, pPhotoUrl]);
+    await  setObjectAsync({structure: 'profile', instance: instanceKey,
+        collection: 'persona', key: userId, value: {
+            name: fbUser.displayName,
+            photoUrl: fbUser.photoURL
+        }})
 }
 
