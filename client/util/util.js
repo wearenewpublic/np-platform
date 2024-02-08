@@ -67,12 +67,10 @@ export function deepClone(obj) {
 }
 
 export function formatString(template, values) {
-    return template.replace(/{([^}]+)}/g, (match, key) => {
-      return values.hasOwnProperty(key) ? values[key] : match;
-    });
+    return template.replace(/{([^}]+)}/g, (match, key) => values[key] ?? match);
 }
   
-  export function generateRandomKey(length) {
+export function generateRandomKey(length) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const randomArray = new Uint32Array(length);
     window.crypto.getRandomValues(randomArray);

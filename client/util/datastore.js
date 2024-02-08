@@ -204,36 +204,13 @@ export class Datastore extends React.Component {
 }
 
 export function WaitForData({children}) {
-    const {structureKey, instanceKey} = useInstanceContext();
     const loaded = useLoaded();
-    const constructed = useGlobalProperty('initialized');
-    const datastore = useDatastore();
 
-    useEffect(() => {
-        if (!loaded) {
-            console.log('initializing instance', {structureKey, instanceKey})
-            callServerApiAsync({datastore, component: 'constructor', funcname: 'runConstructor', params: {structureKey, instanceKey}});    
-        }
-    }, [loaded, instanceKey, structureKey]);
-
-    if (loaded && constructed) {
+    if (loaded) {
         return children;
-    } else if (loaded && !constructed) {
-        return <LoadingScreen label='Initializing Instance...' />
     } else {
         return <LoadingScreen />
     }
-}
-
-
-export async function addCurrentUserToInstanceAsync({structureKey, instanceKey, isMember}) {
-    const fbUser = getFirebaseUser();
-    await firebaseWriteAsync(['structure', structureKey, 'instance', instanceKey, 'collection', 'persona', fbUser.uid], {
-        photoUrl: fbUser.photoURL, 
-        name: fbUser.displayName, 
-        key: personaKey,
-        member: isMember
-    });
 }
 
 export function useDatastore() {

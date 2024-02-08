@@ -1,7 +1,13 @@
 {
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
     "env": {
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "jest": true
     },
     "extends": [
         "eslint:recommended",
@@ -16,6 +22,12 @@
     ],
     "rules": {
         "react/prop-types": "off",
-        "react/react-in-jsx-scope": "off"
+        "react/react-in-jsx-scope": "off",
+        "no-unused-vars": "off",
+        "no-useless-escape": "off",
+        "no-extra-semi": "off"
+    },
+    "globals": {
+        "process": "readonly"
     }
 }

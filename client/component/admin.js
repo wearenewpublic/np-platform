@@ -14,7 +14,7 @@ export function AdminScreen() {
         <Card>
             <Heading label="Admin Actions" />
             <Pad />
-            <CatchList items={struture.adminTools} renderItem={tool => 
+            <CatchList items={structure.adminTools} renderItem={tool => 
                 <AdminAction name={tool.name} action={tool.action} />
             } />
         </Card>

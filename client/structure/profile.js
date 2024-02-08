@@ -1,5 +1,6 @@
-import { ConversationScreen, HorizBox, Pad } from "../component/basics";
+import { ConversationScreen, HorizBox, LoadingScreen, Pad } from "../component/basics";
 import { Catcher } from "../component/catcher";
+import { useServersideConstructor } from "../component/constructor";
 import { FaceImage } from "../component/people";
 import { Heading } from "../component/text";
 import { useInstanceKey } from "../organizer/InstanceContext";
@@ -18,8 +19,11 @@ export const ProfileStructure = {
 function ProfileScreen() {
     const userName = useGlobalProperty('name');
     const photoUrl = useGlobalProperty('photoUrl');
+    const initialized = useServersideConstructor();
     const {profileWidgets} = useConfig();
-    console.log('ProfileScreen', {userName, photoUrl});
+
+    if (!initialized) return <LoadingScreen label='Loading profile...'/>
+    if (!userName) return <LoadingScreen label='No such user'/>
 
     return <ConversationScreen>
         <Pad/>

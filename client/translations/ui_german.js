@@ -61,7 +61,6 @@ export var ui_translations_german = {
     'Just now': 'Gerade eben',
     'You have already written an opinion': 'Sie haben bereits eine Meinung geschrieben',
     'Showing only posts from {regionName}' : 'Zeige nur Beiträge aus {regionName}',
-    'person': 'Person',
     'liked this': 'gefällt das',
     'Generate Conclusion': 'Fazit generieren',
     'Admin': 'Admin',

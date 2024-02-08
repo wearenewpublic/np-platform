@@ -25,5 +25,5 @@ export function setTitle(title) {
 }
 
 export function WebLink({url, children}) {
-    return <a href={url} style={{textDecoration: 'none'}} target='_blank'>{children}</a>;
+    return <a href={url} style={{textDecoration: 'none'}} target='_blank' rel='noreferrer'>{children}</a>;
 }

@@ -1,4 +1,4 @@
 
-exports.openURL = jest.fn();
+export const openURL = jest.fn();
 
 

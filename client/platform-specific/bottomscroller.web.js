@@ -3,6 +3,10 @@ import { findDOMNode } from "react-dom";
 import { ScrollView } from "react-native";
 
 
+/* eslint-disable react/no-find-dom-node */
+/* TODO: Refactor this code to not use findDOMNode */
+
+
 export class BottomScroller extends PureComponent {
     state = {rendered: false, atBottom: true}
   

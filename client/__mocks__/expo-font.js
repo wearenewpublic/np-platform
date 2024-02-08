@@ -1,1 +1,1 @@
-exports.useFonts = () => [true];
+export const useFonts = () => [true];

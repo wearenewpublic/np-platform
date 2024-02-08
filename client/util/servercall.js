@@ -31,7 +31,7 @@ export async function callServerApiAsync({datastore, component, funcname, params
             return null;
         }
     } catch (error) {
-        console.error('Error in fetch', component, funcname, params, result.error);
+        console.error('Error in fetch', component, funcname, params, error?.message);
     }
 }
 
