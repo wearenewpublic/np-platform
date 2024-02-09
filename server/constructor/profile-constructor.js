@@ -6,7 +6,7 @@ const ProfileConstructor = {
 exports.ProfileConstructor = ProfileConstructor;
 
 async function constructorAsync({instanceKey}) {
-    console.log('ProfileConstructor.constructor', {instanceKey});
+    console.log('ProfileConstructor.constructor 2', {instanceKey});
     const userId = instanceKey;
     const fbUser = await firebaseGetUserAsync(userId);
     if (!fbUser) {
@@ -14,8 +14,8 @@ async function constructorAsync({instanceKey}) {
     }
     await  setObjectAsync({structure: 'profile', instance: instanceKey,
         collection: 'persona', key: userId, value: {
-            name: fbUser.displayName,
-            photoUrl: fbUser.photoURL
+            name: fbUser.displayName || null,
+            photoUrl: fbUser.photoURL || null
         }})
 }
 
