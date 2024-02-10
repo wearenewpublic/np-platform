@@ -5,7 +5,7 @@ async function runConstructorApi({structureKey, instanceKey}) {
     const constructorObj = getConstructor(structureKey);
     if (constructorObj?.constructor) {
         try {
-            await constructorObj.constructor({instanceKey});
+            await constructorObj.constructor({structureKey, instanceKey});
             await writeGlobalAsync({structure: structureKey, instance: instanceKey, key: 'initialized', value: Date.now()});
             return {success: true}
         } catch (e) {

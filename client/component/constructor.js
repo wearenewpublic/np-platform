@@ -10,7 +10,6 @@ export function useServersideConstructor() {
 
     useEffect(() => {
         if (!initialized) {
-            console.log('initializing instance', {structureKey, instanceKey})
             callServerApiAsync({datastore, component: 'constructor', funcname: 'runConstructor', params: {structureKey, instanceKey}});    
         }
     }, [instanceKey, structureKey]);

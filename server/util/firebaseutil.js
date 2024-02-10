@@ -17,6 +17,10 @@ function expandPath(path) {
     if (typeof path == 'string') {
         return path;
     } else {
+        if (path.some(p => !p)) {
+            console.error('Bad firebase path', path);
+            throw new Error('Firebase path cannot contain null or undefined elements: ' + JSON.stringify(path));
+        }  
         return path.join('/');
     }
 } 
@@ -79,6 +83,7 @@ async function readObjectAsync({structure, instance, collection, key}) {
     return firebaseReadAsync(['structure', structure, 'instance', instance, 'collection', collection, key]);
 }
 async function createInstanceAsync({structure, instance, collection=null, global=null}) {
+
     return firebaseWriteAsync(['structure', structure, 'instance', instance], {collection, global});
 }
 async function readInstanceAsync({structure, instance}) {

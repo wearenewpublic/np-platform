@@ -8,7 +8,12 @@ var constructors = {
 }
 
 function getConstructor(structureKey) {
-    return constructors[structureKey];
+    const constructor = constructors[structureKey];
+    if (!constructor) {
+        console.error('No constructor found for ' + structureKey);
+        console.error('Available constructors: ' + Object.keys(constructors).join(', '));
+    }
+    return constructor;
 }
 exports.getConstructor = getConstructor;
 
@@ -16,4 +21,3 @@ function addConstructors(newConstructors) {
     constructors = {...constructors, ...newConstructors};
 }
 exports.addConstructors = addConstructors;
-

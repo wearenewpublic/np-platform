@@ -11,5 +11,5 @@ export const auth = {};
 export const GoogleAuthProvider = {}
 export const FacebookAuthProvider = {}
 export function firebaseWriteAsync() {}
-
+export function fbKeyToString(key) {return key}
 
