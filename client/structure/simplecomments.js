@@ -64,7 +64,7 @@ function CommentTeaserScreen() {
     if (teaserScreen) {
         return React.createElement(teaserScreen);
     } else {
-        return <Banner><UtilityText label='No teaser screen configured' /></Banner>
+        return <TeaserScreen><Banner><UtilityText label='No teaser screen configured' /></Banner></TeaserScreen>
     }
 }
 
