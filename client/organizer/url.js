@@ -20,9 +20,9 @@ export function useLiveUrl() {
 }
 
 export function gotoUrl(url) {
-    if (window.location.pathname.endsWith('/teaser')) {
+    if (window.location.pathname.includes('/teaser')) {
         window.parent.postMessage({type: 'psi-sidebar-gotoUrl', url}, '*');
-        console.log('sent sidebar URL', url);
+        console.log('sent sidebar url', url);
     } else {
         historyPushState({state: {url}, url: url});
         if (global_url_watcher) {

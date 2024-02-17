@@ -105,7 +105,8 @@ function fbKeyToString(input) {
         '%f': '/',
         '%l': '[',
         '%r': ']',
-        '%%': '%'
+        '%%': '%',
+        '%q': "'"
     };
 
     return input.replace(/%d|%h|%s|%f|%l|%r|%%/g, match => reverseMapping[match]);
