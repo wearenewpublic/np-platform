@@ -30,8 +30,10 @@ export class Catcher extends React.Component {
 
 export function CatchList({items, renderItem, style}) {
     return <View style={style}>
-        {items && items.map(item => 
-           <Catcher key={item.key}>{renderItem(item)}</Catcher>
+        {items && items.map((item, idx) => 
+           <Catcher key={item.key}>
+                {renderItem(item, idx == items.length-1)}
+            </Catcher>
         )}
     </View>
 }

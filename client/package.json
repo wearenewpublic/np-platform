@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.23.9",
+    "@carbon/icons-react": "^11.36.0",
     "firebase": "^9.22.2",
     "json5": "^2.2.3"
   },

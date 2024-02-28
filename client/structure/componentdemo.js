@@ -63,11 +63,14 @@ function TextScreen() {
                 <Heading label='Heading 1' level={1} />
                 <Heading label='Heading 2' level={2} />
                 <Paragraph type='large' label='Paragraph large' />
+                <Paragraph type='small' strong label='Paragraph small strong' />
                 <Paragraph type='small' label='Paragraph small' />
                 <UtilityText type='large' label='Utility large' />
-                <UtilityText label='Utility small' />
-                <UtilityText color={colorTextGrey} label='Utility small color:TextGrey' />
+                <UtilityText label='Utility small caps' caps strong />
                 <UtilityText strong label='Utility small strong' />
+                <UtilityText label='Utility small' />
+
+                <UtilityText color={colorTextGrey} label='Utility small color:TextGrey' />
                 <UtilityText underline label='Utility small Underline' />
                 
                 <UtilityText type='tiny' label='Utility tiny' />
@@ -115,6 +118,12 @@ function ProfileScreen() {
                 <Byline userId={personaKey} type='large' time={Date.now() - 1000 * 60 * 10} edited={Date.now()} />
                 <Byline userId={personaKey} type='small' time={Date.now()} />
                 <Byline userId={personaKey} type='small' />
+            </DemoSection>
+            <DemoSection label='Anonymous'>
+                <Byline name='Anonymous User' type='large' time={Date.now()} />
+                <Byline name='Anonymous User' type='large' time={Date.now() - 1000 * 60 * 10} edited={Date.now()} />
+                <Byline name='Anonymous User' type='small' time={Date.now()} />
+                <Byline name='Anonymous User' type='small' />
             </DemoSection>
         </Narrow>
      </ConversationScreen>
@@ -226,17 +235,16 @@ function ButtonScreen() {
 
 function CommentScreen() {
     return <ConversationScreen >
-        <Narrow>
+        <Narrow pad={false}>
             {/* <DemoSection label='Comment'>
                 <PadBox horiz={20} >
                     <Comment commentKey='a' />
                 </PadBox>
             </DemoSection> */}
-            <DemoSection label='Composer'>
-                <PadBox horiz={20}>
-                    <BasicComments intro={null} />
-                </PadBox>
-            </DemoSection>
+            <PadBox horiz={20} vert={20}>
+                <DemoHeader label='Comments' />
+            </PadBox>
+            <BasicComments intro={null} />
         </Narrow>
      </ConversationScreen>
 }

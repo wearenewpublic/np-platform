@@ -1,14 +1,14 @@
 import React, { useContext, useState } from "react";
 import { useCollection, useDatastore, useObject, usePersona, usePersonaKey, useSessionData } from "../util/datastore"
 import { Byline, FacePile, Persona } from "./people"
-import { Card, ConversationScreen, Divider, PadBox, Pad, HorizBox } from "./basics";
-import { CharacterCounter, Heading, Paragraph, TextField, TextFieldButton, checkValidLength } from "./text";
+import { Card, ConversationScreen, Divider, PadBox, Pad, HorizBox, Separator } from "./basics";
+import { CharacterCounter, Heading, Paragraph, TextField, TextFieldButton, UtilityText, checkValidLength } from "./text";
 import { CTAButton, ExpandButton, IconButton, SubtleButton, TextButton } from "./button";
 import { IconEdit, IconReply, IconReport, IconUpvote, IconUpvoted } from "./icon";
 import { goBack, pushSubscreen } from "../util/navigate";
 import { StyleSheet, Text, View } from "react-native";
 import { deepClone, getFirstName } from "../util/util";
-import { colorBlueBackgound, colorDisabledText, colorPurpleBackground, colorTextBlue, colorTextGrey } from "./color";
+import { colorBlueBackgound, colorDisabledText, colorGreyPopupBackground, colorPurpleBackground, colorTextBlue, colorTextGrey } from "./color";
 import { RichText } from "./richtext";
 import { CatchList, Catcher } from "./catcher";
 import { TopBarActionProvider } from "../organizer/TopBar";
@@ -21,35 +21,50 @@ export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
     const {commentAboveWidgets} = useConfig();
-    return <Card testID={commentKey}>
-        {commentAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
-        <Byline type='large' userId={comment.from} time={comment.time} edited={comment.edited} />
-        <Pad size={20} />
-        <CommentBody commentKey={commentKey} />
-        {!editing && <PadBox top={20}><CommentActions commentKey={commentKey} /></PadBox>}
-        <MaybeCommentReply commentKey={commentKey} />
+    return <View testID={commentKey}>
+        <PadBox top={20} horiz={20}>
+            {commentAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
+            <Byline type='large' userId={comment.from} time={comment.time} edited={comment.edited} />
+            <Pad size={20} />
+            <CommentBody commentKey={commentKey} />
+            {!editing && <PadBox top={20}><CommentActions commentKey={commentKey} /></PadBox>}
+            <MaybeCommentReply commentKey={commentKey} />
+        </PadBox>
         <CommentReplies commentKey={commentKey} />
-    </Card>
+        <Separator />
+    </View>
 }
 
-export function ReplyComment({commentKey, depth={depth}}) {
+export function ReplyComment({commentKey, depth={depth}, isFinal=false}) {
+    const s = ReplyCommentStyle;
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
-    return <View>
-        <Pad size={20} />
-        <Divider />
-        <Pad size={20} />
+    return <View style={depth == 1 ? s.firstLevel : s.secondLevel}>
+        <UtilityText>Depth: {depth}</UtilityText>
         <Byline type='small' userId={comment.from} time={comment.time} edited={comment.edited} />
         <Pad size={20} />
-        <View style={{marginLeft: 40}}>
-            <CommentBody commentKey={commentKey} />
-            <Pad size={20} />
-            {!editing && <CommentActions commentKey={commentKey} depth={depth} />}
-            <MaybeCommentReply commentKey={commentKey} />
-            <CommentReplies commentKey={commentKey} depth={depth+1} />
-        </View>
+        <CommentBody commentKey={commentKey} />
+        <Pad size={20} />
+        {!editing && <CommentActions commentKey={commentKey} depth={depth} />}
+        <MaybeCommentReply commentKey={commentKey} />
+        <CommentReplies commentKey={commentKey} depth={depth+1} />
+        {!isFinal && <Separator />}
     </View>    
 }
+
+const ReplyCommentStyle = StyleSheet.create({
+    firstLevel: {
+        backgroundColor: colorGreyPopupBackground,
+        paddingLeft: 40,
+        paddingRight: 20,
+        paddingTop: 20
+    },
+    secondLevel: {
+        paddingTop: 20,
+        paddingLeft: 20,
+    }
+})
+
 
 function CommentBody({commentKey}) {
     const comment = useObject('comment', commentKey);
@@ -191,17 +206,22 @@ function CommentReplies({commentKey, depth=1}) {
         datastore.setSessionData(['showReplies', commentKey], expanded);
     }
 
-    if (replies.length == 0) return null;
+    if (replies.length == 0) return <Pad />;
     
     return <View>
-        <Pad size={20} />
+        <PadBox horiz={depth==1 ? 20 : 0} top={20}>
         <ExpandButton userList={replyUsers} label='{count} {noun}' 
             expanded={expanded} setExpanded={setExpanded}
             formatParams={{count: replies.length, singular: 'reply', plural: 'replies'}} />
-        {/* {expanded && replies.map(reply => <ReplyComment key={reply.key} commentKey={reply.key} />)} */}
-        {expanded && <CatchList items={replies} renderItem={reply =>
-            <ReplyComment commentKey={reply.key} depth={depth} />
-        } />}
+        </PadBox>
+        <Pad />
+        {expanded && depth > 1 && <PadBox horiz={20}><Separator /></PadBox>}
+        {expanded && <CatchList items={replies} 
+            renderSeparator={() => <PadBox left={depth == 1 ? 40 : 20}><Separator /></PadBox>}
+            renderItem={(reply,isFinal) =>
+                <ReplyComment commentKey={reply.key} depth={depth} isFinal={isFinal} />
+            } 
+        />}
     </View>
 }
 
@@ -378,7 +398,7 @@ export function BasicComments({about, canPost=true}) {
         </View>
         {comments?.length == 0 && <PadBox vert={20} horiz={20}><NoCommentsBanner /></PadBox>}
         <CatchList items={filteredComments} renderItem={comment =>
-            <PadBox top={20} horiz={20}><Comment commentKey={comment.key} /></PadBox>
+            <Comment commentKey={comment.key} />
         } />
     </View>
 }

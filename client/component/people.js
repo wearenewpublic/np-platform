@@ -7,7 +7,7 @@ import { IconCircleCheck } from "./icon";
 import { UtilityText } from "./text";
 import { Pad } from "./basics";
 import { formatDate, formatMiniDate } from "./date";
-import { colorTextGrey, colorWhite } from "./color";
+import { colorDisabledBackground, colorTextGrey, colorWhite } from "./color";
 import { TextButton } from "./button";
 import { gotoInstance } from "../util/navigate";
 
@@ -29,8 +29,12 @@ export function ProfilePhoto({userId, type='large', photo=null, faint=false, che
         }
     } else {
         const face = persona?.face;
-        return <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} 
-            border={border} faint={faint} check={check} />
+        if (face) {
+            return <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} 
+                border={border} faint={faint} check={check} />
+        } else {
+            return <AnonymousFace faint={faint} type={type} border={border} />    
+        }
     }
 }
 
@@ -69,9 +73,15 @@ export function FaceImage({face, photoUrl=null, type='small', faint=false, check
     </View>
 }
 
-export function AnonymousFace({faint, size, border, check}) {
-    return <FaceImage face='anonymous.jpeg' faint={faint} size={size} border={border} check={check} />
+export function AnonymousFace({faint, type, border, check}) {
+    return <FaceImage face='anonymous2.jpeg' faint={faint} type={type} border={border} check={check} />
 }
+
+const AnonymousFaceStyle = StyleSheet.create({
+    outer: {
+        backgroundColor: colorDisabledBackground,
+    }
+})
 
 export function FacePile({type='small', userIdList}) {
     const s = FacePileStyle;
