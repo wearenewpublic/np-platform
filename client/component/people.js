@@ -29,7 +29,7 @@ export function ProfilePhoto({userId, type='large', photo=null, faint=false, che
         }
     } else {
         const face = persona?.face;
-        if (face) {
+        if (face || photo || persona?.photoUrl) {
             return <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} 
                 border={border} faint={faint} check={check} />
         } else {
