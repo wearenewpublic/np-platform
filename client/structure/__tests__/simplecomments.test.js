@@ -9,6 +9,14 @@ test('Empty', () => {
     render(<TestInstance structureKey='simplecomments' />);
 });
 
+test('Comment and Reply', () => {
+    addObject('comment', {key: 'test', from: 'a', text: 'This is a comment'});
+    render(<TestInstance structureKey='simplecomments' />);
+    
+    screen.getByText('This is a comment');    
+});
+
+
 test('Composer opens', () => {
     render(<TestInstance structureKey='simplecomments' />);
     screen.getByText('Share your thoughts...').click();
@@ -41,6 +49,7 @@ test('Reply to a comment', async () => {
     fireEvent.change(input, {target: {value: 'My reply'}});
     fireEvent.click(screen.getByRole('button', {name: 'Post'}));
     getMatchingObject('comment', {text: 'My reply', replyTo: 'test'});
+    screen.getByText('My reply');
 })
 
 test('Teaser', async () => {

@@ -4,7 +4,10 @@ import { Comment } from "../comment";
 
 test('View comment', () => {
     addObject('comment', {key: 'test', from: 'a', text: 'This is a comment'});
+
     render(<WithFeatures><Comment commentKey='test' /></WithFeatures>);    
+
+    screen.getByText('This is a comment');
 })
 
 test('Edit comment', async () => {
