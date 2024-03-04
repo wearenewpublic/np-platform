@@ -1,7 +1,7 @@
 {
   "name": "np-platform-server",
   "description": "Back end for the New Public Platform",
-  "version": "0.1.14",
+  "version": "0.2.1",
   "license": "Apache-2.0",
   "scripts": {
     "lint": "eslint ."

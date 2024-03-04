@@ -70,6 +70,8 @@ export function firebaseWatchValue(pathList, callback) {
     const pathString = makeFirebasePath(pathList);
     return onValue(ref(database, pathString), snapshot => {
         callback(snapshot.val())
+    }, error => {
+        console.error('Error in firebaseWatchValue', pathString, error);
     });
 }
 

@@ -7,13 +7,13 @@ import { ScreenStack, useStandardFonts } from './util/instance';
 export default function App() {
   useStandardFonts();
   const url = useLiveUrl();
-  const {structureKey, instanceKey, screenStack} = getScreenStackForUrl(url);
+  const {siloKey, structureKey, instanceKey, screenStack} = getScreenStackForUrl(url);
 
   if (!structureKey) {
     gotoInstance({structureKey: 'componentdemo', instanceKey: 'demo'});
     return null;
   } else if (structureKey && instanceKey) {
-    return <ScreenStack url={url} screenStack={screenStack} structureKey={structureKey} instanceKey={instanceKey} />
+    return <ScreenStack url={url} screenStack={screenStack} siloKey={siloKey} structureKey={structureKey} instanceKey={instanceKey} />
   } else {
     return <Text>You need a valid space URL to see a space</Text>
   }

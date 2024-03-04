@@ -1,5 +1,44 @@
 {
     "rules": {
+        "silo": {
+            "$silo": {
+                "module-public": {
+                    "$module": {
+                        ".read": true,
+                        ".write": false
+                    }
+                },
+                "structure": {
+                    "$structure": {
+                        "instance": {                    
+                            "$instance": {
+                                ".read": true,
+                                ".write": false,
+                                "collection": {
+                                    "persona": {
+                                        "$user": {
+                                            ".write" : "$user == auth.uid"
+                                        }
+                                    },
+                                    "$type": {
+                                        "$key": {
+                                            ".write": true,
+                                            ".validate": "newData.child('from').val() == auth.uid && (!data.exists() || data.child('from').val() == auth.uid)"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "module-public": {
+            "$module": {
+                ".read": true,
+                ".write": false
+            }
+        },
         "structure": {
             "$structure": {
                 "instance": {                    

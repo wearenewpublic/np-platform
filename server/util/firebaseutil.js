@@ -50,44 +50,43 @@ function createNewKey() {
     return admin.database().ref().push().key;
 }
 
-async function readGlobalAsync({structure, instance, key}) {
-    return firebaseReadAsync(['structure', structure, 'instance', instance, 'global', key]);
+async function readGlobalAsync({siloKey, structureKey, instanceKey, key}) {
+    return firebaseReadAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global', key]);
 }
-async function writeGlobalAsync({structure, instance, key, value}) {
-    return firebaseWriteAsync(['structure', structure, 'instance', instance, 'global', key], value);
+async function writeGlobalAsync({siloKey, structureKey, instanceKey, key, value}) {
+    return firebaseWriteAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global', key], value);
 }
-async function readCollectionAsync({structure, instance, type}) {
-    return firebaseReadAsync(['structure', structure, 'instance', instance, 'collection', type]);
+async function readCollectionAsync({siloKey, structureKey, instanceKey, type}) {
+    return firebaseReadAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', type]);
 }
-async function readMultipleCollectionsAsync({structure, instance, types}) {
-    const dataArray = await Promise.all(types.map(type => readCollectionAsync({structure, instance, type:type})));
+async function readMultipleCollectionsAsync({siloKey, structureKey, instanceKey, types}) {
+    const dataArray = await Promise.all(types.map(type => readCollectionAsync({siloKey, structureKey, instanceKey, type})));
     var resultMap = {};
     types.forEach((typeName, i) => resultMap[typeName] = dataArray[i]);
     return resultMap;
 }
 
-async function readAllGlobalsAsync({structure, instance}) {
-    return firebaseReadAsync(['structure', structure, 'instance', instance, 'global']);
+async function readAllGlobalsAsync({siloKey, structureKey, instanceKey}) {
+    return firebaseReadAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global']);
 }
 
-async function writeCollectionAsync({structure, instance, collection, items}) {
-    return firebaseWriteAsync(['structure', structure, 'instance', instance, 'collection', collection], items);
+async function writeCollectionAsync({siloKey, structureKey, instanceKey, collection, items}) {
+    return firebaseWriteAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', collection], items);
 }
-async function updateCollectionAsync({structure, instance, collection, updates}) {
-    return firebaseUpdateAsync(['structure', structure, 'instance', instance, 'collection', collection], updates);
+async function updateCollectionAsync({siloKey, structureKey, instanceKey, collection, updates}) {
+    return firebaseUpdateAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', collection], updates);
 }
-async function setObjectAsync({structure, instance, collection, key, value}) {
-    return firebaseWriteAsync(['structure', structure, 'instance', instance, 'collection', collection, key], value);
+async function setObjectAsync({siloKey, structureKey, instanceKey, collection, key, value}) {
+    return firebaseWriteAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', collection, key], value);
 }
-async function readObjectAsync({structure, instance, collection, key}) {
-    return firebaseReadAsync(['structure', structure, 'instance', instance, 'collection', collection, key]);
+async function readObjectAsync({siloKey, structureKey, instanceKey, collection, key}) {
+    return firebaseReadAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', collection, key]);
 }
-async function createInstanceAsync({structure, instance, collection=null, global=null}) {
-
-    return firebaseWriteAsync(['structure', structure, 'instance', instance], {collection, global});
+async function createInstanceAsync({siloKey, structureKey, instanceKey, collection=null, global=null}) {
+    return firebaseWriteAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey], {collection, global});
 }
-async function readInstanceAsync({structure, instance}) {
-    return firebaseReadAsync(['structure', structure, 'instance', instance]);
+async function readInstanceAsync({siloKey, structureKey, instanceKey}) {
+    return firebaseReadAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey]);
 }
 
 function stringToFbKey(input) {

@@ -18,12 +18,13 @@ export function getSharedData() {
     return global_sharedData;
 }
 
-export function TestInstance({structureKey, instanceKey='test', screenKey=null, params={}, data={}}) {
+export function TestInstance({structureKey, siloKey='test', instanceKey='test', screenKey=null, params={}, data={}}) {
     const structure = getStructureForKey(structureKey);
     const instance = {isLive: false, ...global_sharedData.data};
     return <InstanceContext.Provider value={{structureKey, structure, instanceKey, instance, isLive: false}}>
         <SharedDataContext.Provider value={global_sharedData}>
             <Datastore 
+                siloKey={siloKey}
                 structureKey={structureKey} structure={structure} 
                 instanceKey={instanceKey} instance={instance}
                 isLive={false}>
@@ -33,13 +34,14 @@ export function TestInstance({structureKey, instanceKey='test', screenKey=null, 
     </InstanceContext.Provider>
 }
 
-export function WithFeatures({structureKey='componentdemo', instanceKey='test', features={}, children}) {
+export function WithFeatures({siloKey='test', structureKey='componentdemo', instanceKey='test', features={}, children}) {
     const structure = getStructureForKey(structureKey);
     const instance = {isLive: false, ...global_sharedData.data};
     const config = assembleConfig({structure, activeFeatures:features});
     return <InstanceContext.Provider value={{structureKey, structure, instanceKey, instance, isLive: false}}>
         <SharedDataContext.Provider value={global_sharedData}>
             <Datastore 
+                siloKey={siloKey}
                 structureKey={structureKey} structure={structure} 
                 instanceKey={instanceKey} instance={instance}
                 isLive={false}>

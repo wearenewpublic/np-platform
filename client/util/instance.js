@@ -21,16 +21,20 @@ export function useStandardFonts() {
     return fontsLoaded
 }
 
-export function ScreenStack({url, screenStack, structureKey, instanceKey}) {
+export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKey}) {
     const s = ScreenStackStyle;
     
     const structure = getStructureForKey(structureKey);
     const instance = {isLive: true}
+
+    if (!structureKey || !instanceKey || !siloKey) {
+      console.log('ScreenStack missing keys', {structureKey, instanceKey, siloKey});
+    }
  
     return <View style={s.stackHolder}>
       <SharedData key={url}>
-        <InstanceContext.Provider value={{structure, structureKey: structureKey, instance, instanceKey, isLive: true}}>
-          <Datastore instance={instance} instanceKey={instanceKey} structure={structure} structureKey={structureKey} isLive={true}>
+        <InstanceContext.Provider value={{structure, siloKey, structureKey, instance, instanceKey, isLive: true}}>
+          <Datastore instance={instance} siloKey={siloKey} instanceKey={instanceKey} structure={structure} structureKey={structureKey} isLive={true}>
             {screenStack.map((screenInstance, index) => 
               <StackedScreen screenInstance={screenInstance} index={index} key={index} />
             )}

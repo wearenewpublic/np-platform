@@ -96,37 +96,42 @@ async function getValidatedUser(req) {
 
 async function callApiFunctionAsync(request, fields, components) {
     console.log('callApiFunctionAsync', request.path);
-    const {componentId, apiId} = parsePath(request.path);
+    try {
+        const {componentId, apiId} = parsePath(request.path);
 
-    const component = components[componentId];
-    const apiFunction = component?.apiFunctions?.[apiId];
-    const user = await getValidatedUser(request);
-    const userId = user?.uid ?? null;
-    const userEmail = user?.email ?? null;
-    const params = {...request.query, ...fields, userId, userEmail};
+        const component = components[componentId];
+        const apiFunction = component?.apiFunctions?.[apiId];
+        const user = await getValidatedUser(request);
+        const userId = user?.uid ?? null;
+        const userEmail = user?.email ?? null;
+        const params = {...request.query, ...fields, userId, userEmail};
 
-    if (userId == 'error') {
-        return ({statusCode: 500, result: JSON.stringify({success: false, error: 'Error validating user'})});
-    } else if (!component) {
-        return ({statusCode: 400, result: JSON.stringify({success: false, error: 'Unknown component', path: request.path, componentId, apiId})});
-    } else if (!apiFunction) {
-        console.error('Unknown API', apiId, "expected one of", Object.keys(component.apiFunctions));
-        return ({statusCode: 400, result: JSON.stringify({success: false, error: 'Unknown api', path: request.path, componentId, apiId})});
-    }
+        if (userId == 'error') {
+            return ({statusCode: 500, result: JSON.stringify({success: false, error: 'Error validating user'})});
+        } else if (!component) {
+            return ({statusCode: 400, result: JSON.stringify({success: false, error: 'Unknown component', path: request.path, componentId, apiId})});
+        } else if (!apiFunction) {
+            console.error('Unknown API', apiId, "expected one of", Object.keys(component.apiFunctions));
+            return ({statusCode: 400, result: JSON.stringify({success: false, error: 'Unknown api', path: request.path, componentId, apiId})});
+        }
 
-    console.log('apiFunction', apiFunction);
+        console.log('apiFunction', apiFunction);
 
-    const apiResult = await apiFunction(params); 
+        const apiResult = await apiFunction(params); 
 
-    if (apiResult.data) {
-        return ({statusCode: 200, result: JSON.stringify({success: true, data: apiResult.data})});
-    } else if (apiResult.error) {
-        return ({statusCode: 400, result: JSON.stringify({success: false, error: apiResult.error})});
-    } else if (apiResult.success) {
-        return ({statusCode: 200, result: JSON.stringify({success: true})})
-    } else {
-        console.error('Unknown error', apiResult);
-        return ({statusCode: 500, result: JSON.stringify({success: false, error: 'Unknown error'})});
+        if (apiResult.data) {
+            return ({statusCode: 200, result: JSON.stringify({success: true, data: apiResult.data})});
+        } else if (apiResult.error) {
+            return ({statusCode: 400, result: JSON.stringify({success: false, error: apiResult.error})});
+        } else if (apiResult.success) {
+            return ({statusCode: 200, result: JSON.stringify({success: true})})
+        } else {
+            console.error('Unknown error', apiResult);
+            return ({statusCode: 500, result: JSON.stringify({success: false, error: 'Unknown error'})});
+        }
+    } catch (error) {
+        console.error('Error in callApiFunctionAsync', error);
+        return ({statusCode: 500, result: JSON.stringify({success: false, error: error.message})});
     }
 }
 

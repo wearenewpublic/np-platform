@@ -61,14 +61,16 @@ export class Datastore extends React.Component {
     }
 
     resetData() {
-        const {instance, instanceKey, structure, structureKey, isLive} = this.props;
+        const {instance, siloKey, instanceKey, structure, structureKey, isLive} = this.props;
 
         const personaKey = getInitialPersonaKey(instance);
         this.sessionData = {personaKey}
         if (isLive) {
+            console.log('is live. Setting watcher');
             this.fbDataWatchReleaser && this.fbDataWatchReleaser();
-            this.fbDataWatchReleaser = firebaseWatchValue(['structure', structureKey, 'instance', instanceKey], data => {
+            this.fbDataWatchReleaser = firebaseWatchValue(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey], data => {
                 this.setData({...this.getData(), ...data?.collection, ...data?.global});
+                console.log('get response', data);
                 this.setState({loaded: true})
             });
         } else {
@@ -104,7 +106,7 @@ export class Datastore extends React.Component {
         return this.getData()[typeName]?.[key];
     }
     async setObject(typeName, key, value) {
-        const {structureKey, instanceKey, isLive} = this.props;
+        const {siloKey, structureKey, instanceKey, isLive} = this.props;
         if (!key || !typeName) {
             throw new Error('Missing key or typeName', key, typeName);
         }
@@ -117,7 +119,7 @@ export class Datastore extends React.Component {
 
         if (isLive) {
             // addInstanceToMyInstancesAsync({structureKey, instanceKey, dataTree: this.getData()});
-            await firebaseWriteAsync(['structure', structureKey, 'instance', instanceKey, 'collection', typeName, key], value);
+            await firebaseWriteAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', typeName, key], value);
             await callServerApiAsync({datastore: this, component: 'derivedviews', funcname: 'runTriggers', params: {type: typeName, key}});
         }
     }
@@ -191,15 +193,16 @@ export class Datastore extends React.Component {
         return this.getData()[key];
     }
     setGlobalProperty(key, value) {
-        const {structureKey, instanceKey, isLive} = this.props;
+        const {siloKey, structureKey, instanceKey, isLive} = this.props;
         this.setData({...this.getData(), [key]: value});
         
         // this.notifyWatchers();
         if (isLive) {
-            firebaseWriteAsync(['structure', structureKey, 'instance', instanceKey, 'global', key], value);
+            firebaseWriteAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global', key], value);
         }
     }
 
+    getSiloKey() {return this.props.siloKey}
     getStructureKey() {return this.props.structureKey}
     getInstanceKey() {return this.props.instanceKey}
     getLanguage() {return this.getGlobalProperty('language') || 'English'}

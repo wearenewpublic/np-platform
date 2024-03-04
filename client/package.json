@@ -1,6 +1,6 @@
 {
   "name": "np-platform-client",
-  "version": "0.1.16",
+  "version": "0.2.1",
   "license": "Apache-2.0",
   "scripts": {
     "demo": "expo start --web",
@@ -42,6 +42,7 @@
     ]
   },
   "peerDependencies": {
+    "@carbon/icons-react": "^11.36.0",
     "expo": "^49.0.0",
     "expo-font": "~11.1.1",
     "expo-linking": "~4.0.1",
@@ -53,7 +54,6 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.23.9",
-    "@carbon/icons-react": "^11.36.0",
     "firebase": "^9.22.2",
     "json5": "^2.2.3"
   },
@@ -61,6 +61,7 @@
     "@babel/cli": "^7.23.4",
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.22.4",
+    "@carbon/icons-react": "^11.36.0",
     "@expo-google-fonts/ibm-plex-mono": "^0.2.3",
     "@expo/webpack-config": "^19.0.0",
     "@testing-library/jest-native": "^5.4.3",

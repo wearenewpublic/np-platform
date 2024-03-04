@@ -19,7 +19,7 @@ export function goBack() {
 }
 
 export function pushSubscreen(key, params = {}) {
-    const parts = window.location.pathname.split('/').filter(x => x);
+    const parts = window.location.pathname.split('/').filter(x => x).slice(1);
     const query = new URLSearchParams(window.location.search);
     parts.push(key);
     const index = parts.length - 3;
@@ -81,7 +81,9 @@ function getParamsWithSuffix(urlParams, suffix) {
 
 export function makeUrl(parts, query = new URLSearchParams()) {
     const url = new URL(window.location.href);
-    url.pathname = parts.join('/');
+    const currentParts = url.pathname.split('/').filter(x => x);
+    const siloKey = currentParts[0] || 'global';
+    url.pathname = siloKey + '/' + parts.join('/');
     url.search = query.toString();
     return url.toString();
 }
@@ -106,18 +108,18 @@ export function getScreenStackForUrl(url) {
     const parsedUrl = new URL(url);
     const parts = parsedUrl.pathname.split('/').filter(x => x);
     const query = new URLSearchParams(parsedUrl.search);
-    var [structureKey, instanceKey, ...screenParts] = parts;
+    var [siloKey, structureKey, instanceKey, ...screenParts] = parts;
 
     if (!structureKey) return {}
     if (!instanceKey) return {structureKey};
 
-    var screenStack = [{structureKey, instanceKey, screenKey: null, params: {}}];
+    var screenStack = [{siloKey, structureKey, instanceKey, screenKey: null, params: {}}];
 
     for (var i = 0; i < screenParts.length; i++) {
         const screenKey = screenParts[i];
         const params = getParamsWithSuffix(query, getParamSuffixForIndex(i));
-        screenStack.push({structureKey, instanceKey, screenKey, params});
+        screenStack.push({siloKey, structureKey, instanceKey, screenKey, params});
     }
     screenStack = removeInvisibleParentsFromScreenStack(screenStack);
-    return {structureKey, instanceKey, screenStack};
+    return {siloKey, structureKey, instanceKey, screenStack};
 }
