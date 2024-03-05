@@ -1,4 +1,4 @@
-import { addKey, boolToString, forEachAsync, isNonEmpty, removeKey, removeNullProperties, stringToBool, stripSuffix } from "../util";
+import { addKey, boolToInt, boolToString, forEachAsync, getObjectPropertyPath, isNonEmpty, removeKey, removeNullProperties, setObjectPropertyPath, stringToBool, stripSuffix } from "../util";
 
 jest.mock('../firebase');
 
@@ -51,4 +51,24 @@ test('stringToBool', () => {
     expect(stringToBool(null)).toBe(false);
 })
 
-    
+test('boolToInt', () => {
+    expect(boolToInt(true)).toBe(1);
+    expect(boolToInt(false)).toBe(0);
+    expect(boolToInt(null)).toBe(0);
+})
+
+test('getObjectPrepertyPath', () => {
+    const obj = {a: {b: {c: 1}}};
+    expect(getObjectPropertyPath(obj, ['a','b','c'])).toBe(1);
+    expect(getObjectPropertyPath(obj, ['a','b','d'])).toBe(undefined);
+    expect(getObjectPropertyPath(obj, ['a','b'])).toEqual({c: 1});
+})
+
+test('setObjectPropertyPath', () => {
+    const obj = {a: {b: {c: 1}}};
+    const result = setObjectPropertyPath(obj, ['a','b','c'], 2);
+    expect(result).toEqual({a: {b: {c: 2}}});
+    const result2 = setObjectPropertyPath(obj, ['a','b','d'], 3);
+    expect(result2).toEqual({a: {b: {c: 1, d: 3}}});
+})
+

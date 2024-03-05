@@ -97,21 +97,19 @@ export function generateRandomKey(length) {
     return bool ? 1 : 0;
   }
 
-  export function getPath(object, path) {
-    const parts = path.split('.');
+  export function getObjectPropertyPath(object, path) {
     var result = object;
-    parts.forEach(part => {
+    path.forEach(part => {
         result = result?.[part];
     });
     return result;
   }
 
-  export function setPath(object, path, value) {
-    const parts = path.split('.');
+  export function setObjectPropertyPath(object, path, value) {
     const newObject = deepClone(object);
     var subpart = newObject;
-    parts.forEach((part, index) => {
-      if (index == parts.length - 1) {
+    path.forEach((part, index) => {
+      if (index == path.length - 1) {
         subpart[part] = value;
       } else {
         if (subpart[part] == undefined) {

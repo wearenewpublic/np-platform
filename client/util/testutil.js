@@ -3,6 +3,7 @@ import { StackedScreen, getStructureForKey } from './instance';
 import { SharedData, SharedDataContext } from './shareddata';
 import { Datastore } from './datastore';
 import { ConfigContext, assembleConfig } from './features';
+import { mock_setFirebaseData } from './firebase';
 
 var global_sharedData = new SharedData();
 
@@ -18,27 +19,11 @@ export function getSharedData() {
     return global_sharedData;
 }
 
-export function TestInstance({structureKey, siloKey='test', instanceKey='test', screenKey=null, params={}, data={}}) {
-    const structure = getStructureForKey(structureKey);
-    const instance = {isLive: false, ...global_sharedData.data};
-    return <InstanceContext.Provider value={{structureKey, structure, instanceKey, instance, isLive: false}}>
-        <SharedDataContext.Provider value={global_sharedData}>
-            <Datastore 
-                siloKey={siloKey}
-                structureKey={structureKey} structure={structure} 
-                instanceKey={instanceKey} instance={instance}
-                isLive={false}>
-                <StackedScreen screenInstance={{structureKey, instanceKey, screenKey, params}} />
-            </Datastore>
-        </SharedDataContext.Provider>
-    </InstanceContext.Provider>
-}
-
 export function WithFeatures({siloKey='test', structureKey='componentdemo', instanceKey='test', features={}, children}) {
     const structure = getStructureForKey(structureKey);
     const instance = {isLive: false, ...global_sharedData.data};
     const config = assembleConfig({structure, activeFeatures:features});
-    return <InstanceContext.Provider value={{structureKey, structure, instanceKey, instance, isLive: false}}>
+    return <InstanceContext.Provider value={{siloKey, structureKey, structure, instanceKey, instance, isLive: false}}>
         <SharedDataContext.Provider value={global_sharedData}>
             <Datastore 
                 siloKey={siloKey}
@@ -51,8 +36,15 @@ export function WithFeatures({siloKey='test', structureKey='componentdemo', inst
             </Datastore>
         </SharedDataContext.Provider>
     </InstanceContext.Provider>
-
 }
+
+export function TestInstance({structureKey, siloKey='test', instanceKey='test', screenKey=null, params={}, features={}}) {
+    return <WithFeatures siloKey={siloKey} structureKey={structureKey} instanceKey={instanceKey} features={features}>
+        <StackedScreen screenInstance={{structureKey, instanceKey, screenKey, params}} />
+    </WithFeatures>
+}
+
+export const WithEnv = WithFeatures;
 
 export function DataDumper() {
     console.log('data', global_sharedData.data);
@@ -90,6 +82,10 @@ export function setGlobal(key, value) {
         ...global_sharedData.data,
         [key]: value
     });
+}
+
+export function setModulePublicData(siloKey, moduleKey, data) {
+    mock_setFirebaseData(['silo', siloKey, 'module-public', moduleKey], data);
 }
 
 export function setFeatures(features) {
