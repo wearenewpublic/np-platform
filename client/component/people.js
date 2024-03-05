@@ -10,6 +10,7 @@ import { formatDate, formatMiniDate } from "./date";
 import { colorDisabledBackground, colorTextGrey, colorWhite } from "./color";
 import { TextButton } from "./button";
 import { gotoInstance } from "../util/navigate";
+import { useLanguage } from "./translation";
 
 
 export function ProfilePhoto({userId, type='large', photo=null, faint=false, check=false, border=false}) {
@@ -107,9 +108,10 @@ const FacePileStyle = StyleSheet.create({
 
 
 
-export function Byline({type='small', userId, name=null, photo=null, time, subtitle, underline=false, edited=false}) {
+export function Byline({type='small', userId, name=null, photo=null, time, subtitleLabel, underline=false, edited=false}) {
     const s = BylineStyle
     const persona = usePersonaObject(userId);
+    const language = useLanguage();
     function onProfile() {
         gotoInstance({structureKey: 'profile', instanceKey: userId});
     }
@@ -120,7 +122,14 @@ export function Byline({type='small', userId, name=null, photo=null, time, subti
                 {/* <UtilityText strong text={name ?? persona?.name} /> */}
                 <TextButton type='small' text={name ?? persona?.name} strong onPress={onProfile} />
                 <Pad size={2} />
-                <UtilityText color={colorTextGrey} text={subtitle ?? (formatDate(time) + (edited ? ' • Edited' : ''))} underline={underline}/>
+                {subtitleLabel ? 
+                    <UtilityText color={colorTextGrey} label={subtitleLabel} underline={underline} />
+                : 
+                    <UtilityText color={colorTextGrey} 
+                        label={'{time}' + (edited ? ' • Edited' : '')} 
+                        formatParams={{time: formatDate(time, language)}} underline={underline}/>
+                }
+                {/* <UtilityText color={colorTextGrey} text={subtitleLabel ?? (formatDate(time) + (edited ? ' • Edited' : ''))} underline={underline}/> */}
             </View>
         </View>
     } else {
@@ -129,7 +138,12 @@ export function Byline({type='small', userId, name=null, photo=null, time, subti
             <Pad size={8} />
             <TextButton type='small' strong text={name ?? persona?.name} underline={underline} onPress={onProfile} />
             {time && <Pad size={6} />}
-            {time && <UtilityText color={colorTextGrey} text={formatMiniDate(time) + (edited ? ' • Edited' : '')} />}
+            {time &&                     <UtilityText color={colorTextGrey} 
+                        label={'{time}' + (edited ? ' • Edited' : '')} 
+                        formatParams={{time: formatDate(time, language)}} underline={underline}/>
+            }
+                        
+            {/* <UtilityText color={colorTextGrey} text={formatMiniDate(time) + (edited ? ' • Edited' : '')} />} */}
         </View>
     }
 }

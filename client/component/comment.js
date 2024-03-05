@@ -341,7 +341,7 @@ export function Composer({about=null, goBackAfterPost=false, topLevel=false, con
     }
 
     return <View>
-        <Byline type='large' userId={personaKey} subtitle={contentType} />
+        <Byline type='large' userId={personaKey} subtitleLabel={contentType} />
         <Pad size={24} />
         <EditComment big comment={comment} topLevel={topLevel}
             onCancel={goBackAfterPost && onCancel}

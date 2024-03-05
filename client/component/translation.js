@@ -5,13 +5,13 @@ import { Text } from "react-native";
 import { formatString } from "../util/util";
 import { useFirebaseData } from "../util/firebase";
 
-export const languageEnglish = 'English';
-export const languageGerman = 'German';
-export const languageFrench = 'French';
+export const languageEnglish = 'english';
+export const languageGerman = 'german';
+export const languageFrench = 'french';
 
 const ui_translations_for_language = {
-    German: translations.german,
-    French: translations.french
+    german: translations.german,
+    french: translations.french
 }
 
 export function translateLabel({label, language, formatParams={}}) {
@@ -30,25 +30,28 @@ export function translateLabel({label, language, formatParams={}}) {
         }
     }
     const translations = ui_translations_for_language[language];
+    if (language && language != languageEnglish && !translations) {
+        console.error('No translations for ' + language);
+    }
+
     var translatedText = translations ? translations[label] : label;
 
     if (!translatedText && language != languageEnglish && language) {
-        console.log('No translation for ' + label + ' in ' + language);
+        console.error('No translation for ' + label + ' in ' + language);
     }
     if (formatParams) {
         translatedText = formatString(translatedText || label, {...formatParams, ...extra});
     }
+
     return translatedText || label;
 }
 
 export function useLanguage() {
-    const {structureKey, instanceKey, instance} = useContext(InstanceContext);    
-    const globalLanguage = useFirebaseData(['structure', structureKey, 'instance', instanceKey, 'global', 'language']);
+    const {siloKey} = useContext(InstanceContext);    
+    const globalLanguage = useFirebaseData(['silo', siloKey, 'module-public', 'language']);
 
-    if (!instance) {
+    if (!siloKey) {
         return null;
-    } else if (!instance?.isLive || instance?.language) {
-        return instance.language;
     } else {
         return globalLanguage;
     }
@@ -65,10 +68,8 @@ export function TranslatableText({text, label, formatParams, style, ...props}) {
         const translatedLabel = useTranslation(label, formatParams);
         return <Text style={style} {...props}>{translatedLabel || label || text}</Text>
     } catch (e) {
-        console.log('Error translating ' + label, e);
+        console.error('Error translating ' + label, e);
         return <Text style={style} {...props}>{label || text}</Text>
-        // throw Error('Error translating ' + label + ': ' + e);
-        // return <Text style={style} {...props}>{label}</Text>
     }
 }
 
