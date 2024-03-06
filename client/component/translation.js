@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { translations } from "../translations";
+import { allTranslations } from "../translations";
 import { InstanceContext } from "../organizer/InstanceContext";
 import { Text } from "react-native";
 import { formatString } from "../util/util";
@@ -9,10 +9,6 @@ export const languageEnglish = 'english';
 export const languageGerman = 'german';
 export const languageFrench = 'french';
 
-const ui_translations_for_language = {
-    german: translations.german,
-    french: translations.french
-}
 
 export function translateLabel({label, language, formatParams={}}) {
     var extra = {};
@@ -29,7 +25,8 @@ export function translateLabel({label, language, formatParams={}}) {
             }
         }
     }
-    const translations = ui_translations_for_language[language];
+    
+    const translations = allTranslations[language];
     if (language && language != languageEnglish && !translations) {
         console.error('No translations for ' + language);
     }

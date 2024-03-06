@@ -1,6 +1,7 @@
 import { screen, render } from "@testing-library/react";
 import { WithEnv, WithFeatures, setModulePublicData } from "../../util/testutil";
 import { TranslatableText, languageEnglish, languageFrench, languageGerman, translateLabel } from "../translation";
+import { addTranslations } from "../../translations";
 
 jest.mock('../../util/firebase');
 
@@ -30,3 +31,11 @@ test('translation based on silo language', () => {
     render(<WithEnv siloKey='silo-fr'><TranslatableText label='Member'/></WithEnv>);
     screen.getByText('Membre');
 })
+
+test('Add Translations', () => {
+    addTranslations({french: {Awesome: 'Génial', Horrible: 'Terrible'}});
+    expect(translateLabel({label: 'Awesome', language: languageFrench})).toBe('Génial');
+    expect(translateLabel({label: 'Horrible', language: languageFrench})).toBe('Terrible');
+
+});
+
