@@ -84,7 +84,7 @@ export function setGlobal(key, value) {
     });
 }
 
-export function setModulePublicData(siloKey, moduleKey, data) {
+export function setModulePublicData({siloKey='test', moduleKey, data}) {
     mock_setFirebaseData(['silo', siloKey, 'module-public', moduleKey], data);
 }
 

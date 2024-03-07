@@ -4,9 +4,11 @@ import { Heading, UtilityText } from "./text";
 import { InstanceContext } from "../organizer/InstanceContext";
 import { CatchList } from "./catcher";
 import { CTAButton, IconButton } from "./button";
-import { useDatastore } from "../util/datastore";
+import { useDatastore, useModulePublicData } from "../util/datastore";
 import { goBack } from "../util/navigate";
 import { View } from "react-native";
+import { useFirebaseUser } from "../util/firebase";
+import { getIsLocalhost } from "../platform-specific/url";
 
 export function AdminScreen() {
     const {structure} = useContext(InstanceContext);
@@ -35,3 +37,12 @@ function AdminAction({name, action}) {
         {inProgress && <PadBox top={20}><UtilityText label='In Progress...' /></PadBox>}
     </View>
 }   
+
+export function useIsAdmin() {
+    const fbUser = useFirebaseUser();
+    const email = fbUser?.email;
+    const adminEmails = useModulePublicData('admin',['adminEmails']);
+    const emailDomain = email?.split('@')[1];
+    return adminEmails?.includes(email) || (getIsLocalhost() && emailDomain == 'admin.org');
+}
+

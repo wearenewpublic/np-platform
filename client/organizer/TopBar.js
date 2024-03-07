@@ -18,6 +18,7 @@ import { callServerApiAsync } from "../util/servercall";
 import { defaultFeatureConfig } from "../feature";
 import { Catcher } from "../component/catcher";
 import { historyGetState } from "../platform-specific/url";
+import { useIsAdmin } from "../component/admin";
 
 const global_toolbarAction = new ObservableValue(null);
 
@@ -125,8 +126,7 @@ function UserInfo() {
     const fbUser = useFirebaseUser();
     const personaKey = usePersonaKey();
     const [hover, setHover] = useState(false);
-
-    const isAdmin = fbUser && emailIsAdmin(fbUser.email);
+    const isAdmin = useIsAdmin();
 
     function popup() {
         return <View>
@@ -134,7 +134,7 @@ function UserInfo() {
             <TextButton type='small' onPress={() => gotoInstance({structureKey:'profile', instanceKey: personaKey})} label='Profile' />
             <Pad />
             <TextButton type='small' onPress={firebaseSignOut} label='Log out' />
-            <Catcher><FeatureToggles /></Catcher>
+            {isAdmin && <Catcher><FeatureToggles /></Catcher>}
             {/* {isAdmin && <FeatureToggles />} */}
         </View>
     }

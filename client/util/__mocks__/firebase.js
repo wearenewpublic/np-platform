@@ -17,4 +17,4 @@ export function fbKeyToString(key) {return key}
 var global_firebaseData = {};
 export function useFirebaseData(path) {return getObjectPropertyPath(global_firebaseData, path)};
 export function mock_setFirebaseData(path, value) {global_firebaseData = setObjectPropertyPath(global_firebaseData, path, value)}
-
+export function getMockFirebaseData() {return global_firebaseData}

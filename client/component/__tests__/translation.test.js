@@ -27,7 +27,7 @@ test('translateLabel with params', () => {
 })
 
 test('translation based on silo language', () => {
-    setModulePublicData('silo-fr', 'language', languageFrench);
+    setModulePublicData({siloKey: 'silo-fr', moduleKey: 'language', data: languageFrench});
     render(<WithEnv siloKey='silo-fr'><TranslatableText label='Member'/></WithEnv>);
     screen.getByText('Membre');
 })

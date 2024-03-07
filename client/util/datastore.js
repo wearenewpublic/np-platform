@@ -1,7 +1,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { adminPersonaList, defaultPersona, defaultPersonaList, memberPersonaList, personaListToMap } from '../data/personas';
-import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseDataAsync, getFirebaseUser, onFbUserChanged } from './firebase';
+import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseUser, onFbUserChanged, useFirebaseData } from './firebase';
 import { deepClone } from './util';
 import { Text } from 'react-native';
 import { LoadingScreen } from '../component/basics';
@@ -423,4 +423,9 @@ export function makeIndex(fields, itemMap) {
 export function lookupFromIndex(fields, index, filter) {
     const key = fields.map(field => filter[field]).join('-');
     return index[key] || [];
+}
+
+export function useModulePublicData(moduleKey, path = []) {
+    const datastore = useDatastore();
+    return useFirebaseData(['silo', datastore.getSiloKey(), 'module-public', moduleKey, ...path]);
 }
