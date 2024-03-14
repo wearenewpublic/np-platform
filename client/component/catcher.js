@@ -8,7 +8,7 @@ export class Catcher extends React.Component {
     }
 
     componentDidCatch(error, errorInfo) {
-        console.log('componentDidCatch', error, errorInfo);
+        console.error('componentDidCatch', error, errorInfo);
         if (process.env.NODE_ENV === 'test') {
             throw error;
         }

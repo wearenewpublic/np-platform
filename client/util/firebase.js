@@ -111,7 +111,7 @@ function fbKeyToString(input) {
         '%q': "'"
     };
 
-    return input.replace(/%d|%h|%s|%f|%l|%r|%%/g, match => reverseMapping[match]);
+    return input.replace(/%d|%h|%s|%f|%l|%r|%%|%q/g, match => reverseMapping[match]);
 }
 
 

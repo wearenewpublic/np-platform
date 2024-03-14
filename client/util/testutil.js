@@ -39,9 +39,9 @@ export function WithFeatures({siloKey='test', structureKey='componentdemo', inst
 }
 
 export function TestInstance({structureKey, siloKey='test', instanceKey='test', screenKey=null, params={}, features={}}) {
-    return <WithFeatures siloKey={siloKey} structureKey={structureKey} instanceKey={instanceKey} features={features}>
-        <StackedScreen screenInstance={{structureKey, instanceKey, screenKey, params}} />
-    </WithFeatures>
+    return <WithEnv siloKey={siloKey} structureKey={structureKey} instanceKey={instanceKey} >
+        <StackedScreen screenInstance={{structureKey, instanceKey, screenKey, params}} features={features} />
+    </WithEnv>
 }
 
 export const WithEnv = WithFeatures;

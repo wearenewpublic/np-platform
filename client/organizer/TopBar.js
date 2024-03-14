@@ -130,12 +130,10 @@ function UserInfo() {
 
     function popup() {
         return <View>
-            {isAdmin && <PadBox bottom={20}><TextButton type='small' onPress={() => pushSubscreen('admin')} label='Admin Tools' /></PadBox>}
             <TextButton type='small' onPress={() => gotoInstance({structureKey:'profile', instanceKey: personaKey})} label='Profile' />
             <Pad />
             <TextButton type='small' onPress={firebaseSignOut} label='Log out' />
             {isAdmin && <Catcher><FeatureToggles /></Catcher>}
-            {/* {isAdmin && <FeatureToggles />} */}
         </View>
     }
 

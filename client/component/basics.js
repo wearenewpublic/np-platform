@@ -9,7 +9,8 @@ export function Pad({size=20}) {
     return <View style={{height: size, width: size}}/>
 }
 
-export function HoverView({style, role, hoverStyle, pressedStyle, children, disabled=false, onPress, shrink, setHover=()=>{}, setPressed=()=>{}}) {
+// Note: react-testing-library only supports DOM events, so we can't test hover events right now
+export function HoverView({style, ariaLabel, role, hoverStyle, pressedStyle, children, disabled=false, onPress, shrink, setHover=()=>{}, setPressed=()=>{}}) {
     const [localHover, setLocalHover] = useState(false);
     const [localPressed, setLocalPressed] = useState(false);
     if (disabled) {
@@ -17,6 +18,7 @@ export function HoverView({style, role, hoverStyle, pressedStyle, children, disa
     }
     return <Pressable
         role={role}
+        aria-label={ariaLabel}
         style={[style, localHover ? hoverStyle : null, localPressed ? pressedStyle : null, shrink ? {flexShrink: 1} : null]}
         onPressIn={() => {setLocalPressed(true); setPressed(true)}}
         onPressOut={() => {setLocalPressed(false); setPressed(false)}}
@@ -43,21 +45,9 @@ const CardStyle = StyleSheet.create({
     }
 });
 
-export function Divider() {
-    const s = DividerStyle;
-    return <View style={s.divider} />
-}
-const DividerStyle = StyleSheet.create({
-    divider: {
-        height: 1,
-        backgroundColor: colorGreyBorder,
-    }
-});
-
 export function TeaserScreen({children}) {
     function onLayout(e) {
         const {height} = e.nativeEvent.layout;
-        console.log('height', height);
         window.parent.postMessage({type: 'psi-teaser-height', height}, '*');
     }
     return <View onLayout={onLayout}>
@@ -98,19 +88,6 @@ export function PadBox({children, horiz, vert, top, bottom, left, right}) {
     return <View style={{paddingHorizontal: horiz, paddingVertical: vert, paddingTop: top, paddingBottom: bottom, paddingLeft: left, paddingRight: right}}>
         {children}
     </View>
-}
-
-export function SpacedArray({pad=16, horiz=false, children}) {
-    if (children.length > 1) {
-        return <View style={horiz ? {flexDirection: 'row'} : null}>
-            {children.map((c, i) => <View key={i} style={horiz ? {flexDirection: 'row'} : null}>
-                {c}
-                {i < children.length - 1 ? <Pad size={pad} /> : null}
-            </View>)}
-        </View>
-    } else {
-        return children;
-    }
 }
 
 export function HorizBox({children, center=false, right=false, spread=false}) {
@@ -164,20 +141,3 @@ const SeparatorStyle = StyleSheet.create({
     }
 });
 
-export function Collection({items, renderItem}) {
-    const s = CollectionStyle;
-    return <View style={s.outer}>
-        {items.map((c, i) => <Catcher key={i}>
-            {renderItem(c)}
-            {i < items.length - 1 ? <PadBox vert={20}><Separator/></PadBox> : null}
-        </Catcher>)}
-    </View>
-}
-const CollectionStyle = StyleSheet.create({
-    outer: {
-        backgroundColor: colorGreyPopupBackground,
-        padding: 20,
-        borderRadius: 8
-    },
-    inner: {}
-})

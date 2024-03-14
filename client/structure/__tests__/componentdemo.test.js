@@ -1,4 +1,4 @@
-const { TestInstance } = require("../../util/testutil")
+const { TestInstance, WithFeatures } = require("../../util/testutil")
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { pushSubscreen } from '../../util/navigate';
 
@@ -43,4 +43,9 @@ test('Teaser', async () => {
 
 test('Composer', async () => {
     render(<TestInstance structureKey='componentdemo' screenKey='composer' />);
+});
+
+test('Feature', async () => {
+    render(<TestInstance structureKey='componentdemo' screenKey='feature' features={{demo: true}} />);
+    screen.getByText('Demo Widget');
 });

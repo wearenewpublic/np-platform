@@ -8,7 +8,6 @@ import { Datastore, WaitForData, useGlobalProperty } from '../util/datastore';
 import { SharedData } from '../util/shareddata';
 import { useFonts } from 'expo-font';
 import { Catcher } from '../component/catcher';
-import { AdminScreen } from '../component/admin';
 import { structures } from '../structure';
 import { ConfigContext, assembleConfig } from './features';
 
@@ -54,7 +53,7 @@ export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKe
   
 
 
-export function StackedScreen({screenInstance, index}) {
+export function StackedScreen({screenInstance, index, features}) {
     const {structureKey, instanceKey, screenKey, params} = screenInstance;
     
     if (structureKey == 'login' || instanceKey == 'login' || screenKey == 'login') {
@@ -66,8 +65,8 @@ export function StackedScreen({screenInstance, index}) {
   
     const structure = getStructureForKey(structureKey);
     const instance = chooseInstanceByKey({structure, instanceKey});
-    const screenSet = {...defaultScreens, ...structure.subscreens};
-    const activeFeatures = useGlobalProperty('features') || [];
+    const screenSet = structure.subscreens;
+    const activeFeatures = useGlobalProperty('features') || features || [];
     const config = assembleConfig({structure, activeFeatures});
     
     var screen = getScreen({screenSet, structure, screenKey, instanceKey});
@@ -89,13 +88,7 @@ export function StackedScreen({screenInstance, index}) {
             </WaitForData>
       </ConfigContext.Provider>
     </FullScreen>  
-  }
-  
-
-const defaultScreens = {
-    admin: () => <AdminScreen />
-  }
-  
+  }  
 
 function getScreen({screenSet, structure, screenKey}) {
     if (!screenKey) {
