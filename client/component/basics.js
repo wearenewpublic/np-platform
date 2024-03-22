@@ -4,6 +4,7 @@ import { colorBlueBackgound, colorGreyBorder, colorGreyPopupBackground, colorWhi
 import { UtilityText } from "./text";
 import { closeActivePopup } from "../platform-specific/popup";
 import { Catcher } from "./catcher";
+import { setTitle } from "../platform-specific/url";
 
 export function Pad({size=20}) {
     return <View style={{height: size, width: size}}/>
@@ -141,3 +142,7 @@ const SeparatorStyle = StyleSheet.create({
     }
 });
 
+export function WindowTitle({title}) {
+    setTitle(title);
+    return null;
+}

@@ -79,6 +79,9 @@ async function updateCollectionAsync({siloKey, structureKey, instanceKey, collec
 async function setObjectAsync({siloKey, structureKey, instanceKey, collection, key, value}) {
     return firebaseWriteAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', collection, key], value);
 }
+async function updateObjectAsync({siloKey, structureKey, instanceKey, collection, key, value}) {
+    return firebaseUpdateAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', collection, key], value);
+}
 async function readObjectAsync({siloKey, structureKey, instanceKey, collection, key}) {
     return firebaseReadAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', collection, key]);
 }
@@ -124,7 +127,7 @@ function fbKeyToString(input) {
 module.exports = {firebaseWriteAsync, firebaseReadAsync, firebaseUpdateAsync, stringToFbKey, fbKeyToString, 
     readGlobalAsync, writeGlobalAsync, readCollectionAsync, createInstanceAsync, writeCollectionAsync,
     readInstanceAsync, setObjectAsync, readMultipleCollectionsAsync, updateCollectionAsync,
-    readObjectAsync, readAllGlobalsAsync,
+    readObjectAsync, readAllGlobalsAsync, updateObjectAsync,
 
     verifyIdTokenAsync, createNewKey, firebaseGetUserAsync,
 

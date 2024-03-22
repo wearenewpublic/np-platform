@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useCollection, useDatastore, useObject, usePersona, usePersonaKey, useSessionData } from "../util/datastore"
 import { Byline, FacePile, Persona } from "./people"
-import { Card, ConversationScreen, Divider, PadBox, Pad, HorizBox, Separator } from "./basics";
+import { Card, ConversationScreen, PadBox, Pad, HorizBox, Separator } from "./basics";
 import { CharacterCounter, Heading, Paragraph, TextField, TextFieldButton, UtilityText, checkValidLength } from "./text";
 import { CTAButton, ExpandButton, IconButton, SubtleButton, TextButton } from "./button";
 import { IconEdit, IconReply, IconReport, IconUpvote, IconUpvoted } from "./icon";
@@ -166,12 +166,12 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
 
     return <View>
         {topLevel && <TopBarActionProvider label={action} disabled={!canPost || inProgress} onPress={onPost} />}
-        <EditWidgets widgets={commentEditTopWidgets} comment={comment} setComment={setComment} />
+        <EditWidgets widgets={commentEditTopWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
         <TextField value={comment.text} onChange={text => setComment({...comment, text})} 
             placeholder={placeholder} autoFocus big={big}
             placeholderParams={{authorName: getFirstName(author?.name)}} />
         <Pad size={12} />
-        <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} />
+        <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
         {personaKey &&
             <PadBox top={20} >
                 <HorizBox center spread>
@@ -188,10 +188,10 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
     </View>
 }
 
-function EditWidgets({widgets, comment, setComment}) {
+function EditWidgets({widgets, comment, setComment, onCancel}) {
     return <View>
         {widgets?.map((Widget, idx) => <View key={idx} style={{marginRight: 12}}>
-            <Widget comment={comment} setComment={setComment} />
+            <Widget comment={comment} setComment={setComment} onCancel={onCancel} />
         </View>)} 
     </View>
 }
