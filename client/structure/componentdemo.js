@@ -3,7 +3,7 @@ import { Byline, FacePile, Persona, ProfilePhoto } from "../component/people";
 import { usePersonaKey } from "../util/datastore";
 import { IconAudio, IconChevronDown, IconCircleCheck, IconClose, IconCloseBig, IconComment, IconCommentBig, IconEdit, IconEmoji, IconImage, IconInfo, IconLeftArrow, IconLeftArrowBig, IconList, IconReply, IconReport, IconSave, IconUpvote, IconUpvoted, IconVideo } from "../component/icon";
 import { CharacterCounter, ContentHeading, ContentParagraph, Heading, LinkText, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
-import { colorBlueBackgound, colorPink, colorTextBlue, colorTextGrey } from "../component/color";
+import { colorBlueBackground, colorPink, colorTextBlue, colorTextGrey } from "../component/color";
 import { BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, PhotoPile, ReactionButton, SubtleButton, Tag, TextButton, Toggle } from "../component/button";
 import { useState } from "react";
 import { expandDataList } from "../util/util";
@@ -31,6 +31,10 @@ export const ComponentDemoStructure = {
     },
     defaultConfig: {
         widgets: [DefaultWidget],
+        commentAboveWidgets: [],
+        replyAboveWidgets: [],
+        commentFilters: [],
+        replyFilters: [],
         commentActions: [ActionReply],
         commentRightActions: [ActionReport, ActionEdit],
         commentEditBottomWidgets: [],
@@ -145,6 +149,7 @@ function ButtonScreen() {
                     <CTAButton label='Accent Button' type='accent' />
                 </SpacedArray>
                 <SpacedArray horiz>
+                    <CTAButton label='Delete Button' type='delete' />
                     <CTAButton label='✨ Accent with Emoji' type='accent' />
                     <CTAButton label='Disabled Button' type='primary' disabled />
                 </SpacedArray>

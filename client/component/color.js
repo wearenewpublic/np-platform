@@ -26,10 +26,12 @@ export const colorAccentPress = '#361293';
 export const colorIconButtonPress = '#bababa';
 
 export const colorPink = '#FCEBEA';
+export const colorPinkHover = '#E4D3D4';
+export const colorPinkPress = '#CABCBB';
 export const colorRed = '#F53C19';
 export const colorGreen = '#00af87';
-export const colorLightGreen = '#B8EBDC';
+export const colorLightGreen = '#B9EBDC';
 export const colorPurpleBackground = '#ECECFF';
 
-export const colorBlueBackgound = '#CDE1FF';
+export const colorBlueBackground = '#CDE1FF';
 export const colorPinkBackground = '#FEF7F2';

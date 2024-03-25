@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
-import { colorAccent, colorAccentHover, colorAccentPress, colorBlack, colorBlackHover, colorDisabledBackground, colorDisabledText, colorGreen, colorGreyBorder, colorGreyHover, colorGreyPopupBackground, colorIconButtonPress, colorLightGreen, colorNearBlack, colorPrimaryPress, colorRed, colorSecondaryPress, colorTextBlue, colorTextGrey, colorWhite } from "./color";
+import { colorAccent, colorAccentHover, colorAccentPress, colorBlack, colorBlackHover, colorDisabledBackground, colorDisabledText, colorGreen, colorGreyBorder, colorGreyHover, colorGreyPopupBackground, colorIconButtonPress, colorLightGreen, colorNearBlack, colorPink, colorPinkHover, colorPinkPress, colorPrimaryPress, colorRed, colorSecondaryPress, colorTextBlue, colorTextGrey, colorWhite } from "./color";
 import { Paragraph, UtilityText } from "./text";
 import { HoverView, Pad, PadBox } from "./basics";
 import { IconChevronDown, IconChevronUpSmall, IconChevronUp, IconCircleCheck, IconSwitchOff, IconSwitchOn, IconChevronDownSmall } from "./icon";
@@ -14,14 +14,14 @@ export function CTAButton({label, image, type='primary', disabled, compact=false
     const s = CTAButtonStyle;
 
     const styleMap = {
-        primary: {normal: s.primary, hover: s.primaryHover, pressed: s.primaryPressed},
-        secondary: {normal: s.secondary, hover: s.secondaryHover, pressed: s.secondaryPressed},
-        accent: {normal: s.accent, hover: s.accentHover, pressed: s.accentPressed},
-        disabled: {normal: s.disabled, hover: s.disabled, pressed: s.disabled}        
+        primary: {normal: s.primary, hover: s.primaryHover, pressed: s.primaryPressed, textColor: colorWhite}, 
+        secondary: {normal: s.secondary, hover: s.secondaryHover, pressed: s.secondaryPressed, textColor: colorBlack},
+        accent: {normal: s.accent, hover: s.accentHover, pressed: s.accentPressed, textColor: colorWhite},
+        disabled: {normal: s.disabled, hover: s.disabled, pressed: s.disabled, textColor: colorDisabledText},        
+        delete: {normal: s.delete, hover: s.deleteHover, pressed: s.deletePressed, textColor: colorRed}
     }
-    const {normal, hover, pressed} = styleMap[disabled ? 'disabled' : type] ?? styleMap.primary;
-    const textColor = disabled ? colorDisabledText : type == 'secondary' ? colorBlack : colorWhite;
-    
+    const {normal, hover, pressed, textColor} = styleMap[disabled ? 'disabled' : type] ?? styleMap.primary;
+        
     return <HoverView disabled={disabled} role='button'
             style={[compact ? s.compactButton : s.button, normal]} hoverStyle={[s.hover, hover]} 
             pressedStyle={pressed} onPress={onPress} >
@@ -66,6 +66,18 @@ const CTAButtonStyle = StyleSheet.create({
         backgroundColor: colorAccentHover,
         borderColor: colorAccentHover
     },
+    delete: {
+        backgroundColor: colorPink,
+        borderColor: colorPink,
+    },
+    deletePressed: {
+        backgroundColor: colorPinkPress,
+        borderColor: colorPinkPress,
+    },
+    deleteHover: {
+        backgroundColor: colorPinkHover,
+        borderColor: colorPinkHover,
+    },
     disabled: {
         backgroundColor: colorDisabledBackground,
         borderColor: colorDisabledBackground,
@@ -96,7 +108,7 @@ export function IconButton({label, icon=null, wide=false, onPress}) {
     return <HoverView style={[s.button, wide ? s.wide : null]} hoverStyle={s.hover} 
             pressedStyle={s.pressed} onPress={onPress} role='button'>
         {icon && React.createElement(icon)} 
-        {icon && <Pad size={8} />}
+        {icon && label && <Pad size={8} />}
         <UtilityText label={label} />
     </HoverView>
 }

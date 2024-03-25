@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
-import { colorBlueBackgound, colorGreyBorder, colorGreyPopupBackground, colorWhite } from "./color";
+import { colorBlueBackground, colorGreyBorder, colorGreyPopupBackground, colorWhite } from "./color";
 import { UtilityText } from "./text";
 import { closeActivePopup } from "../platform-specific/popup";
 import { Catcher } from "./catcher";

@@ -8,7 +8,7 @@ import { IconEdit, IconReply, IconReport, IconUpvote, IconUpvoted } from "./icon
 import { goBack, pushSubscreen } from "../util/navigate";
 import { StyleSheet, Text, View } from "react-native";
 import { deepClone, getFirstName } from "../util/util";
-import { colorBlueBackgound, colorDisabledText, colorGreyPopupBackground, colorPurpleBackground, colorTextBlue, colorTextGrey } from "./color";
+import { colorBlueBackground, colorDisabledText, colorGreyPopupBackground, colorPurpleBackground, colorTextBlue, colorTextGrey } from "./color";
 import { RichText } from "./richtext";
 import { CatchList, Catcher } from "./catcher";
 import { TopBarActionProvider } from "../organizer/TopBar";
@@ -39,8 +39,9 @@ export function ReplyComment({commentKey, depth={depth}, isFinal=false}) {
     const s = ReplyCommentStyle;
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
+    const {replyAboveWidgets} = useConfig();
     return <View style={depth == 1 ? s.firstLevel : s.secondLevel}>
-        <UtilityText>Depth: {depth}</UtilityText>
+        {replyAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
         <Byline type='small' userId={comment.from} time={comment.time} edited={comment.edited} />
         <Pad size={20} />
         <CommentBody commentKey={commentKey} />
@@ -197,10 +198,12 @@ function EditWidgets({widgets, comment, setComment, onCancel}) {
 }
 
 function CommentReplies({commentKey, depth=1}) {
-    const replies = useCollection('comment', {filter: {replyTo: commentKey}, sortBy: 'time', reverse: true});
+    const {replyFilters} = useConfig();
+    const datastore = useDatastore();
+    var replies = useCollection('comment', {filter: {replyTo: commentKey}, sortBy: 'time', reverse: true});
+    replies = filterComments({datastore, comments: replies, commentFilters: replyFilters});
     const replyUsers = replies.map(reply => reply.from);
     const expanded = useSessionData(['showReplies', commentKey]);
-    const datastore = useDatastore();
 
     function setExpanded(expanded) {
         datastore.setSessionData(['showReplies', commentKey], expanded);
