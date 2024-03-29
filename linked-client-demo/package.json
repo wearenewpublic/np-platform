@@ -26,9 +26,10 @@
     "react-native-web": ">=0.18.11"
   },
   "dependencies": {
+    "@carbon/icons-react": "^11.36.0",
+    "@expo-google-fonts/playfair-display": "^0.2.3",
     "firebase": "^9.22.2",
-    "json5": "^2.2.3",
-    "@carbon/icons-react": "^11.36.0"
+    "json5": "^2.2.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.23.4",

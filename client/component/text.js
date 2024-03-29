@@ -33,6 +33,49 @@ const HeadingStyle = StyleSheet.create({
     },
 })
 
+
+export function EditorialHeading({level=1, text, label, underline, formatParams, color='black', italic=false}) {
+    const s = EditorialHeadingStyle;
+    const styleMap = {
+        1: s.heading1,
+        2: s.heading2,
+        3: s.heading3,
+        4: s.heading4,
+        5: s.heading5,        
+    }    
+    return <TranslatableText text={text} label={label} formatParams={formatParams}
+        style={[
+            styleMap[level], 
+            {color}, 
+            italic && {fontStyle: 'italic'},
+            underline && {textDecorationLine: 'underline'}
+        ]} />
+}
+const EditorialHeadingStyle = StyleSheet.create({
+    heading1: {
+        fontFamily: 'PlayfairDisplay_400Regular',
+        fontSize: 32,
+    }, 
+    heading2: {
+        fontFamily: 'PlayfairDisplay_400Regular',
+        fontSize: 28,
+    },
+    heading3: {
+        fontFamily: 'PlayfairDisplay_400Regular',
+        fontSize: 24,
+    },
+    heading4: {
+        fontFamily: 'PlayfairDisplay_400Regular',
+        fontSize: 20,
+    },
+    heading5: {
+        fontFamily: 'PlayfairDisplay_400Regular',
+        fontSize: 18,
+    }
+
+})
+
+
 export function Paragraph({type='small', color={colorBlack}, strong=false, text, label, formatParams, underline=false}) {
     const s = ParagraphStyle;
     const styleMap = {
@@ -61,6 +104,8 @@ const ParagraphStyle = StyleSheet.create({
         fontFamily: 'IBMPlexMono_400Regular',
     },
 })
+
+
 
 export function UtilityText({type='small', text, label, formatParams, color='black', strong=false, caps=false, underline=false}) {
     const s = UtilityTextStyle;

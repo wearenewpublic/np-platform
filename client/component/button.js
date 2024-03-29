@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { colorAccent, colorAccentHover, colorAccentPress, colorBlack, colorBlackHover, colorDisabledBackground, colorDisabledText, colorGreen, colorGreyBorder, colorGreyHover, colorGreyPopupBackground, colorIconButtonPress, colorLightGreen, colorNearBlack, colorPink, colorPinkHover, colorPinkPress, colorPrimaryPress, colorRed, colorSecondaryPress, colorTextBlue, colorTextGrey, colorWhite } from "./color";
-import { Paragraph, UtilityText } from "./text";
+import { EditorialHeading, Paragraph, UtilityText } from "./text";
 import { HoverView, Pad, PadBox } from "./basics";
 import { IconChevronDown, IconChevronUpSmall, IconChevronUp, IconCircleCheck, IconSwitchOff, IconSwitchOn, IconChevronDownSmall } from "./icon";
 import { FacePile } from "./people";
@@ -154,7 +154,7 @@ const SubtleButtonStyle = StyleSheet.create({
 });
 
 
-export function TextButton({label, text, type='large', paragraph=false, underline, strong, formatParams, leftIcon, rightIcon, color=colorBlack, onPress}) {
+export function TextButton({label, level=1, text, type='large', paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, rightIcon, color=colorBlack, onPress}) {
     const s = TextButtonStyle;
     const [hover, setHover] = useState(false);
     return <HoverView shrink style={s.button} setHover={setHover} onPress={onPress} role='button'>
@@ -163,6 +163,9 @@ export function TextButton({label, text, type='large', paragraph=false, underlin
         {paragraph ? 
             <Paragraph label={label} text={text} formatParams={formatParams} type={type}
                 color={color} underline={hover ^ underline} strong={strong} />
+        : editorial ?
+            <EditorialHeading level={level} label={label} text={text} formatParams={formatParams} type={type}
+                color={color} underline={hover ^ underline} italic={italic} strong={strong} />
         :
             <UtilityText label={label} text={text} formatParams={formatParams} type={type} 
                 color={color} underline={hover ^ underline} strong={strong} />
