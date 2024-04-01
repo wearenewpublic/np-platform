@@ -69,7 +69,7 @@ export class Datastore extends React.Component {
             console.log('is live. Setting watcher');
             this.fbDataWatchReleaser && this.fbDataWatchReleaser();
             this.fbDataWatchReleaser = firebaseWatchValue(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey], data => {
-                this.setData({...this.getData(), ...data?.collection, ...data?.global});
+                this.setData({...data?.collection, ...data?.global});
                 console.log('get response', data);
                 this.setState({loaded: true})
             });
