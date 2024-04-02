@@ -8,7 +8,7 @@ import { IconEdit, IconReply, IconReport, IconUpvote, IconUpvoted } from "./icon
 import { goBack, pushSubscreen } from "../util/navigate";
 import { StyleSheet, Text, View } from "react-native";
 import { deepClone, getFirstName } from "../util/util";
-import { colorBlueBackground, colorDisabledText, colorGreyPopupBackground, colorPurpleBackground, colorTextBlue, colorTextGrey } from "./color";
+import { colorBlueBackground, colorDisabledText, colorGreyPopupBackground, colorLightBlueBackground, colorPurpleBackground, colorTextBlue, colorTextGrey } from "./color";
 import { RichText } from "./richtext";
 import { CatchList, Catcher } from "./catcher";
 import { TopBarActionProvider } from "../organizer/TopBar";
@@ -71,8 +71,10 @@ function CommentBody({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
     const [editedComment, setEditedComment] = useState(null);
+    const [expanded, setExpanded] = useState(false);
     const datastore = useDatastore();
     const {commentTopWidgets} = useConfig();
+    const isLong = comment.text.length > 200 || comment.text.split('\n').length > 3;
 
     function onEditingDone(finalComment) {
         setEditedComment(null);
@@ -92,7 +94,8 @@ function CommentBody({commentKey}) {
     } else {
         return <View>
             {commentTopWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
-            <Paragraph text={comment.text.trim()} />
+            <Paragraph numberOfLines={(isLong && !expanded) ? 6 : null} text={comment.text.trim()} />
+            {isLong && !expanded && <PadBox top={14}><TextButton type='small' label='Read more' color={colorTextBlue} onPress={() => setExpanded(true)} /></PadBox>}
         </View>
     }
 }
@@ -379,6 +382,7 @@ function NoCommentsBanner() {
 
 export function BasicComments({about, canPost=true}) {
     const datastore = useDatastore();
+    const {noCommentsMessage, noMoreCommentsMessage} = useConfig();
     const {commentInputPlaceholder, commentInputLoginAction, pageTopWidgets, commentFilters} = useConfig();
     const comments = useCollection('comment', {filter: {about, replyTo: null}, sortBy: 'time', reverse: true});
     const filteredComments = filterComments({datastore, comments, commentFilters});
@@ -399,10 +403,15 @@ export function BasicComments({about, canPost=true}) {
             <Catcher key={i}><Widget comments={comments} /></Catcher>
         )}
         </View>
-        {comments?.length == 0 && <PadBox vert={20} horiz={20}><NoCommentsBanner /></PadBox>}
+        {comments?.length == 0 && 
+            <PadBox vert={20} horiz={20}><Banner color={colorPurpleBackground}><RichText label={noCommentsMessage} /></Banner></PadBox>
+        }
         <CatchList items={filteredComments} renderItem={comment =>
             <Comment commentKey={comment.key} />
         } />
+        {comments?.length > 1 &&
+            <PadBox vert={40} horiz={20}><Banner color={colorLightBlueBackground}><RichText label={noMoreCommentsMessage} /></Banner></PadBox>
+        }
     </View>
 }
 

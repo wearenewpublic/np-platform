@@ -108,7 +108,7 @@ const FacePileStyle = StyleSheet.create({
 
 
 
-export function Byline({type='small', userId, name=null, photo=null, time, subtitleLabel, underline=false, edited=false}) {
+export function Byline({type='small', clickable=true, userId, name=null, photo=null, time, subtitleLabel, underline=false, edited=false}) {
     const s = BylineStyle
     const persona = usePersonaObject(userId);
     const language = useLanguage();
@@ -129,21 +129,22 @@ export function Byline({type='small', userId, name=null, photo=null, time, subti
                         label={'{time}' + (edited ? ' • Edited' : '')} 
                         formatParams={{time: formatDate(time, language)}} underline={underline}/>
                 }
-                {/* <UtilityText color={colorTextGrey} text={subtitleLabel ?? (formatDate(time) + (edited ? ' • Edited' : ''))} underline={underline}/> */}
             </View>
         </View>
     } else {
         return <View style={s.smallOuter}>
             <ProfilePhoto userId={userId} photo={photo} type='small' /> 
             <Pad size={8} />
-            <TextButton type='small' strong text={name ?? persona?.name} underline={underline} onPress={onProfile} />
+            {clickable ?
+                <TextButton type='small' strong text={name ?? persona?.name} underline={underline} onPress={onProfile} />
+            : 
+                <UtilityText strong text={name ?? persona?.name} underline={underline} />
+            }
             {time && <Pad size={6} />}
             {time &&                     <UtilityText color={colorTextGrey} 
                         label={'{time}' + (edited ? ' • Edited' : '')} 
                         formatParams={{time: formatDate(time, language)}} underline={underline}/>
             }
-                        
-            {/* <UtilityText color={colorTextGrey} text={formatMiniDate(time) + (edited ? ' • Edited' : '')} />} */}
         </View>
     }
 }

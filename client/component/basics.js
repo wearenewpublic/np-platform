@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { colorBlueBackground, colorGreyBorder, colorGreyPopupBackground, colorWhite } from "./color";
 import { UtilityText } from "./text";
 import { closeActivePopup } from "../platform-specific/popup";
 import { Catcher } from "./catcher";
 import { setTitle } from "../platform-specific/url";
+import { Banner } from "./banner";
 
 export function Pad({size=20}) {
     return <View style={{height: size, width: size}}/>
@@ -102,8 +103,22 @@ export function HorizBox({children, center=false, right=false, spread=false}) {
 }
 
 export function LoadingScreen({label = 'Loading...'}) {
+    const [show, setShow] = useState(false);
     const s = LoadingScreenStyle;
-    return <View style={s.outer}><UtilityText style={s.text} label={label} /></View>
+
+    useEffect(() => {
+        const timeout = setTimeout(() => setShow(true), 1000);
+        return () => clearTimeout(timeout);
+    }, []);
+
+    if (show) {
+        return <View style={s.outer}>
+            {/* <UtilityText style={s.text} label={label} /> */}
+            <Banner color={colorBlueBackground}><UtilityText label={label} /></Banner>
+        </View>
+    } else {
+        return null;
+    }
 }
 const LoadingScreenStyle = StyleSheet.create({
     outer: {

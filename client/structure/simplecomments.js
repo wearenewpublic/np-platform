@@ -35,7 +35,8 @@ export const SimpleCommentsStructure = {
         topBanners: [],
         pageTopWidgets: [],
         teaserScreen: null,
-        noCommentsMessage: 'No comments yet. Start the conversation!'
+        noCommentsMessage: 'No comments yet. Start the conversation!',
+        noMoreCommentsMessage: 'No more comments',
     },
     instance: [
         {

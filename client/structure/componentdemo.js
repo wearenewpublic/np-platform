@@ -43,7 +43,8 @@ export const ComponentDemoStructure = {
         commentInputPlaceholder: 'Share your thoughts...',
         commentReplyPlaceholder: 'Reply to {authorName}...',
         commentInputLoginAction: 'comment',
-        noCommentsMessage: 'No answers yet. Be the first to answer!'
+        noCommentsMessage: 'No answers yet. Be the first to answer!',
+        noMoreCommentsMessage: 'No more comments',
     }
 }
 

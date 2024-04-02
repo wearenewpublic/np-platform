@@ -6,7 +6,7 @@ import { Popup } from "../platform-specific/popup";
 import { useDatastore, useGlobalProperty, usePersonaKey, useSessionData } from "../util/datastore";
 import { useContext, useEffect, useState } from "react";
 import { InstanceContext } from "./InstanceContext";
-import { IconChevronDown, IconChevronDownSmall, IconClose, IconCloseBig, IconLeftArrowBig, IconSettings } from "../component/icon";
+import { IconChevronDown, IconChevronDownSmall, IconChevronUpSmall, IconClose, IconCloseBig, IconLeftArrowBig, IconSettings } from "../component/icon";
 import { Byline, FaceImage } from "../component/people";
 import { BreadCrumb, CTAButton, TextButton, Toggle } from "../component/button";
 import { HorizBox, Pad, PadBox, Separator } from "../component/basics";
@@ -126,6 +126,7 @@ function UserInfo() {
     const fbUser = useFirebaseUser();
     const personaKey = usePersonaKey();
     const [hover, setHover] = useState(false);
+    const [shown, setShown] = useState(false);
     const isAdmin = useIsAdmin();
 
     function popup() {
@@ -138,12 +139,12 @@ function UserInfo() {
     }
 
     if (fbUser) {
-        return <Popup popupContent={popup} setHover={setHover} popupStyle={s.popup}>
+        return <Popup popupContent={popup} setHover={setHover} setShown={setShown} popupStyle={s.popup}>
             <PadBox vert={6} right={20}>
                 <HorizBox center>
-                    <Byline userId={personaKey} name={fbUser.displayName} underline={hover} />
+                    <Byline userId={personaKey} clickable={false} name={fbUser.displayName} underline={hover} />
                     <Pad size={8} />
-                    <IconChevronDownSmall />
+                    {shown ? <IconChevronUpSmall/> : <IconChevronDownSmall />}
                 </HorizBox>
             </PadBox>
         </Popup>

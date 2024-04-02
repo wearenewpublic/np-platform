@@ -76,13 +76,13 @@ const EditorialHeadingStyle = StyleSheet.create({
 })
 
 
-export function Paragraph({type='small', color={colorBlack}, strong=false, text, label, formatParams, underline=false}) {
+export function Paragraph({numberOfLines=null, type='small', color={colorBlack}, strong=false, text, label, formatParams, underline=false}) {
     const s = ParagraphStyle;
     const styleMap = {
         large: s.largeParagraph,
         small: s.smallParagraph
     }
-    return <TranslatableText text={text} label={label} formatParams={formatParams} 
+    return <TranslatableText numberOfLines={numberOfLines} text={text} label={label} formatParams={formatParams} 
         style={[
             styleMap[type], {color}, 
             strong && {fontFamily: fontFamilyMonoSemiBold},
