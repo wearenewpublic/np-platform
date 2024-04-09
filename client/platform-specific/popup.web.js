@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import ReactDOM from 'react-dom';
 import { HoverView } from "../component/basics";
+import { colorWhite } from "../component/color";
 
 var global_active_popup_closer = null;
 
@@ -91,7 +92,7 @@ function global_layoutPopup() {
 }
 
 
-export function Popup({popupContent, popupStyle, alignRight=false, setHover=()=>{}, setShown=()=>{}, children}) {
+export function Popup({popupContent, popupStyle=null, alignRight=false, setHover=()=>{}, setShown=()=>{}, children}) {
     const s = PopupButtonStyle;
     const [shown, setLocalShown] = useState(false);
     const popupRef = React.useRef(null);
@@ -156,7 +157,7 @@ export function Popup({popupContent, popupStyle, alignRight=false, setHover=()=>
         </View> 
         {shown ? 
             <DocumentLevelComponent>
-                <View ref={popupRef} style={[s.basicPopup, popupStyle ?? s.popupFrame]} >
+                <View ref={popupRef} style={[s.basicPopup, popupStyle]} >
                     {shown ? popupContent() : null}
                 </View>
             </DocumentLevelComponent>
@@ -171,11 +172,10 @@ const PopupButtonStyle = StyleSheet.create({
     basicPopup: {
         position: 'absolute',        
         zIndex: 1000,
-    },
-    popupFrame: {
-        borderWidth: 1, borderColor: '#ddd', borderRadius: 8, padding: 10,
-        boxShadow: '0 4px 4px 0 rgba(85, 85, 85, 0.5',
-        backgroundColor: '#fff'
+        backgroundColor: colorWhite,
+        boxShadow: '0px 4px 20px 0px rgba(0, 0, 0, 0.10)',
+        borderRadius: 8,
+        padding: 20  
     },
     up: {
         bottom: 0

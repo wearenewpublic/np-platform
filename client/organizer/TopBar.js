@@ -11,7 +11,7 @@ import { Byline, FaceImage } from "../component/people";
 import { BreadCrumb, CTAButton, TextButton, Toggle } from "../component/button";
 import { HorizBox, Pad, PadBox, Separator } from "../component/basics";
 import { emailIsAdmin } from "../util/config";
-import { colorGreyHover, colorGreyPopupBackground, colorTextGrey } from "../component/color";
+import { colorGreyHover, colorGreyPopupBackground, colorTextGrey, colorWhite } from "../component/color";
 import { ObservableProvider, ObservableValue, useObservable } from "../util/observable";
 import { getAvailableFeaturesForStructure } from "../util/features";
 import { callServerApiAsync } from "../util/servercall";
@@ -161,9 +161,6 @@ const UserInfoStyle = StyleSheet.create({
         marginLeft: 12
     },
     popup: {
-        backgroundColor: colorGreyPopupBackground,
-        borderRadius: 8,
-        padding: 20,
         marginRight: 20
     }
 });

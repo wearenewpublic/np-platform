@@ -5,10 +5,9 @@ import { HorizBox, HoverView, Pad } from "./basics";
 import { useEffect, useState } from "react";
 import { IconCheckmark, IconEdit, IconEditBig } from "./icon";
 
-const fontFamilyMonoRegular = 'IBMPlexMono_400Regular, Courier New, Courier, monospace';
-const fontFamilyMonoMedium = 'IBMPlexMono_500Medium, Courier New, Courier, monospace';
-const fontFamilyMonoSemiBold = 'IBMPlexMono_600SemiBold, Courier New, Courier, monospace';
-
+const fontFamilySansRegular = 'IBMPlexSans_400Regular, Arial, Helvetica, sans-serif';
+const fontFamilySansMedium = 'IBMPlexSans_500Medium, Arial, Helvetica, sans-serif';
+const fontFamilySansSemiBold = 'IBMPlexSans_600SemiBold, Arial, Helvetica, sans-serif';
 
 
 export function Heading({text, label, level=2, formatParams}) {
@@ -22,12 +21,12 @@ export function Heading({text, label, level=2, formatParams}) {
 
 const HeadingStyle = StyleSheet.create({
     heading1: {
-        fontFamily: fontFamilyMonoMedium,
+        fontFamily: fontFamilySansMedium,
         fontSize: 24,
         lineHeight: 24 * 1.25
     },
     heading2: {
-        fontFamily: fontFamilyMonoSemiBold,
+        fontFamily: fontFamilySansSemiBold,
         fontSize: 16,
         lineHeight: 16 * 1.25
     },
@@ -53,23 +52,23 @@ export function EditorialHeading({level=1, text, label, underline, formatParams,
 }
 const EditorialHeadingStyle = StyleSheet.create({
     heading1: {
-        fontFamily: 'PlayfairDisplay_400Regular',
+        fontFamily: fontFamilySansRegular,
         fontSize: 32,
     }, 
     heading2: {
-        fontFamily: 'PlayfairDisplay_400Regular',
+        fontFamily: fontFamilySansRegular,
         fontSize: 28,
     },
     heading3: {
-        fontFamily: 'PlayfairDisplay_400Regular',
+        fontFamily: fontFamilySansRegular,
         fontSize: 24,
     },
     heading4: {
-        fontFamily: 'PlayfairDisplay_400Regular',
+        fontFamily: fontFamilySansRegular,
         fontSize: 20,
     },
     heading5: {
-        fontFamily: 'PlayfairDisplay_400Regular',
+        fontFamily: fontFamilySansRegular,
         fontSize: 18,
     }
 
@@ -85,7 +84,7 @@ export function Paragraph({numberOfLines=null, type='small', color={colorBlack},
     return <TranslatableText numberOfLines={numberOfLines} text={text} label={label} formatParams={formatParams} 
         style={[
             styleMap[type], {color}, 
-            strong && {fontFamily: fontFamilyMonoSemiBold},
+            strong && {fontFamily: fontFamilySansSemiBold},
             underline && {textDecorationLine: 'underline'}
         ]} 
     />
@@ -96,12 +95,12 @@ const ParagraphStyle = StyleSheet.create({
     largeParagraph: {
         fontSize: 16,
         lineHeight: 16 * 1.5,
-        fontFamily: 'IBMPlexMono_400Regular',
+        fontFamily: fontFamilySansRegular,
     },
     smallParagraph: {
         fontSize: 14,
         lineHeight: 14 * 1.5,
-        fontFamily: 'IBMPlexMono_400Regular',
+        fontFamily: fontFamilySansRegular,
     },
 })
 
@@ -115,9 +114,9 @@ export function UtilityText({type='small', text, label, formatParams, color='bla
         tiny: s.utilityTiny,
     }
     const strongMap = {
-        large: fontFamilyMonoMedium,
-        small: fontFamilyMonoMedium,
-        tiny: fontFamilyMonoSemiBold,
+        large: fontFamilySansMedium,
+        small: fontFamilySansMedium,
+        tiny: fontFamilySansSemiBold,
     }
     if (!text && !label) return null;
     return <TranslatableText text={text} label={label} formatParams={formatParams}
@@ -133,17 +132,17 @@ export function UtilityText({type='small', text, label, formatParams, color='bla
 
 const UtilityTextStyle = StyleSheet.create({
     utilityLarge: {
-        fontFamily: fontFamilyMonoRegular,
+        fontFamily: fontFamilySansRegular,
         fontSize: 16,
         lineHeight: 16 * 1.25
     },
     utilitySmall: {
-        fontFamily: fontFamilyMonoRegular,
+        fontFamily: fontFamilySansRegular,
         fontSize: 14, 
         lineHeight: 14 * 1.25
     },
     utilityTiny: {
-        fontFamily: fontFamilyMonoMedium,
+        fontFamily: fontFamilySansMedium,
         fontSize: 12,
         lineHeight: 12 * 1.25,
     }
@@ -158,7 +157,7 @@ export function LinkText({type='small', text, url, label, formatParams}) {
 
     return <HoverView shrink setHover={setHover} onPress={onPress}>
         <UtilityText type={type} text={text} label={label} formatParams={formatParams} 
-            color={colorTextBlue} underline={!hover} />
+            /* color={colorTextBlue} */ underline={!hover} />
     </HoverView>
 }
 
@@ -211,7 +210,7 @@ const TextFieldStyle = StyleSheet.create({
         paddingHorizontal: 16,
         paddingVertical: 15,
         fontSize: 16,
-        fontFamily: 'IBMPlexMono_400Regular',
+        fontFamily: fontFamilySansRegular,
     },
     hover: {
         borderColor: colorGreyHoverBorder
@@ -229,7 +228,7 @@ export function TextFieldButton({placeholder, placeholderParams, onPress}) {
 const TextFieldButtonStyle = StyleSheet.create({
     textFieldText: {
         color: colorBlack, 
-        fontFamily: 'IBMPlexMono_500Medium'
+        fontFamily: fontFamilySansMedium
     },
     textFieldButton: {
         borderColor: colorGreyBorder,
@@ -238,7 +237,7 @@ const TextFieldButtonStyle = StyleSheet.create({
         borderRadius: 4,
         paddingHorizontal: 16,
         height: 50,
-        fontFamily: 'IBMPlexMono_400Regular',
+        fontFamily: fontFamilySansRegular,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'

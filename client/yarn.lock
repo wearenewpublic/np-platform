@@ -1258,6 +1258,11 @@
   resolved "https://registry.yarnpkg.com/@expo-google-fonts/ibm-plex-mono/-/ibm-plex-mono-0.2.3.tgz#447948818c0ee0352a983eb1967c571f6527d45d"
   integrity sha512-Bc+VBBtOjP993mNycex2Dmomuokvd3lkn43CY7Kya8Jst4F8CKXhe6H/wp52AAR6Wo+dWsCHSUdW0ynHDD3Qhg==
 
+"@expo-google-fonts/ibm-plex-sans@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/ibm-plex-sans/-/ibm-plex-sans-0.2.3.tgz#586f35503b5d17225b058bb8efd829ab8c1cf907"
+  integrity sha512-FO0p5qnzr4C3FfjNWKNiJzMuyz8wOsjjeZjk9UWCncuNuKjUR37FtZt+5CI/OGEVZBgn7flL0YUqALNAP+nIWg==
+
 "@expo-google-fonts/playfair-display@^0.2.3":
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/@expo-google-fonts/playfair-display/-/playfair-display-0.2.3.tgz#892805793743fc5d110a39d31442ae269d43de47"

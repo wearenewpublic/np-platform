@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { InstanceContext } from '../organizer/InstanceContext';
 import { TopBar } from '../organizer/TopBar';
-import { IBMPlexMono_400Regular, IBMPlexMono_500Medium, IBMPlexMono_600SemiBold } from '@expo-google-fonts/ibm-plex-mono'
+import { IBMPlexSans_400Regular, IBMPlexSans_500Medium, IBMPlexSans_600SemiBold } from '@expo-google-fonts/ibm-plex-sans'
 import { LoginScreen } from '../organizer/Login';
 import { Datastore, WaitForData, useGlobalProperty } from '../util/datastore';
 import { SharedData } from '../util/shareddata';
@@ -13,9 +13,9 @@ import { ConfigContext, assembleConfig } from './features';
 
 export function useStandardFonts() {
     let [fontsLoaded] = useFonts({
-        IBMPlexMono_400Regular,
-        IBMPlexMono_500Medium,
-        IBMPlexMono_600SemiBold
+        IBMPlexSans_400Regular,
+        IBMPlexSans_500Medium,
+        IBMPlexSans_600SemiBold
       });
     return fontsLoaded
 }

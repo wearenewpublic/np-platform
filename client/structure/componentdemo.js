@@ -3,7 +3,7 @@ import { Byline, FacePile, Persona, ProfilePhoto } from "../component/people";
 import { usePersonaKey } from "../util/datastore";
 import { IconAudio, IconChevronDown, IconCircleCheck, IconClose, IconCloseBig, IconComment, IconCommentBig, IconEdit, IconEmoji, IconImage, IconInfo, IconLeftArrow, IconLeftArrowBig, IconList, IconReply, IconReport, IconSave, IconUpvote, IconUpvoted, IconVideo } from "../component/icon";
 import { CharacterCounter, ContentHeading, ContentParagraph, EditorialHeading, Heading, LinkText, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
-import { colorBlueBackground, colorPink, colorTextBlue, colorTextGrey } from "../component/color";
+import { colorBlack, colorBlueBackground, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
 import { BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, PhotoPile, ReactionButton, SubtleButton, Tag, TextButton, Toggle } from "../component/button";
 import { useState } from "react";
 import { expandDataList } from "../util/util";
@@ -14,6 +14,8 @@ import { ConversationScreen, Narrow, Pad, PadBox, Separator, TeaserScreen } from
 import { BasicTeaser } from "../component/teaser";
 import { useConfig } from "../util/features";
 import { Banner, TopBanner } from "../component/banner";
+import { TrashCan, Pin } from "@carbon/icons-react"
+
 
 export const ComponentDemoStructure = {
     key: 'componentdemo',
@@ -153,15 +155,15 @@ function ButtonScreen() {
                     <CTAButton label='Accent Button' type='accent' />
                 </SpacedArray>
                 <SpacedArray horiz>
-                    <CTAButton label='Delete Button' type='delete' />
+                    <CTAButton icon={<TrashCan style={{fill: colorRed}} />} label='Delete Button' type='delete' />
                     <CTAButton label='✨ Accent with Emoji' type='accent' />
                     <CTAButton label='Disabled Button' type='primary' disabled />
                 </SpacedArray>
             </DemoSection>
-            <DemoSection label='Icon Button'>
+            <DemoSection label='Action Button'>
                 <SpacedArray horiz>
                     <IconButton icon={IconReply} label='Reply' />
-                    <IconButton icon={IconComment} label='Comment' />
+                    <IconButton icon={IconComment} label='Respond' />
                     <IconButton icon={IconEdit} label='Edit' />
                     <IconButton icon={IconSave} label='Save' />
                 </SpacedArray>
@@ -177,11 +179,11 @@ function ButtonScreen() {
                 <SpacedArray horiz>
                     <SubtleButton icon={IconReply} label='Reply' />                    
                     <SubtleButton icon={IconUpvote} label='Upvote ({count})' formatParams={{count: 22}} />
-                    <SubtleButton icon={IconUpvoted} label='Upvoted ({count})' formatParams={{count: 23}} color={colorTextBlue} />
+                    <SubtleButton icon={IconUpvoted} label='Upvoted ({count})' formatParams={{count: 23}} color={colorBlack} />
                     <SubtleButton icon={IconReport} label='Report' />
                     <SubtleButton icon={IconComment} label='{count} {noun}' 
                         formatParams={{singular: 'comment', plural: 'comments', count: 12}} />
-                    <SubtleButton icon={IconList} label='Community Guidelines' color={colorTextBlue} />
+                    <SubtleButton icon={Pin} label='Community Guidelines' />
                 </SpacedArray>
             </DemoSection>
             <DemoSection label='Text Button'>
@@ -194,8 +196,7 @@ function ButtonScreen() {
                 </SpacedArray>
                 <SpacedArray>
                     <TextButton label='Editoral 1 Italic' editorial italic/>
-                    <TextButton label='Editoral 2 Italic' editorial italic/>
-
+                    <TextButton label='Editoral 2 Italic' editorial level={2} italic/>
                 </SpacedArray>
             </DemoSection>
             <DemoSection label='Expand Button'>
@@ -214,6 +215,7 @@ function ButtonScreen() {
             <DemoSection label='Tag'>
                 <Tag label='Subtle Tag' type='subtle' />
                 <Tag label='🔥 Emphasized Tag' type='emphasized' color={colorPink} />
+                <Tag label='Tiny Tag' type='tiny' />
             </DemoSection>
             <DemoSection label='Reaction Button'>
                 <ReactionButton label='🤝🏽 Respect' count={1} />

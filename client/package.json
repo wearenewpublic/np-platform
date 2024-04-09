@@ -54,7 +54,6 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.23.9",
-    "@expo-google-fonts/playfair-display": "^0.2.3",
     "firebase": "^9.22.2",
     "json5": "^2.2.3"
   },
@@ -63,7 +62,7 @@
     "@babel/core": "^7.20.0",
     "@babel/preset-env": "^7.22.4",
     "@carbon/icons-react": "^11.36.0",
-    "@expo-google-fonts/ibm-plex-mono": "^0.2.3",
+    "@expo-google-fonts/ibm-plex-sans": "^0.2.3",
     "@expo/webpack-config": "^19.0.0",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react": "^14.2.0",

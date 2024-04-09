@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
-import { colorAccent, colorAccentHover, colorAccentPress, colorBlack, colorBlackHover, colorDisabledBackground, colorDisabledText, colorGreen, colorGreyBorder, colorGreyHover, colorGreyPopupBackground, colorIconButtonPress, colorLightGreen, colorNearBlack, colorPink, colorPinkHover, colorPinkPress, colorPrimaryPress, colorRed, colorSecondaryPress, colorTextBlue, colorTextGrey, colorWhite } from "./color";
+import { colorAccent, colorAccentHover, colorAccentPress, colorBlack, colorBlackHover, colorDisabledBackground, colorDisabledText, colorGreen, colorGreyBorder, colorGreyHover, colorGreyPopupBackground, colorIconButtonPress, colorLightBlueBackground, colorLightGreen, colorNearBlack, colorPink, colorPinkHover, colorPinkPress, colorPrimaryPress, colorPurpleBackground, colorRed, colorSecondaryPress, colorTextBlue, colorTextGrey, colorWhite } from "./color";
 import { EditorialHeading, Paragraph, UtilityText } from "./text";
 import { HoverView, Pad, PadBox } from "./basics";
 import { IconChevronDown, IconChevronUpSmall, IconChevronUp, IconCircleCheck, IconSwitchOff, IconSwitchOn, IconChevronDownSmall } from "./icon";
@@ -10,7 +10,7 @@ import { closeActivePopup } from "../platform-specific/popup";
 
 
 
-export function CTAButton({label, image, type='primary', disabled, compact=false, onPress}) {
+export function CTAButton({label, icon, type='primary', disabled, compact=false, onPress}) {
     const s = CTAButtonStyle;
 
     const styleMap = {
@@ -25,7 +25,7 @@ export function CTAButton({label, image, type='primary', disabled, compact=false
     return <HoverView disabled={disabled} role='button'
             style={[compact ? s.compactButton : s.button, normal]} hoverStyle={[s.hover, hover]} 
             pressedStyle={pressed} onPress={onPress} >
-        {image && <PadBox right={8}>{image}</PadBox>}
+        {icon && <PadBox right={8}>{icon}</PadBox>}
         <UtilityText type='large' label={label} color={textColor} />
     </HoverView>
 }
@@ -67,16 +67,16 @@ const CTAButtonStyle = StyleSheet.create({
         borderColor: colorAccentHover
     },
     delete: {
-        backgroundColor: colorPink,
-        borderColor: colorPink,
+        // backgroundColor: colorPink,
+        borderColor: colorGreyBorder,
     },
     deletePressed: {
-        backgroundColor: colorPinkPress,
-        borderColor: colorPinkPress,
+        backgroundColor: colorSecondaryPress,
+        borderColor: colorGreyBorder,
     },
     deleteHover: {
-        backgroundColor: colorPinkHover,
-        borderColor: colorPinkHover,
+        backgroundColor: colorGreyHover,
+        borderColor: colorGreyBorder
     },
     disabled: {
         backgroundColor: colorDisabledBackground,
@@ -119,8 +119,8 @@ const IconReplyStyle = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 8,
         alignSelf: 'flex-start',
-        borderRadius: 100,
-        backgroundColor: colorGreyHover
+        borderRadius: 8,
+        // backgroundColor: colorGreyHover
     },
     wide: {
         alignSelf: 'stretch',
@@ -192,9 +192,9 @@ export function ExpandButton({userList, photoUrlList, label, text, type='tiny', 
         {photoUrlList && <PhotoPile photoUrlList={photoUrlList} />}
         {(userList || photoUrlList) && <Pad size={4} />}
         <UtilityText label={label} text={text} formatParams={formatParams} type={type} 
-            color={colorTextBlue} underline={hover} strong />
+            underline={hover} strong />
         <Pad size={4} />
-        {expanded ? <IconChevronUp color={colorTextBlue} /> : <IconChevronDown color={colorTextBlue} />}
+        {expanded ? <IconChevronUp /> : <IconChevronDown />}
     </HoverView>
 
 }
@@ -207,10 +207,14 @@ const ExpanderButtonStyle = StyleSheet.create({
 
 export function Tag({label, text, type='emphasized', formatParams, color=null, onPress}) {
     const s = TagStyle;
-    return <View style={[s.button, type == 'emphasized' && s.emphasized, 
-                color && {borderColor: color, backgroundColor: color}]} 
+    return <View style={[
+                s.button, 
+                type == 'emphasized' && s.emphasized, 
+                type == 'tiny' && s.tiny,      
+                color && {borderColor: color, backgroundColor: color}
+            ]} 
             hoverStyle={s.hover} onPress={onPress}>
-        <UtilityText label={label} text={text} formatParams={formatParams} strong type='tiny' />
+        <UtilityText color={type=='tiny' ? colorTextBlue : null} label={label} text={text} formatParams={formatParams} strong type='tiny' />
     </View>
 }
 const TagStyle = StyleSheet.create({
@@ -226,6 +230,13 @@ const TagStyle = StyleSheet.create({
     emphasized: {
         borderRadius: 100,
     },
+    tiny: {
+        paddingHorizontal: 4,
+        paddingVertical: 2,
+        borderRadius: 100,
+        backgroundColor: colorLightBlueBackground,
+        borderColor: colorLightBlueBackground
+    }
 })
 
 export function ReactionButton({label, count, selected}){
@@ -272,7 +283,7 @@ export function DropDownSelector({label, options, value, onChange=()=>{}}) {
         </View>
     }
     return <View style={{alignSelf: 'flex-start'}}> 
-        <Popup popupContent={popup} popupStyle={s.popup} alignRight setHover={setHover} setShown={setShown}>
+        <Popup popupContent={popup} alignRight setHover={setHover} setShown={setShown}>
             <View style={s.button}>
                 <UtilityText label={label} type='tiny' strong />
                 <UtilityText text=': ' type='tiny' strong />
@@ -288,11 +299,6 @@ const DropDownSelectorStyle = StyleSheet.create({
     button: {
         flexDirection: 'row',
         alignSelf: 'flex-start',
-    },
-    popup: {
-        backgroundColor: colorGreyPopupBackground,
-        borderRadius: 8,
-        padding: 20
     }
 })
 
@@ -339,12 +345,12 @@ const ToggleStyle = StyleSheet.create({
     toggleZoneSelected: {
         width: 56,
         height: 32,
-        backgroundColor: colorLightGreen,
+        backgroundColor: colorPurpleBackground,
         borderRadius: 100,
         transition: 'background-color 0.2s ease-in-out'
     },
     toggleBallSelected: {
-        backgroundColor: colorGreen,
+        backgroundColor: colorAccent,
         left: 56-28-2,
         top: 2,
         width: 28,
