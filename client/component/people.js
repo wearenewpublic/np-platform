@@ -143,7 +143,7 @@ export function Byline({type='small', clickable=true, userId, name=null, photo=n
             {time && <Pad size={6} />}
             {time &&                     <UtilityText color={colorTextGrey} 
                         label={'{time}' + (edited ? ' • Edited' : '')} 
-                        formatParams={{time: formatDate(time, language)}} underline={underline}/>
+                        formatParams={{time: formatMiniDate(time, language)}} underline={underline}/>
             }
         </View>
     }

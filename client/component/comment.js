@@ -8,7 +8,7 @@ import { IconEdit, IconReply, IconReport, IconUpvote, IconUpvoted } from "./icon
 import { goBack, pushSubscreen } from "../util/navigate";
 import { StyleSheet, Text, View } from "react-native";
 import { deepClone, getFirstName } from "../util/util";
-import { colorBlueBackground, colorDisabledText, colorGreyPopupBackground, colorLightBlueBackground, colorPurpleBackground, colorTextBlue, colorTextGrey } from "./color";
+import { colorBlueBackground, colorDisabledText, colorGreyPopupBackground, colorLightBlueBackground, colorPurpleBackground, colorTeaserBackground, colorTextBlue, colorTextGrey } from "./color";
 import { RichText } from "./richtext";
 import { CatchList, Catcher } from "./catcher";
 import { TopBarActionProvider } from "../organizer/TopBar";
@@ -21,16 +21,18 @@ export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
     const {commentAboveWidgets} = useConfig();
-    return <View testID={commentKey}>
-        <PadBox top={20} horiz={20}>
+    return <View testID={commentKey} id={commentKey} >
+        <PadBox top={20} horiz={10}>
             {commentAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
             <Byline type='large' userId={comment.from} time={comment.time} edited={comment.edited} />
             <Pad size={20} />
-            <CommentBody commentKey={commentKey} />
-            {!editing && <PadBox top={20}><CommentActions commentKey={commentKey} /></PadBox>}
-            <MaybeCommentReply commentKey={commentKey} />
+            <PadBox left={48}>
+                <CommentBody commentKey={commentKey} />
+                {!editing && <PadBox top={20}><CommentActions commentKey={commentKey} /></PadBox>}
+                <MaybeCommentReply commentKey={commentKey} />
+                <CommentReplies commentKey={commentKey} />
+            </PadBox>
         </PadBox>
-        <CommentReplies commentKey={commentKey} />
         <Separator />
     </View>
 }
@@ -44,25 +46,23 @@ export function ReplyComment({commentKey, depth={depth}, isFinal=false}) {
         {replyAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
         <Byline type='small' userId={comment.from} time={comment.time} edited={comment.edited} />
         <Pad size={20} />
-        <CommentBody commentKey={commentKey} />
-        <Pad size={20} />
-        {!editing && <CommentActions commentKey={commentKey} depth={depth} />}
-        <MaybeCommentReply commentKey={commentKey} />
-        <CommentReplies commentKey={commentKey} depth={depth+1} />
+        <PadBox left={40}>
+            <CommentBody commentKey={commentKey} />
+            <Pad size={20} />
+            {!editing && <CommentActions commentKey={commentKey} depth={depth} />}
+            <MaybeCommentReply commentKey={commentKey} />
+            <CommentReplies commentKey={commentKey} depth={depth+1} />
+        </PadBox>
         {!isFinal && <Separator />}
     </View>    
 }
 
 const ReplyCommentStyle = StyleSheet.create({
     firstLevel: {
-        backgroundColor: colorGreyPopupBackground,
-        paddingLeft: 40,
-        paddingRight: 20,
         paddingTop: 20
     },
     secondLevel: {
-        paddingTop: 20,
-        paddingLeft: 20,
+        paddingTop: 10,
     }
 })
 
@@ -123,8 +123,10 @@ function MaybeCommentReply({commentKey}) {
         <Pad size={20} />
         <Byline type='small' userId={personaKey} />
         <Pad size={20} />
-        <EditComment comment={comment} onCancel={onCancel}
-            setComment={setComment} onEditingDone={onEditingDone} />
+        <PadBox left={24}>
+            <EditComment comment={comment} onCancel={onCancel}
+                setComment={setComment} onEditingDone={onEditingDone} />
+        </PadBox>
     </View>
 }
 
@@ -215,15 +217,16 @@ function CommentReplies({commentKey, depth=1}) {
     if (replies.length == 0) return <Pad />;
     
     return <View>
-        <PadBox horiz={depth==1 ? 20 : 0} top={20}>
-        <ExpandButton userList={replyUsers} label='{count} {noun}' 
-            expanded={expanded} setExpanded={setExpanded}
-            formatParams={{count: replies.length, singular: 'reply', plural: 'replies'}} />
-        </PadBox>
         <Pad />
-        {expanded && depth > 1 && <PadBox horiz={20}><Separator /></PadBox>}
+        {/* <PadBox horiz={depth==1 ? 20 : 0} top={20}> */}
+            <ExpandButton userList={replyUsers} label='{count} {noun}' 
+                expanded={expanded} setExpanded={setExpanded}
+                formatParams={{count: replies.length, singular: 'reply', plural: 'replies'}} />
+        {/* </PadBox> */}
+        <Pad />
+        {expanded && <Separator />}
         {expanded && <CatchList items={replies} 
-            renderSeparator={() => <PadBox left={depth == 1 ? 40 : 20}><Separator /></PadBox>}
+            renderSeparator={() => <PadBox left={20}><Separator /></PadBox>}
             renderItem={(reply,isFinal) =>
                 <ReplyComment commentKey={reply.key} depth={depth} isFinal={isFinal} />
             } 
@@ -266,12 +269,17 @@ const CommentActionsStyle = StyleSheet.create({
 
 export function ActionReply({commentKey, depth}) {
     const datastore = useDatastore();
-
+    const comment = useObject('comment', commentKey);
+    const parent = useObject('comment', comment.replyTo);
+    const personaKey = usePersonaKey();
+    
     function onReply() {
         const oldReply = datastore.getSessionData(['replyToComment', commentKey]);
         datastore.setSessionData(['replyToComment', commentKey], !oldReply);
     }
 
+    if (comment.from == personaKey) return null;
+    if (depth == 1 && parent.from != personaKey) return null;
     if (depth > 1) return null;
 
     return <SubtleButton icon={IconReply} label='Reply' onPress={needsLogin(onReply, 'reply')} padRight />
@@ -293,7 +301,7 @@ export function ActionUpvote({commentKey}) {
             datastore.addObject('upvote', {comment: commentKey, from: personaKey});
         }
     }
-    
+
     const disabled = comment?.from == personaKey;
 
     return <SubtleButton icon={upvoted ? IconUpvoted : IconUpvote} bold={upvoted}
@@ -356,11 +364,11 @@ export function Composer({about=null, goBackAfterPost=false, topLevel=false, con
  }
 
 export function CommentsIntro() {
-    return <PadBox horiz={20}>
+    return <View>
         <Heading level={1} label='Comments'/>
         <Pad size={20} />
         <RichText color={colorTextGrey} label='Join the conversation by submitting a comment. Be sure to follow our [community guidelines](https://example.com).' />
-    </PadBox>
+    </View>
 }
 
 function filterComments({datastore, comments, commentFilters}) {
@@ -373,38 +381,29 @@ function filterComments({datastore, comments, commentFilters}) {
     }
 }
 
-function NoCommentsBanner() {
-    const {noCommentsMessage} = useConfig();
-    return <Banner color={colorPurpleBackground}>
-        <RichText label={noCommentsMessage} />
-    </Banner>
+export function CommentsInput({about=null}) {
+    const {commentInputPlaceholder, commentInputLoginAction} = useConfig();
+    return <TextFieldButton placeholder={commentInputPlaceholder} 
+                onPress={needsLogin(
+                    () => pushSubscreen('composer', {about}), 
+                    commentInputLoginAction)} 
+    />
 }
 
-export function BasicComments({about, canPost=true}) {
+export function BasicComments({about=null, showInput=true, canPost=true}) {
     const datastore = useDatastore();
     const {noCommentsMessage, noMoreCommentsMessage} = useConfig();
     const {commentInputPlaceholder, commentInputLoginAction, pageTopWidgets, commentFilters} = useConfig();
     const comments = useCollection('comment', {filter: {about, replyTo: null}, sortBy: 'time', reverse: true});
     const filteredComments = filterComments({datastore, comments, commentFilters});
     return <View>
-        <Catcher>
-            {canPost && <Card>
-                <PadBox horiz={20}>
-                    <TextFieldButton placeholder={commentInputPlaceholder} 
-                        onPress={needsLogin(
-                            () => pushSubscreen('composer', {about}), 
-                            commentInputLoginAction)} 
-                    />
-                </PadBox>
-            </Card>}
-        </Catcher>
         <View>
         {pageTopWidgets?.map((Widget,i) => 
             <Catcher key={i}><Widget comments={comments} /></Catcher>
         )}
         </View>
         {comments?.length == 0 && 
-            <PadBox vert={20} horiz={20}><Banner color={colorPurpleBackground}><RichText label={noCommentsMessage} /></Banner></PadBox>
+            <PadBox vert={20} horiz={20}><Banner color={colorTeaserBackground}><RichText label={noCommentsMessage} /></Banner></PadBox>
         }
         <CatchList items={filteredComments} renderItem={comment =>
             <Comment commentKey={comment.key} />

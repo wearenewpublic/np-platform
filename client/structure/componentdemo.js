@@ -7,10 +7,10 @@ import { colorBlack, colorBlueBackground, colorPink, colorRed, colorTextBlue, co
 import { BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, PhotoPile, ReactionButton, SubtleButton, Tag, TextButton, Toggle } from "../component/button";
 import { useState } from "react";
 import { expandDataList } from "../util/util";
-import { ActionEdit, ActionReply, ActionReport, BasicComments, Comment, CommentsIntro, ComposerScreen } from "../component/comment";
+import { ActionEdit, ActionReply, ActionReport, BasicComments, Comment, CommentsInput, CommentsIntro, ComposerScreen } from "../component/comment";
 import { gotoInstance, pushSubscreen } from "../util/navigate";
 import { RichText, wrapLinks } from "../component/richtext";
-import { ConversationScreen, Narrow, Pad, PadBox, Separator, TeaserScreen } from "../component/basics";
+import { ConversationScreen, HeaderBox, Narrow, Pad, PadBox, Separator, TeaserScreen } from "../component/basics";
 import { BasicTeaser } from "../component/teaser";
 import { useConfig } from "../util/features";
 import { Banner, TopBanner } from "../component/banner";
@@ -45,7 +45,7 @@ export const ComponentDemoStructure = {
         commentInputPlaceholder: 'Share your thoughts...',
         commentReplyPlaceholder: 'Reply to {authorName}...',
         commentInputLoginAction: 'comment',
-        noCommentsMessage: 'No answers yet. Be the first to answer!',
+        noCommentsMessage: 'No responses yet. Start the conversation!',
         noMoreCommentsMessage: 'No more comments',
     }
 }
@@ -162,7 +162,7 @@ function ButtonScreen() {
             </DemoSection>
             <DemoSection label='Action Button'>
                 <SpacedArray horiz>
-                    <IconButton icon={IconReply} label='Reply' />
+                    <IconButton icon={IconReply} label='Respond' />
                     <IconButton icon={IconComment} label='Respond' />
                     <IconButton icon={IconEdit} label='Edit' />
                     <IconButton icon={IconSave} label='Save' />
@@ -252,14 +252,11 @@ function ButtonScreen() {
 function CommentScreen() {
     return <ConversationScreen >
         <Narrow pad={false}>
-            {/* <DemoSection label='Comment'>
-                <PadBox horiz={20} >
-                    <Comment commentKey='a' />
-                </PadBox>
-            </DemoSection> */}
-            <PadBox horiz={20} vert={20}>
+            <HeaderBox horiz={20} vert={20}>
                 <DemoHeader label='Comments' />
-            </PadBox>
+                <Pad/>
+                <CommentsInput />
+            </HeaderBox>
             <BasicComments intro={null} />
         </Narrow>
      </ConversationScreen>

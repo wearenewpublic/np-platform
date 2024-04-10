@@ -1,6 +1,6 @@
 import React from "react";
-import { ConversationScreen, Pad, PadBox, TeaserScreen } from "../component/basics";
-import { ActionEdit, ActionReply, ActionReport, ActionUpvote, BasicComments, CommentsIntro, ComposerScreen } from "../component/comment";
+import { ConversationScreen, HeaderBox, Pad, PadBox, TeaserScreen } from "../component/basics";
+import { ActionEdit, ActionReply, ActionReport, ActionUpvote, BasicComments, CommentsInput, CommentsIntro, ComposerScreen } from "../component/comment";
 import { BasicTeaser } from "../component/teaser";
 import { UtilityText } from "../component/text";
 import { useCollection } from "../util/datastore";
@@ -55,10 +55,13 @@ function SimpleCommentsScreen() {
     const {topBanners} = useConfig();
     return <ConversationScreen>
         {topBanners?.map((Banner, i) => <Banner key={i} />)}
+        <HeaderBox>
+            <CommentsIntro />
+            <Pad />
+            <CommentsInput />
+        </HeaderBox>
         <Pad />
-        <CommentsIntro />
-        <Pad />
-        <BasicComments />
+        <BasicComments showInput={false} />
     </ConversationScreen>
 }
 

@@ -20,7 +20,7 @@ test('Comment and Reply', () => {
 test('Composer opens', () => {
     render(<TestInstance structureKey='simplecomments' />);
     screen.getByText('Share your thoughts...').click();
-    expect(pushSubscreen).toHaveBeenCalledWith('composer', {about: undefined});
+    expect(pushSubscreen).toHaveBeenCalledWith('composer', {about: null});
 });
 
 test('Composer saves comment', async () => {
@@ -40,12 +40,12 @@ test('Comment renders', async () => {
 })
 
 test('Reply to a comment', async () => {
-    addObject('comment', {key: 'test', from: 'a', text: 'This is a comment'});
+    addObject('comment', {key: 'test', from: 'b', text: 'This is a comment'});
     render(<TestInstance structureKey='simplecomments' />);
     const comment = screen.getByTestId('test');
     const replyButton = within(comment).getByRole('button', {name: 'Reply'});
     fireEvent.click(replyButton);
-    const input = screen.getByPlaceholderText('Reply to Alice...');
+    const input = screen.getByPlaceholderText('Reply to Bob...');
     fireEvent.change(input, {target: {value: 'My reply'}});
     fireEvent.click(screen.getByRole('button', {name: 'Post'}));
     getMatchingObject('comment', {text: 'My reply', replyTo: 'test'});

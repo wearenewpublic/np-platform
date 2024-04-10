@@ -4,6 +4,8 @@ import { colorBannerGreen, colorBlack, colorDisabledText, colorGreyBorder, color
 import { HorizBox, HoverView, Pad } from "./basics";
 import { useEffect, useState } from "react";
 import { IconCheckmark, IconEdit, IconEditBig } from "./icon";
+import { usePersonaKey } from "../util/datastore";
+import { ProfilePhoto } from "./people";
 
 const fontFamilySansRegular = 'IBMPlexSans_400Regular, Arial, Helvetica, sans-serif';
 const fontFamilySansMedium = 'IBMPlexSans_500Medium, Arial, Helvetica, sans-serif';
@@ -220,8 +222,13 @@ const TextFieldStyle = StyleSheet.create({
 export function TextFieldButton({placeholder, placeholderParams, onPress}) {
     const s = TextFieldButtonStyle;
     const tPlaceholder = useTranslation(placeholder, placeholderParams);
+    const personaKey = usePersonaKey();
     return <HoverView style={s.textFieldButton} hoverStyle={s.hover} onPress={onPress}>
-        <Text style={s.textFieldText}>{tPlaceholder}</Text>
+        <HorizBox center>
+            <ProfilePhoto userId={personaKey} type='small' />
+            <Pad size={10} />
+            <Text style={s.textFieldText}>{tPlaceholder}</Text>
+        </HorizBox>
         <IconEditBig />
     </HoverView>
 }

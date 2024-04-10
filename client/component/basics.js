@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
-import { colorBlueBackground, colorGreyBorder, colorGreyPopupBackground, colorWhite } from "./color";
+import { colorBlueBackground, colorGreyBorder, colorGreyPopupBackground, colorPinkBackground, colorWhite } from "./color";
 import { UtilityText } from "./text";
 import { closeActivePopup } from "../platform-specific/popup";
 import { Catcher } from "./catcher";
@@ -60,12 +60,15 @@ export function TeaserScreen({children}) {
 
 export function ConversationScreen({children, pad=false}) {
     const s = ConversationScreenStyle;
+    const hasEmulateWarning = window.location.hostname == 'localhost';
+ 
     return <ScrollView style={s.scroller}>
         <View style={s.outer}>
             <View style={[s.screen, pad ? {paddingHorizontal: 20} : null]}>
                 {children}
             </View>
         </View>
+        {hasEmulateWarning && <Pad size={36} />}
     </ScrollView>
 }
 const ConversationScreenStyle = StyleSheet.create({
@@ -144,6 +147,18 @@ export function Center({children, pad=0}) {
         {children}
     </View>  
 }
+
+export function HeaderBox({children}) {
+    const s = HeaderBoxStyle;
+    return <View style={s.box}>{children}</View>
+}
+const HeaderBoxStyle = StyleSheet.create({
+    box: {
+        backgroundColor: colorPinkBackground,
+        paddingHorizontal: 20,
+        paddingVertical: 20
+    }
+})
 
 
 export function Separator() {
