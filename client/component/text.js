@@ -1,7 +1,7 @@
 import { Linking, StyleSheet, Text, TextInput, View } from "react-native";
 import { TranslatableText, useTranslation } from "./translation"
 import { colorBannerGreen, colorBlack, colorDisabledText, colorGreyBorder, colorGreyHoverBorder, colorRed, colorTextBlue, colorTextGrey, colorWhite } from "./color";
-import { HorizBox, HoverView, Pad } from "./basics";
+import { HorizBox, HoverView, Pad, PadBox } from "./basics";
 import { useEffect, useState } from "react";
 import { IconCheckmark, IconEdit, IconEditBig } from "./icon";
 import { usePersonaKey } from "../util/datastore";
@@ -225,8 +225,7 @@ export function TextFieldButton({placeholder, placeholderParams, onPress}) {
     const personaKey = usePersonaKey();
     return <HoverView style={s.textFieldButton} hoverStyle={s.hover} onPress={onPress}>
         <HorizBox center>
-            <ProfilePhoto userId={personaKey} type='small' />
-            <Pad size={10} />
+            {personaKey && <PadBox right={10}><ProfilePhoto userId={personaKey} type='small' /></PadBox>}
             <Text style={s.textFieldText}>{tPlaceholder}</Text>
         </HorizBox>
         <IconEditBig />
@@ -271,17 +270,20 @@ const TextBannerStyle = StyleSheet.create({
 export function CharacterCounter({max, min, text}) {
     const count = text?.length ?? 0;
 
-    if (count < min) {
+    if (count == 0) {
         return <UtilityText type='tiny' label='{min} characters min' formatParams={{min}} 
             color={colorDisabledText} />
+    } else if (count < min) {
+        return <UtilityText type='tiny' label='{count}/{min} characters min' formatParams={{count,min}} 
+            color={colorDisabledText} />
     } else if (count > max) {
-        return <UtilityText type='tiny' label='{max} characters max' formatParams={{max}} 
+        return <UtilityText type='tiny' label='{count}/{max} characters max' formatParams={{count,max}} 
             color={colorRed} />
     } else {
         return <HorizBox>
             <IconCheckmark />
             <Pad size={8} />
-            <UtilityText type='tiny' label='{min} characters min' formatParams={{min}} />
+            <UtilityText type='tiny' label='{count}/{max} characters max' formatParams={{count,max}} />
         </HorizBox>
     }
 }

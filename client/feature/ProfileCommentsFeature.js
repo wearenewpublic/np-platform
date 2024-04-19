@@ -24,7 +24,6 @@ function DerivedComment({comment}) {
 
 function ProfileCommentsWidget() {
     const comments = useDerivedCollection('comment');
-    console.log('ProfileCommentsWidget', comments);
 
     return <PadBox top={20}>
         <Heading level='1' label='Comments' />

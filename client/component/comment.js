@@ -33,7 +33,7 @@ export function Comment({commentKey}) {
                 <CommentReplies commentKey={commentKey} />
             </PadBox>
         </PadBox>
-        <Separator />
+        <PadBox horiz={20}><Separator /></PadBox>
     </View>
 }
 
@@ -42,7 +42,7 @@ export function ReplyComment({commentKey, depth={depth}, isFinal=false}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
     const {replyAboveWidgets} = useConfig();
-    return <View style={depth == 1 ? s.firstLevel : s.secondLevel}>
+    return <View testID={commentKey} style={depth == 1 ? s.firstLevel : s.secondLevel}>
         {replyAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
         <Byline type='small' userId={comment.from} time={comment.time} edited={comment.edited} />
         <Pad size={20} />
@@ -74,7 +74,7 @@ function CommentBody({commentKey}) {
     const [expanded, setExpanded] = useState(false);
     const datastore = useDatastore();
     const {commentTopWidgets} = useConfig();
-    const isLong = comment.text.length > 200 || comment.text.split('\n').length > 3;
+    const isLong = comment.text.length > 300 || comment.text.split('\n').length > 5;
 
     function onEditingDone(finalComment) {
         setEditedComment(null);
@@ -94,7 +94,8 @@ function CommentBody({commentKey}) {
     } else {
         return <View>
             {commentTopWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
-            <Paragraph numberOfLines={(isLong && !expanded) ? 6 : null} text={comment.text.trim()} />
+            {/* <Paragraph numberOfLines={(isLong && !expanded) ? 5 : null} text={comment.text.trim()} /> */}
+            <RichText numberOfLines={(isLong && !expanded) ? 5 : null} label={comment.text.trim()} />
             {isLong && !expanded && <PadBox top={14}><TextButton type='small' label='Read more' color={colorTextBlue} onPress={() => setExpanded(true)} /></PadBox>}
         </View>
     }
@@ -318,8 +319,12 @@ export function ActionEdit({commentKey}) {
     const personaKey = usePersonaKey();
     const comment = useObject('comment', commentKey)
     function onEdit() {
-        const old = datastore.getSessionData(['editComment', commentKey]);
-        datastore.setSessionData(['editComment', commentKey], !old);
+        if (!comment.replyTo) {
+            pushSubscreen('composer', {commentKey});
+        } else {
+            const old = datastore.getSessionData(['editComment', commentKey]);
+            datastore.setSessionData(['editComment', commentKey], !old);
+        }
     }
 
     if (comment.from != personaKey) return null;
@@ -338,14 +343,19 @@ export function ActionReport({commentKey}) {
     return <SubtleButton icon={IconReport} onPress={onReport}/>
 }
 
-export function Composer({about=null, goBackAfterPost=false, topLevel=false, contentType}) {
-    const [comment, setComment] = useState({text: '', about});
+export function Composer({about=null, commentKey, goBackAfterPost=false, topLevel=false, contentType}) {
+    const comment = useObject('comment', commentKey);
+    const [editedComment, setEditedComment] = useState(null);
     const personaKey = usePersonaKey();
     const datastore = useDatastore();
 
     function onEditingDone(finalComment) {
-        datastore.addObject('comment', finalComment);
-        setComment({text: '', about});
+        if (commentKey) {
+            datastore.updateObject('comment', commentKey, {...finalComment, edited: Date.now()});
+        } else {
+            datastore.addObject('comment', finalComment);
+        }
+        setEditedComment({text: '', about});
         if (goBackAfterPost) {
             goBack();
         }
@@ -357,9 +367,9 @@ export function Composer({about=null, goBackAfterPost=false, topLevel=false, con
     return <View>
         <Byline type='large' userId={personaKey} subtitleLabel={contentType} />
         <Pad size={24} />
-        <EditComment big comment={comment} topLevel={topLevel}
+        <EditComment big comment={editedComment ?? comment ?? {text: ''}} topLevel={topLevel}
             onCancel={goBackAfterPost && onCancel}
-            setComment={setComment} onEditingDone={onEditingDone} />
+            setComment={setEditedComment} onEditingDone={onEditingDone} />
     </View>
  }
 
@@ -415,14 +425,14 @@ export function BasicComments({about=null, showInput=true, canPost=true}) {
 }
 
 
-export function ComposerScreen({about, intro=null, contentType}) {
+export function ComposerScreen({about, commentKey=null, intro=null, contentType}) {
     const {composerTopBanners} = useConfig();
     return <ConversationScreen>
         {composerTopBanners?.map((Banner, i) => <Banner key={i} about={about} />)}
         {intro}
         {/* <Pad size={20} /> */}
         <PadBox horiz={20} top={20}>
-            <Composer about={about} goBackAfterPost topLevel contentType={contentType} />
+            <Composer about={about} commentKey={commentKey} goBackAfterPost topLevel contentType={contentType} />
         </PadBox>  
     </ConversationScreen>
 }

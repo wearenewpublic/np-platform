@@ -149,7 +149,7 @@ function UserInfo() {
             </PadBox>
         </Popup>
     } else {        
-        return <PadBox horiz={20}><TextButton onPress={() => pushSubscreen('login')} label='Log in' /></PadBox>
+        return <PadBox horiz={20}><CTAButton type='secondary' onPress={() => pushSubscreen('login')} label='Log in' /></PadBox>
     }
 }
 

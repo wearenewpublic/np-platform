@@ -35,6 +35,9 @@ export var defaultFeatureConfig = {
     },
     simplecomments: {
         upvote: true
+    },
+    profile: {
+        profilecomments: true    
     }
 }
 

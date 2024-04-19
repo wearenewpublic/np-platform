@@ -94,7 +94,7 @@ function RichTextPart({text, color, type='small', linkColor}) {
     return <Paragraph color={color} type={type} text={text} />
 }
 
-export function RichText({text, type, color={colorBlack}, label, formatParams}) {
+export function RichText({text, numberOfLines=null, type, color={colorBlack}, label, formatParams}) {
     const tText = useTranslation(label, formatParams);
-    return <RichTextPart color={color} type={type} text={text ?? tText} />
+    return <Text numberOfLines={numberOfLines}><RichTextPart color={color} type={type} text={text ?? tText} /></Text>
 }

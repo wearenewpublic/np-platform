@@ -29,7 +29,7 @@ export function LoginScreen({action}) {
         <RichText color={colorTextGrey} label='By continuing, you agree to our [community guidelines](https://example.com) and [Privacy Policy](https://example.com).' />
         <Pad size={40} />
         <CTAButton 
-            image={
+            icon={
                 <Image source={{uri: expandUrl({url: 'google.png', type: 'images'})}} 
                     style={{width: 20, height: 20}} />
             } 

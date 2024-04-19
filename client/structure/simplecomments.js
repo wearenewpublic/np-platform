@@ -14,7 +14,7 @@ export const SimpleCommentsStructure = {
     screen: SimpleCommentsScreen,
     teaser: CommentTeaserScreen,
     subscreens: {
-        composer: ({about}) => <ComposerScreen about={about} intro={null} contentType='Public Comment' />,
+        composer: ({about, commentKey}) => <ComposerScreen about={about} commentKey={commentKey} intro={null} contentType='Public Comment' />,
     },
     defaultConfig: {
         commentActions: [ActionReply],
