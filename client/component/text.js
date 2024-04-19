@@ -108,7 +108,7 @@ const ParagraphStyle = StyleSheet.create({
 
 
 
-export function UtilityText({type='small', text, label, formatParams, color='black', strong=false, caps=false, underline=false}) {
+export function UtilityText({type='small', center=false, right=false, text, label, formatParams, color='black', strong=false, caps=false, underline=false}) {
     const s = UtilityTextStyle;
     const styleMap = {
         large: s.utilityLarge,
@@ -126,6 +126,8 @@ export function UtilityText({type='small', text, label, formatParams, color='bla
             styleMap[type], {color}, 
             underline && {textDecorationLine: 'underline'},
             strong && {fontFamily: strongMap[type]},
+            center && {textAlign: 'center'},
+            right && {textAlign: 'right'},
             caps && {textTransform: 'uppercase', letterSpacing: 0.5}
         ]} />
 }
