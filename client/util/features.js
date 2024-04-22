@@ -17,14 +17,21 @@ export function assembleConfig({structure, activeFeatures}) {
 
     availableFeatures.forEach(feature => {
         if (mergedActiveFeatures[feature.key]) {
-            Object.keys(config).forEach(key => {
-                const featureParam = feature.config[key];
-                if (Array.isArray(featureParam)) {
-                    config[key] = [...config[key], ...featureParam];
-                } else if (featureParam) {
-                    config[key] = featureParam;
+            Object.keys(feature.config).forEach(key => {
+                if (!(key in config)) {
+                    console.error('Feature key not found in config', {key, feature, config});
+                } else {
+                    const featureParam = feature.config[key];
+                    if (Array.isArray(featureParam)) {
+                        config[key] = [...config[key], ...featureParam];
+                    } else if (featureParam) {
+                        config[key] = featureParam;
+                    }
                 }
             });
+            if (feature.defaultConfig) {                
+                config = {...config, ...feature.defaultConfig};
+            }
         }
     })
 

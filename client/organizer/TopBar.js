@@ -85,11 +85,10 @@ const TopBarStyle = StyleSheet.create({
 })
 
 
-function FeatureToggles() {
+export function FeatureToggles() {
     const {structure, structureKey} = useContext(InstanceContext);
     const features = getAvailableFeaturesForStructure(structureKey)
     const defaultFeatures = defaultFeatureConfig[structureKey] ?? {};
-    console.log('structure', {structureKey, structure, features, defaultFeatures})
     if (!features) return null;
     return <PadBox top={20}>
         <Separator />
@@ -104,6 +103,8 @@ function FeatureToggle({feature, defaultState=false}) {
     const features = useGlobalProperty('features');
     const enabled = features?.[feature.key] ?? defaultState;
     const datastore = useDatastore();
+
+    if (feature.parentFeature && !features?.[feature.parentFeature]) return null;
 
     function onToggle() {
         const newFeatures = {

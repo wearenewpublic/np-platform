@@ -6,14 +6,15 @@ import { BasicTeaserFeature } from "./BasicTeaserFeature";
 import { DemoProfileFeature } from "./DemoProfileFeature";
 import { ProfileCommentsFeature } from "./ProfileCommentsFeature";
 
-const { DemoFeature } = require("./DemoFeature");
+const { DemoFeature, DemoSecondaryFeature } = require("./DemoFeature");
 
 export var features = {
     componentdemo: [
         DemoFeature,
+        DemoSecondaryFeature,
         LengthLimitFeature,
         UpvoteFeature,
-        DemoModerationFeature
+        DemoModerationFeature,
     ],
     simplecomments: [
         UpvoteFeature,

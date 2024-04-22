@@ -1,4 +1,5 @@
 import { UtilityText } from "../component/text"
+import { useConfig } from "../util/features"
 
 export const DemoFeature = {
     name: 'Demo Feature',
@@ -8,12 +9,26 @@ export const DemoFeature = {
         commentAboveWidgets: [DemoWidget],
         replyAboveWidgets: [DemoWidget],    
         replyFilters: [demoFilter],
-        commentFilters: [demoFilter]
+        commentFilters: [demoFilter],
+    },
+    defaultConfig: {
+        demoMessage: 'Demo Widget'
     }   
 }
 
+export const DemoSecondaryFeature = {
+    parentFeature: 'demo',
+    name: 'Demo Secondary Feature',
+    key: 'demo_secondary',
+    config: {
+        demoMessage: 'Modified Message'
+    },
+}
+
+
 function DemoWidget() {
-    return <UtilityText label='Demo Widget' />
+    const {demoMessage} = useConfig();
+    return <UtilityText label={demoMessage} />
 }
 
 function demoFilter({comment}) {
