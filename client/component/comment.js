@@ -27,7 +27,7 @@ export function Comment({commentKey}) {
             <Byline type='large' userId={comment.from} time={comment.time} edited={comment.edited} />
             <Pad size={20} />
             <PadBox left={48}>
-                <CommentBody commentKey={commentKey} />
+                <Catcher><CommentBody commentKey={commentKey} /></Catcher>
                 {!editing && <PadBox top={20}><CommentActions commentKey={commentKey} /></PadBox>}
                 <MaybeCommentReply commentKey={commentKey} />
                 <CommentReplies commentKey={commentKey} />
@@ -74,7 +74,8 @@ function CommentBody({commentKey}) {
     const [expanded, setExpanded] = useState(false);
     const datastore = useDatastore();
     const {commentTopWidgets} = useConfig();
-    const isLong = comment.text.length > 300 || comment.text.split('\n').length > 5;
+    const text = comment.text || '';
+    const isLong = text.length > 300 || text.split('\n').length > 5;
 
     function onEditingDone(finalComment) {
         setEditedComment(null);
@@ -95,7 +96,7 @@ function CommentBody({commentKey}) {
         return <View>
             {commentTopWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
             {/* <Paragraph numberOfLines={(isLong && !expanded) ? 5 : null} text={comment.text.trim()} /> */}
-            <RichText numberOfLines={(isLong && !expanded) ? 5 : null} label={comment.text.trim()} />
+            <RichText numberOfLines={(isLong && !expanded) ? 5 : null} text={text.trim()} />
             {isLong && !expanded && <PadBox top={14}><TextButton type='small' label='Read more' color={colorTextBlue} onPress={() => setExpanded(true)} /></PadBox>}
         </View>
     }
@@ -142,7 +143,7 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
         commentEditBottomWidgets, commentEditTopWidgets
         } = useConfig();
 
-    const isBlocked = commentPostBlockers.some(blocker => blocker({comment}));
+    const isBlocked = commentPostBlockers.some(blocker => blocker({datastore, comment}));
     const canPost = comment.text && !isBlocked;
     const action = comment.key ? 
           (inProgress ? 'Updating...' : 'Update') 
