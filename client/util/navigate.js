@@ -81,7 +81,7 @@ function getParamsWithSuffix(urlParams, suffix) {
 
 export function makeUrl(parts, query = new URLSearchParams()) {
     const url = new URL(window.location.href);
-    const currentParts = url.pathname.split('/').filter(x => x).map(decodeURIComponent);
+    const currentParts = url.pathname.split('/').filter(x => x);
     const siloKey = currentParts[0] || 'global';
     url.pathname = siloKey + '/' + parts.map(encodeURIComponent).join('/');
     url.search = query.toString();
@@ -108,7 +108,7 @@ export function getScreenStackForUrl(url) {
     const parsedUrl = new URL(url);
     const parts = parsedUrl.pathname.split('/').filter(x => x);
     const query = new URLSearchParams(parsedUrl.search);
-    var [siloKey, structureKey, instanceKey, ...screenParts] = parts.map(decodeURIComponent);
+    var [siloKey, structureKey, instanceKey, ...screenParts] = parts;
 
     if (!structureKey) return {}
     if (!instanceKey) return {structureKey};
