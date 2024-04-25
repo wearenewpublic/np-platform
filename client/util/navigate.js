@@ -83,7 +83,7 @@ export function makeUrl(parts, query = new URLSearchParams()) {
     const url = new URL(window.location.href);
     const currentParts = url.pathname.split('/').filter(x => x);
     const siloKey = currentParts[0] || 'global';
-    url.pathname = siloKey + '/' + parts.map(encodeURIComponent).join('/');
+    url.pathname = siloKey + '/' + parts.join('/');
     url.search = query.toString();
     return url.toString();
 }
