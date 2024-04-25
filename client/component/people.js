@@ -108,7 +108,7 @@ const FacePileStyle = StyleSheet.create({
 
 
 
-export function Byline({type='small', clickable=true, userId, name=null, photo=null, time, subtitleLabel, underline=false, edited=false}) {
+export function Byline({type='small', photoType=null, clickable=true, userId, name=null, photo=null, time, subtitleLabel, underline=false, edited=false}) {
     const s = BylineStyle
     const persona = usePersonaObject(userId);
     const language = useLanguage();
@@ -117,7 +117,7 @@ export function Byline({type='small', clickable=true, userId, name=null, photo=n
     }
     if (type == 'large') {
         return <View style={s.outer}>
-            <ProfilePhoto userId={userId} photo={photo} type='large' /> 
+            <ProfilePhoto userId={userId} photo={photo} type={photoType ?? 'large'} /> 
             <View style={s.right}>
                 {/* <UtilityText strong text={name ?? persona?.name} /> */}
                 <TextButton type='small' text={name ?? persona?.name} strong onPress={onProfile} />
@@ -133,7 +133,7 @@ export function Byline({type='small', clickable=true, userId, name=null, photo=n
         </View>
     } else {
         return <View style={s.smallOuter}>
-            <ProfilePhoto userId={userId} photo={photo} type='small' /> 
+            <ProfilePhoto userId={userId} photo={photo} type={photoType ?? 'small'} /> 
             <Pad size={8} />
             {clickable ?
                 <TextButton type='small' strong text={name ?? persona?.name} underline={underline} onPress={onProfile} />

@@ -33,7 +33,7 @@ export function Comment({commentKey}) {
                 <CommentReplies commentKey={commentKey} />
             </PadBox>
         </PadBox>
-        <PadBox horiz={20}><Separator /></PadBox>
+        <PadBox horiz={30}><Separator /></PadBox>
     </View>
 }
 

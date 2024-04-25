@@ -46,7 +46,7 @@ export const ComponentDemoStructure = {
         commentReplyPlaceholder: 'Reply to {authorName}...',
         commentInputLoginAction: 'comment',
         noCommentsMessage: 'No responses yet. Start the conversation!',
-        noMoreCommentsMessage: 'No more comments',
+        noMoreCommentsMessage: 'No more comments'        
     }
 }
 
@@ -128,12 +128,17 @@ function ProfileScreen() {
                 <Byline userId={personaKey} type='large' time={Date.now() - 1000 * 60 * 10} edited={Date.now()} />
                 <Byline userId={personaKey} type='small' time={Date.now()} />
                 <Byline userId={personaKey} type='small' />
+                <Byline userId={personaKey} type='small' time={Date.now()} />
+                <Byline userId={personaKey} type='small' photoType='large' />
+                <Byline userId={personaKey} type='small' photoType='large' time={Date.now()} />
             </DemoSection>
             <DemoSection label='Anonymous'>
                 <Byline name='Anonymous User' type='large' time={Date.now()} />
                 <Byline name='Anonymous User' type='large' time={Date.now() - 1000 * 60 * 10} edited={Date.now()} />
                 <Byline name='Anonymous User' type='small' time={Date.now()} />
                 <Byline name='Anonymous User' type='small' />
+                <Byline name='Anonymous User' photoType='large' type='small' time={Date.now()} />
+                <Byline name='Anonymous User' photoType='large' type='small' />
             </DemoSection>
         </Narrow>
      </ConversationScreen>
