@@ -351,7 +351,7 @@ export function Composer({about=null, commentKey, goBackAfterPost=false, topLeve
     const personaKey = usePersonaKey();
     const datastore = useDatastore();
     const {composerSubtitle} = useConfig();
-    const subtitle = composerSubtitle ? composerSubtitle({datastore, comment:editedComment}) : 'Public Comment';
+    const subtitle = composerSubtitle ? composerSubtitle({datastore, comment:(editedComment ?? comment)}) : 'Public Comment';
 
     function onEditingDone(finalComment) {
         if (commentKey) {
