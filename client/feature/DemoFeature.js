@@ -9,7 +9,7 @@ export const DemoFeature = {
         commentAboveWidgets: [DemoWidget],
         replyAboveWidgets: [DemoWidget],    
         replyFilters: [demoFilter],
-        commentFilters: [demoFilter],
+        commentFilters: [demoFilter]
     },
     defaultConfig: {
         demoMessage: 'Demo Widget'

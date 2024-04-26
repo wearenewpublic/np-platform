@@ -10,7 +10,9 @@ export const DemoFilterFeature = {
         pageTopWidgets: [TypeFilter],
         commentFilters: [filterFunc],
         commentEditTopWidgets: [CatToggle],
-        commentTopWidgets: [CatState]
+        commentTopWidgets: [CatState],
+        commentAllowEmpty: true,
+        composerSubtitle: ({comment}) => comment?.text ? 'Demo Comment' : 'Empty Comment',
     }
 } 
 

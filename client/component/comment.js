@@ -140,11 +140,12 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
     const [inProgress, setInProgress] = useState(false);
     const {commentReplyPlaceholder, commentInputPlaceholder, 
         commentPostBlockers, commentPostCheckers,
-        commentEditBottomWidgets, commentEditTopWidgets
+        commentEditBottomWidgets, commentEditTopWidgets,
+        commentAllowEmpty
         } = useConfig();
 
     const isBlocked = commentPostBlockers.some(blocker => blocker({datastore, comment}));
-    const canPost = comment.text && !isBlocked;
+    const canPost = (comment.text || commentAllowEmpty) && !isBlocked;
     const action = comment.key ? 
           (inProgress ? 'Updating...' : 'Update') 
         : (inProgress ? 'Posting...' : 'Post');
@@ -344,11 +345,13 @@ export function ActionReport({commentKey}) {
     return <SubtleButton icon={IconReport} onPress={onReport}/>
 }
 
-export function Composer({about=null, commentKey, goBackAfterPost=false, topLevel=false, contentType}) {
+export function Composer({about=null, commentKey, goBackAfterPost=false, topLevel=false}) {
     const comment = useObject('comment', commentKey);
     const [editedComment, setEditedComment] = useState(null);
     const personaKey = usePersonaKey();
     const datastore = useDatastore();
+    const {composerSubtitle} = useConfig();
+    const subtitle = composerSubtitle ? composerSubtitle({datastore, comment:editedComment}) : 'Public Comment';
 
     function onEditingDone(finalComment) {
         if (commentKey) {
@@ -366,7 +369,7 @@ export function Composer({about=null, commentKey, goBackAfterPost=false, topLeve
     }
 
     return <View>
-        <Byline type='large' userId={personaKey} subtitleLabel={contentType} />
+        <Byline type='large' userId={personaKey} subtitleLabel={subtitle} />
         <Pad size={24} />
         <EditComment big comment={editedComment ?? comment ?? {text: ''}} topLevel={topLevel}
             onCancel={goBackAfterPost && onCancel}
@@ -426,14 +429,14 @@ export function BasicComments({about=null, showInput=true, canPost=true}) {
 }
 
 
-export function ComposerScreen({about, commentKey=null, intro=null, contentType}) {
+export function ComposerScreen({about, commentKey=null, intro=null}) {
     const {composerTopBanners} = useConfig();
     return <ConversationScreen>
         {composerTopBanners?.map((Banner, i) => <Banner key={i} about={about} />)}
         {intro}
         {/* <Pad size={20} /> */}
         <PadBox horiz={20} top={20}>
-            <Composer about={about} commentKey={commentKey} goBackAfterPost topLevel contentType={contentType} />
+            <Composer about={about} commentKey={commentKey} goBackAfterPost topLevel />
         </PadBox>  
     </ConversationScreen>
 }
