@@ -7,3 +7,7 @@ export function PopupSelector({value, items, onSelect}) {
 export function Popup({popup, children}) {
     return <Text>Not yet implemented!</Text>
 }
+
+export function DocumentLevelComponent({children}) {
+    return <Text>Not yet implemented!</Text>
+}   

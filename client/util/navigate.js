@@ -49,6 +49,17 @@ export function gotoInstance({structureKey, instanceKey}) {
     gotoUrl(makeUrl([structureKey, instanceKey]));
 }
 
+export function gotoInstanceScreen({structureKey, instanceKey, screenKey, params}) {
+    const parts = [structureKey, instanceKey, screenKey];
+    const query = new URLSearchParams();
+    for (const [key, value] of Object.entries(params)) {
+        if (value) {
+            query.set(key, value);
+        }
+    }
+    gotoUrl(makeUrl(parts, query));
+}
+
 export function replaceInstance({structureKey, instanceKey}) {
     replaceUrl(makeUrl([structureKey, instanceKey]));
 }

@@ -15,7 +15,7 @@ import { BasicTeaser } from "../component/teaser";
 import { useConfig } from "../util/features";
 import { Banner, ClickableBanner, TopBanner } from "../component/banner";
 import { TrashCan, Pin } from "@carbon/icons-react"
-import { Modal } from "../platform-specific/modal";
+import { Modal } from "../component/modal";
 
 
 export const ComponentDemoStructure = {
@@ -244,6 +244,7 @@ function ButtonScreen() {
             <DemoSection label='Link'>
                 {/* <LinkText type='small' url='https://www.google.com' label='Link' /> */}
                 <RichText text={inputString} />
+                <RichText label='Text with a {param} and a [link]({url})' formatParams={{param: 'parameter', url: 'https://example.com'}} />
             </DemoSection>
             <DemoSection label='Breadcrumb'>
                 <SpacedArray horiz>
@@ -336,7 +337,7 @@ function BannerDemoScreen() {
             <DemoSection label='Clickable Banner'>
                 <Narrow>
                     <ClickableBanner>
-                        <RichText label='This is a **very** important problem. Click for info.'/>
+                        <RichText label='This is a **very** important problem. You need to make sure you address it or terrible things will happen. Click the info box to learn more.'/>
                     </ClickableBanner>
                     <Pad/>
                     <ClickableBanner iconType='close'>
