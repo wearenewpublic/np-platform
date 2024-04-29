@@ -95,7 +95,7 @@ export function PadBox({children, horiz, vert, top, bottom, left, right}) {
     </View>
 }
 
-export function HorizBox({children, center=false, right=false, spread=false}) {
+export function HorizBox({children, center=false, stretch=false, right=false, spread=false}) {
     return <View style={{
             flexDirection: 'row', 
             alignItems: center ? 'center' : 'flex-start', 

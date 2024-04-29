@@ -24,7 +24,7 @@ class TriggerDatastore{
     }
     
     async commitDataAsync() {
-        console.log('commitDataAsync', this.output);
+        // console.log('commitDataAsync', this.output);
         return await firebaseUpdateAsync('/silo/' + this.siloKey + '/', this.output);
     }
 }

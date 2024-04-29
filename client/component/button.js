@@ -7,10 +7,11 @@ import { IconChevronDown, IconChevronUpSmall, IconChevronUp, IconCircleCheck, Ic
 import { FacePile } from "./people";
 import { Popup } from "../platform-specific/popup";
 import { closeActivePopup } from "../platform-specific/popup";
+import { Information, Close } from '@carbon/icons-react'
 
 
 
-export function CTAButton({label, icon, type='primary', disabled, compact=false, onPress}) {
+export function CTAButton({label, icon, type='primary', disabled, compact=false, wide=false, onPress}) {
     const s = CTAButtonStyle;
 
     const styleMap = {
@@ -23,7 +24,7 @@ export function CTAButton({label, icon, type='primary', disabled, compact=false,
     const {normal, hover, pressed, textColor} = styleMap[disabled ? 'disabled' : type] ?? styleMap.primary;
         
     return <HoverView disabled={disabled} role='button'
-            style={[compact ? s.compactButton : s.button, normal]} hoverStyle={[s.hover, hover]} 
+            style={[compact ? s.compactButton : s.button, wide && s.wide, normal]} hoverStyle={[s.hover, hover]} 
             pressedStyle={pressed} onPress={onPress} >
         {icon && <PadBox right={8}>{icon}</PadBox>}
         <UtilityText type='large' label={label} color={textColor} />
@@ -99,6 +100,11 @@ const CTAButtonStyle = StyleSheet.create({
         borderRadius: 8,
         alignSelf: 'flex-start',
         borderWidth: 1   
+    },
+    wide: {
+        alignSelf: 'stretch',    
+        justifyContent: 'center',
+        flex: 1
     }
 })
 
@@ -369,6 +375,33 @@ const ToggleStyle = StyleSheet.create({
         borderBottomRightRadius: 100,    
     }
 })
+
+
+export function BannerIconButton({type, onPress}) {
+    const s = BannerIconButtonStyle;
+    const icon = type == 'close' ? Close : Information;
+    return <HoverView style={s.regular} hoverStyle={s.hover} 
+        pressedStyle={s.pressed} onPress={onPress}>
+        {React.createElement(icon, {size: 24})}
+    </HoverView>
+}
+
+const BannerIconButtonStyle = StyleSheet.create({
+    regular: {
+        width: 24,
+        height: 24,
+        borderRadius: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    hover: {
+        backgroundColor: colorGreyHover
+    },
+    pressed: {
+        backgroundColor: colorIconButtonPress
+    }
+})
+
 
 export function BreadCrumb({icon, onPress}) {
     const s = BreadCrumbStyle;

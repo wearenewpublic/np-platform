@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import ReactDOM from 'react-dom';
 import { HoverView } from "../component/basics";
 import { colorWhite } from "../component/color";
+import { DocumentLevelComponent } from "./webutil";
 
 var global_active_popup_closer = null;
 
@@ -35,26 +36,6 @@ export function PopupSelector({value, items, onSelect, textStyle={}, paddingVert
 }
 
 
-
-function DocumentLevelComponent({children}) {
-    const [container, setContainer] = useState(null);
-
-    useEffect(() => {
-        const container = document.createElement('div');
-        document.body.appendChild(container);
-        setContainer(container);
-        return () => {
-            document.body.removeChild(container);
-        }
-    }, []);
-
-    if (!container) return null;
-
-    return ReactDOM.createPortal(
-        children,
-        container,
-    );
-}
 
 var global_clickTargetRef = null;
 var global_popupRef = null;

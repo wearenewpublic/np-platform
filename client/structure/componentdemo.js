@@ -4,17 +4,18 @@ import { usePersonaKey } from "../util/datastore";
 import { IconAudio, IconChevronDown, IconCircleCheck, IconClose, IconCloseBig, IconComment, IconCommentBig, IconEdit, IconEmoji, IconImage, IconInfo, IconLeftArrow, IconLeftArrowBig, IconList, IconReply, IconReport, IconSave, IconUpvote, IconUpvoted, IconVideo } from "../component/icon";
 import { CharacterCounter, ContentHeading, ContentParagraph, EditorialHeading, Heading, LinkText, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
 import { colorBlack, colorBlueBackground, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
-import { BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, PhotoPile, ReactionButton, SubtleButton, Tag, TextButton, Toggle } from "../component/button";
+import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, ModalButton, PhotoPile, ReactionButton, SubtleButton, Tag, TextButton, Toggle } from "../component/button";
 import { useState } from "react";
 import { expandDataList } from "../util/util";
 import { ActionEdit, ActionReply, ActionReport, BasicComments, Comment, CommentsInput, CommentsIntro, ComposerScreen } from "../component/comment";
 import { gotoInstance, pushSubscreen } from "../util/navigate";
 import { RichText, wrapLinks } from "../component/richtext";
-import { ConversationScreen, HeaderBox, Narrow, Pad, PadBox, Separator, TeaserScreen } from "../component/basics";
+import { ConversationScreen, HeaderBox, HorizBox, Narrow, Pad, PadBox, Separator, TeaserScreen } from "../component/basics";
 import { BasicTeaser } from "../component/teaser";
 import { useConfig } from "../util/features";
-import { Banner, TopBanner } from "../component/banner";
+import { Banner, ClickableBanner, TopBanner } from "../component/banner";
 import { TrashCan, Pin } from "@carbon/icons-react"
+import { Modal } from "../platform-specific/modal";
 
 
 export const ComponentDemoStructure = {
@@ -28,6 +29,7 @@ export const ComponentDemoStructure = {
         comment: CommentScreen,
         teaserDemo: TeaserDemoScreen,
         banner: BannerDemoScreen,
+        modal: ModalScreen,
         feature: FeatureScreen,
         composer: params => <ComposerScreen {...params} contentType='Public Comment' />,
     },
@@ -37,6 +39,7 @@ export const ComponentDemoStructure = {
         replyAboveWidgets: [],
         commentFilters: [],
         replyFilters: [],
+        commentAllowEmpty: false,
         commentActions: [ActionReply],
         commentRightActions: [ActionReport, ActionEdit],
         commentEditBottomWidgets: [],
@@ -164,6 +167,7 @@ function ButtonScreen() {
                     <CTAButton label='✨ Accent with Emoji' type='accent' />
                     <CTAButton label='Disabled Button' type='primary' disabled />
                 </SpacedArray>
+                <CTAButton wide label='Wide Button' />
             </DemoSection>
             <DemoSection label='Action Button'>
                 <SpacedArray horiz>
@@ -248,11 +252,40 @@ function ButtonScreen() {
                     <BreadCrumb icon={IconCommentBig} />
                 </SpacedArray>
             </DemoSection>
+            <DemoSection label='Banner Icon Button'>
+                <SpacedArray>
+                    <BannerIconButton type='close' />
+                    <BannerIconButton type='info' />
+                </SpacedArray>
+            </DemoSection>
 
         </Narrow>
      </ConversationScreen>
 }
 
+function ModalScreen() {
+    const [shown, setShown] = useState(false);
+    const [shown2, setShown2] = useState(false);
+
+    const buttonRow = <HorizBox center>
+        <CTAButton wide type='secondary' label='Action 1' onPress={() => setShown2(false)} />
+        <Pad />
+        <CTAButton wide label='Action 2' onPress={() => setShown2(false)} />
+    </HorizBox>
+
+    return <ConversationScreen>
+        <DemoSection label='Modal'>
+            <CTAButton label='Basic Modal' onPress={() => setShown(true)} />
+            {shown && <Modal onClose={() => setShown(false)}>
+                <PadBox horiz={20} vert={20}><UtilityText text='Content'/></PadBox>
+            </Modal>}
+            <CTAButton label='Modal with Buttons' onPress={() => setShown2(true)} />
+            {shown2 && <Modal onClose={() => setShown2(false)} buttonRow={buttonRow} >
+                <PadBox horiz={20} vert={20}><UtilityText text='Content'/></PadBox>
+            </Modal>}
+        </DemoSection>
+    </ConversationScreen>
+}
 
 function CommentScreen() {
     return <ConversationScreen >
@@ -278,7 +311,7 @@ function TeaserDemoScreen() {
 function BannerDemoScreen() {
     return <ConversationScreen>
             <DemoSection label='Top Banner'>
-                <TopBanner rightIcon={<IconInfo />}>
+                <TopBanner /* rightIcon={<IconInfo />} */>
                     <RichText label='🚧 **Moderation under construction:** We are still tuning auto-moderator triggering' />
                 </TopBanner>
             </DemoSection>
@@ -298,6 +331,18 @@ function BannerDemoScreen() {
                         <Pad size={16} />
                         <RichText label='This is a **very** important problem'/>
                     </Banner>
+                </Narrow>
+            </DemoSection>
+            <DemoSection label='Clickable Banner'>
+                <Narrow>
+                    <ClickableBanner>
+                        <RichText label='This is a **very** important problem. Click for info.'/>
+                    </ClickableBanner>
+                    <Pad/>
+                    <ClickableBanner iconType='close'>
+                        <RichText label='This is a **minor** problem. Click to close'/>
+                    </ClickableBanner>
+
                 </Narrow>
             </DemoSection>
     </ConversationScreen>
@@ -326,6 +371,7 @@ function ComponentDemoScreen() {
                 <CTAButton label='Button' onPress={() => pushSubscreen('button')} />
                 <CTAButton label='Comment' onPress={() => pushSubscreen('comment')} />
                 <CTAButton label='Banner' onPress={() => pushSubscreen('banner')} />
+                <CTAButton label='Modal' onPress={() => pushSubscreen('modal')} />
                 <CTAButton label='Teaser' onPress={() => pushSubscreen('teaserDemo')} />
                 <CTAButton label='Feature Modules' onPress={() => pushSubscreen('feature')} />
                 <Pad />
