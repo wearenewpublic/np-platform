@@ -176,11 +176,12 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
     return <View>
         {topLevel && <TopBarActionProvider label={action} disabled={!canPost || inProgress} onPress={onPost} />}
         <EditWidgets widgets={commentEditTopWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
+        {big && <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />}
         <TextField value={comment.text} onChange={text => setComment({...comment, text})} 
             placeholder={placeholder} autoFocus big={big}
             placeholderParams={{authorName: getFirstName(author?.name)}} />
         <Pad size={12} />
-        <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
+        {!big && <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />}
         {personaKey &&
             <PadBox top={20} >
                 <HorizBox center spread>
@@ -199,8 +200,10 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
 
 function EditWidgets({widgets, comment, setComment, onCancel}) {
     return <View>
-        {widgets?.map((Widget, idx) => <View key={idx} style={{marginRight: 12}}>
-            <Widget comment={comment} setComment={setComment} onCancel={onCancel} />
+        {widgets?.map((Widget, idx) => <View key={idx}>
+            <Catcher>
+                <Widget comment={comment} setComment={setComment} onCancel={onCancel} />
+            </Catcher>
         </View>)} 
     </View>
 }
