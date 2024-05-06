@@ -138,6 +138,7 @@ export class Datastore extends React.Component {
     }
     updateObject(typename, key, value) {
         const object = this.getObject(typename, key);
+        this.addCurrentUser();
         const newObject = {...object, ...value};
         this.setObject(typename, key, newObject);
     }
