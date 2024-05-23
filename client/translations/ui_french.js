@@ -49,6 +49,7 @@ export var ui_translations_french = {
     'replies': 'réponses',
     'Profile': 'Profil',
     'Log out': 'Se déconnecter',
+    'Read more': 'Lire la suite',
 
     // Feature module names
     'Upvote Comments': 'Vote positif des commentaires',

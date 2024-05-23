@@ -48,6 +48,7 @@ export var ui_translations_german = {
     'replies': 'antworten',
     'Profile': 'Profil',
     'Log out': 'Abmelden',
+    'Read more': 'Mehr lesen',
 
     // Feature module names
     'Upvote Comments': 'Kommentare hochwählen',
