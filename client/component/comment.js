@@ -20,7 +20,7 @@ import { Banner } from "./banner";
 export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
-    const {commentAboveWidgets} = useConfig();
+    const {commentAboveWidgets, commentBelowWidgets} = useConfig();
     return <View testID={commentKey} id={commentKey} >
         <PadBox top={20} horiz={10}>
             {commentAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
@@ -28,6 +28,7 @@ export function Comment({commentKey}) {
             <Pad size={20} />
             <PadBox left={48}>
                 <Catcher><CommentBody commentKey={commentKey} /></Catcher>
+                {commentBelowWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
                 {!editing && <PadBox top={20}><CommentActions commentKey={commentKey} /></PadBox>}
                 <MaybeCommentReply commentKey={commentKey} />
                 <CommentReplies commentKey={commentKey} />

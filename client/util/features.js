@@ -8,6 +8,10 @@ export function useConfig() {
     return config;
 }
 
+export function REPLACE(array) {
+    return {REPLACE: array};
+}
+
 export function assembleConfig({structure, activeFeatures}) {
     var config = cloneConfig(structure.defaultConfig);
     const availableFeatures = features[structure.key] ?? [];
@@ -24,6 +28,8 @@ export function assembleConfig({structure, activeFeatures}) {
                     const featureParam = feature.config[key];
                     if (Array.isArray(featureParam)) {
                         config[key] = [...config[key], ...featureParam];
+                    } else if (featureParam && featureParam.REPLACE) {
+                        config[key] = featureParam.REPLACE;
                     } else if (featureParam) {
                         config[key] = featureParam;
                     }

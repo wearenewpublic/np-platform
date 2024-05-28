@@ -10,7 +10,6 @@ import { closeActivePopup } from "../platform-specific/popup";
 import { Information, Close } from '@carbon/icons-react'
 
 
-
 export function CTAButton({label, icon, type='primary', disabled, compact=false, wide=false, onPress}) {
     const s = CTAButtonStyle;
 
@@ -245,14 +244,14 @@ const TagStyle = StyleSheet.create({
     }
 })
 
-export function ReactionButton({label, count, selected}){
+export function ReactionButton({label, count, selected, onPress}){
     const s = ReactionButtonStyle;
     const [pressed, setPressed] = useState(false);
     return <HoverView style={[s.button, selected && s.pressed]} hoverStyle={s.hover} 
-            pressedStyle={s.pressed} setPressed={setPressed} role='button'>
+            pressedStyle={s.pressed} setPressed={setPressed} role='button' onPress={onPress}>
         <UtilityText label={label} type='tiny' strong 
             color={(pressed || selected) ? colorTextBlue : colorBlack} />
-        <Pad size={8} />
+        {count ? <Pad size={8} /> : null}
         <UtilityText text={count} type='tiny' strong color={colorRed} />
     </HoverView>
 }
