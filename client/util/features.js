@@ -30,7 +30,7 @@ export function assembleConfig({structure, activeFeatures}) {
                         config[key] = [...config[key], ...featureParam];
                     } else if (featureParam && featureParam.REPLACE) {
                         config[key] = featureParam.REPLACE;
-                    } else if (featureParam) {
+                    } else if (featureParam !== undefined) {
                         config[key] = featureParam;
                     }
                 }
