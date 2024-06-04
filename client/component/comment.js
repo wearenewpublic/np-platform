@@ -15,6 +15,7 @@ import { TopBarActionProvider } from "../organizer/TopBar";
 import { needsLogin } from "../organizer/Login";
 import { useConfig } from "../util/features";
 import { Banner } from "./banner";
+import { logEventAsync, useLogEvent } from "../util/eventlog";
 
 
 export function Comment({commentKey}) {
@@ -219,6 +220,9 @@ function CommentReplies({commentKey, depth=1}) {
 
     function setExpanded(expanded) {
         datastore.setSessionData(['showReplies', commentKey], expanded);
+        if (expanded) {
+            logEventAsync(datastore, 'showReplies', {commentKey});
+        }
     }
 
     if (replies.length == 0) return <Pad />;
@@ -435,6 +439,7 @@ export function BasicComments({about=null, showInput=true, canPost=true}) {
 
 export function ComposerScreen({about, commentKey=null, intro=null}) {
     const {composerTopBanners} = useConfig();
+    useLogEvent('open-composer', {commentKey});
     return <ConversationScreen>
         {composerTopBanners?.map((Banner, i) => <Banner key={i} about={about} />)}
         {intro}

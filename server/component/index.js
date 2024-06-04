@@ -3,6 +3,7 @@ var coreComponents = {
     derivedviews: require('./derivedviews'),
     features: require('./features'),
     constructor: require('./constructor'),
+    eventlog: require('./eventlog'),
 }
 
 exports.coreComponents = coreComponents;

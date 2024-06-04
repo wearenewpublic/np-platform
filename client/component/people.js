@@ -108,7 +108,7 @@ const FacePileStyle = StyleSheet.create({
 
 
 
-export function Byline({type='small', photoType=null, clickable=true, userId, name=null, photo=null, time, subtitleLabel, underline=false, edited=false}) {
+export function Byline({type='small', photoType=null, clickable=true, userId, name=null, photo=null, time, subtitleLabel, subtitleParams={}, underline=false, edited=false}) {
     const s = BylineStyle
     const persona = usePersonaObject(userId);
     const language = useLanguage();
@@ -123,7 +123,7 @@ export function Byline({type='small', photoType=null, clickable=true, userId, na
                 <TextButton type='small' text={name ?? persona?.name} strong onPress={onProfile} />
                 <Pad size={2} />
                 {subtitleLabel ? 
-                    <UtilityText color={colorTextGrey} label={subtitleLabel} underline={underline} />
+                    <UtilityText color={colorTextGrey} label={subtitleLabel} formatParams={subtitleParams} underline={underline} />
                 : 
                     <UtilityText color={colorTextGrey} 
                         label={'{time}' + (edited ? ' • Edited' : '')} 

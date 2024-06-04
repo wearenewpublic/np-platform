@@ -37,6 +37,12 @@ async function firebaseReadAsync(path) {
     return snapshot.val();
 }
 
+async function firebaseReadWithFilterAsync(path, key, value) {
+    const ref  = admin.database().ref(expandPath(path));
+    const snapshot = await ref.orderByChild(key).equalTo(value).once('value');
+    return snapshot.val();
+}
+
 async function firebaseUpdateAsync(path, data) {
     const ref = admin.database().ref(expandPath(path));
     return await ref.update(data);
@@ -127,7 +133,7 @@ function fbKeyToString(input) {
 module.exports = {firebaseWriteAsync, firebaseReadAsync, firebaseUpdateAsync, stringToFbKey, fbKeyToString, 
     readGlobalAsync, writeGlobalAsync, readCollectionAsync, createInstanceAsync, writeCollectionAsync,
     readInstanceAsync, setObjectAsync, readMultipleCollectionsAsync, updateCollectionAsync,
-    readObjectAsync, readAllGlobalsAsync, updateObjectAsync,
+    readObjectAsync, readAllGlobalsAsync, updateObjectAsync, firebaseReadWithFilterAsync,
 
     verifyIdTokenAsync, createNewKey, firebaseGetUserAsync,
 

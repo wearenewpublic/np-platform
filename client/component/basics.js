@@ -174,3 +174,31 @@ export function WindowTitle({title}) {
     setTitle(title);
     return null;
 }
+
+// HACK: Bump the key to force a re-render, otherwise the old hover state is preserved when the component is unselected
+export function HoverSelectBox({selected, onPress, children}) {
+    const s = HoverSelectBoxStyle;
+    const [key, setKey] = useState(0);
+    function onLocalPress() {
+        onPress();
+        setKey(key+1)
+    }
+    return <HoverView key={key} onPress={onLocalPress} disabled={!onPress || selected} style={s.outline} hoverStyle={s.hover}>
+        {children}
+    </HoverView>
+}
+const HoverSelectBoxStyle = StyleSheet.create({
+    hover: {
+        borderColor: colorGreyBorder,
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 0,
+        boxShadow: '0px 4px 20px 0px rgba(0, 0, 0, 0.10)',
+    },
+    outline: {
+        borderColor: colorGreyBorder,
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 0
+    }
+})
