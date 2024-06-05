@@ -86,7 +86,7 @@ function SessionListScreen() {
 function Session({session}) {
     console.log('Session', session, session.userName, session.time);
     return <HoverView onPress={() => pushSubscreen('eventlog', {sessionKey: session.key})}>
-        <Byline name={session.userName} photo={session.userPhoto} clickable={false} time={session.endTime} />
+        <Byline name={session.userName} photo={session.userPhoto} clickable={false} time={session.endTime ?? session.startTime} />
     </HoverView>
     return <UtilityText label={JSON.stringify(session)} />
 }
