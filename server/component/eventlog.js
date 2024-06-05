@@ -19,7 +19,7 @@ async function logEventApi({sessionKey, isNewSession, userId, siloKey, structure
 
     if (isNewSession) {
         firebaseWriteAsync(['log', 'session', sessionKey], {
-            userId, siloKey, userName, userPhoto, startTime: Date.now()
+            userId, siloKey, userName, userPhoto, startTime: Date.now(), endTime: Date.now()
         })
     } else if (userId) {
         firebaseUpdateAsync(['log', 'session', sessionKey], {userId, siloKey, userName, userPhoto, endTime: Date.now()})
