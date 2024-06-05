@@ -5,12 +5,26 @@ import { useEffect } from "react";
 
 const hourMillis = 60*60*1000;
 
-export const eventTypes = {
+export var eventTypes = {
     'login-screen': 'Open the Login Screen',
     'login-request': 'Request to login',
     'login-success': 'Successful login',
-    'open-composer': 'Open the Composer Screen to write a new top level response',
     'showReplies': 'Show replies to a post',
+    'post-start': 'Open the Composer Screen to write a new top level response',
+    'post-cancel': 'Cancel writing a post',
+    'post-finish': 'Finish writing a post',
+    'edit-start-top': 'Start editing a post',
+    'edit-start-reply': 'Start editing a reply',
+    'edit-cancel': 'Cancel editing a post',
+    'edit-finish': 'Finish editing a post',
+    'reply-start': 'Start a reply to a post',
+    'reply-finish': 'Finish a reply to a post',
+    'upvote': 'Upvote a post',
+    'upvote-undo': 'Unvote a post',
+}
+
+export function addEventTypes(newEventTypes) {
+    eventTypes = {...eventTypes, ...newEventTypes};
 }
 
 onFbUserChanged((userId) => {
@@ -71,14 +85,14 @@ export async function useLogEvent(eventKey, params, skip=false) {
     }, [eventKey, JSON.stringify(params), skip]);
 }
 
-export async function getLogEvents({siloKey, eventType, sessionKey} = {}) {
+export async function getLogEventsAsync({siloKey, eventType, sessionKey} = {}) {
     console.log('getLogEvents', {siloKey, eventType, sessionKey});
     const eventObjs = await callServerApiAsync({component: 'eventlog', funcname: 'getEvents', params: {siloKey, eventType, sessionKey}});
     const eventKeys = Object.keys(eventObjs).sort((a, b) => eventObjs[b].time - eventObjs[a].time);
     return eventKeys.map(key => ({key, ...eventObjs[key]}));
 }
 
-export async function getSessions({siloKey = null} = {}) {
+export async function getSessionsAsync({siloKey = null} = {}) {
     const sessionObjs = await callServerApiAsync({component: 'eventlog', funcname: 'getSessions', params: {siloKey}});
     const sessionKeys = Object.keys(sessionObjs).sort((a, b) => sessionObjs[b].endTime - sessionObjs[a].endTime);
     return sessionKeys.map(key => ({key, ...sessionObjs[key]}));

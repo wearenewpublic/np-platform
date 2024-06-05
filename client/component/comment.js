@@ -81,11 +81,13 @@ function CommentBody({commentKey}) {
 
     function onEditingDone(finalComment) {
         setEditedComment(null);
+        logEventAsync(datastore, 'edit-finish', {commentKey, text: finalComment.text});
         datastore.updateObject('comment', comment.key, {...finalComment, edited: Date.now()});
         datastore.setSessionData(['editComment', comment.key], false);
     }
 
     function onCancel() {
+        logEventAsync(datastore, 'edit-cancel', {commentKey});
         setEditedComment(null);
         datastore.setSessionData(['editComment', comment.key], false);
     }
@@ -112,6 +114,7 @@ function MaybeCommentReply({commentKey}) {
     if (!replyEnabled) return null;
 
     function onEditingDone(finalComment) {
+        logEventAsync(datastore, 'reply-finish', {commentKey, text: finalComment.text});
         datastore.setSessionData(['replyToComment', comment.replyTo], false);
         datastore.setSessionData(['showReplies', comment.replyTo], true);
         datastore.addObject('comment', finalComment);
@@ -287,6 +290,7 @@ export function ActionReply({commentKey, depth}) {
     function onReply() {
         const oldReply = datastore.getSessionData(['replyToComment', commentKey]);
         datastore.setSessionData(['replyToComment', commentKey], !oldReply);
+        logEventAsync(datastore, 'reply-start', {commentKey});
     }
 
     if (comment.from == personaKey) return null;
@@ -308,8 +312,10 @@ export function ActionUpvote({commentKey}) {
         if (upvoted) {
             const myUpvote = upvotes.find(upvote => upvote.from == personaKey);
             datastore.deleteObject('upvote', myUpvote.key);
+            logEventAsync(datastore, 'upvote-undo', {commentKey});
         } else {
             datastore.addObject('upvote', {comment: commentKey, from: personaKey});
+            logEventAsync(datastore, 'upvote', {commentKey});
         }
     }
 
@@ -330,8 +336,10 @@ export function ActionEdit({commentKey}) {
     const comment = useObject('comment', commentKey)
     function onEdit() {
         if (!comment.replyTo) {
+            logEventAsync(datastore, 'edit-start-top', {commentKey});
             pushSubscreen('composer', {commentKey});
         } else {
+            logEventAsync(datastore, 'edit-start-reply', {commentKey});
             const old = datastore.getSessionData(['editComment', commentKey]);
             datastore.setSessionData(['editComment', commentKey], !old);
         }
@@ -346,6 +354,7 @@ export function ActionReport({commentKey}) {
     const comment = useObject('comment', commentKey)
 
     function onReport() {
+        logEventAsync(datastore, 'report-start', {commentKey});
         pushSubscreen('report', {commentKey});
     }
 
@@ -363,8 +372,10 @@ export function Composer({about=null, commentKey, goBackAfterPost=false, topLeve
 
     function onEditingDone(finalComment) {
         if (commentKey) {
+            logEventAsync(datastore, 'edit-finish', {commentKey, text: finalComment.text});
             datastore.updateObject('comment', commentKey, {...finalComment, edited: Date.now()});
         } else {
+            logEventAsync(datastore, 'post-finish', {about, text: finalComment.text});
             datastore.addObject('comment', finalComment);
         }
         setEditedComment({text: '', about});
@@ -373,6 +384,7 @@ export function Composer({about=null, commentKey, goBackAfterPost=false, topLeve
         }
     }
     function onCancel() {
+        logEventAsync(datastore, commentKey ? 'edit-cancel' : 'post-cancel', {commentKey});
         goBack();
     }
 
@@ -439,7 +451,7 @@ export function BasicComments({about=null, showInput=true, canPost=true}) {
 
 export function ComposerScreen({about, commentKey=null, intro=null}) {
     const {composerTopBanners} = useConfig();
-    useLogEvent('open-composer', {commentKey});
+    useLogEvent('post-start', {commentKey});
     return <ConversationScreen>
         {composerTopBanners?.map((Banner, i) => <Banner key={i} about={about} />)}
         {intro}

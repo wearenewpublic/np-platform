@@ -15,7 +15,7 @@ export function Pad({size=20}) {
 export function HoverView({style, ariaLabel, role, hoverStyle, pressedStyle, children, disabled=false, onPress, shrink, setHover=()=>{}, setPressed=()=>{}}) {
     const [localHover, setLocalHover] = useState(false);
     const [localPressed, setLocalPressed] = useState(false);
-    if (disabled) {
+    if (disabled || !onPress) {
         return <View style={style}>{children}</View>
     }
     return <Pressable

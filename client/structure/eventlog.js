@@ -4,9 +4,9 @@ import { CTAButton, TextButton } from "../component/button";
 import { formatDate } from "../component/date";
 import { Byline } from "../component/people";
 import { RichText } from "../component/richtext";
-import { Heading, UtilityText } from "../component/text"
+import { Heading, Paragraph, UtilityText } from "../component/text"
 import { useDatastore, useSessionData } from "../util/datastore";
-import { eventTypes, getLogEvents, getSessions } from "../util/eventlog";
+import { eventTypes, getLogEventsAsync, getSessionsAsync } from "../util/eventlog";
 import { useState, useEffect } from "react";
 import { View } from 'react-native';
 import { gotoInstance, pushSubscreen } from "../util/navigate";
@@ -61,7 +61,7 @@ function SessionListScreen() {
     const [limit, setLimit] = useState(100);
 
     async function onRefresh() {
-        const sessions = await getSessions();
+        const sessions = await getSessionsAsync();
         console.log('Sessions', sessions);
         setSessions(sessions);
     }
@@ -99,7 +99,7 @@ function EventLogScreen({eventType, sessionKey, siloKey}) {
 
     async function onRefresh() {
         console.log('Refresh');
-        const events = await getLogEvents({sessionKey, siloKey, eventType});
+        const events = await getLogEventsAsync({sessionKey, siloKey, eventType});
         console.log('Events', events);
         setEvents(events);
     }
@@ -160,8 +160,11 @@ function ExpandedEvent({event}) {
         <EventPreview event={event} />
         <Separator />
         <PadBox horiz={10} vert={10}>
+            {event.eventType && <LinkedField label='Event Type' value={event.eventType} onPress={() => pushSubscreen('eventlog', {eventType: event.eventType})} />}
             {event.sessionKey && <LinkedField label='Session' value={event.sessionKey} onPress={() => pushSubscreen('eventlog', {sessionKey: event.sessionKey})} />} 
             {event.structureKey && event.instanceKey && <LinkedField label='Instance' value={event.structureKey + '/' + event.instanceKey} onPress={() => gotoInstance({structureKey: event.structureKey, instanceKey: event.instanceKey})} />} 
+            {event.url && <LinkedField label='URL' value={event.url} onPress={() => window.open(event.url, '_blank')} />}
+            {event.text && <Paragraph text={event.text} />}
         </PadBox>
     </View>
 }
@@ -170,7 +173,8 @@ function LinkedField({label, value, onPress}) {
     return <View>
         <HorizBox>
             <UtilityText type='large' strong label={label + ': '} />
-            <TextButton onPress={onPress} text={value} />
+            {onPress && <TextButton onPress={onPress} text={value} />}
+            {!onPress && <Paragraph type='large' label={value} />}
        </HorizBox>
        <Pad size={4} />
     </View>

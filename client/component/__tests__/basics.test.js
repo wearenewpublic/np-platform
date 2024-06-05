@@ -3,7 +3,7 @@ const { HoverView, Center } = require("../basics");
 const { UtilityText } = require("../text");
 
 test('Hoveriew Accessibility Label', () => {
-    render(<HoverView ariaLabel='test'><UtilityText label='Label'/></HoverView>);
+    render(<HoverView ariaLabel='test' onPress={()=>{}}><UtilityText label='Label'/></HoverView>);
     screen.getByLabelText('test');
 })
 

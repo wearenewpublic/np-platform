@@ -16,6 +16,9 @@ export class FacebookAuthProvider {}
 export function firebaseWriteAsync() {}
 export function fbKeyToString(key) {return key}
 
+var global_nextKey = 1;
+export function firebaseNewKey() {return global_nextKey++}
+
 var global_firebaseData = {};
 export function useFirebaseData(path) {return getObjectPropertyPath(global_firebaseData, path)};
 export function mock_setFirebaseData(path, value) {global_firebaseData = setObjectPropertyPath(global_firebaseData, path, value)}
