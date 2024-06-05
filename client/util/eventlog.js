@@ -46,7 +46,6 @@ export async function setSessionUserAsync(userId) {
 }
 
 export async function logEventAsync(datastore, eventType, params) {
-    console.log('logEvent', eventType, params);
     var sessionKey = localStorage.getItem('sessionKey');
     var sessionTime = localStorage.getItem('sessionTime');
     var isNewSession = false;
@@ -55,21 +54,16 @@ export async function logEventAsync(datastore, eventType, params) {
     if (!sessionKey || !sessionTime || Date.now() - sessionTime > hourMillis){
         sessionKey = firebaseNewKey();
         sessionTime = Date.now();
-        console.log('New session', sessionKey, sessionTime);
         isNewSession = true;
         localStorage.setItem('sessionKey', sessionKey);
         localStorage.setItem('sessionTime', sessionTime);    
-    } else {
-        console.log('Existing session', sessionKey, sessionTime);
     }
     const result = await callServerApiAsync({datastore, component: 'eventlog', funcname: 'logEvent', params: {eventType, sessionKey, isNewSession, params}});
     global_last_event = result?.eventKey ?? null;
-    console.log('logEvent result', result, global_last_event);
 
     const postFirebaseUser = getFirebaseUser();
 
     if (postFirebaseUser && !preFirebaseUser) {
-        console.log('Logged in during event log. Setting session user');
         setSessionUserAsync(postFirebaseUser.uid);
         return;
     }
@@ -86,7 +80,6 @@ export async function useLogEvent(eventKey, params, skip=false) {
 }
 
 export async function getLogEventsAsync({siloKey, eventType, sessionKey} = {}) {
-    console.log('getLogEvents', {siloKey, eventType, sessionKey});
     const eventObjs = await callServerApiAsync({component: 'eventlog', funcname: 'getEvents', params: {siloKey, eventType, sessionKey}});
     const eventKeys = Object.keys(eventObjs).sort((a, b) => eventObjs[b].time - eventObjs[a].time);
     return eventKeys.map(key => ({key, ...eventObjs[key]}));
