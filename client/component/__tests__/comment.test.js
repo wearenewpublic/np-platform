@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { WithFeatures, addObject, getMatchingObject } from "../../util/testutil"
 import { Comment } from "../comment";
 import { pushSubscreen } from "../../util/navigate";
@@ -32,7 +32,9 @@ test('Edit Reply', async () => {
 
     const input = await screen.findByDisplayValue('This is a reply');
     fireEvent.change(input, {target: {value: 'My edited reply'}});     
-    fireEvent.click(screen.getByRole('button', {name: 'Update'})); 
+    await act(async () => {
+        fireEvent.click(screen.getByRole('button', {name: 'Update'})); 
+    });
     getMatchingObject('comment', {text: 'My edited reply'});
 })
 

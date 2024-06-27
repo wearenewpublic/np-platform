@@ -1,0 +1,32 @@
+
+{
+    "english": {
+        "FROM": "Talkb Notifications <noreply@talkb.org>",
+        "SUBJECT": "{{replyAuthorName}} replied to you",
+        "VIEWREPLY": "View Reply",
+        "AUTOMESSAGE": "This is an automatic message from New_ Public.",
+        "UNSUBSCRIBE": "Unsubscribe",
+        "DESCRIPTION_PRE": "replied to you in",
+        "DESCRIPTION_POST": ""
+    },
+    "french": {
+        "FROM": "Talkb Notifications <noreply@talkb.org>",
+        "SUBJECT": "{{replyAuthorName}} vous a répondu",
+        "VIEWREPLY": "Voir la réponse",
+        "AUTOMESSAGE": "Ceci est un message automatique de New_ Public.",
+        "UNSUBSCRIBE": "Se désabonner",
+        "DESCRIPTION_PRE": "t'a répondu dans",
+        "DESCRIPTION_POST": ""
+    },
+    "german": {
+        "FROM": "Talkb Benachrichtigungen <noreply@talkb.org>",
+        "SUBJECT": "{{replyAuthorName}} hat dir geantwortet",
+        "VIEWREPLY": "Antwort anzeigen",
+        "AUTOMESSAGE": "Dies ist eine automatische Nachricht von New_ Public.",
+        "UNSUBSCRIBE": "Abmelden",
+        "DESCRIPTION_PRE": "hat in",
+        "DESCRIPTION_POST": "geantwortet"
+    }
+}
+
+

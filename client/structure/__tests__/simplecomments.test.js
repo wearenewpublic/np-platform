@@ -1,4 +1,4 @@
-import { findByRole, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { act, findByRole, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { TestInstance, addObject, checkPressable, getMatchingObject, getObject, getSharedData, isPressable, objectExists, resetSharedData } from "../../util/testutil";
 import { goBack, pushSubscreen } from "../../util/navigate";
 import { SharedData } from "../../util/shareddata";
@@ -27,7 +27,10 @@ test('Composer saves comment', async () => {
     render(<TestInstance structureKey='simplecomments' screenKey='composer' />);
     const input = screen.getByPlaceholderText('Share your thoughts...');
     fireEvent.change(input, {target: {value: 'This is a test comment'}});
-    fireEvent.click(await findByRole(document.body, 'button', {name: 'Post'}));
+    
+    await act(async () => {
+       fireEvent.click(await findByRole(document.body, 'button', {name: 'Post'}));
+    });
     expect(goBack).toHaveBeenCalled();
 
     getMatchingObject('comment', {text: 'This is a test comment'});
@@ -47,7 +50,10 @@ test('Reply to a comment', async () => {
     fireEvent.click(replyButton);
     const input = screen.getByPlaceholderText('Reply to Bob...');
     fireEvent.change(input, {target: {value: 'My reply'}});
-    fireEvent.click(screen.getByRole('button', {name: 'Post'}));
+
+    await act(() => {
+        fireEvent.click(screen.getByRole('button', {name: 'Post'}));
+    })
     getMatchingObject('comment', {text: 'My reply', replyTo: 'test'});
     screen.getByText('My reply');
 })

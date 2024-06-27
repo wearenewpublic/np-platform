@@ -1,5 +1,5 @@
 
-import { fireEvent, getByText, render, screen, within } from "@testing-library/react";
+import { act, fireEvent, getByText, render, screen, within } from "@testing-library/react";
 import { TestInstance, addObject, getMatchingObject, setFeatures } from "../../util/testutil";
 import { goBack } from "../../util/navigate";
 
@@ -12,7 +12,9 @@ test('Compose with Cat', async () => {
     fireEvent.click(toggle);
     const text = screen.getByRole('textbox');
     fireEvent.change(text, {target: {value: 'I am a Cat'}});
-    fireEvent.click(await screen.findByRole('button', {name: 'Post'}));
+    await act(async () => {
+        fireEvent.click(await screen.findByRole('button', {name: 'Post'}));
+    });
     expect(goBack).toHaveBeenCalled();
     getMatchingObject('comment', {text: 'I am a Cat', isCat: true});
 })

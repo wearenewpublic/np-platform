@@ -1,0 +1,10 @@
+{{NAME}} {{DESCRIPTION_PRE}} "{{TITLE}}" {{DESCRIPTION_POST}}
+
+{{VIEWREPLY}}: {{{LINK}}}
+
+---
+
+{{AUTOMESSAGE}}
+
+
+

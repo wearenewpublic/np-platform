@@ -26,6 +26,7 @@ export const SimpleCommentsStructure = {
         commentEditBottomWidgets: [],
         commentEditTopWidgets: [],
         commentPostBlockers: [],
+        commentPostTriggers: [],
         commentInputPlaceholder: 'Share your thoughts...',
         commentReplyPlaceholder: 'Reply to {authorName}...',
         commentInputLoginAction: 'comment',

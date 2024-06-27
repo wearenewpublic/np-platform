@@ -4,6 +4,7 @@ var coreComponents = {
     features: require('./features'),
     constructor: require('./constructor'),
     eventlog: require('./eventlog'),
+    notifs: require('./notifs'),
 }
 
 exports.coreComponents = coreComponents;

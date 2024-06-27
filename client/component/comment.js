@@ -81,8 +81,6 @@ function CommentBody({commentKey}) {
 
     function onEditingDone(finalComment) {
         setEditedComment(null);
-        logEventAsync(datastore, 'edit-finish', {commentKey, text: finalComment.text});
-        datastore.updateObject('comment', comment.key, {...finalComment, edited: Date.now()});
         datastore.setSessionData(['editComment', comment.key], false);
     }
 
@@ -114,10 +112,8 @@ function MaybeCommentReply({commentKey}) {
     if (!replyEnabled) return null;
 
     function onEditingDone(finalComment) {
-        logEventAsync(datastore, 'reply-finish', {commentKey, text: finalComment.text});
         datastore.setSessionData(['replyToComment', comment.replyTo], false);
         datastore.setSessionData(['showReplies', comment.replyTo], true);
-        datastore.addObject('comment', finalComment);
         setComment({text: '', replyTo: commentKey})
     }
 
@@ -145,6 +141,7 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
     const [inProgress, setInProgress] = useState(false);
     const {commentReplyPlaceholder, commentInputPlaceholder, 
         commentPostBlockers, commentPostCheckers,
+        commentPostTriggers,
         commentEditBottomWidgets, commentEditTopWidgets,
         commentAllowEmpty
         } = useConfig();
@@ -156,6 +153,24 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
         : (inProgress ? 'Posting...' : 'Post');
     const placeholder = comment.replyTo ? commentReplyPlaceholder : commentInputPlaceholder;
     
+    async function storeCommentAndRunTriggers(comment) {
+        var commentKey = comment.key;
+        if (comment.key) {
+            logEventAsync(datastore, 'edit-finish', {commentKey, text: comment.text});
+            await datastore.updateObject('comment', comment.key, {...comment, edited: Date.now()});
+        } else {
+            commentKey = await datastore.addObject('comment', comment);
+            if (comment.replyTo) {
+                logEventAsync(datastore, 'reply-finish', {commentKey, text: comment.text});
+            } else {
+                logEventAsync(datastore, 'post-finish', {commentKey, text: comment.text});
+            }
+        }
+        if (commentPostTriggers?.length) {
+            await Promise.all(commentPostTriggers.map(trigger => trigger({datastore, comment, commentKey})));
+        }
+    }
+
     async function onPost() {
         if (commentPostCheckers?.length) {
             setInProgress(true);
@@ -166,14 +181,15 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
             checkResults.forEach(judgement => {
                 finalComment = {...finalComment, ...judgement.commentProps}
             })
-            // console.log('finalComment', finalComment);
             if (checkResults.every(x => x.allow)) {
+                await storeCommentAndRunTriggers(finalComment);
                 onEditingDone(finalComment);
             } else {
                 setComment(finalComment);
             }
             setInProgress(false);
         } else {
+            await storeCommentAndRunTriggers(comment);
             onEditingDone(comment);
         }
     }
@@ -371,13 +387,6 @@ export function Composer({about=null, commentKey, goBackAfterPost=false, topLeve
     const subtitle = composerSubtitle ? composerSubtitle({datastore, comment:(editedComment ?? comment)}) : 'Public Comment';
 
     function onEditingDone(finalComment) {
-        if (commentKey) {
-            logEventAsync(datastore, 'edit-finish', {commentKey, text: finalComment.text});
-            datastore.updateObject('comment', commentKey, {...finalComment, edited: Date.now()});
-        } else {
-            logEventAsync(datastore, 'post-finish', {about, text: finalComment.text});
-            datastore.addObject('comment', finalComment);
-        }
         setEditedComment({text: '', about});
         if (goBackAfterPost) {
             goBack();

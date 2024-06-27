@@ -15,7 +15,7 @@ const ProfileComment = {
 exports.ProfileComment = ProfileComment;
 
 function ProfileCommentTriggerAsync({datastore, structureKey,instanceKey, value: comment}) {
-    console.log('ProfileCommentTrigger', {instanceKey, comment});
+    // console.log('ProfileCommentTrigger', {instanceKey, comment});
 
     datastore.setDerivedObject({
         structureKey: 'profile', 
