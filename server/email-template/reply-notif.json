@@ -3,7 +3,7 @@
     "english": {
         "FROM": "Talkb Notifications <noreply@talkb.org>",
         "SUBJECT": "{{replyAuthorName}} replied to you",
-        "VIEWREPLY": "View Reply",
+        "VIEWREPLY": "View reply",
         "AUTOMESSAGE": "This is an automatic message from New_ Public.",
         "UNSUBSCRIBE": "Unsubscribe",
         "DESCRIPTION_PRE": "replied to you in",
