@@ -40,14 +40,16 @@ async function sendTemplatedEmailAsync({toUserId, templateId, language, siloKey,
     const textTemplate = readFileSync(path.join(templateDir, templateId + '.txt'), 'utf8').toString();
     const stringMap = JSON.parse(jsonText);
     const stringsForLanguage = stringMap[language.toLowerCase() ?? 'english'];
-    
+
+    console.log('stringsForLanguage', stringsForLanguage);
+
     const LINK = domain + '/' + siloKey + '/' + structureKey + '/' + instanceKey;
 
     const HtmlBody = Mustache.render(htmlTemplate, {...stringsForLanguage, ...data, LINK});
     const TextBody = Mustache.render(textTemplate, {...stringsForLanguage, ...data, LINK});
     const Subject = Mustache.render(stringsForLanguage.SUBJECT, data);
     const emailFields = {
-        From: stringsForLanguage.FROM,
+        From: Mustache.render(stringsForLanguage.FROM, {...data, siloKey}),
         To: toUser.displayName + ' <' + toUser.email + '>',
         Subject, HtmlBody, TextBody
     }
