@@ -12,7 +12,7 @@ async function postTriggerAsync({datastore, comment, commentKey}) {
     console.log('postTriggerAsync', comment, commentKey);
     const {replyTo} = comment;
     if (!replyTo) return;
-    await callServerApiAsync({datastore, component: 'notifs', funcname: 'sendNotifsForReply', params: {
+    callServerApiAsync({datastore, component: 'notifs', funcname: 'sendNotifsForReply', params: {
         replyKey: commentKey, parentKey: replyTo}
     });
 }        

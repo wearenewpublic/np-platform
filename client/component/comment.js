@@ -167,7 +167,8 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
             }
         }
         if (commentPostTriggers?.length) {
-            await Promise.all(commentPostTriggers.map(trigger => trigger({datastore, comment, commentKey})));
+            // Don't await the promise, since some triggers may be slow
+            Promise.all(commentPostTriggers.map(trigger => trigger({datastore, comment, commentKey})));
         }
     }
 
