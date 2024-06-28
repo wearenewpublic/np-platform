@@ -1,7 +1,7 @@
 
 {
     "english": {
-        "FROM": "Talkb Notifications <noreply@talkb.org>",
+        "FROM": "New Public Notifications <noreply@psi.newpublic.org>",
         "SUBJECT": "{{replyAuthorName}} replied to you",
         "VIEWREPLY": "View reply",
         "AUTOMESSAGE": "This is an automatic message from New_ Public and",
@@ -10,7 +10,7 @@
         "DESCRIPTION_POST": ""
     },
     "french": {
-        "FROM": "Talkb Notifications <noreply@talkb.org>",
+        "FROM": "New Public Notifications <noreply@psi.newpublic.org>",
         "SUBJECT": "{{replyAuthorName}} vous a répondu",
         "VIEWREPLY": "Voir la réponse",
         "AUTOMESSAGE": "Ceci est un message automatique de New_ Public et",
@@ -19,7 +19,7 @@
         "DESCRIPTION_POST": ""
     },
     "german": {
-        "FROM": "Talkb Benachrichtigungen <noreply@talkb.org>",
+        "FROM": "New Public Benachrichtigungen <noreply@psi.newpublic.org>",
         "SUBJECT": "{{replyAuthorName}} hat dir geantwortet",
         "VIEWREPLY": "Antwort anzeigen",
         "AUTOMESSAGE": "Dies ist eine automatische Nachricht von New_ Public und",
