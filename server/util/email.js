@@ -4,7 +4,7 @@ const Mustache = require('mustache');
 const path = require('path');
 const { firebaseGetUserAsync } = require('./firebaseutil');
 
-const domain = "https://np-psi-dev.web.app/";
+const domain = "https://psi.newpublic.org/";
 
 
 var postmark_key = null;
