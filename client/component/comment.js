@@ -6,7 +6,7 @@ import { CharacterCounter, Heading, Paragraph, TextField, TextFieldButton, Utili
 import { CTAButton, ExpandButton, IconButton, SubtleButton, TextButton } from "./button";
 import { IconEdit, IconReply, IconReport, IconUpvote, IconUpvoted } from "./icon";
 import { goBack, pushSubscreen } from "../util/navigate";
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { deepClone, getFirstName } from "../util/util";
 import { colorBlueBackground, colorDisabledText, colorGreyPopupBackground, colorLightBlueBackground, colorPurpleBackground, colorTeaserBackground, colorTextBlue, colorTextGrey } from "./color";
 import { RichText } from "./richtext";
@@ -16,6 +16,7 @@ import { needsLogin } from "../organizer/Login";
 import { useConfig } from "../util/features";
 import { Banner } from "./banner";
 import { logEventAsync, useLogEvent } from "../util/eventlog";
+import { NoCommentsHelp } from "./help";
 
 
 export function Comment({commentKey}) {
@@ -442,12 +443,12 @@ export function BasicComments({about=null, showInput=true, canPost=true}) {
     const filteredComments = filterComments({datastore, comments, commentFilters});
     return <View>
         <View>
-        {pageTopWidgets?.map((Widget,i) => 
-            <Catcher key={i}><Widget comments={comments} /></Catcher>
-        )}
+            {pageTopWidgets?.map((Widget,i) => 
+                <Catcher key={i}><Widget comments={comments} /></Catcher>
+            )}
         </View>
         {comments?.length == 0 && 
-            <PadBox vert={20} horiz={20}><Banner color={colorTeaserBackground}><RichText label={noCommentsMessage} /></Banner></PadBox>
+            <NoCommentsHelp />
         }
         <CatchList items={filteredComments} renderItem={comment =>
             <Comment commentKey={comment.key} />
@@ -457,6 +458,7 @@ export function BasicComments({about=null, showInput=true, canPost=true}) {
         }
     </View>
 }
+
 
 
 export function ComposerScreen({about, commentKey=null, intro=null}) {

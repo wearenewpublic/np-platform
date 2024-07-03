@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@carbon/icons-react": "^11.36.0",
+    "expo-linear-gradient": "~12.3.0",
     "firebase": "^9.22.2",
     "json5": "^2.2.3"
   },
