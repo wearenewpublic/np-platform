@@ -50,6 +50,10 @@ export var ui_translations_german = {
     'Log out': 'Abmelden',
     'Read more': 'Mehr lesen',
 
+    // Help
+    'Start the conversation': 'Beginne die Unterhaltung',
+    'Be the first to share your thoughts': 'Sei der Erste, der seine Gedanken teilt',
+
     // Feature module names
     'Upvote Comments': 'Kommentare hochwählen',
     'Comment Length Limit': 'Kommentarlängenbegrenzung',

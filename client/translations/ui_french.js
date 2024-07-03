@@ -51,6 +51,11 @@ export var ui_translations_french = {
     'Log out': 'Se déconnecter',
     'Read more': 'Lire la suite',
 
+    // Help
+    'Start the conversation': 'Lancez la conversation',
+    'Be the first to share your thoughts': 'Soyez le premier à partager vos réflexions',
+
+
     // Feature module names
     'Upvote Comments': 'Vote positif des commentaires',
     'Comment Length Limit': 'Limite de longueur des commentaires',
