@@ -244,11 +244,13 @@ const TagStyle = StyleSheet.create({
     }
 })
 
-export function ReactionButton({label, count, selected, onPress}){
+export function ReactionButton({emoji, viewOnly=false, label, count, selected, onPress}){
     const s = ReactionButtonStyle;
     const [pressed, setPressed] = useState(false);
-    return <HoverView style={[s.button, selected && s.pressed]} hoverStyle={s.hover} 
+    return <HoverView style={[s.horiz, !viewOnly && s.button, selected && s.pressed]} 
+            hoverStyle={s.hover} disabled={viewOnly}
             pressedStyle={s.pressed} setPressed={setPressed} role='button' onPress={onPress}>
+        {emoji && <PadBox right={8}><UtilityText label={emoji} type='tiny' strong /></PadBox>}
         <UtilityText label={label} type='tiny' strong 
             color={(pressed || selected) ? colorTextBlue : colorBlack} />
         {count ? <Pad size={8} /> : null}
@@ -256,6 +258,14 @@ export function ReactionButton({label, count, selected, onPress}){
     </HoverView>
 }
 const ReactionButtonStyle = StyleSheet.create({
+    horiz: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    viewOnly: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     button: {
         flexDirection: 'row',
         alignSelf: 'flex-start',

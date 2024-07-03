@@ -227,9 +227,10 @@ function ButtonScreen() {
                 <Tag label='Tiny Tag' type='tiny' />
             </DemoSection>
             <DemoSection label='Reaction Button'>
-                <ReactionButton label='🤝🏽 Respect' count={0} />
-                <ReactionButton label='🤝🏽 Respect' count={1} />
-                <ReactionButton label='🤝🏽 Selected' count={1} selected />                
+                <ReactionButton emoji='🤝🏽' label='Respect' count={0} />
+                <ReactionButton emoji='🤝🏽' label='Respect' count={1} />
+                <ReactionButton emoji='🤝🏽' label='Selected' count={1} selected />                
+                <ReactionButton emoji='🤝🏽' label='View only' count={2} viewOnly />
             </DemoSection>
             <DemoSection label='DropDownSelector'>
                 <DropDownSelector label='Sort by' 
