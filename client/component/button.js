@@ -250,7 +250,7 @@ export function ReactionButton({emoji, viewOnly=false, label, count, selected, o
     return <HoverView style={[s.horiz, !viewOnly && s.button, selected && s.pressed]} 
             hoverStyle={s.hover} disabled={viewOnly}
             pressedStyle={s.pressed} setPressed={setPressed} role='button' onPress={onPress}>
-        {emoji && <PadBox right={8}><UtilityText label={emoji} type='tiny' strong /></PadBox>}
+        {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
         <UtilityText label={label} type='tiny' strong 
             color={(pressed || selected) ? colorTextBlue : colorBlack} />
         {count ? <Pad size={8} /> : null}
