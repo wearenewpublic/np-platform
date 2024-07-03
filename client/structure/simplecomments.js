@@ -64,7 +64,6 @@ function SimpleCommentsScreen() {
             <Pad />
             <CommentsInput />
         </HeaderBox>
-        <Pad />
         <BasicComments showInput={false} />
     </ConversationScreen>
 }

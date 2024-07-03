@@ -9,7 +9,7 @@ import { useConfig } from "../util/features";
 export function NoCommentsHelp() {
     const s = NoCommentsHelpStyle;
     const {noCommentsMessage, noCommentsTitle} = useConfig();
-    return <PadBox horiz={20} top={12}>
+    return <PadBox horiz={20} top={32}>
         <View style={s.helpBox}>
             <Image source={{uri: 'https://psi.newpublic.org/images/bubbles.png'}} 
                 style={{width: 58, height: 58}} />    
