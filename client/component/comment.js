@@ -24,7 +24,7 @@ export function Comment({commentKey}) {
     const editing = useSessionData(['editComment', commentKey]);
     const {commentAboveWidgets, commentBelowWidgets} = useConfig();
     return <View testID={commentKey} id={commentKey} >
-        <PadBox top={20} horiz={10}>
+        <PadBox top={20} horiz={20}>
             {commentAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
             <Byline type='large' userId={comment.from} time={comment.time} edited={comment.edited} />
             <Pad size={20} />
@@ -36,7 +36,7 @@ export function Comment({commentKey}) {
                 <CommentReplies commentKey={commentKey} />
             </PadBox>
         </PadBox>
-        <PadBox horiz={30}><Separator /></PadBox>
+        <PadBox horiz={20}><Separator /></PadBox>
     </View>
 }
 
@@ -78,8 +78,8 @@ function CommentBody({commentKey}) {
     const datastore = useDatastore();
     const {commentTopWidgets} = useConfig();
     const text = comment.text || '';
-    const isLong = text.length > 300 || text.split('\n').length > 5;
-
+    const isLong = guessNumberOfLines(text) > 8;
+    
     function onEditingDone(finalComment) {
         setEditedComment(null);
         datastore.setSessionData(['editComment', comment.key], false);
@@ -98,11 +98,19 @@ function CommentBody({commentKey}) {
     } else {
         return <View>
             {commentTopWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
-            {/* <Paragraph numberOfLines={(isLong && !expanded) ? 5 : null} text={comment.text.trim()} /> */}
-            <RichText numberOfLines={(isLong && !expanded) ? 5 : null} text={text.trim()} />
-            {isLong && !expanded && <PadBox top={14}><TextButton type='small' label='Read more' color={colorTextBlue} onPress={() => setExpanded(true)} /></PadBox>}
+            <RichText numberOfLines={(isLong && !expanded) ? 8 : null} 
+                text={text.trim()} 
+            />
+            {isLong && !expanded && <PadBox top={14}><TextButton type='small' label='Read more' onPress={() => setExpanded(true)} /></PadBox>}
         </View>
     }
+}
+
+function guessNumberOfLines(text) {
+    const lines = text.split('\n');
+    const linesPerLine = lines.map(line => Math.floor(line.length / 60) + 1);
+    const sum = linesPerLine.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+    return sum;
 }
 
 function MaybeCommentReply({commentKey}) {
@@ -317,36 +325,6 @@ export function ActionReply({commentKey, depth}) {
 
     return <SubtleButton icon={IconReply} label='Reply' onPress={needsLogin(onReply, 'reply')} padRight />
 }
-
-export function ActionUpvote({commentKey}) {
-    const personaKey = usePersonaKey();
-    const comment = useObject('comment', commentKey);
-    const upvotes = useCollection('upvote', {filter: {comment: commentKey}});
-    const datastore = useDatastore();
-    const count = upvotes.length;
-    const upvoted = upvotes.some(upvote => upvote.from == personaKey);
-
-    function onUpvote() {
-        if (upvoted) {
-            const myUpvote = upvotes.find(upvote => upvote.from == personaKey);
-            datastore.deleteObject('upvote', myUpvote.key);
-            logEventAsync(datastore, 'upvote-undo', {commentKey});
-        } else {
-            datastore.addObject('upvote', {comment: commentKey, from: personaKey});
-            logEventAsync(datastore, 'upvote', {commentKey});
-        }
-    }
-
-    const disabled = comment?.from == personaKey;
-
-    return <SubtleButton icon={upvoted ? IconUpvoted : IconUpvote} bold={upvoted}
-        disabled={disabled}
-        label={upvoted ? 'Upvoted ({count})' : count ? 'Upvote ({count})' : 'Upvote'} 
-        color={upvoted ? colorTextBlue : disabled ? colorDisabledText : colorTextGrey}
-        formatParams={{count}} onPress={needsLogin(onUpvote, 'upvote')} />
-}
-
-
 
 export function ActionEdit({commentKey}) {
     const datastore = useDatastore();

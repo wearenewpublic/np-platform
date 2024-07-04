@@ -34,10 +34,11 @@ export function ActionUpvote({commentKey}) {
     const disabled = comment?.from == personaKey;
 
     return <SubtleButton icon={upvoted ? IconUpvoted : IconUpvote} bold={upvoted}
+        ariaLabel='upvote'
         disabled={disabled}
-        label={upvoted ? 'Upvoted ({count})' : count ? 'Upvote ({count})' : 'Upvote'} 
+        text={count.toString()}
         color={upvoted ? colorTextBlue : disabled ? colorDisabledText : colorTextGrey}
-        formatParams={{count}} onPress={needsLogin(onUpvote, 'upvote')} />
+        onPress={needsLogin(onUpvote, 'upvote')} />
 }
 
 

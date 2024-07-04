@@ -44,7 +44,7 @@ function removeTrailingPeriod(url) {
   }
 }
 
-function RichTextPart({text, color, type='small', linkColor}) {
+function RichTextPart({text, color, type='small'}) {
     if (!text) return null;
     const mMarkdown = text.match(markdownLinkRegex);
     if (mMarkdown && mMarkdown.length > 0) {
@@ -94,7 +94,9 @@ function RichTextPart({text, color, type='small', linkColor}) {
     return <Paragraph color={color} type={type} text={text} />
 }
 
-export function RichText({text, numberOfLines=null, type, color={colorBlack}, label, formatParams}) {
+export function RichText({text, numberOfLines=null, onTextLayout, type, color={colorBlack}, label, formatParams}) {
     const tText = useTranslation(label, formatParams);
-    return <Text numberOfLines={numberOfLines}><RichTextPart color={color} type={type} text={text ?? tText} /></Text>
+    return <Text numberOfLines={numberOfLines} onTextLayout={onTextLayout}>
+      <RichTextPart color={color} type={type} text={text ?? tText} />
+    </Text>
 }
