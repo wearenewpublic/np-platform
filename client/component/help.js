@@ -19,11 +19,11 @@ export function NoCommentsHelp() {
                 <RichText label={noCommentsMessage} />
             </View>
         </View>
-        <PadBox horiz={8} top={24}>
+        {/* <PadBox horiz={8} top={24}>
             <SkeletonComment />
             <Pad size={40} />
             <SkeletonComment />
-        </PadBox>
+        </PadBox> */}
     </PadBox>
 }
 const NoCommentsHelpStyle = StyleSheet.create({
