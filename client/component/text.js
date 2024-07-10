@@ -10,7 +10,9 @@ import { ProfilePhoto } from "./people";
 const fontFamilySansRegular = 'IBMPlexSans_400Regular, Arial, Helvetica, sans-serif';
 const fontFamilySansMedium = 'IBMPlexSans_500Medium, Arial, Helvetica, sans-serif';
 const fontFamilySansSemiBold = 'IBMPlexSans_600SemiBold, Arial, Helvetica, sans-serif';
-
+const fontFamilyMonoRegular = 'IBMPlexMono_400Regular, Arial, Helvetica, sans-serif';
+const fontFamilyMonoMedium = 'IBMPlexMono_500Medium, Arial, Helvetica, sans-serif';
+const fontFamilyMonoSemiBold = 'IBMPlexMono_600SemiBold, Arial, Helvetica, sans-serif'
 
 export function Heading({text, label, level=2, formatParams}) {
     const styleMap = {
@@ -32,6 +34,43 @@ const HeadingStyle = StyleSheet.create({
         fontSize: 16,
         lineHeight: 16 * 1.25
     },
+})
+
+
+export function DataVizText({type, text, label, formatParams}) {
+    const s = DataVizTextStyle;
+    const styleMap = {
+        heading1: s.heading1,
+        heading2: s.heading2,
+        number: s.number,
+        label: s.label,
+        labelStrong: [s.label, {fontFamily: fontFamilySansMedium}]
+    }
+    return <TranslatableText text={text} label={label} formatParams={formatParams}
+        style={styleMap[type]} />
+}
+const DataVizTextStyle = StyleSheet.create({
+    heading1: {
+        fontFamily: fontFamilySansSemiBold,
+        fontSize: 18,
+        lineHeight: 18 * 1.25
+    },
+    heading2: {
+        fontFamily: fontFamilyMonoRegular,
+        fontSize: 12,
+        lineHeight: 12 * 1.25,
+        fontStyle: 'italic'
+    },
+    number: {
+        fontFamily: fontFamilyMonoSemiBold,
+        fontSize: 12,
+        lineHeight: 12 * 1.25
+    },
+    label: {
+        fontFamily: fontFamilyMonoRegular,
+        fontSize: 12,
+        lineHeight: 12 * 1.25
+    }    
 })
 
 

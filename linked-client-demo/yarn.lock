@@ -1260,6 +1260,11 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.56.0.tgz#ef20350fec605a7f7035a01764731b2de0f3782b"
   integrity sha512-gMsVel9D7f2HLkBma9VbtzZRehRogVRfbr++f06nL2vnCGCNlzOD+/MUov/F4p8myyAHspEhVobgjpX64q5m6A==
 
+"@expo-google-fonts/ibm-plex-mono@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/ibm-plex-mono/-/ibm-plex-mono-0.2.3.tgz#447948818c0ee0352a983eb1967c571f6527d45d"
+  integrity sha512-Bc+VBBtOjP993mNycex2Dmomuokvd3lkn43CY7Kya8Jst4F8CKXhe6H/wp52AAR6Wo+dWsCHSUdW0ynHDD3Qhg==
+
 "@expo-google-fonts/ibm-plex-sans@^0.2.3":
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/@expo-google-fonts/ibm-plex-sans/-/ibm-plex-sans-0.2.3.tgz#586f35503b5d17225b058bb8efd829ab8c1cf907"

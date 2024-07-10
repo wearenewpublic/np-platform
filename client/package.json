@@ -1,6 +1,6 @@
 {
   "name": "np-platform-client",
-  "version": "0.2.34",
+  "version": "0.2.36",
   "license": "Apache-2.0",
   "scripts": {
     "demo": "expo start --web",
@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.23.9",
+    "@expo-google-fonts/ibm-plex-mono": "^0.2.3",
     "expo-linear-gradient": "~12.3.0",
     "firebase": "^9.22.2",
     "json5": "^2.2.3"

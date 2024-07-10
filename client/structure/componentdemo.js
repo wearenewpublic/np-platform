@@ -2,7 +2,7 @@ import { StyleSheet, Switch, Text, TextBase, View } from "react-native";
 import { Byline, FacePile, Persona, ProfilePhoto } from "../component/people";
 import { usePersonaKey } from "../util/datastore";
 import { IconAudio, IconChevronDown, IconCircleCheck, IconClose, IconCloseBig, IconComment, IconCommentBig, IconEdit, IconEmoji, IconImage, IconInfo, IconLeftArrow, IconLeftArrowBig, IconList, IconReply, IconReport, IconSave, IconUpvote, IconUpvoted, IconVideo } from "../component/icon";
-import { CharacterCounter, ContentHeading, ContentParagraph, EditorialHeading, Heading, LinkText, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
+import { CharacterCounter, ContentHeading, ContentParagraph, DataVizText, EditorialHeading, Heading, LinkText, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
 import { colorBlack, colorBlueBackground, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
 import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, ModalButton, PhotoPile, ReactionButton, SubtleButton, Tag, TextButton, Toggle } from "../component/button";
 import { useState } from "react";
@@ -89,6 +89,14 @@ function TextScreen() {
                 <EditorialHeading level={4} italic label='Editorial Heading 4 Italic' />
                 <EditorialHeading level={5} label='Editorial Heading 5' />
                 <EditorialHeading level={5} italic label='Editorial Heading 5 Italic' />
+            </DemoSection>
+            <DemoSection label='DataViz Text'>
+                <DataVizText type='heading1' label='Data Viz Heading 1' />
+                <DataVizText type='heading2' label='Data Viz Heading 2' />
+                <DataVizText type='number' label='Data Viz Number' />
+                <DataVizText type='label' label='Data Viz Label' />
+                <DataVizText type='labelStrong' label='Data Viz Label Strong' />
+
             </DemoSection>
             <DemoSection label='Text Field'>
                 <TextField value={text} placeholder='Enter some text' onChange={setText} />
