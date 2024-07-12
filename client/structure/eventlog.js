@@ -141,16 +141,6 @@ function SessionSummary({sessionKey}) {
     if (!session) {return null};
 
     return <Session session={session} />
-
-    return <View>
-        <HorizBox>
-            <ProfilePhoto userId={session.userId} type='large' />
-            <Pad size={10} />
-            <View>
-                <Heading label={session.userName} />
-            </View>
-        </HorizBox>
-    </View>
 }
 
 function LogEvent({event}) {
@@ -176,7 +166,8 @@ function EventPreview({event}) {
 
 function ExpandedEvent({event}) {
     const extraKeys = Object.keys(event).filter(key => ![
-        'time', 'eventType', 'userName', 'siloKey', 'sessionKey', 'instanceKey', 'structureKey'
+        'time', 'eventType', 'userName', 'text', 'url',
+        'siloKey', 'sessionKey', 'instanceKey', 'structureKey'
     ].includes(key));
     return <View>
         <EventPreview event={event} />
