@@ -1,7 +1,12 @@
 const { firebaseWriteAsync, firebaseUpdateAsync, createNewKey, firebaseGetUserAsync, firebaseReadAsync, firebaseReadWithFilterAsync } = require("../util/firebaseutil");
 
-async function logEventApi({sessionKey, isNewSession, userId, siloKey, structureKey, instanceKey, eventType, params}) {
-    console.log('logEvent2', {sessionKey, isNewSession, userId, siloKey, structureKey, instanceKey, eventType, params});
+async function logEventApi({
+        sessionKey, isNewSession, deviceInfo=null, userId, 
+        siloKey, structureKey, instanceKey, 
+        eventType, params}) {
+
+    console.log('logEvent', {sessionKey, isNewSession, userId, siloKey, structureKey, instanceKey, eventType, params});
+    console.log('== DeviceInfo ==\n', deviceInfo);
     const eventKey = createNewKey();
     const time = Date.now();
     var userName = null;
@@ -19,7 +24,8 @@ async function logEventApi({sessionKey, isNewSession, userId, siloKey, structure
 
     if (isNewSession) {
         firebaseWriteAsync(['log', 'session', sessionKey], {
-            userId, siloKey, userName, userPhoto, startTime: Date.now(), endTime: Date.now()
+            userId, siloKey, userName, userPhoto, deviceInfo,
+            startTime: Date.now(), endTime: Date.now()
         })
     } else if (userId) {
         firebaseUpdateAsync(['log', 'session', sessionKey], {userId, siloKey, userName, userPhoto, endTime: Date.now()})
@@ -85,10 +91,21 @@ async function getSessionsApi({userId, userEmail, siloKey}) {
     return {success: true, data: sessions}
 }
 
+async function getSingleSessionApi({userId, userEmail, sessionKey}) {
+    const isAdmin = getIsGlobalAdmin(userEmail);
+    if (!isAdmin) {
+        return {success: false, error: 'Not authorized'};
+    }
+    const session = await firebaseReadAsync(['log', 'session', sessionKey]);
+    return {success: true, data: session}
+}
+
+
 exports.apiFunctions = {
     logEvent: logEventApi,
     setSessionUser: setSessionUserApi,
     getEvents: getEventsApi,
     getSessions: getSessionsApi,
+    getSingleSession: getSingleSessionApi
 }
 

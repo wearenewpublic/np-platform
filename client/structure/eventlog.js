@@ -2,15 +2,16 @@ import { useIsAdmin } from "../component/admin";
 import { ConversationScreen, HorizBox, HoverSelectBox, HoverView, Pad, PadBox, Separator, WindowTitle } from "../component/basics"
 import { CTAButton, TextButton } from "../component/button";
 import { formatDate } from "../component/date";
-import { Byline } from "../component/people";
+import { Byline, ProfilePhoto } from "../component/people";
 import { RichText } from "../component/richtext";
 import { Heading, Paragraph, UtilityText } from "../component/text"
 import { useDatastore, useSessionData } from "../util/datastore";
-import { eventTypes, getLogEventsAsync, getSessionsAsync } from "../util/eventlog";
+import { eventTypes, getLogEventsAsync, getSessionsAsync, useSession } from "../util/eventlog";
 import { useState, useEffect } from "react";
 import { View } from 'react-native';
 import { gotoInstance, pushSubscreen } from "../util/navigate";
 import { colorTextGrey } from "../component/color";
+import { useLanguage } from "../component/translation";
 
 // TODO: Make this code less hideous. Written in haste before going on vacation.
 
@@ -22,7 +23,7 @@ export const EventLogStructure = {
     subscreens: {
         eventlog: EventLogScreen,
         sessions: SessionListScreen,
-        events: EventListScreen,
+        events: EventTypesScreen,
     }
 }
 
@@ -34,15 +35,15 @@ function HomeScreen() {
         <Pad />
         <CTAButton label='Sessions' onPress={() => pushSubscreen('sessions')}/>
         <Pad />
-        <CTAButton label='Events' onPress={() => pushSubscreen('events')} />
+        <CTAButton label='Event Types' onPress={() => pushSubscreen('events')} />
     </ConversationScreen>
 }
 
-function EventListScreen() {
+function EventTypesScreen() {
     return <ConversationScreen>
-        <WindowTitle title='Events' />
+        <WindowTitle title='Event Types' />
         <Pad />
-        <Heading level={1} label='Events' />
+        <Heading level={1} label='Event Types' />
         <Pad />
         {Object.keys(eventTypes).map((eventType, i) => <PadBox vert={4} key={i}><EventType eventType={eventType} /></PadBox>)}
     </ConversationScreen>
@@ -62,7 +63,6 @@ function SessionListScreen() {
 
     async function onRefresh() {
         const sessions = await getSessionsAsync();
-        console.log('Sessions', sessions);
         setSessions(sessions);
     }
 
@@ -84,31 +84,32 @@ function SessionListScreen() {
 }
 
 function Session({session}) {
-    console.log('Session', session, session.userName, session.time);
+    const language = useLanguage();
     return <HoverView onPress={() => pushSubscreen('eventlog', {sessionKey: session.key})}>
-        <Byline name={session.userName} photo={session.userPhoto} clickable={false} time={session.endTime ?? session.startTime} />
+        <Byline type='large' userId={session.userId} name={session.userName} photo={session.userPhoto} 
+            clickable={false} time={session.endTime ?? session.startTime} 
+            subtitleLabel={session.deviceInfo && '{time} - {mobileDesktop} - {browserName} - {browserVersion} - {os} - {screenWidth}x{screenHeight}'}
+            subtitleParams={{...session?.deviceInfo, 
+                time: formatDate(session.endTime ?? session.startTime, language),
+                mobileDesktop: session?.deviceInfo?.isMobile ? 'Mobile' : 'Desktop'
+            }}
+        />
     </HoverView>
-    return <UtilityText label={JSON.stringify(session)} />
 }
 
 function EventLogScreen({eventType, sessionKey, siloKey}) {
-    console.log('EventLog screen');
     const isAdmin = useIsAdmin();
     const [events, setEvents] = useState([]); 
     const [limit, setLimit] = useState(100);
 
     async function onRefresh() {
-        console.log('Refresh');
         const events = await getLogEventsAsync({sessionKey, siloKey, eventType});
-        console.log('Events', events);
         setEvents(events);
     }
 
     useEffect(() => {
         onRefresh();
     }, []);
-
-    console.log('events', events);
 
     const sortedEvents = events.sort((a, b) => b.time - a.time).slice(0, limit);
     const filteredEvents = sortedEvents.filter(event => 
@@ -124,6 +125,7 @@ function EventLogScreen({eventType, sessionKey, siloKey}) {
     }
     return <ConversationScreen>
         <Pad />
+        {sessionKey && <PadBox bottom={20}><SessionSummary sessionKey={sessionKey} /></PadBox>}
         <HorizBox spread center>
             <Heading level={1} label='Event Log' />
             <CTAButton label='Refresh' onPress={onRefresh} />
@@ -132,6 +134,23 @@ function EventLogScreen({eventType, sessionKey, siloKey}) {
         {filteredEvents.map((event, i) => <PadBox vert={4} key={i}><LogEvent event={event} /></PadBox>)}
         {filteredEvents.length > limit && <CTAButton label='Load more' onPress={() => setLimit(limit * 2)} />}
     </ConversationScreen>
+}
+
+function SessionSummary({sessionKey}) {
+    const session = useSession({sessionKey});
+    if (!session) {return null};
+
+    return <Session session={session} />
+
+    return <View>
+        <HorizBox>
+            <ProfilePhoto userId={session.userId} type='large' />
+            <Pad size={10} />
+            <View>
+                <Heading label={session.userName} />
+            </View>
+        </HorizBox>
+    </View>
 }
 
 function LogEvent({event}) {
@@ -156,6 +175,9 @@ function EventPreview({event}) {
 }
 
 function ExpandedEvent({event}) {
+    const extraKeys = Object.keys(event).filter(key => ![
+        'time', 'eventType', 'userName', 'siloKey', 'sessionKey', 'instanceKey', 'structureKey'
+    ].includes(key));
     return <View>
         <EventPreview event={event} />
         <Separator />
@@ -165,6 +187,7 @@ function ExpandedEvent({event}) {
             {event.structureKey && event.instanceKey && <LinkedField label='Instance' value={event.structureKey + '/' + event.instanceKey} onPress={() => gotoInstance({structureKey: event.structureKey, instanceKey: event.instanceKey})} />} 
             {event.url && <LinkedField label='URL' value={event.url} onPress={() => window.open(event.url, '_blank')} />}
             {event.text && <Paragraph text={event.text} />}
+            {extraKeys.map((key, i) => <LinkedField key={i} label={key} value={event[key]} />)}
         </PadBox>
     </View>
 }
@@ -174,7 +197,7 @@ function LinkedField({label, value, onPress}) {
         <HorizBox>
             <UtilityText type='large' strong label={label + ': '} />
             {onPress && <TextButton onPress={onPress} text={value} />}
-            {!onPress && <Paragraph type='large' label={value} />}
+            {!onPress && <UtilityText type='large' label={value} />}
        </HorizBox>
        <Pad size={4} />
     </View>

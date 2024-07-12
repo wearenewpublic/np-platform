@@ -20,7 +20,10 @@ export function LoginScreen({action}) {
         const provider = new GoogleAuthProvider();
         try {
             const result = await signInWithPopup(auth, provider);
-            logEventAsync(datastore, 'login-success', {method: 'google'});
+            logEventAsync(datastore, 'login-success', {
+                method: 'google', 
+                email: result?.user?.email ?? 'unknown',
+            });
             goBack();
         } catch (error) {
             console.error(error);

@@ -67,7 +67,7 @@ export function deepClone(obj) {
 }
 
 export function formatString(template, values) {
-    return template.replace(/{([^}]+)}/g, (match, key) => values[key] ?? match);
+    return template.replace(/{([^}]+)}/g, (match, key) => values[key] ?? '');
 }
   
 export function generateRandomKey(length) {

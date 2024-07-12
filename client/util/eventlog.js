@@ -1,7 +1,8 @@
+import { getDeviceInfo } from "../platform-specific/deviceinfo";
 import { useDatastore } from "./datastore";
 import { firebaseNewKey, getFirebaseUser, onFbUserChanged } from "./firebase";
 import { callServerApiAsync } from "./servercall";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const hourMillis = 60*60*1000;
 
@@ -49,6 +50,7 @@ export async function logEventAsync(datastore, eventType, params) {
     var sessionKey = localStorage.getItem('sessionKey');
     var sessionTime = localStorage.getItem('sessionTime');
     var isNewSession = false;
+    var deviceInfo = null;
     const preFirebaseUser = getFirebaseUser();
     
     if (!sessionKey || !sessionTime || Date.now() - sessionTime > hourMillis){
@@ -57,8 +59,14 @@ export async function logEventAsync(datastore, eventType, params) {
         isNewSession = true;
         localStorage.setItem('sessionKey', sessionKey);
         localStorage.setItem('sessionTime', sessionTime);    
+        deviceInfo = getDeviceInfo();
+        console.log('New session', sessionKey, deviceInfo);
     }
-    const result = await callServerApiAsync({datastore, component: 'eventlog', funcname: 'logEvent', params: {eventType, sessionKey, isNewSession, params}});
+    const result = await callServerApiAsync({
+        datastore, component: 'eventlog', funcname: 'logEvent', params: {
+            eventType, sessionKey, isNewSession, params, deviceInfo
+        }
+    });
     global_last_event = result?.eventKey ?? null;
 
     const postFirebaseUser = getFirebaseUser();
@@ -89,4 +97,16 @@ export async function getSessionsAsync({siloKey = null} = {}) {
     const sessionObjs = await callServerApiAsync({component: 'eventlog', funcname: 'getSessions', params: {siloKey}});
     const sessionKeys = Object.keys(sessionObjs).sort((a, b) => (sessionObjs[b].endTime || sessionObjs[b].startTime) - (sessionObjs[a].endTime || sessionObjs[a].startTime));
     return sessionKeys.map(key => ({key, ...sessionObjs[key]}));
+}
+
+export function useSession({sessionKey}) {
+    const [session, setSession] = useState(null);
+
+    useEffect(() => {
+        callServerApiAsync({
+            component: 'eventlog', funcname: 'getSingleSession', 
+            params: {sessionKey}
+        }).then(session => setSession(session));
+    }, [sessionKey]);
+    return session;
 }
