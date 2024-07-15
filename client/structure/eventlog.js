@@ -59,7 +59,7 @@ function EventType({eventType}) {
 
 function SessionListScreen() {
     const [sessions, setSessions] = useState([]);
-    const [limit, setLimit] = useState(100);
+    const [limit, setLimit] = useState(20);
 
     async function onRefresh() {
         const sessions = await getSessionsAsync();
@@ -70,6 +70,8 @@ function SessionListScreen() {
         onRefresh();
     }, []);
 
+    const shownSessions = sessions.slice(0, limit);
+
     return <ConversationScreen>
         <WindowTitle title='Sessions' />
         <Pad />
@@ -78,8 +80,8 @@ function SessionListScreen() {
             <CTAButton label='Refresh' onPress={onRefresh} />
         </HorizBox>
         <Pad />
-        {sessions.map((session, i) => <PadBox vert={4} key={i}><Session session={session} /></PadBox>)}
-        {sessions.length > limit && <CTAButton label='Load more' onPress={() => setLimit(limit * 2)} />}
+        {shownSessions.map((session, i) => <PadBox vert={4} key={i}><Session session={session} /></PadBox>)}
+        {sessions.length > limit && <PadBox top={20}><CTAButton label='Load more' onPress={() => setLimit(limit * 2)} /></PadBox>}
     </ConversationScreen>
 }
 
@@ -100,7 +102,7 @@ function Session({session}) {
 function EventLogScreen({eventType, sessionKey, siloKey}) {
     const isAdmin = useIsAdmin();
     const [events, setEvents] = useState([]); 
-    const [limit, setLimit] = useState(100);
+    const [limit, setLimit] = useState(20);
 
     async function onRefresh() {
         const events = await getLogEventsAsync({sessionKey, siloKey, eventType});
@@ -111,12 +113,13 @@ function EventLogScreen({eventType, sessionKey, siloKey}) {
         onRefresh();
     }, []);
 
-    const sortedEvents = events.sort((a, b) => b.time - a.time).slice(0, limit);
+    const sortedEvents = events.sort((a, b) => b.time - a.time);
     const filteredEvents = sortedEvents.filter(event => 
         (!eventType || event.eventType == eventType) &&
         (!sessionKey || event.sessionKey == sessionKey) &&
         (!siloKey || event.siloKey == siloKey)
     );
+    const shownEvents = filteredEvents.slice(0, limit);
 
     if (!isAdmin) {
         return <ConversationScreen>
@@ -131,8 +134,8 @@ function EventLogScreen({eventType, sessionKey, siloKey}) {
             <CTAButton label='Refresh' onPress={onRefresh} />
         </HorizBox>
         <Pad />
-        {filteredEvents.map((event, i) => <PadBox vert={4} key={i}><LogEvent event={event} /></PadBox>)}
-        {filteredEvents.length > limit && <CTAButton label='Load more' onPress={() => setLimit(limit * 2)} />}
+        {shownEvents.map((event, i) => <PadBox vert={4} key={i}><LogEvent event={event} /></PadBox>)}
+        {filteredEvents.length > limit && <PadBox top={20}><CTAButton label='Load more' onPress={() => setLimit(limit * 2)} /></PadBox>}
     </ConversationScreen>
 }
 

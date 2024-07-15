@@ -5,8 +5,6 @@ async function logEventApi({
         siloKey, structureKey, instanceKey, 
         eventType, params}) {
 
-    console.log('logEvent', {sessionKey, isNewSession, userId, siloKey, structureKey, instanceKey, eventType, params});
-    console.log('== DeviceInfo ==\n', deviceInfo);
     const eventKey = createNewKey();
     const time = Date.now();
     var userName = null;
@@ -37,7 +35,6 @@ async function logEventApi({
 }
 
 async function setSessionUserApi({sessionKey, userId, eventKey}) {
-    console.log('setSessionUser', {sessionKey, userId, eventKey});
     if (userId) {
         const userInfo = await firebaseGetUserAsync(userId);
         const userName = userInfo.displayName;

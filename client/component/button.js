@@ -184,6 +184,7 @@ const TextButtonStyle = StyleSheet.create({
     button: {
         flexDirection: 'row',
         alignItems: 'center',
+        alignSelf: 'flex-start',
     }
 })
 
