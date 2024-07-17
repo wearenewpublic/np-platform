@@ -17,6 +17,7 @@ import { useConfig } from "../util/features";
 import { Banner } from "./banner";
 import { logEventAsync, useLogEvent } from "../util/eventlog";
 import { NoCommentsHelp } from "./help";
+import { useIsAdmin } from "./admin";
 
 
 export function Comment({commentKey}) {
@@ -394,10 +395,10 @@ export function CommentsIntro() {
     </View>
 }
 
-function filterComments({datastore, comments, commentFilters}) {
+function filterComments({datastore, comments, isAdmin, commentFilters}) {
     if (commentFilters) {
         return comments.filter(comment => 
-            commentFilters.every(filter => filter({datastore, comment}))
+            commentFilters.every(filter => filter({datastore, isAdmin, comment}))
         )
     } else {
         return comments;
@@ -415,10 +416,11 @@ export function CommentsInput({about=null}) {
 
 export function BasicComments({about=null, showInput=true, canPost=true}) {
     const datastore = useDatastore();
-    const {noCommentsMessage, noMoreCommentsMessage} = useConfig();
-    const {commentInputPlaceholder, commentInputLoginAction, pageTopWidgets, commentFilters} = useConfig();
+    const {noMoreCommentsMessage} = useConfig();
+    const {pageTopWidgets, commentFilters} = useConfig();
     const comments = useCollection('comment', {filter: {about, replyTo: null}, sortBy: 'time', reverse: true});
-    const filteredComments = filterComments({datastore, comments, commentFilters});
+    const isAdmin = useIsAdmin();
+    const filteredComments = filterComments({datastore, comments, isAdmin, commentFilters});
     return <View>
         <View>
             {pageTopWidgets?.map((Widget,i) => 
