@@ -205,6 +205,7 @@ export class Datastore extends React.Component {
     getSiloKey() {return this.props.siloKey}
     getStructureKey() {return this.props.structureKey}
     getInstanceKey() {return this.props.instanceKey}
+    getIsAdmin() {return this.isAdmin};
     getLanguage() {return this.props.language}
     getLoaded() {return this.state.loaded}
         

@@ -160,10 +160,10 @@ const SubtleButtonStyle = StyleSheet.create({
 });
 
 
-export function TextButton({label, level=1, text, type='large', paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, rightIcon, color=colorBlack, onPress}) {
+export function TextButton({label, level=1, text, type='large', paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, rightIcon, color=colorBlack, alignStart=false, onPress}) {
     const s = TextButtonStyle;
     const [hover, setHover] = useState(false);
-    return <HoverView shrink style={s.button} setHover={setHover} onPress={onPress} role='button'>
+    return <HoverView shrink style={[s.button, alignStart ? {alignSelf: 'flex-start'} : null]} setHover={setHover} onPress={onPress} role='button'>
         {leftIcon && React.createElement(leftIcon, {color})}
         {leftIcon && <Pad size={8} />}        
         {paragraph ? 
@@ -184,7 +184,6 @@ const TextButtonStyle = StyleSheet.create({
     button: {
         flexDirection: 'row',
         alignItems: 'center',
-        alignSelf: 'flex-start',
     }
 })
 

@@ -17,8 +17,8 @@ test('useIsAdmin', () => {
     screen.getByText('Not Admin');
 })
 
-test('useIsAdmin', () => {    
+test('useIsAdmin', async () => {    
     setModulePublicData({moduleKey: 'admin', data: {adminEmails: 'bob@bob.org, alice@adams.org'}});
-    render(<WithEnv><IsAdmin /></WithEnv>);
-    screen.getByText('Is Admin');
+    render(<WithEnv isAdmin><IsAdmin /></WithEnv>);
+    await screen.findByText('Is Admin');
 })

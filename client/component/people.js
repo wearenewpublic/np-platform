@@ -120,7 +120,7 @@ export function Byline({type='small', photoType=null, clickable=true, userId, na
             <ProfilePhoto userId={userId} photo={photo} type={photoType ?? 'large'} /> 
             <View style={s.right}>
                 {/* <UtilityText strong text={name ?? persona?.name} /> */}
-                <TextButton type='small' text={name ?? persona?.name} strong onPress={onProfile} />
+                <TextButton type='small' alignStart text={name ?? persona?.name} strong onPress={onProfile} />
                 <Pad size={2} />
                 {subtitleLabel ? 
                     <UtilityText color={colorTextGrey} label={subtitleLabel} formatParams={subtitleParams} underline={underline} />
@@ -141,7 +141,7 @@ export function Byline({type='small', photoType=null, clickable=true, userId, na
                 <UtilityText strong text={name ?? persona?.name} underline={underline} />
             }
             {time && <Pad size={6} />}
-            {time &&                     <UtilityText color={colorTextGrey} 
+            {time && <UtilityText color={colorTextGrey} 
                         label={'{time}' + (edited ? ' • Edited' : '')} 
                         formatParams={{time: formatMiniDate(time, language)}} underline={underline}/>
             }

@@ -4,6 +4,7 @@ import { SharedData, SharedDataContext } from './shareddata';
 import { Datastore } from './datastore';
 import { ConfigContext, assembleConfig } from './features';
 import { mock_setFirebaseData } from './firebase';
+import { useIsAdminForSilo } from '../component/admin';
 
 var global_sharedData = new SharedData();
 
@@ -19,16 +20,17 @@ export function getSharedData() {
     return global_sharedData;
 }
 
-export function WithFeatures({siloKey='test', structureKey='componentdemo', instanceKey='test', features={}, children}) {
+export function WithFeatures({siloKey='test', structureKey='componentdemo', instanceKey='test', isAdmin=false, features={}, children}) {
     const structure = getStructureForKey(structureKey);
     const instance = {isLive: false, ...global_sharedData.data};
     const config = assembleConfig({structure, activeFeatures:features});
-    return <InstanceContext.Provider value={{siloKey, structureKey, structure, instanceKey, instance, isLive: false}}>
+    return <InstanceContext.Provider value={{siloKey, structureKey, structure, instanceKey, instance, isAdmin, isLive: false}}>
         <SharedDataContext.Provider value={global_sharedData}>
             <Datastore 
                 siloKey={siloKey}
                 structureKey={structureKey} structure={structure} 
                 instanceKey={instanceKey} instance={instance}
+                isAdmin={isAdmin}
                 isLive={false}>
                 <ConfigContext.Provider value={config}>
                     {children}

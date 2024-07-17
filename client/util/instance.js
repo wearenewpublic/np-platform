@@ -13,6 +13,7 @@ import { structures } from '../structure';
 import { ConfigContext, assembleConfig } from './features';
 import { useLanguage } from '../component/translation';
 import { useFirebaseData } from './firebase';
+import { useIsAdminForSilo } from '../component/admin';
 
 export function useStandardFonts() {
     let [fontsLoaded] = useFonts({
@@ -32,6 +33,7 @@ export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKe
     const structure = getStructureForKey(structureKey);
     const instance = {isLive: true}
     const language = useFirebaseData(['silo', siloKey, 'module-public', 'language'])
+    const isAdmin = useIsAdminForSilo({siloKey});
 
     if (!structureKey || !instanceKey || !siloKey) {
       console.log('ScreenStack missing keys', {structureKey, instanceKey, siloKey});
@@ -39,8 +41,8 @@ export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKe
  
     return <View style={s.stackHolder}>
       <SharedData key={url}>
-        <InstanceContext.Provider value={{structure, siloKey, structureKey, instance, instanceKey, isLive: true}}>
-          <Datastore instance={instance} siloKey={siloKey} instanceKey={instanceKey} structure={structure} structureKey={structureKey} language={language} isLive={true}>
+        <InstanceContext.Provider value={{structure, siloKey, structureKey, instance, instanceKey, isLive: true, isAdmin}}>
+          <Datastore instance={instance} siloKey={siloKey} instanceKey={instanceKey} structure={structure} structureKey={structureKey} language={language} isAdmin={isAdmin} isLive={true}>
             {screenStack.map((screenInstance, index) => 
               <StackedScreen screenInstance={screenInstance} index={index} key={index} />
             )}

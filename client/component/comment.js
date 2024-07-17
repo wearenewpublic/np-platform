@@ -243,8 +243,9 @@ function EditWidgets({widgets, comment, setComment, onCancel}) {
 function CommentReplies({commentKey, depth=1}) {
     const {replyFilters} = useConfig();
     const datastore = useDatastore();
+    const isAdmin = useIsAdmin();
     var replies = useCollection('comment', {filter: {replyTo: commentKey}, sortBy: 'time', reverse: true});
-    replies = filterComments({datastore, comments: replies, commentFilters: replyFilters});
+    replies = filterComments({datastore, comments: replies, isAdmin, commentFilters: replyFilters});
     const replyUsers = replies.map(reply => reply.from);
     const expanded = useSessionData(['showReplies', commentKey]);
 
