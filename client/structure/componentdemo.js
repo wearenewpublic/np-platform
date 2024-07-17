@@ -30,7 +30,6 @@ export const ComponentDemoStructure = {
         teaserDemo: TeaserDemoScreen,
         banner: BannerDemoScreen,
         modal: ModalScreen,
-        feature: FeatureScreen,
         composer: params => <ComposerScreen {...params} contentType='Public Comment' />,
     },
     defaultConfig: {
@@ -359,17 +358,6 @@ function BannerDemoScreen() {
     </ConversationScreen>
 } 
 
-function FeatureScreen() {
-    const config = useConfig();
-    return <ConversationScreen>
-        <Narrow>
-            <DemoSection label='Feature Widgets'>
-                {config.widgets.map((Widget, i) => <Widget key={i} />)}
-            </DemoSection>
-        </Narrow>
-    </ConversationScreen>
-}
-
 function ComponentDemoScreen() {
     return <ConversationScreen>
         <Narrow>
@@ -384,7 +372,6 @@ function ComponentDemoScreen() {
                 <CTAButton label='Banner' onPress={() => pushSubscreen('banner')} />
                 <CTAButton label='Modal' onPress={() => pushSubscreen('modal')} />
                 <CTAButton label='Teaser' onPress={() => pushSubscreen('teaserDemo')} />
-                <CTAButton label='Feature Modules' onPress={() => pushSubscreen('feature')} />
                 <Pad />
                 <Heading label='Structure Demos' />
                 <CTAButton label='Simple Comments' onPress={() => gotoInstance({structureKey: 'simplecomments', instanceKey: 'demo'})} />                
@@ -392,8 +379,6 @@ function ComponentDemoScreen() {
         </Narrow>
     </ConversationScreen>
 }
-
-
 
 
 function DemoSection({label, horiz=false, children}) {

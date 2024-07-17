@@ -202,3 +202,15 @@ const HoverSelectBoxStyle = StyleSheet.create({
         padding: 0
     }
 })
+
+export function ShadowBox({children}) {
+    const s = ShadowBoxStyle;
+    return <View style={s.shadow}>{children}</View>
+}
+
+const ShadowBoxStyle = StyleSheet.create({
+    shadow: {
+        boxShadow: '0px 4px 20px 0px rgba(0, 0, 0, 0.10)',
+        borderRadius: 12
+    }
+})

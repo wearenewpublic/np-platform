@@ -5,7 +5,6 @@ import { getFirebaseIdTokenAsync } from "./firebase";
 
 // TODO: Do user-based authentication, once we have a database
 export async function callServerApiAsync({datastore, component, funcname, params}) {
-    console.log('callServerApi', component, funcname, params);
     const idToken = await getFirebaseIdTokenAsync();
     const expandedParams = {...params, 
         siloKey: datastore?.getSiloKey() || null,
@@ -15,7 +14,6 @@ export async function callServerApiAsync({datastore, component, funcname, params
     };
     try {
         const apiUrl = makeApiUrl(component, funcname);
-        console.log('apiUrl', apiUrl);
         const response = await fetch(apiUrl, {
             method: 'POST',
             headers: {

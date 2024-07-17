@@ -33,19 +33,10 @@ test('Banner', async () => {
     render(<TestInstance structureKey='componentdemo' screenKey='banner' />);
 });
 
-test('Feature', async () => {
-    render(<TestInstance structureKey='componentdemo' screenKey='feature' />);
-});
-
 test('Teaser', async () => {
     render(<TestInstance structureKey='componentdemo' screenKey='teaserDemo' />);
 });
 
 test('Composer', async () => {
     render(<TestInstance structureKey='componentdemo' screenKey='composer' />);
-});
-
-test('Feature', async () => {
-    render(<TestInstance structureKey='componentdemo' screenKey='feature' features={{demo: true}} />);
-    screen.getByText('Demo Widget');
 });

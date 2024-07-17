@@ -11,14 +11,10 @@ export function useIsAdmin() {
 
 export function useIsAdminForSilo({siloKey}) {
     const fbUser = useFirebaseUser();
-    console.log('fbuser', fbUser);
-    console.log('siloKey', siloKey);
     const adminEmails = useFirebaseData(['silo', siloKey, 'module-public', 'admin', 'adminEmails'])?.toLowerCase(); 
-    console.log('adminEmails', adminEmails);
     const email = fbUser?.email?.toLowerCase();
     const emailDomain = email?.split('@')?.[1];
 
     const isAdmin = (email && adminEmails?.includes(email)) || (getIsLocalhost() && emailDomain == 'admin.org');
-    console.log('isAdmin', isAdmin);
     return isAdmin;
 }

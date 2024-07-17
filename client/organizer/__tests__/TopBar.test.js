@@ -7,14 +7,14 @@ test('TopBar Renders', () => {
 });
 
 test('Feature Toggles', () => {
-    render(<WithFeatures><FeatureToggles /></WithFeatures>);
+    render(<WithFeatures structureKey="simplecomments"><FeatureToggles /></WithFeatures>);
     screen.getByText('Demo Feature');
     expect(screen.queryByText('Demo Secondary Feature')).toBeNull();
 })
 
 test('Secondary Feature Toggles', () => {
     setFeatures({demo: true});
-    render(<WithFeatures features={{demo: true}}><FeatureToggles /></WithFeatures>);
+    render(<WithFeatures structureKey='simplecomments' features={{demo: true}}><FeatureToggles /></WithFeatures>);
     screen.getByText('Demo Feature');
     screen.getByText('Demo Secondary Feature');
 })

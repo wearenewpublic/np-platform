@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useCollection, useDatastore, useObject, usePersona, usePersonaKey, useSessionData } from "../util/datastore"
 import { Byline, FacePile, Persona } from "./people"
-import { Card, ConversationScreen, PadBox, Pad, HorizBox, Separator } from "./basics";
+import { Card, ConversationScreen, PadBox, Pad, HorizBox, Separator, ShadowBox } from "./basics";
 import { CharacterCounter, Heading, Paragraph, TextField, TextFieldButton, UtilityText, checkValidLength } from "./text";
 import { CTAButton, ExpandButton, IconButton, SubtleButton, TextButton } from "./button";
 import { IconEdit, IconReply, IconReport, IconUpvote, IconUpvoted } from "./icon";
@@ -241,11 +241,13 @@ function EditWidgets({widgets, comment, setComment, onCancel}) {
 }
 
 function CommentReplies({commentKey, depth=1}) {
-    const {replyFilters} = useConfig();
+    const {replyFilters, replyBoosters, commentRankers} = useConfig();
     const datastore = useDatastore();
     const isAdmin = useIsAdmin();
     var replies = useCollection('comment', {filter: {replyTo: commentKey}, sortBy: 'time', reverse: true});
     replies = filterComments({datastore, comments: replies, isAdmin, commentFilters: replyFilters});
+    replies = rankComments({datastore, comments: replies, commentRankers: commentRankers});
+    const boostedComment = replyBoosters?.map(booster => booster({comments: replies}))[0];
     const replyUsers = replies.map(reply => reply.from);
     const expanded = useSessionData(['showReplies', commentKey]);
 
@@ -259,12 +261,15 @@ function CommentReplies({commentKey, depth=1}) {
     if (replies.length == 0) return <Pad />;
     
     return <View>
+        {boostedComment && !expanded && <PadBox vert={20}><ShadowBox>
+            <PadBox horiz={20} bottom={20}>
+                <ReplyComment isFinal commentKey={boostedComment.key} depth={depth} />
+            </PadBox>
+        </ShadowBox></PadBox>}
         <Pad />
-        {/* <PadBox horiz={depth==1 ? 20 : 0} top={20}> */}
             <ExpandButton userList={replyUsers} label='{count} {noun}' 
                 expanded={expanded} setExpanded={setExpanded}
                 formatParams={{count: replies.length, singular: 'reply', plural: 'replies'}} />
-        {/* </PadBox> */}
         <Pad />
         {expanded && <Separator />}
         {expanded && <CatchList items={replies} 
@@ -415,13 +420,28 @@ export function CommentsInput({about=null}) {
     />
 }
 
+function rankComments({datastore, comments, commentRankers, chosenRanker}) {
+    var ranker;
+    if (chosenRanker) {
+        ranker = commentRankers.find(ranker => ranker.name == chosenRanker);
+    } else {
+        ranker = commentRankers?.[0];
+    }
+    if (ranker) {
+        return ranker.ranker({datastore, comments});
+    } else {
+        return comments;
+    }
+}
+
 export function BasicComments({about=null, showInput=true, canPost=true}) {
     const datastore = useDatastore();
-    const {noMoreCommentsMessage} = useConfig();
+    const {noMoreCommentsMessage, commentRankers} = useConfig();
     const {pageTopWidgets, commentFilters} = useConfig();
     const comments = useCollection('comment', {filter: {about, replyTo: null}, sortBy: 'time', reverse: true});
     const isAdmin = useIsAdmin();
     const filteredComments = filterComments({datastore, comments, isAdmin, commentFilters});
+    const rankedComments = rankComments({datastore, comments: filteredComments, commentRankers});
     return <View>
         <View>
             {pageTopWidgets?.map((Widget,i) => 
@@ -431,7 +451,7 @@ export function BasicComments({about=null, showInput=true, canPost=true}) {
         {comments?.length == 0 && 
             <NoCommentsHelp />
         }
-        <CatchList items={filteredComments} renderItem={comment =>
+        <CatchList items={rankedComments} renderItem={comment =>
             <Comment commentKey={comment.key} />
         } />
         {comments?.length > 1 &&

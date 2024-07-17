@@ -10,14 +10,9 @@ import { ReplyNotificationsFeature } from "./ReplyNotifsFeature";
 const { DemoFeature, DemoSecondaryFeature } = require("./DemoFeature");
 
 export var features = {
-    componentdemo: [
+    simplecomments: [
         DemoFeature,
         DemoSecondaryFeature,
-        LengthLimitFeature,
-        UpvoteFeature,
-        DemoModerationFeature,
-    ],
-    simplecomments: [
         UpvoteFeature,
         LengthLimitFeature,
         DemoModerationFeature,
@@ -34,7 +29,7 @@ export var features = {
 export var defaultFeatureConfig = {
     componentdemo: {
         upvote: true,
-        lengthlimit: true
+        lengthlimit: true,
     },
     simplecomments: {
         upvote: true
