@@ -1,6 +1,6 @@
 {
   "name": "np-platform-client",
-  "version": "0.2.43",
+  "version": "0.2.44",
   "license": "Apache-2.0",
   "scripts": {
     "demo": "expo start --web",
