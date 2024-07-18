@@ -261,8 +261,8 @@ function CommentReplies({commentKey, depth=1}) {
     if (replies.length == 0) return <Pad />;
     
     return <View>
-        {boostedComment && !expanded && <PadBox vert={20}><ShadowBox>
-            <PadBox horiz={20} bottom={20}>
+        {boostedComment && !expanded && <PadBox top={20}><ShadowBox>
+            <PadBox horiz={20}>
                 <ReplyComment isFinal commentKey={boostedComment.key} depth={depth} />
             </PadBox>
         </ShadowBox></PadBox>}
