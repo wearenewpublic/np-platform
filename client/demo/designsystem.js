@@ -1,39 +1,63 @@
-import { StyleSheet, Switch, Text, TextBase, View } from "react-native";
-import { Byline, FacePile, Persona, ProfilePhoto } from "../component/people";
+import { Byline, FacePile, ProfilePhoto } from "../component/people";
 import { usePersonaKey } from "../util/datastore";
-import { IconAudio, IconChevronDown, IconCircleCheck, IconClose, IconCloseBig, IconComment, IconCommentBig, IconEdit, IconEmoji, IconImage, IconInfo, IconLeftArrow, IconLeftArrowBig, IconList, IconReply, IconReport, IconSave, IconUpvote, IconUpvoted, IconVideo } from "../component/icon";
-import { CharacterCounter, ContentHeading, ContentParagraph, DataVizText, EditorialHeading, Heading, LinkText, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
-import { colorBlack, colorBlueBackground, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
-import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, ModalButton, PhotoPile, ReactionButton, SubtleButton, Tag, TextButton, Toggle } from "../component/button";
+import { IconAudio, IconChevronDown, IconClose, IconCloseBig, IconComment, IconCommentBig, IconEdit, IconEmoji, IconImage, IconLeftArrowBig, IconReply, IconReport, IconSave, IconUpvote, IconUpvoted, IconVideo } from "../component/icon";
+import { CharacterCounter, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
+import { colorBlack, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
+import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, PhotoPile, ReactionButton, SubtleButton, Tag, TextButton, Toggle } from "../component/button";
 import { useState } from "react";
-import { expandDataList } from "../util/util";
-import { ActionEdit, ActionReply, ActionReport, BasicComments, Comment, CommentsInput, CommentsIntro, ComposerScreen } from "../component/comment";
-import { gotoInstance, pushSubscreen } from "../util/navigate";
-import { RichText, wrapLinks } from "../component/richtext";
-import { ConversationScreen, HeaderBox, HorizBox, Narrow, Pad, PadBox, Separator, TeaserScreen } from "../component/basics";
+import { ActionEdit, ActionReply, ActionReport, BasicComments, CommentsInput, ComposerScreen } from "../component/comment";
+import { RichText } from "../component/richtext";
+import { ConversationScreen, HeaderBox, HorizBox, Narrow, Pad, PadBox } from "../component/basics";
 import { BasicTeaser } from "../component/teaser";
-import { useConfig } from "../util/features";
 import { Banner, ClickableBanner, TopBanner } from "../component/banner";
-import { TrashCan, Pin } from "@carbon/icons-react"
+import { TrashCan, Pin } from "@carbon/icons-react";
 import { Modal } from "../component/modal";
+import { DemoHeader, DemoSection, SpacedArray } from "../component/demo";
 
 
-export const ComponentDemoStructure = {
-    key: 'componentdemo',
-    name: 'Component Demo',
-    screen: ComponentDemoScreen,
+export const DesignSystemDemoFeature = {
+    key: 'demo_designsystem',
+    name: 'Core Design System',
     subscreens: {
         text: TextScreen,
         profile: ProfileScreen,
         button: ButtonScreen,
-        comment: CommentScreen,
         teaserDemo: TeaserDemoScreen,
         banner: BannerDemoScreen,
         modal: ModalScreen,
+    },
+    config: {
+        componentSections: [
+            {label: 'Core Design System', pages: [
+                {label: 'Text', key: 'text'},
+                {label: 'Profile', key: 'profile'},
+                {label: 'Button', key: 'button'},
+                {label: 'Teaser', key: 'teaserDemo'},
+                {label: 'Banner', key: 'banner'},
+                {label: 'Modal', key: 'modal'},
+            ]}
+        ]
+    }
+}
+
+export const CommentDemoFeature = {
+    key: 'commentdemo',
+    name: 'Comment Demo',
+    subscreens: {
+        comment: CommentScreen,
         composer: params => <ComposerScreen {...params} contentType='Public Comment' />,
     },
-    defaultConfig: {
-        widgets: [DefaultWidget],
+    config: {
+        componentSections: [
+            {label: 'Comments', pages: [
+                {label: 'Comment', key: 'comment'},
+            ]}
+        ],
+        structures: [
+            {label: 'Simple Comments', key: 'simplecomments', instanceKey: 'demo'}
+        ]
+    },
+    defaultConfig: {        
         commentAboveWidgets: [],
         replyAboveWidgets: [],
         commentFilters: [],
@@ -48,7 +72,7 @@ export const ComponentDemoStructure = {
         commentReplyPlaceholder: 'Reply to {authorName}...',
         commentInputLoginAction: 'comment',
         noCommentsMessage: 'No responses yet. Start the conversation!',
-        noMoreCommentsMessage: 'No more comments'        
+        noMoreCommentsMessage: 'No more comments'       
     }
 }
 
@@ -356,60 +380,5 @@ function BannerDemoScreen() {
                 </Narrow>
             </DemoSection>
     </ConversationScreen>
-} 
-
-function ComponentDemoScreen() {
-    return <ConversationScreen>
-        <Narrow>
-            {/* <ContentHeading label='Component Groups' /> */}
-            <Pad size={20} />
-            <SpacedArray>
-                <Heading label='Component Demos' />
-                <CTAButton label='Text' onPress={() => pushSubscreen('text')} />
-                <CTAButton label='Profile' onPress={() => pushSubscreen('profile')} />
-                <CTAButton label='Button' onPress={() => pushSubscreen('button')} />
-                <CTAButton label='Comment' onPress={() => pushSubscreen('comment')} />
-                <CTAButton label='Banner' onPress={() => pushSubscreen('banner')} />
-                <CTAButton label='Modal' onPress={() => pushSubscreen('modal')} />
-                <CTAButton label='Teaser' onPress={() => pushSubscreen('teaserDemo')} />
-                <Pad />
-                <Heading label='Structure Demos' />
-                <CTAButton label='Simple Comments' onPress={() => gotoInstance({structureKey: 'simplecomments', instanceKey: 'demo'})} />                
-            </SpacedArray>
-        </Narrow>
-    </ConversationScreen>
 }
 
-
-function DemoSection({label, horiz=false, children}) {
-    return <View style={{marginBottom: 32}}>
-        <DemoHeader label={label} />
-        <Pad size={8} />
-        <SpacedArray horiz={horiz}>{children}</SpacedArray>
-    </View>
-}
-
-function DemoHeader({label}) {
-    const s = DemoHeaderStyle;
-    return <Text style={s.header}>{label}</Text>
-}
-const DemoHeaderStyle = StyleSheet.create({
-    header: {
-        fontFamily: 'sans-serif',
-        fontSize: 24,
-        lineHeight: 32
-    }
-})
-
-function SpacedArray({pad=16, horiz=false, children}) {
-    if (children.length > 1) {
-        return <View style={horiz ? {flexDirection: 'row'} : null}>
-            {children.map((c, i) => <View key={i} style={horiz ? {flexDirection: 'row'} : null}>
-                {c}
-                {i < children.length - 1 ? <Pad size={pad} /> : null}
-            </View>)}
-        </View>
-    } else {
-        return children;
-    }
-}

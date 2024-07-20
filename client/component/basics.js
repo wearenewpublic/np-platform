@@ -105,6 +105,23 @@ export function HorizBox({children, center=false, stretch=false, right=false, sp
     </View>
 }
 
+export function WrapBox({children, center=false, stretch=false, right=false, spread=false}) {
+    const s = WrapBoxStyle;
+    return <View style={s.box}>
+        {children}
+    </View>
+}
+const WrapBoxStyle = StyleSheet.create({
+    box: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        justifyContent: 'flex-start'
+    }
+})        
+
+
+
 export function LoadingScreen({label = 'Loading...'}) {
     const [show, setShow] = useState(false);
     const s = LoadingScreenStyle;

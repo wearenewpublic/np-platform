@@ -64,15 +64,6 @@ export function replaceInstance({structureKey, instanceKey}) {
     replaceUrl(makeUrl([structureKey, instanceKey]));
 }
 
-
-function removeParamsWithSuffix(urlParams, suffix) {
-    for(let [key, value] of urlParams) {
-        if(key.endsWith(suffix)) {
-            urlParams.delete(key);
-        }
-    }
-}
-
 function getParamsWithSuffix(urlParams, suffix) {
     const result = {};
     for(let [key, value] of urlParams) {

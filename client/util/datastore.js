@@ -231,7 +231,7 @@ export function useDatastore() {
 }
 
 
-function useLoaded() {
+export function useLoaded() {
     const datastore = useDatastore();
     return datastore.getLoaded();
 }

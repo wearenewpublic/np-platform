@@ -6,6 +6,8 @@ import { BasicTeaserFeature } from "./BasicTeaserFeature";
 import { DemoProfileFeature } from "./DemoProfileFeature";
 import { ProfileCommentsFeature } from "./ProfileCommentsFeature";
 import { ReplyNotificationsFeature } from "./ReplyNotifsFeature";
+import { DesignSystemDemoFeature } from "../demo/designsystem";
+import { CommentDemoFeature } from "../demo/commentdemo";
 
 const { DemoFeature, DemoSecondaryFeature } = require("./DemoFeature");
 
@@ -23,13 +25,18 @@ export var features = {
     profile: [
         DemoProfileFeature,
         ProfileCommentsFeature
+    ],
+    componentdemo: [
+        DesignSystemDemoFeature,
+        CommentDemoFeature,
     ]
 }
 
 export var defaultFeatureConfig = {
     componentdemo: {
-        upvote: true,
-        lengthlimit: true,
+        demo_designsystem: true,
+        demo_comment: true
+
     },
     simplecomments: {
         upvote: true

@@ -5,12 +5,12 @@ import { TopBar } from '../organizer/TopBar';
 import { IBMPlexSans_400Regular, IBMPlexSans_500Medium, IBMPlexSans_600SemiBold } from '@expo-google-fonts/ibm-plex-sans'
 import { IBMPlexMono_400Regular, IBMPlexMono_500Medium, IBMPlexMono_600SemiBold } from '@expo-google-fonts/ibm-plex-mono'
 import { LoginScreen } from '../organizer/Login';
-import { Datastore, WaitForData, useGlobalProperty } from '../util/datastore';
+import { Datastore, WaitForData, useGlobalProperty, useLoaded } from '../util/datastore';
 import { SharedData } from '../util/shareddata';
 import { useFonts } from 'expo-font';
 import { Catcher } from '../component/catcher';
 import { structures } from '../structure';
-import { ConfigContext, assembleConfig } from './features';
+import { ConfigContext, assembleConfig, assembleScreenSet } from './features';
 import { useLanguage } from '../component/translation';
 import { useFirebaseData } from './firebase';
 import { useIsAdminForSilo } from '../component/admin';
@@ -74,16 +74,19 @@ export function StackedScreen({screenInstance, index, features}) {
   
     const structure = getStructureForKey(structureKey);
     const instance = chooseInstanceByKey({structure, instanceKey});
-    const screenSet = structure.subscreens;
     const activeFeatures = useGlobalProperty('features') || features || [];
     const config = assembleConfig({structure, activeFeatures});
-    
+    const screenSet = assembleScreenSet({structure, activeFeatures});
+    const loaded = useLoaded();
+
     var screen = getScreen({screenSet, structure, screenKey, instanceKey});
     var title = getScreenTitle({screenSet, structure, screenKey, instance, params}); 
     const showTopBar = screenKey != 'teaser';
   
     if (!screen) {
-      console.error('Screen not found', {screenSet, structure: structure, screenKey, instanceKey, screen});
+      if (loaded) { // Don't show this error waiting for screen set to resolve
+        console.error('Screen not found', {loaded, activeFeatures, screenSet, structure: structure, screenKey, instanceKey, screen});
+      }
       return null;
     }
 
