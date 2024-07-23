@@ -160,7 +160,7 @@ export function Popup({popupContent, popupStyle=null, alignRight=false, setHover
         {shown ? 
             <DocumentLevelComponent>
                 <View ref={popupRef} style={[s.basicPopup, popupStyle]} >
-                    {shown ? popupContent() : null}
+                    {shown ? popupContent({onClose: closePopup}) : null}
                 </View>
             </DocumentLevelComponent>
         : null}

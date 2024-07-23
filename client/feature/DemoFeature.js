@@ -31,6 +31,7 @@ export const DemoFeature = {
         composerTopBanners: [ComposerTopBanner],
 
         topBanners: [TopBanner],
+        pageBottomWidgets: [PageBottomWidget],
         pageTopWidgets: [PageTopWidget],
 
         noCommentsTitle: 'No Comments Title',
@@ -147,4 +148,8 @@ function TopBanner() {
 
 function PageTopWidget() {
     return <PadBox bottom={10} top={20}><Center><Tag label='Page Top Widget' /></Center></PadBox>
+}
+
+function PageBottomWidget() {
+    return <PadBox bottom={10} top={20}><Center><Tag label='Page Bottom Widget' /></Center></PadBox>
 }

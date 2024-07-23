@@ -41,6 +41,7 @@ export const SimpleCommentsStructure = {
         composerTopBanners: [],
 
         topBanners: [],
+        pageBottomWidgets: [],
         pageTopWidgets: [],
         
         teaserScreen: null,

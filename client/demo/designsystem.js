@@ -3,7 +3,7 @@ import { usePersonaKey } from "../util/datastore";
 import { IconAudio, IconChevronDown, IconClose, IconCloseBig, IconComment, IconCommentBig, IconEdit, IconEmoji, IconImage, IconLeftArrowBig, IconReply, IconReport, IconSave, IconUpvote, IconUpvoted, IconVideo } from "../component/icon";
 import { CharacterCounter, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
 import { colorBlack, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
-import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, PhotoPile, ReactionButton, SubtleButton, Tag, TextButton, Toggle } from "../component/button";
+import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, TextButton, Toggle } from "../component/button";
 import { useState } from "react";
 import { ActionEdit, ActionReply, ActionReport, BasicComments, CommentsInput, ComposerScreen } from "../component/comment";
 import { RichText } from "../component/richtext";
@@ -254,7 +254,7 @@ function ButtonScreen() {
             </DemoSection>
             <DemoSection label='Tag'>
                 <Tag label='Subtle Tag' type='subtle' />
-                <Tag label='🔥 Emphasized Tag' type='emphasized' color={colorPink} />
+                <Tag emoji='🔥' label='Emphasized Tag' type='emphasized' color={colorPink} />
                 <Tag label='Tiny Tag' type='tiny' />
             </DemoSection>
             <DemoSection label='Reaction Button'>
@@ -271,8 +271,15 @@ function ButtonScreen() {
                         {key: 'top', label: 'Top voted'}
                 ]} />
             </DemoSection>
+            <DemoSection label='Popup Panel'>
+                <PopupPanel popupContent={() => <UtilityText label='Panel content'/>}>
+                    <UtilityText label='Open Panel'/>
+               </PopupPanel>
+            </DemoSection>
             <DemoSection label='Toggle'>
                 <Toggle label='Toggle' value={switchValue} onChange={setSwitchValue} />
+                <Toggle emoji='😭' label='Toggle with emoji' value={switchValue} onChange={setSwitchValue} />
+                <Toggle emoji='😭' label='Spread Toggle' spread value={switchValue} onChange={setSwitchValue} />
             </DemoSection>
             <DemoSection label='Link'>
                 {/* <LinkText type='small' url='https://www.google.com' label='Link' /> */}

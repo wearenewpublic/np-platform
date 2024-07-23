@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { colorAccent, colorAccentHover, colorAccentPress, colorBlack, colorBlackHover, colorDisabledBackground, colorDisabledText, colorGreen, colorGreyBorder, colorGreyHover, colorGreyPopupBackground, colorIconButtonPress, colorLightBlueBackground, colorLightGreen, colorNearBlack, colorPink, colorPinkHover, colorPinkPress, colorPrimaryPress, colorPurpleBackground, colorRed, colorSecondaryPress, colorTextBlue, colorTextGrey, colorWhite } from "./color";
 import { EditorialHeading, Paragraph, UtilityText } from "./text";
-import { HoverView, Pad, PadBox } from "./basics";
+import { HorizBox, HoverView, Pad, PadBox } from "./basics";
 import { IconChevronDown, IconChevronUpSmall, IconChevronUp, IconCircleCheck, IconSwitchOff, IconSwitchOn, IconChevronDownSmall } from "./icon";
 import { FacePile } from "./people";
 import { Popup } from "../platform-specific/popup";
@@ -211,7 +211,7 @@ const ExpanderButtonStyle = StyleSheet.create({
     }
 })
 
-export function Tag({label, text, type='emphasized', formatParams, color=null, onPress}) {
+export function Tag({label, emoji, text, type='emphasized', formatParams, color=null, onPress}) {
     const s = TagStyle;
     return <View style={[
                 s.button, 
@@ -220,12 +220,15 @@ export function Tag({label, text, type='emphasized', formatParams, color=null, o
                 color && {borderColor: color, backgroundColor: color}
             ]} 
             hoverStyle={s.hover} onPress={onPress}>
+        {emoji && <PadBox right={6}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
         <UtilityText color={type=='tiny' ? colorTextBlue : null} label={label} text={text} formatParams={formatParams} strong type='tiny' />
     </View>
 }
 const TagStyle = StyleSheet.create({
     button: {
         alignSelf: 'flex-start',
+        flexDirection: 'row',
+        alignItems: 'center',
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderWidth: 1,
@@ -286,24 +289,32 @@ const ReactionButtonStyle = StyleSheet.create({
 })
 
 export function DropDownSelector({label, options, value, onChange=()=>{}}) {
-    const s = DropDownSelectorStyle;
     const [hover, setHover] = useState(false);
-    const [shown, setShown] = useState(false);
     const selectedOption = options.find(o => o.key == value) || options[0];
-    function popup() {
+    function popupContent({onClose}) {
         return <View >
             {options.map((o, i) => <View key={i}>
                 {i != 0 && <Pad size={20} />}
-                <TextButton label={o.label} type='tiny' onPress={() => {onChange(o.key); closeActivePopup()}} />
+                <TextButton label={o.label} type='tiny' onPress={() => {onChange(o.key); onClose()}} />
             </View>)}
         </View>
     }
+    return <PopupPanel popupContent={popupContent} alignRight setHover={setHover}>
+        <HorizBox>
+            <UtilityText label={label} type='tiny' strong />
+            <UtilityText text=': ' type='tiny' strong />
+            <UtilityText label={selectedOption.label} type='tiny' underline={hover} strong />
+        </HorizBox>
+    </PopupPanel>
+}
+
+export function PopupPanel({children, popupContent, alignRight=false, setHover}) {
+    const s = PopupPanelStyle;
+    const [shown, setShown] = useState(false);
     return <View style={{alignSelf: 'flex-start'}}> 
-        <Popup popupContent={popup} alignRight setHover={setHover} setShown={setShown}>
+        <Popup popupContent={popupContent} alignRight={alignRight} setHover={setHover} setShown={setShown}>
             <View style={s.button}>
-                <UtilityText label={label} type='tiny' strong />
-                <UtilityText text=': ' type='tiny' strong />
-                <UtilityText label={selectedOption.label} type='tiny' underline={hover} strong />
+                {children}
                 <Pad size={8} />
                 {shown ? <IconChevronUpSmall /> : <IconChevronDownSmall />}
             </View>        
@@ -311,22 +322,29 @@ export function DropDownSelector({label, options, value, onChange=()=>{}}) {
     </View>
 }
 
-const DropDownSelectorStyle = StyleSheet.create({
+const PopupPanelStyle = StyleSheet.create({
     button: {
         flexDirection: 'row',
         alignSelf: 'flex-start',
+        alignItems: 'center',
     }
 })
 
-export function Toggle({label, value, onChange}) {
+
+export function Toggle({emoji, label, value, spread, onChange}) {
     const s = ToggleStyle;
-    return <HoverView style={s.outer} hoverStyle={s.hover}
+    return <HoverView hoverStyle={s.hover}
             onPress={() => onChange(!value)} role='checkbox'>
-        <UtilityText label={label} />
-        <Pad size={12} />
-        <View style={value ? s.toggleZoneSelected : s.toggleZone} onPress={() => onChange(!value)}>
-            <View style={value ? s.toggleBallSelected : s.toggleBall} />
-        </View>
+        <HorizBox center spread={spread}>        
+            <HorizBox center>
+                {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
+                <UtilityText label={label} />
+            </HorizBox>
+            <Pad size={12} />
+            <View style={value ? s.toggleZoneSelected : s.toggleZone} onPress={() => onChange(!value)}>
+                <View style={value ? s.toggleBallSelected : s.toggleBall} />
+            </View>
+        </HorizBox>
     </HoverView>
 }
 const ToggleStyle = StyleSheet.create({

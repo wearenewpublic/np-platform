@@ -5,6 +5,7 @@ var coreComponents = {
     constructor: require('./constructor'),
     eventlog: require('./eventlog'),
     notifs: require('./notifs'),
+    global: require('./global'),
 }
 
 exports.coreComponents = coreComponents;

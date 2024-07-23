@@ -437,7 +437,7 @@ function rankComments({datastore, comments, commentRankers, chosenRanker}) {
 export function BasicComments({about=null, showInput=true, canPost=true}) {
     const datastore = useDatastore();
     const {noMoreCommentsMessage, commentRankers} = useConfig();
-    const {pageTopWidgets, commentFilters} = useConfig();
+    const {pageTopWidgets, pageBottomWidgets, commentFilters} = useConfig();
     const comments = useCollection('comment', {filter: {about, replyTo: null}, sortBy: 'time', reverse: true});
     const isAdmin = useIsAdmin();
     const filteredComments = filterComments({datastore, comments, isAdmin, commentFilters});
@@ -454,9 +454,14 @@ export function BasicComments({about=null, showInput=true, canPost=true}) {
         <CatchList items={rankedComments} renderItem={comment =>
             <Comment commentKey={comment.key} />
         } />
-        {comments?.length > 1 &&
+        {comments?.length > 0 && !pageBottomWidgets?.length > 0 &&
             <PadBox vert={40} horiz={20}><Banner color={colorLightBlueBackground}><RichText label={noMoreCommentsMessage} /></Banner></PadBox>
         }
+        <View>
+            {pageBottomWidgets?.map((Widget,i) => 
+                <Catcher key={i}><Widget comments={comments} /></Catcher>
+            )}
+        </View>
     </View>
 }
 

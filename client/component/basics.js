@@ -231,3 +231,9 @@ const ShadowBoxStyle = StyleSheet.create({
         borderRadius: 12
     }
 })
+
+export function FlowBox({children, center=false}) {
+    return <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: center ? 'center' : 'flex-start'}}>
+        {children}
+    </View>
+}

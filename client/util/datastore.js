@@ -196,9 +196,8 @@ export class Datastore extends React.Component {
         const {siloKey, structureKey, instanceKey, isLive} = this.props;
         this.setData({...this.getData(), [key]: value});
         
-        // this.notifyWatchers();
         if (isLive) {
-            firebaseWriteAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global', key], value);
+            callServerApiAsync({datastore: this, component: 'global', funcname: 'setGlobalProperty', params: {key, value}});
         }
     }
 
