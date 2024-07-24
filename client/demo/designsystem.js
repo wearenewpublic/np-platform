@@ -184,59 +184,62 @@ function ButtonScreen() {
     const [expanded, setExpanded] = useState(false);
     const inputString = 'Check this link [OpenAI](https://www.openai.com) or visit https://www.example.com directly.';
 
+    function onPress() {
+        console.log('press');
+    }
+
     return <ConversationScreen >
         <Narrow>
-
             <DemoSection label='CTA Button'>
                 <SpacedArray horiz>
-                    <CTAButton label='Primary Button' type='primary' />
-                    <CTAButton label='Secondary Button' type='secondary' />
-                    <CTAButton label='Accent Button' type='accent' />
+                    <CTAButton label='Primary Button' type='primary' onPress={onPress} />
+                    <CTAButton label='Secondary Button' type='secondary' onPress={onPress} />
+                    <CTAButton label='Accent Button' type='accent' onPress={onPress} />
                 </SpacedArray>
                 <SpacedArray horiz>
-                    <CTAButton icon={<TrashCan style={{fill: colorRed}} />} label='Delete Button' type='delete' />
-                    <CTAButton label='✨ Accent with Emoji' type='accent' />
+                    <CTAButton icon={<TrashCan style={{fill: colorRed}} />} label='Delete Button' type='delete' onPress={onPress} />
+                    <CTAButton label='✨ Accent with Emoji' type='accent' onPress={onPress} />
                     <CTAButton label='Disabled Button' type='primary' disabled />
                 </SpacedArray>
-                <CTAButton wide label='Wide Button' />
+                <CTAButton wide label='Wide Button' onPress={onPress} />
             </DemoSection>
             <DemoSection label='Action Button'>
                 <SpacedArray horiz>
-                    <IconButton icon={IconReply} label='Respond' />
-                    <IconButton icon={IconComment} label='Respond' />
-                    <IconButton icon={IconEdit} label='Edit' />
-                    <IconButton icon={IconSave} label='Save' />
+                    <IconButton icon={IconReply} label='Respond' onPress={onPress} />
+                    <IconButton icon={IconComment} label='Respond' onPress={onPress} />
+                    <IconButton icon={IconEdit} label='Edit' onPress={onPress} />
+                    <IconButton icon={IconSave} label='Save' onPress={onPress} />
                 </SpacedArray>
                 <SpacedArray horiz>
-                    <IconButton icon={IconImage} label='Image' />
-                    <IconButton icon={IconAudio} label='Audio' />
-                    <IconButton icon={IconVideo} label='Video' />
-                    <IconButton icon={IconEmoji} label='Emoji' />
+                    <IconButton icon={IconImage} label='Image' onPress={onPress} />
+                    <IconButton icon={IconAudio} label='Audio' onPress={onPress} />
+                    <IconButton icon={IconVideo} label='Video' onPress={onPress} />
+                    <IconButton icon={IconEmoji} label='Emoji' onPress={onPress} />
                 </SpacedArray>
-                <IconButton wide icon={IconComment} label='Wide Button' />
+                <IconButton wide icon={IconComment} label='Wide Button' onPress={onPress} />
             </DemoSection>
             <DemoSection label='Subtle Button'>
                 <SpacedArray horiz>
-                    <SubtleButton icon={IconReply} label='Reply' />                    
-                    <SubtleButton icon={IconUpvote} label='Upvote ({count})' formatParams={{count: 22}} />
-                    <SubtleButton icon={IconUpvoted} label='Upvoted ({count})' formatParams={{count: 23}} color={colorBlack} />
-                    <SubtleButton icon={IconReport} label='Report' />
+                    <SubtleButton icon={IconReply} label='Reply' onPress={onPress} />                    
+                    <SubtleButton icon={IconUpvote} label='Upvote ({count})' formatParams={{count: 22}} onPress={onPress} />
+                    <SubtleButton icon={IconUpvoted} label='Upvoted ({count})' formatParams={{count: 23}} color={colorBlack} onPress={onPress} />
+                    <SubtleButton icon={IconReport} label='Report' onPress={onPress} />
                     <SubtleButton icon={IconComment} label='{count} {noun}' 
-                        formatParams={{singular: 'comment', plural: 'comments', count: 12}} />
-                    <SubtleButton icon={Pin} label='Community Guidelines' />
+                        formatParams={{singular: 'comment', plural: 'comments', count: 12}} onPress={onPress} />
+                    <SubtleButton icon={Pin} label='Community Guidelines' onPress={onPress} />
                 </SpacedArray>
             </DemoSection>
             <DemoSection label='Text Button'>
                 <SpacedArray horiz>
-                    <TextButton leftIcon={IconClose} label='Close' />
-                    <TextButton label='Show more comments' rightIcon={IconChevronDown} color={colorTextBlue} />
-                    <TextButton label='Cancel' underline color={colorTextGrey} />
-                    <TextButton type='small' text={'This is a question'} strong />
-                    <TextButton type='small' paragraph text={'This is a paragraph question'} strong />
+                    <TextButton leftIcon={IconClose} label='Close' onPress={onPress} />
+                    <TextButton label='Show more comments' rightIcon={IconChevronDown} color={colorTextBlue} onPress={onPress} />
+                    <TextButton label='Cancel' underline color={colorTextGrey} onPress={onPress} />
+                    <TextButton type='small' text={'This is a question'} strong onPress={onPress} />
+                    <TextButton type='small' paragraph text={'This is a paragraph question'} strong onPress={onPress} />
                 </SpacedArray>
                 <SpacedArray>
-                    <TextButton label='Editoral 1 Italic' editorial italic/>
-                    <TextButton label='Editoral 2 Italic' editorial level={2} italic/>
+                    <TextButton label='Editoral 1 Italic' editorial italic onPress={onPress} />
+                    <TextButton label='Editoral 2 Italic' editorial level={2} italic onPress={onPress} />
                 </SpacedArray>
             </DemoSection>
             <DemoSection label='Expand Button'>
@@ -258,10 +261,10 @@ function ButtonScreen() {
                 <Tag label='Tiny Tag' type='tiny' />
             </DemoSection>
             <DemoSection label='Reaction Button'>
-                <ReactionButton emoji='🤝🏽' label='Respect' count={0} />
-                <ReactionButton emoji='🤝🏽' label='Respect' count={1} />
-                <ReactionButton emoji='🤝🏽' label='Selected' count={1} selected />                
-                <ReactionButton emoji='🤝🏽' label='View only' count={2} viewOnly />
+                <ReactionButton emoji='🤝🏽' label='Respect' count={0} onPress={onPress} />
+                <ReactionButton emoji='🤝🏽' label='Respect' count={1} onPress={onPress} />
+                <ReactionButton emoji='🤝🏽' label='Selected' count={1} selected onPress={onPress} />                
+                <ReactionButton emoji='🤝🏽' label='View only' count={2} viewOnly onPress={onPress} />
             </DemoSection>
             <DemoSection label='DropDownSelector'>
                 <DropDownSelector label='Sort by' 
@@ -288,15 +291,15 @@ function ButtonScreen() {
             </DemoSection>
             <DemoSection label='Breadcrumb'>
                 <SpacedArray horiz>
-                    <BreadCrumb icon={IconCloseBig} />
-                    <BreadCrumb icon={IconLeftArrowBig} />
-                    <BreadCrumb icon={IconCommentBig} />
+                    <BreadCrumb icon={IconCloseBig} onPress={onPress} />
+                    <BreadCrumb icon={IconLeftArrowBig} onPress={onPress} />
+                    <BreadCrumb icon={IconCommentBig} onPress={onPress} />
                 </SpacedArray>
             </DemoSection>
             <DemoSection label='Banner Icon Button'>
                 <SpacedArray>
-                    <BannerIconButton type='close' />
-                    <BannerIconButton type='info' />
+                    <BannerIconButton type='close' onPress={onPress} />
+                    <BannerIconButton type='info' onPress={onPress} />
                 </SpacedArray>
             </DemoSection>
 
