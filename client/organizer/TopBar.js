@@ -112,7 +112,7 @@ function FeatureToggle({feature, defaultState=false}) {
         });  
     }
 
-    return <View style={{paddingVertical: 2, alignSelf: 'flex-end'}}><Toggle label={feature.name} value={enabled || false} 
+    return <View style={{alignSelf: 'flex-end'}}><Toggle label={feature.name} value={enabled || false} 
         onChange={onToggle} /></View>
 }
 

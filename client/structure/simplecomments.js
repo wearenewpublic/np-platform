@@ -39,6 +39,7 @@ export const SimpleCommentsStructure = {
 
         composerSubtitle: () => 'Public Comment',
         composerTopBanners: [],
+        composerTopWidgets: [],
 
         topBanners: [],
         pageBottomWidgets: [],

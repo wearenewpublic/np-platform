@@ -370,7 +370,7 @@ export function Composer({about=null, commentKey, goBackAfterPost=false, topLeve
     const [editedComment, setEditedComment] = useState(null);
     const personaKey = usePersonaKey();
     const datastore = useDatastore();
-    const {composerSubtitle} = useConfig();
+    const {composerSubtitle, composerTopWidgets} = useConfig();
     const subtitle = composerSubtitle ? composerSubtitle({datastore, comment:(editedComment ?? comment)}) : 'Public Comment';
 
     function onEditingDone(finalComment) {
@@ -385,6 +385,10 @@ export function Composer({about=null, commentKey, goBackAfterPost=false, topLeve
     }
 
     return <View>
+        <EditWidgets widgets={composerTopWidgets} 
+            comment={editedComment ?? comment ?? {text: ''}} 
+            setComment={setEditedComment} 
+            onCancel={goBackAfterPost && onCancel} />
         <Byline type='large' userId={personaKey} subtitleLabel={subtitle} />
         <Pad size={24} />
         <EditComment big comment={editedComment ?? comment ?? {text: ''}} topLevel={topLevel}

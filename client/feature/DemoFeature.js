@@ -1,5 +1,5 @@
 import { Banner } from "../component/banner";
-import { Center, PadBox } from "../component/basics";
+import { Center, Pad, PadBox, ShadowBox } from "../component/basics";
 import { CTAButton, SubtleButton, Tag } from "../component/button";
 import { colorBannerGreen } from "../component/color";
 import { Heading, Paragraph, UtilityText } from "../component/text"
@@ -29,6 +29,7 @@ export const DemoFeature = {
 
         composerSubtitle: () => 'Composer Subtitle',
         composerTopBanners: [ComposerTopBanner],
+        composerTopWidgets: [ComposerTopWidget],
 
         topBanners: [TopBanner],
         pageBottomWidgets: [PageBottomWidget],
@@ -102,10 +103,24 @@ function CommentEditTopWidget({comment, setComment}) {
     }
     return <PadBox bottom={16}>
         <CTAButton onPress={onPress} label='Comment Edit Top Widget' />
-        <UtilityText label='Comments that mention cats will disable the post button' />
-        <UtilityText label='Comments that mention dogs will be rejected on post' />
-        {comment.blockHappened && <Tag label='You mentioned a dog' />}
     </PadBox>
+}
+
+function ComposerTopWidget({comment, setComment}) {
+    function onPress() {
+        setComment({...comment, text: comment.text + ' and I love komodo dragons'});
+    }
+
+    return <PadBox vert={20}><ShadowBox>
+        <PadBox horiz={20} vert={20}>
+            <Heading label='Composer Top Widget' />
+            <UtilityText label='Comments that mention cats will disable the post button' />
+            <UtilityText label='Comments that mention dogs will be rejected on post' />
+            {comment.blockHappened && <Tag label='You mentioned a dog' />}
+            <Pad />
+            <CTAButton onPress={onPress} label='Add Komodo Dragon' />
+        </PadBox>
+    </ShadowBox></PadBox>
 }
 
 function commentFilter({comment}) {

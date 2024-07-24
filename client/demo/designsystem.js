@@ -265,6 +265,8 @@ function ButtonScreen() {
                 <ReactionButton emoji='🤝🏽' label='Respect' count={1} onPress={onPress} />
                 <ReactionButton emoji='🤝🏽' label='Selected' count={1} selected onPress={onPress} />                
                 <ReactionButton emoji='🤝🏽' label='View only' count={2} viewOnly onPress={onPress} />
+                <ReactionButton emoji='🤝🏽' text='Text not label' onPress={onPress} />
+
             </DemoSection>
             <DemoSection label='DropDownSelector'>
                 <DropDownSelector label='Sort by' 

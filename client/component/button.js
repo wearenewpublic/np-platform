@@ -211,7 +211,7 @@ const ExpanderButtonStyle = StyleSheet.create({
     }
 })
 
-export function Tag({label, emoji, text, type='emphasized', formatParams, color=null, onPress}) {
+export function Tag({label, emoji, text, type='emphasized', strong=false, formatParams, color=null, onPress}) {
     const s = TagStyle;
     return <View style={[
                 s.button, 
@@ -221,7 +221,9 @@ export function Tag({label, emoji, text, type='emphasized', formatParams, color=
             ]} 
             hoverStyle={s.hover} onPress={onPress}>
         {emoji && <PadBox right={6}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
-        <UtilityText color={type=='tiny' ? colorTextBlue : null} label={label} text={text} formatParams={formatParams} strong type='tiny' />
+        <UtilityText color={type=='tiny' ? colorTextBlue : null} 
+            label={label} text={text} formatParams={formatParams} 
+            strong={strong} type='tiny' />
     </View>
 }
 const TagStyle = StyleSheet.create({
@@ -233,6 +235,7 @@ const TagStyle = StyleSheet.create({
         paddingVertical: 6,
         borderWidth: 1,
         borderRadius: 4,
+        height: 32,
         // borderColor: 'red',
         borderColor: colorGreyBorder
     },
@@ -248,14 +251,14 @@ const TagStyle = StyleSheet.create({
     }
 })
 
-export function ReactionButton({emoji, viewOnly=false, label, count, selected, onPress}){
+export function ReactionButton({emoji, viewOnly=false, label, text, count, selected, onPress}){
     const s = ReactionButtonStyle;
     const [pressed, setPressed] = useState(false);
     return <HoverView style={[s.horiz, !viewOnly && s.button, selected && s.pressed]} 
             hoverStyle={s.hover} disabled={viewOnly}
             pressedStyle={s.pressed} setPressed={setPressed} role='button' onPress={onPress}>
         {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
-        <UtilityText label={label} type='tiny' 
+        <UtilityText label={label} text={text} type='tiny' 
             color={(pressed || selected) ? colorTextBlue : colorBlack} />
         {count ? <Pad size={8} /> : null}
         <UtilityText text={count} type='tiny' color={colorRed} />
@@ -331,28 +334,25 @@ const PopupPanelStyle = StyleSheet.create({
 })
 
 
-export function Toggle({emoji, label, value, spread, onChange}) {
+export function Toggle({emoji, text, label, value, spread, onChange}) {
     const s = ToggleStyle;
     return <HoverView hoverStyle={s.hover}
             onPress={() => onChange(!value)} role='checkbox'>
-        <HorizBox center spread={spread}>        
-            <HorizBox center>
-                {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
-                <UtilityText label={label} />
+        <PadBox vert={8}>
+            <HorizBox center spread={spread}>        
+                    <HorizBox center>
+                        {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
+                        <UtilityText text={text} label={label} />
+                    </HorizBox>
+                    <Pad size={12} />
+                    <View style={value ? s.toggleZoneSelected : s.toggleZone} onPress={() => onChange(!value)}>
+                        <View style={value ? s.toggleBallSelected : s.toggleBall} />
+                    </View>
             </HorizBox>
-            <Pad size={12} />
-            <View style={value ? s.toggleZoneSelected : s.toggleZone} onPress={() => onChange(!value)}>
-                <View style={value ? s.toggleBallSelected : s.toggleBall} />
-            </View>
-        </HorizBox>
+        </PadBox>
     </HoverView>
 }
 const ToggleStyle = StyleSheet.create({
-    outer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignSelf: 'flex-start'
-    },
     toggleZone: {
         width: 56,
         height: 32,
@@ -394,8 +394,8 @@ const ToggleStyle = StyleSheet.create({
     },
     hover: {
         backgroundColor: colorGreyPopupBackground,
-        borderTopRightRadius: 100,
-        borderBottomRightRadius: 100,
+        // borderTopRightRadius: 100,
+        // borderBottomRightRadius: 100,
     },
     pressed: {
         backgroundColor: colorGreyHover,
