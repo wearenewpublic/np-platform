@@ -1,19 +1,16 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Entypo, FontAwesome } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { PrimaryButton, StatusButtonlikeMessage } from "../component/basics";
-import { InstanceContext } from "../organizer/InstanceContext";
-import { makeStorageUrl, useDatastore, usePersonaKey } from "../util/datastore";
+import { makeStorageUrl, useDatastore, useIsLive } from "../util/datastore";
 import { callServerMultipartApiAsync } from "../util/servercall";
-import { getFirebaseUser } from "../util/firebase";
-import { QuietSystemMessage } from "../component/message";
 
 
 export function AudioRecorder({action='Record Audio', onSubmitRecording}) {
     const s = VideoCameraStyle;
     const [recorderShown, setRecorderShown] = useState(false);
-    const {isLive} = useContext(InstanceContext);
+    const isLive = useIsLive();
     const [uploading, setUploding] = useState(false);
     const datastore = useDatastore();
 

@@ -1,17 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
-import { PersonaSelector } from "./PersonaSelector";
-import { closeSidebar, goBack, gotoInstance, gotoStructure, pushSubscreen } from "../util/navigate";
+import { StyleSheet, View } from "react-native";
+import { closeSidebar, goBack, gotoInstance, pushSubscreen } from "../util/navigate";
 import { firebaseSignOut, useFirebaseUser } from "../util/firebase";
 import { Popup } from "../platform-specific/popup";
-import { useDatastore, useGlobalProperty, usePersonaKey, useSessionData } from "../util/datastore";
-import { useContext, useEffect, useState } from "react";
-import { InstanceContext } from "./InstanceContext";
-import { IconChevronDown, IconChevronDownSmall, IconChevronUpSmall, IconClose, IconCloseBig, IconLeftArrowBig, IconSettings } from "../component/icon";
-import { Byline, FaceImage } from "../component/people";
+import { useDatastore, useGlobalProperty, useInstanceKey, usePersonaKey, useStructureKey } from "../util/datastore";
+import { useState } from "react";
+import { IconChevronDownSmall, IconChevronUpSmall, IconCloseBig, IconLeftArrowBig } from "../component/icon";
+import { Byline } from "../component/people";
 import { BreadCrumb, CTAButton, TextButton, Toggle } from "../component/button";
 import { HorizBox, Pad, PadBox, Separator } from "../component/basics";
-import { emailIsAdmin } from "../util/config";
-import { colorGreyHover, colorGreyPopupBackground, colorTextGrey, colorWhite } from "../component/color";
 import { ObservableProvider, ObservableValue, useObservable } from "../util/observable";
 import { getAvailableFeaturesForStructure } from "../util/features";
 import { callServerApiAsync } from "../util/servercall";
@@ -22,9 +18,9 @@ import { useIsAdmin } from "../component/admin";
 
 const global_toolbarAction = new ObservableValue(null);
 
-export function TopBar({showPersonas}) {
+export function TopBar() {
     const s = TopBarStyle;
-    const {instance, instanceKey} = useContext(InstanceContext);
+    const instanceKey = useInstanceKey();
     const toolbarAction = useObservable(global_toolbarAction);
     return <View style={s.topBox}>        
         <View style={s.leftRow}>    
@@ -38,8 +34,6 @@ export function TopBar({showPersonas}) {
             <HorizBox center>
                 {toolbarAction ? 
                     <PadBox right={12}><CTAButton compact label={toolbarAction.label} disabled={toolbarAction.disabled} onPress={toolbarAction.onPress} /></PadBox>
-                : showPersonas ? 
-                    <PersonaSelector />
                 : 
                     instanceKey && <UserInfo />
                 }
@@ -86,7 +80,7 @@ const TopBarStyle = StyleSheet.create({
 
 
 export function FeatureToggles() {
-    const {structure, structureKey} = useContext(InstanceContext);
+    const structureKey = useStructureKey();
     const features = getAvailableFeaturesForStructure(structureKey)
     const defaultFeatures = defaultFeatureConfig[structureKey] ?? {};
     if (!features) return null;

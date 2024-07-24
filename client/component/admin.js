@@ -1,12 +1,10 @@
-import { useDatastore, useModulePublicData } from "../util/datastore";
+import { useDatastore } from "../util/datastore";
 import { useFirebaseData, useFirebaseUser } from "../util/firebase";
 import { getIsLocalhost } from "../platform-specific/url";
-import { useContext } from 'react';
-import { InstanceContext } from "../organizer/InstanceContext";
 
 export function useIsAdmin() {
-    const {isAdmin} = useContext(InstanceContext);
-    return isAdmin;
+    const datastore = useDatastore();
+    return datastore.getIsAdmin();
 }
 
 export function useIsAdminForSilo({siloKey}) {

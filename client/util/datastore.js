@@ -3,12 +3,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { adminPersonaList, defaultPersona, defaultPersonaList, memberPersonaList, personaListToMap } from '../data/personas';
 import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseUser, onFbUserChanged, useFirebaseData } from './firebase';
 import { deepClone } from './util';
-import { Text } from 'react-native';
 import { LoadingScreen } from '../component/basics';
 import { SharedDataContext } from './shareddata';
 import { callServerApiAsync } from './servercall';
-import { InstanceContext, useInstanceContext, useInstanceKey } from '../organizer/InstanceContext';
-import { useContext } from 'react';
 
 const DatastoreContext = React.createContext({});
 
@@ -204,7 +201,8 @@ export class Datastore extends React.Component {
     getSiloKey() {return this.props.siloKey}
     getStructureKey() {return this.props.structureKey}
     getInstanceKey() {return this.props.instanceKey}
-    getIsAdmin() {return this.isAdmin};
+    getIsAdmin() {return this.props.isAdmin}
+    getIsLive() {return this.props.isLive}
     getLanguage() {return this.props.language}
     getLoaded() {return this.state.loaded}
         
@@ -273,9 +271,9 @@ export function usePersona() {
 export function usePersonaObject(key) {
     const persona = useObject('persona', key);
     const meKey = usePersonaKey();
-    const {instance} = useContext(InstanceContext);
+    const isLive = useIsLive();
 
-    if (key == meKey && instance.isLive) {
+    if (key == meKey && isLive) {
         const fbUser = getFirebaseUser();
         if (fbUser) {
             return {
@@ -428,4 +426,34 @@ export function lookupFromIndex(fields, index, filter) {
 export function useModulePublicData(moduleKey, path = []) {
     const datastore = useDatastore();
     return useFirebaseData(['silo', datastore.getSiloKey(), 'module-public', moduleKey, ...path]);
+}
+
+
+export function useInstanceContext() {
+    const datastore = useDatastore();
+    return {
+        structureKey: datastore.structureKey, 
+        instanceKey: datastore.instanceKey,
+        siloKey: datastore.siloKey
+    };
+}
+
+export function useSiloKey() {
+    const datastore = useDatastore();
+    return datastore.getSiloKey();
+}
+
+export function useIsLive() {
+    const datastore = useDatastore();
+    return datastore.getIsLive();
+}
+
+export function useInstanceKey() {
+    const datastore = useDatastore();
+    return datastore.getInstanceKey();
+}
+
+export function useStructureKey() {
+    const datastore = useDatastore();
+    return datastore.getStructureKey();
 }

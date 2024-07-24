@@ -1,6 +1,5 @@
-import { useContext } from "react";
 import { allTranslations } from "../translations";
-import { InstanceContext } from "../organizer/InstanceContext";
+import { useSiloKey } from "../util/datastore";
 import { Text } from "react-native";
 import { formatString } from "../util/util";
 import { useFirebaseData } from "../util/firebase";
@@ -44,7 +43,7 @@ export function translateLabel({label, language, formatParams={}}) {
 }
 
 export function useLanguage() {
-    const {siloKey} = useContext(InstanceContext);    
+    const siloKey = useSiloKey();
     const globalLanguage = useFirebaseData(['silo', siloKey, 'module-public', 'language']);
 
     if (!siloKey) {

@@ -1,13 +1,11 @@
-import { useContext } from "react";
-import { useObject, usePersonaKey, usePersonaObject } from "../util/datastore";
-import { InstanceContext } from "../organizer/InstanceContext";
+import { useIsLive, useObject, usePersonaKey, usePersonaObject } from "../util/datastore";
 import { getFirebaseUser } from "../util/firebase";
 import { Image, StyleSheet, View } from "react-native";
 import { IconCircleCheck } from "./icon";
 import { UtilityText } from "./text";
 import { Pad } from "./basics";
 import { formatDate, formatMiniDate } from "./date";
-import { colorDisabledBackground, colorTextGrey, colorWhite } from "./color";
+import { colorDisabledBackground, colorTextGrey } from "./color";
 import { TextButton } from "./button";
 import { gotoInstance } from "../util/navigate";
 import { useLanguage } from "./translation";
@@ -15,12 +13,10 @@ import { useLanguage } from "./translation";
 
 export function ProfilePhoto({userId, type='large', photo=null, faint=false, check=false, border=false}) {
     const persona = useObject('persona', userId);
-
-
-    const {instance} = useContext(InstanceContext);
+    const isLive = useIsLive();
     const meKey = usePersonaKey();
 
-    if (meKey == userId && instance.isLive) {
+    if (meKey == userId && isLive) {
         const fbUser = getFirebaseUser();
         if (fbUser) {
             return <FaceImage photoUrl={photo ?? fbUser.photoURL} type={type} faint={faint} 

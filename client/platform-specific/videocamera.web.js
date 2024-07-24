@@ -1,10 +1,9 @@
 import { Entypo } from "@expo/vector-icons";
-import { useContext, useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { Pad, PrimaryButton, StatusButtonlikeMessage } from "../component/basics";
 import { callServerMultipartApiAsync } from "../util/servercall";
-import { makeStorageUrl, useDatastore, usePersonaKey } from "../util/datastore";
-import { InstanceContext } from "../organizer/InstanceContext";
+import { makeStorageUrl, useDatastore, useIsLive, usePersonaKey } from "../util/datastore";
 import { gotoLogin } from "../util/navigate";
 
 const video_mimetype = 'video/webm; codecs=vp9';  // this works for Chrome, and Firefox, but not Safari
@@ -12,7 +11,7 @@ const video_mimetype = 'video/webm; codecs=vp9';  // this works for Chrome, and 
 export function VideoCamera({size=200, action='Record Video', onSubmitRecording}) {
     const s = VideoCameraStyle;
     const [cameraShown, setCameraShown] = useState(false);
-    const {isLive} = useContext(InstanceContext);
+    const isLive = useIsLive();
     const [uploading, setUploding] = useState(false);
     const datastore = useDatastore();
     const personaKey = usePersonaKey();

@@ -1,4 +1,4 @@
-import { getByText, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { WithFeatures, setFeatures } from "../../util/testutil";
 import { FeatureToggles, TopBar } from "../TopBar";
 

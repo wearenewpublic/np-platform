@@ -3,8 +3,7 @@ import { Catcher } from "../component/catcher";
 import { useServersideConstructor } from "../component/constructor";
 import { FaceImage } from "../component/people";
 import { Heading } from "../component/text";
-import { useInstanceKey } from "../organizer/InstanceContext";
-import { useGlobalProperty, usePersonaObject } from "../util/datastore";
+import { useInstanceKey, usePersonaObject } from "../util/datastore";
 import { useConfig } from "../util/features";
 
 export const ProfileStructure = {

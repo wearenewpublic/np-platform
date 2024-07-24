@@ -36,7 +36,6 @@ export var defaultFeatureConfig = {
     componentdemo: {
         demo_designsystem: true,
         demo_comment: true
-
     },
     simplecomments: {
         upvote: true

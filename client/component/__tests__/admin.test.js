@@ -1,7 +1,8 @@
-const { render,  screen } = require("@testing-library/react");
-const { useIsAdmin } = require("../admin");
-const { UtilityText } = require("../text");
-const { setModulePublicData, WithEnv } = require("../../util/testutil");
+import React from 'react';
+import { render, screen } from "@testing-library/react";
+import { UtilityText } from "../text";
+import { useIsAdmin } from "../admin";
+import { WithEnv } from "../../util/testutil";
 
 function IsAdmin() {
     const isAdmin = useIsAdmin();
@@ -12,13 +13,12 @@ function IsAdmin() {
     }
 }
 
-test('useIsAdmin', () => {    
+test('not admin', () => {    
     render(<WithEnv><IsAdmin /></WithEnv>);
     screen.getByText('Not Admin');
 })
 
-test('useIsAdmin', async () => {    
-    setModulePublicData({moduleKey: 'admin', data: {adminEmails: 'bob@bob.org, alice@adams.org'}});
+test('is Admin', async () => {    
     render(<WithEnv isAdmin><IsAdmin /></WithEnv>);
     await screen.findByText('Is Admin');
 })
