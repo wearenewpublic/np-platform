@@ -102,7 +102,7 @@ function CommentBody({commentKey}) {
             <RichText numberOfLines={(isLong && !expanded) ? 8 : null} 
                 text={text.trim()} 
             />
-            {isLong && !expanded && <PadBox top={14}><TextButton type='small' label='Read more' onPress={() => setExpanded(true)} /></PadBox>}
+            {isLong && !expanded && <PadBox top={14}><TextButton underline type='small' label='Read more' onPress={() => setExpanded(true)} /></PadBox>}
         </View>
     }
 }

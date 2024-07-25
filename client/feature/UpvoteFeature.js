@@ -37,7 +37,6 @@ export function ActionUpvote({commentKey}) {
         ariaLabel='upvote'
         disabled={disabled}
         text={count.toString()}
-        color={upvoted ? colorTextBlue : disabled ? colorDisabledText : colorTextGrey}
         onPress={needsLogin(onUpvote, 'upvote')} />
 }
 

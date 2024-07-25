@@ -72,7 +72,7 @@ export const CommentDemoFeature = {
         commentReplyPlaceholder: 'Reply to {authorName}...',
         commentInputLoginAction: 'comment',
         noCommentsMessage: 'No responses yet. Start the conversation!',
-        noMoreCommentsMessage: 'No more comments'       
+        noMoreCommentsMessage: 'No more responses'       
     }
 }
 

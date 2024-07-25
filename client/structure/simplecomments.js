@@ -49,7 +49,7 @@ export const SimpleCommentsStructure = {
         teaserScreen: null,
         noCommentsTitle: 'Start the conversation',
         noCommentsMessage: 'Be the first to share your thoughts',
-        noMoreCommentsMessage: 'No more comments',
+        noMoreCommentsMessage: 'No more responses',
     },
     instance: [
         {

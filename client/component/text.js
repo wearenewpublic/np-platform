@@ -238,6 +238,7 @@ const TextFieldStyle = StyleSheet.create({
         paddingHorizontal: 16,
         paddingVertical: 15,
         fontSize: 16,
+        lineHeight: 24,
         fontFamily: fontFamilySansRegular,
     },
     hover: {

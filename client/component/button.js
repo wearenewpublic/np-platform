@@ -190,6 +190,28 @@ const TextButtonStyle = StyleSheet.create({
 })
 
 
+export function TextLinkButton({label, text, type='large', paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, rightIcon, color=colorBlack, alignStart=false, onPress}) {
+    const [hover, setHover] = useState(false);
+    return <HoverView shrink style={[alignStart ? {alignSelf: 'flex-start'} : null]} setHover={setHover} onPress={onPress} role='button'>
+        {leftIcon && React.createElement(leftIcon, {color})}
+        {leftIcon && <Pad size={8} />}        
+        {paragraph ? 
+            <Paragraph label={label} text={text} formatParams={formatParams} type={type}
+                color={color} underline={hover ^ underline} strong={strong} />
+        : editorial ?
+            <EditorialHeading type={type} label={label} text={text} formatParams={formatParams} type={type}
+                color={color} underline={hover ^ underline} italic={italic} strong={strong} />
+        :
+            <UtilityText label={label} text={text} formatParams={formatParams} type={type} 
+                color={color} underline={hover ^ underline} strong={strong} />
+        }
+        {rightIcon && <Pad size={8} />}
+        {rightIcon && React.createElement(rightIcon, {color})}
+    </HoverView>
+}
+
+
+
 export function ExpandButton({userList, photoUrlList, label, text, type='tiny', formatParams, expanded, setExpanded=()=>{}}) {
     const s = ExpanderButtonStyle;
     const [hover, setHover] = useState(false);
