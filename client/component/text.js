@@ -74,41 +74,26 @@ const DataVizTextStyle = StyleSheet.create({
 })
 
 
-export function EditorialHeading({level=1, text, label, underline, formatParams, color='black', italic=false}) {
+export function EditorialHeading({type='large', text, label, underline, formatParams, color='black', italic=false}) {
     const s = EditorialHeadingStyle;
     const styleMap = {
-        1: s.heading1,
-        2: s.heading2,
-        3: s.heading3,
-        4: s.heading4,
-        5: s.heading5,        
+        large: s.large,
+        small: s.small,        
     }    
     return <TranslatableText text={text} label={label} formatParams={formatParams}
         style={[
-            styleMap[level], 
+            styleMap[type], 
             {color}, 
             italic && {fontStyle: 'italic'},
             underline && {textDecorationLine: 'underline'}
         ]} />
 }
 const EditorialHeadingStyle = StyleSheet.create({
-    heading1: {
-        fontFamily: fontFamilySansRegular,
-        fontSize: 32,
-    }, 
-    heading2: {
-        fontFamily: fontFamilySansRegular,
-        fontSize: 28,
-    },
-    heading3: {
+    large: {
         fontFamily: fontFamilySansRegular,
         fontSize: 24,
     },
-    heading4: {
-        fontFamily: fontFamilySansRegular,
-        fontSize: 20,
-    },
-    heading5: {
+    small: {
         fontFamily: fontFamilySansRegular,
         fontSize: 18,
     }

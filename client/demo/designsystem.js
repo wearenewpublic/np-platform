@@ -104,14 +104,10 @@ function TextScreen() {
                 <UtilityText type='tiny' caps label='Utility tiny Caps' />
             </DemoSection>
             <DemoSection label='Brand Text'>
-                <EditorialHeading level={1} label='Editorial Heading 1' />
-                <EditorialHeading level={2} label='Editorial Heading 2' />
-                <EditorialHeading level={3} label='Editorial Heading 3' />
-                <EditorialHeading level={3} italic label='Editorial Heading 3 Italic' />
-                <EditorialHeading level={4} label='Editorial Heading 4' />
-                <EditorialHeading level={4} italic label='Editorial Heading 4 Italic' />
-                <EditorialHeading level={5} label='Editorial Heading 5' />
-                <EditorialHeading level={5} italic label='Editorial Heading 5 Italic' />
+                <EditorialHeading label='Editorial Heading Large' />
+                <EditorialHeading italic label='Editorial Heading Large Italic' />
+                <EditorialHeading type='small' label='Editorial Heading Small' />
+                <EditorialHeading type='small' italic label='Editorial Heading Small Italic' />
             </DemoSection>
             <DemoSection label='DataViz Text'>
                 <DataVizText type='heading1' label='Data Viz Heading 1' />
