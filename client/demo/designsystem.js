@@ -3,7 +3,7 @@ import { usePersonaKey } from "../util/datastore";
 import { IconAudio, IconChevronDown, IconClose, IconCloseBig, IconComment, IconCommentBig, IconEdit, IconEmoji, IconImage, IconLeftArrowBig, IconReply, IconReport, IconSave, IconUpvote, IconUpvoted, IconVideo } from "../component/icon";
 import { CharacterCounter, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
 import { colorBlack, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
-import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, TextButton, Toggle } from "../component/button";
+import { BannerIconButton, BreadCrumb, Checkbox, CTAButton, DropDownSelector, ExpandButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, TextButton, Toggle } from "../component/button";
 import { useState } from "react";
 import { ActionEdit, ActionReply, ActionReport, BasicComments, CommentsInput, ComposerScreen } from "../component/comment";
 import { RichText } from "../component/richtext";
@@ -198,6 +198,7 @@ function ButtonScreen() {
                     <CTAButton label='Disabled Button' type='primary' disabled />
                 </SpacedArray>
                 <CTAButton wide label='Wide Button' onPress={onPress} />
+                <CTAButton compact label='Compact Button' onPress={onPress} />
             </DemoSection>
             <DemoSection label='Action Button'>
                 <SpacedArray horiz>
@@ -281,6 +282,10 @@ function ButtonScreen() {
                 <Toggle label='Toggle' value={switchValue} onChange={setSwitchValue} />
                 <Toggle emoji='😭' label='Toggle with emoji' value={switchValue} onChange={setSwitchValue} />
                 <Toggle emoji='😭' label='Spread Toggle' spread value={switchValue} onChange={setSwitchValue} />
+            </DemoSection>
+            <DemoSection label='Checkbox'>
+                <Checkbox label='Checkbox' value={switchValue} onChange={setSwitchValue} />
+                <Checkbox emoji='🔥' label='Checkbox with emoji' value={switchValue} onChange={setSwitchValue} />
             </DemoSection>
             <DemoSection label='Link'>
                 {/* <LinkText type='small' url='https://www.google.com' label='Link' /> */}

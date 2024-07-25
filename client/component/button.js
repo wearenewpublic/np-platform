@@ -7,7 +7,7 @@ import { IconChevronDown, IconChevronUpSmall, IconChevronUp, IconCircleCheck, Ic
 import { FacePile } from "./people";
 import { Popup } from "../platform-specific/popup";
 import { closeActivePopup } from "../platform-specific/popup";
-import { Information, Close } from '@carbon/icons-react'
+import { Information, Close, CheckboxCheckedFilled, Checkbox as CheckboxOpen } from '@carbon/icons-react'
 
 
 export function CTAButton({label, icon, type='primary', disabled, compact=false, wide=false, onPress}) {
@@ -95,9 +95,11 @@ const CTAButtonStyle = StyleSheet.create({
     },
     compactButton: {
         paddingHorizontal: 12,
-        paddingVertical: 8,
+        height: 40,
         borderRadius: 8,
         alignSelf: 'flex-start',
+        flexDirection: 'row',
+        alignItems: 'center',
         borderWidth: 1   
     },
     wide: {
@@ -334,6 +336,30 @@ const PopupPanelStyle = StyleSheet.create({
 })
 
 
+export function Checkbox({emoji, text, label, value, onChange}) {
+    const s = CheckboxStyle;
+    return <HoverView hoverStyle={s.hover} pressedStyle={s.pressed}
+            onPress={() => onChange(!value)} role='checkbox'>
+        <PadBox vert={8}>
+            <HorizBox center>
+                {value ? <CheckboxCheckedFilled size={32} /> : <CheckboxOpen size={32} style={{fill: colorGreyBorder}} />}
+                <Pad size={12} />
+                {emoji && <PadBox right={6}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
+                <UtilityText text={text} label={label} />
+            </HorizBox>
+        </PadBox>
+    </HoverView>
+}
+const CheckboxStyle = StyleSheet.create({
+    hover: {
+        backgroundColor: colorGreyPopupBackground
+    },
+    pressed: {
+        backgroundColor: colorGreyHover    
+    }
+})
+
+
 export function Toggle({emoji, text, label, value, spread, onChange}) {
     const s = ToggleStyle;
     return <HoverView hoverStyle={s.hover}
@@ -362,10 +388,6 @@ const ToggleStyle = StyleSheet.create({
     },
     toggleBall: {
         boxShadow: '2px 0px 10px rgba(0, 0, 0, 0.30)',
-        // shadowOffset: { width: 2, height: 0 },
-        // shadowOpacity: 0.50,
-        // shadowRadius: 10,
-        // shadowColor: 'rgba(0, 0, 0, 0.30)',
         elevation: 5,  // for Android,
         position: 'absolute',
         left: 2,
