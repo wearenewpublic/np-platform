@@ -349,7 +349,7 @@ export function ActionEdit({commentKey}) {
     }
 
     if (comment.from != personaKey) return null;
-    return <SubtleButton icon={IconEdit} label='Edit' onPress={onEdit} padRight />
+    return <SubtleButton icon={IconEdit} label='Edit' onPress={onEdit} />
 }
 
 export function ActionReport({commentKey}) {
@@ -440,8 +440,8 @@ function rankComments({datastore, comments, commentRankers, chosenRanker}) {
 
 export function BasicComments({about=null, showInput=true, canPost=true}) {
     const datastore = useDatastore();
-    const {noMoreCommentsMessage, commentRankers} = useConfig();
-    const {pageTopWidgets, pageBottomWidgets, commentFilters} = useConfig();
+    const {noMoreCommentsMessage, commentRankers, pageTopWidgets, pageShowEmptyHelp,
+        pageBottomWidgets, commentFilters} = useConfig();
     const comments = useCollection('comment', {filter: {about, replyTo: null}, sortBy: 'time', reverse: true});
     const isAdmin = useIsAdmin();
     const filteredComments = filterComments({datastore, comments, isAdmin, commentFilters});
@@ -452,7 +452,7 @@ export function BasicComments({about=null, showInput=true, canPost=true}) {
                 <Catcher key={i}><Widget comments={comments} /></Catcher>
             )}
         </View>
-        {comments?.length == 0 && 
+        {comments?.length == 0 && pageShowEmptyHelp &&
             <NoCommentsHelp />
         }
         <CatchList items={rankedComments} renderItem={comment =>

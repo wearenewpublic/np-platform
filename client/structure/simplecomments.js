@@ -44,6 +44,7 @@ export const SimpleCommentsStructure = {
         topBanners: [],
         pageBottomWidgets: [],
         pageTopWidgets: [],
+        pageShowEmptyHelp: true,
         
         teaserScreen: null,
         noCommentsTitle: 'Start the conversation',
