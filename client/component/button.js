@@ -172,7 +172,7 @@ export function TextButton({label, level=1, text, type='large', paragraph=false,
             <Paragraph label={label} text={text} formatParams={formatParams} type={type}
                 color={color} underline={hover ^ underline} strong={strong} />
         : editorial ?
-            <EditorialHeading type={type} label={label} text={text} formatParams={formatParams} type={type}
+            <EditorialHeading type={type} label={label} text={text} formatParams={formatParams}
                 color={color} underline={hover ^ underline} italic={italic} strong={strong} />
         :
             <UtilityText label={label} text={text} formatParams={formatParams} type={type} 
@@ -199,7 +199,7 @@ export function TextLinkButton({label, text, type='large', paragraph=false, edit
             <Paragraph label={label} text={text} formatParams={formatParams} type={type}
                 color={color} underline={hover ^ underline} strong={strong} />
         : editorial ?
-            <EditorialHeading type={type} label={label} text={text} formatParams={formatParams} type={type}
+            <EditorialHeading type={type} label={label} text={text} formatParams={formatParams} 
                 color={color} underline={hover ^ underline} italic={italic} strong={strong} />
         :
             <UtilityText label={label} text={text} formatParams={formatParams} type={type} 

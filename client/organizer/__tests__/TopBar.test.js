@@ -13,8 +13,9 @@ test('Feature Toggles', () => {
 })
 
 test('Secondary Feature Toggles', () => {
-    setFeatures({demo: true});
-    render(<WithFeatures structureKey='simplecomments' features={{demo: true}}><FeatureToggles /></WithFeatures>);
+    render(<WithFeatures features={{demo: true}} structureKey='simplecomments' >
+        <FeatureToggles />
+    </WithFeatures>);
     screen.getByText('Demo Feature');
     screen.getByText('Demo Secondary Feature');
 })

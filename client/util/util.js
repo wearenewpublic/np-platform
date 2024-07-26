@@ -23,6 +23,13 @@ export function expandDataList(list) {
     return collection;
 }
 
+export function expandDataListMap(map) {
+    var newMap = {};
+    Object.keys(map).forEach(key => {
+        newMap[key] = expandDataList(map[key]);
+    });
+    return newMap;
+}
 
 export function removeKey(collection, key) {
     const newCollection = {...collection};

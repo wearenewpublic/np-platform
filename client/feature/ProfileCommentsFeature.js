@@ -1,8 +1,7 @@
-import { Heading, Paragraph, UtilityText } from "../component/text"
-import { View } from "react-native";
+import { Heading, Paragraph } from "../component/text";
 import { useDerivedCollection } from "../util/datastore";
-import { Card, HorizBox, Pad, PadBox, Separator } from "../component/basics";
-import { Byline, ProfilePhoto } from "../component/people";
+import { HorizBox, Pad, PadBox } from "../component/basics";
+import { ProfilePhoto } from "../component/people";
 
 export const ProfileCommentsFeature = {
     name: 'Profile Comments',

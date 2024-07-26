@@ -2,9 +2,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { adminPersonaList, defaultPersona, defaultPersonaList, memberPersonaList, personaListToMap } from '../data/personas';
 import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseUser, onFbUserChanged, useFirebaseData } from './firebase';
-import { deepClone } from './util';
+import { deepClone, expandDataList, expandDataListMap } from './util';
 import { LoadingScreen } from '../component/basics';
-import { SharedDataContext } from './shareddata';
+import { SharedData, SharedDataContext } from './shareddata';
 import { callServerApiAsync } from './servercall';
 
 const DatastoreContext = React.createContext({});
@@ -21,14 +21,17 @@ export class Datastore extends React.Component {
     fbUserWatchReleaser = null;
     fbDataWatchReleaser = null;
 
+    constructor(props) {
+        super(props);
+        this.sharedData = new SharedData();
+        this.resetData();
+    }
+
     componentDidMount() {
         this.resetData();
         if (this.props.isLive) {
-            this.fbWatchReleaser = onFbUserChanged(user => {
-                this.setSessionData('personaKey', user?.uid);
-            })
-        }
-        if (!this.props.isLive) {
+            this.setupFirebaseWatchers();
+        } else {
             this.setState({loaded: true});
         }
     }
@@ -39,53 +42,49 @@ export class Datastore extends React.Component {
     componentDidUpdate(prevProps) {
         if (prevProps.instanceKey != this.props.instanceKey || prevProps.structureKey != this.props.structureKey) {
             this.resetData();
+            if (this.props.isLive) {
+                this.setupFirebaseWatchers();
+            }
         }
     }
 
-    getDefaultPersonaList() {
-        const {instance, structure, isLive} = this.props;
-        if (isLive) {
-            return [];
-        } else if (instance.personaList) {
-            return instance.personaList;
-        } else if (structure.hasMembers) {
-            return memberPersonaList;
-        } else if (structure.hasAdmin) {
-            return adminPersonaList;
-        } else {
-            return defaultPersonaList;
-        }
+    setupFirebaseWatchers() {
+        const {siloKey, structureKey, instanceKey} = this.props;
+        this.fbUserWatchReleaser && this.fbUserWatchReleaser();
+        this.fbDataWatchReleaser && this.fbDataWatchReleaser();
+
+        this.fbDataWatchReleaser = firebaseWatchValue(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey], data => {
+            this.setData({...data?.collection, ...data?.global});
+            this.setState({loaded: true})
+        });
+        this.fbWatchReleaser = onFbUserChanged(user => {
+            this.setSessionData('personaKey', user?.uid);
+        })
     }
 
     resetData() {
-        const {instance, siloKey, instanceKey, structure, structureKey, isLive} = this.props;
-
-        const personaKey = getInitialPersonaKey(instance);
-        this.sessionData = {personaKey}
+        const {isLive, globals, collections, sessionData, personaKey='a'} = this.props;
         if (isLive) {
-            console.log('is live. Setting watcher');
-            this.fbDataWatchReleaser && this.fbDataWatchReleaser();
-            this.fbDataWatchReleaser = firebaseWatchValue(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey], data => {
-                this.setData({...data?.collection, ...data?.global});
-                this.setState({loaded: true})
-            });
+            const personaKey = getFirebaseUser()?.uid || null;
+            this.sessionData = {personaKey}
         } else {
+            this.sessionData = {personaKey, ...sessionData}
             this.setData({
-                persona: personaListToMap(this.getDefaultPersonaList()),
-                admin: instance.admin || 'a',
-                ...deepClone(instance)
-            })    
+                persona: personaListToMap(defaultPersonaList),
+                ...deepClone(globals || {}), 
+                ...expandDataListMap(collections || {})
+            })
         }
     }
 
     // Delegate local data storage and notification to SharedDataContext
     // This allows the side-by-side view to work for role play instances.
     static contextType = SharedDataContext;
-    watch(watchFunc) {this.context.watch(watchFunc)}
-    unwatch(watchFunc) {this.context.unwatch(watchFunc)}
-    notifyWatchers() {this.context.notifyWatchers()}
-    getData() {return this.context.getData()}
-    setData(data) {return this.context.setData(data)}
+    watch(watchFunc) {this.sharedData.watch(watchFunc)}
+    unwatch(watchFunc) {this.sharedData.unwatch(watchFunc)}
+    notifyWatchers() {this.sharedData.notifyWatchers()}
+    getData() {return this.sharedData.getData()}
+    setData(data) {return this.sharedData.setData(data)}
 
     setSessionData(path, value) {
         this.sessionData = {...this.sessionData, [pathToName(path)]: value};
@@ -151,12 +150,12 @@ export class Datastore extends React.Component {
     }
     getOrGenerateIndex(typeName, indexFields) {
         const indexName = indexFields.join('-');
-        const index = this.context.getIndex(typeName, indexName);
+        const index = this.sharedData.getIndex(typeName, indexName);
         if (index) {
             return index;
         } else {
             const newIndex = makeIndex(indexFields, this.getData()[typeName]);
-            this.context.setIndex(typeName, indexName, newIndex);
+            this.sharedData.setIndex(typeName, indexName, newIndex);
             return newIndex;
         }
     }
@@ -190,10 +189,9 @@ export class Datastore extends React.Component {
         return this.getData()[key];
     }
     setGlobalProperty(key, value) {
-        const {siloKey, structureKey, instanceKey, isLive} = this.props;
         this.setData({...this.getData(), [key]: value});
         
-        if (isLive) {
+        if (this.props.isLive) {
             callServerApiAsync({datastore: this, component: 'global', funcname: 'setGlobalProperty', params: {key, value}});
         }
     }
@@ -201,12 +199,16 @@ export class Datastore extends React.Component {
     getSiloKey() {return this.props.siloKey}
     getStructureKey() {return this.props.structureKey}
     getInstanceKey() {return this.props.instanceKey}
+    getConfig() {return this.props.config ?? {}}
     getIsAdmin() {return this.props.isAdmin}
     getIsLive() {return this.props.isLive}
     getLanguage() {return this.props.language}
     getLoaded() {return this.state.loaded}
         
     render() {
+        // if (!this.state.loaded && !this.props.isLive) {
+        //     return null;
+        // }
         return <DatastoreContext.Provider value={this}>
             {this.props.children}
         </DatastoreContext.Provider>
@@ -362,24 +364,6 @@ export function ensureNextLocalKeyGreater(key) {
         if (global_nextKey <= key) {
             global_nextKey = key + 1;
         }
-    }
-}
-
-
-function getInitialPersonaKey(instance) {
-    if (instance.isLive) {
-        return getFirebaseUser()?.uid || null;
-    } else {
-        return instance['$personaKey'] || firstPersona(instance) || defaultPersona;
-    }
-}
-
-function firstPersona(instance) {
-    if (!instance?.persona) {
-        return null
-    } else {
-        const keys = Object.keys(instance.persona);
-        return keys[0];
     }
 }
 

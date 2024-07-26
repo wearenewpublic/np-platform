@@ -1,8 +1,7 @@
-import { getByText, render, screen } from "@testing-library/react";
-import { TestInstance, setFeatures } from "../../util/testutil";
+import { render, screen } from "@testing-library/react";
+import { TestInstance } from "../../util/testutil";
 
 test('Teaser', () => {
-    setFeatures({basicteaser: true});
-    render(<TestInstance structureKey='simplecomments' screenKey='teaser' />);
+    render(<TestInstance features={{basicteaser: true}} structureKey='simplecomments' screenKey='teaser' />);
     screen.getByText('Join the Conversation');
 })

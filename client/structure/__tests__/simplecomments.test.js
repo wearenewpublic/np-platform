@@ -1,7 +1,7 @@
-import { act, findByRole, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { TestInstance, addObject, checkPressable, getMatchingObject, getObject, getSharedData, isPressable, objectExists, resetSharedData } from "../../util/testutil";
+import { act, findByRole, fireEvent, render, screen, within } from "@testing-library/react";
+import { TestInstance, getMatchingObject } from "../../util/testutil";
 import { goBack, pushSubscreen } from "../../util/navigate";
-import { SharedData } from "../../util/shareddata";
+import React from "react";
 
 jest.mock("../../util/navigate");
 
@@ -10,9 +10,11 @@ test('Empty', () => {
 });
 
 test('Comment and Reply', () => {
-    addObject('comment', {key: 'test', from: 'a', text: 'This is a comment'});
-    render(<TestInstance structureKey='simplecomments' />);
-    
+    const collections = {comment: [
+        {key: 'test', from: 'b', text: 'This is a comment'},
+    ]}
+
+    render(<TestInstance collections={collections} structureKey='simplecomments' />);    
     screen.getByText('This is a comment');    
 });
 
@@ -24,7 +26,8 @@ test('Composer opens', () => {
 });
 
 test('Composer saves comment', async () => {
-    render(<TestInstance structureKey='simplecomments' screenKey='composer' />);
+    const dataRef = React.createRef();
+    render(<TestInstance dataRef={dataRef} structureKey='simplecomments' screenKey='composer' />);
     const input = screen.getByPlaceholderText('Share your thoughts...');
     fireEvent.change(input, {target: {value: 'This is a test comment'}});
     
@@ -33,18 +36,23 @@ test('Composer saves comment', async () => {
     });
     expect(goBack).toHaveBeenCalled();
 
-    getMatchingObject('comment', {text: 'This is a test comment'});
+    getMatchingObject(dataRef, 'comment', {text: 'This is a test comment'});
 })
 
 test('Comment renders', async () => {
-    addObject('comment', {key: 'test', from: 'a', text: 'This is a comment'});
-    render(<TestInstance structureKey='simplecomments' />);
+    const collections = {comment: [
+        {key: 'test', from: 'a', text: 'This is a comment'}
+    ]}
+    render(<TestInstance collections={collections} structureKey='simplecomments' />);
     screen.getByText('This is a comment');    
 })
 
 test('Reply to a comment', async () => {
-    addObject('comment', {key: 'test', from: 'b', text: 'This is a comment'});
-    render(<TestInstance structureKey='simplecomments' />);
+    const dataRef = React.createRef();
+    const collections = {comment: [
+        {key: 'test', from: 'b', text: 'This is a comment'}
+    ]}
+    render(<TestInstance dataRef={dataRef} collections={collections} structureKey='simplecomments' />);
     const comment = screen.getByTestId('test');
     const replyButton = within(comment).getByRole('button', {name: 'Reply'});
     fireEvent.click(replyButton);
@@ -54,12 +62,14 @@ test('Reply to a comment', async () => {
     await act(() => {
         fireEvent.click(screen.getByRole('button', {name: 'Post'}));
     })
-    getMatchingObject('comment', {text: 'My reply', replyTo: 'test'});
+    getMatchingObject(dataRef, 'comment', {text: 'My reply', replyTo: 'test'});
     screen.getByText('My reply');
 })
 
 test('Teaser', async () => {
-    addObject('comment', {key: 'test', from: 'a', text: 'This is a comment'});
-    render(<TestInstance structureKey='simplecomments' screenKey='teaser' />);
+    const collections = {comment: [
+        {key: 'test', from: 'a', text: 'This is a comment'}
+    ]}
+    render(<TestInstance collections={collections} structureKey='simplecomments' screenKey='teaser' />);
     screen.getByText('No teaser screen configured');    
 })

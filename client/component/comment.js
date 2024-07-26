@@ -162,7 +162,7 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
         commentAllowEmpty
         } = useConfig();
 
-    const isBlocked = commentPostBlockers.some(blocker => blocker({datastore, comment}));
+    const isBlocked = commentPostBlockers?.some(blocker => blocker({datastore, comment}));
     const canPost = (comment.text || commentAllowEmpty) && !isBlocked;
     const action = comment.key ? 
           (inProgress ? 'Updating...' : 'Update') 
@@ -360,7 +360,8 @@ export function ActionEdit({commentKey}) {
 
 export function ActionReport({commentKey}) {
     const personaKey = usePersonaKey();
-    const comment = useObject('comment', commentKey)
+    const comment = useObject('comment', commentKey);
+    const datastore = useDatastore();
 
     function onReport() {
         logEventAsync(datastore, 'report-start', {commentKey});

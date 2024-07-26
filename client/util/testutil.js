@@ -1,57 +1,53 @@
 import { StackedScreen, getStructureForKey } from './instance';
-import { SharedData, SharedDataContext } from './shareddata';
-import { Datastore } from './datastore';
-import { ConfigContext, assembleConfig } from './features';
+import { Datastore, useDatastore } from './datastore';
+import { assembleConfig, assembleScreenSet } from './features';
 import { mock_setFirebaseData } from './firebase';
 
-var global_sharedData = new SharedData();
-
-beforeEach(() => {
-    resetSharedData();
-});
-
-export function resetSharedData() {
-    global_sharedData = new SharedData();
-}
-
-export function getSharedData() {
-    return global_sharedData;
-}
-
-export function WithFeatures({siloKey='test', structureKey='componentdemo', instanceKey='test', isAdmin=false, features={}, children}) {
+export function WithFeatures({dataRef, siloKey='test', structureKey='componentdemo', instanceKey='test', 
+        isAdmin=false, features={}, globals, collections, sessionData, children}) {
     const structure = getStructureForKey(structureKey);
-    const instance = {isLive: false, ...global_sharedData.data};
     const config = assembleConfig({structure, activeFeatures:features});
-    return <SharedDataContext.Provider value={global_sharedData}>
-        <Datastore 
+    return <Datastore 
+            ref={dataRef}
             siloKey={siloKey}
-            structureKey={structureKey} structure={structure} 
-            instanceKey={instanceKey} instance={instance}
+            structureKey={structureKey}
+            instanceKey={instanceKey} 
             isAdmin={isAdmin}
+            globals={{...globals, features}}
+            collections={collections}
+            sessionData={sessionData}
+            config={config}
             isLive={false}>
-            <ConfigContext.Provider value={config}>
-                {children}
-            </ConfigContext.Provider>
-        </Datastore>
-    </SharedDataContext.Provider>
+        {children}
+    </Datastore>
 }
 
-export function TestInstance({structureKey, siloKey='test', instanceKey='test', screenKey=null, params={}, features={}}) {
-    return <WithEnv siloKey={siloKey} structureKey={structureKey} instanceKey={instanceKey} >
-        <StackedScreen screenInstance={{structureKey, instanceKey, screenKey, params}} features={features} />
+export function TestInstance({dataRef, structureKey, siloKey='test', instanceKey='test', screenKey=null, 
+        params={}, features={}, globals, collections, sessionData}) {
+    const structure = getStructureForKey(structureKey);
+    const screenSet = assembleScreenSet({structure, activeFeatures:features});
+    return <WithEnv dataRef={dataRef} siloKey={siloKey} structureKey={structureKey} instanceKey={instanceKey}
+            features={features} globals={globals} collections={collections} sessionData={sessionData}
+        >
+        <StackedScreen screenSet={screenSet} screenInstance={{structureKey, instanceKey, screenKey, params}} features={features} />
     </WithEnv>
 }
 
 export const WithEnv = WithFeatures;
 
-export function DataDumper() {
-    console.log('data', global_sharedData.data);
-    return <div>{JSON.stringify(global_sharedData.data)}</div>
+export function DumpDatastore() {
+    const datastore = useDatastore();
+    const data = datastore.getData();
+    console.log('Datastore Data:', data);
 }
 
-export function getMatchingObject(type, data) {
-    const objects = global_sharedData.data[type];
-    if (!objects) return false;
+
+export function getMatchingObject(dataRef, type, data) {
+    const objects = dataRef.current.getData()[type];
+    if (!objects) {
+        console.error('No objects of type', type);
+        return false;
+    }
     for (let key in objects) {
         if (objectIsSubset(data, objects[key])) return key;
     }
@@ -65,28 +61,7 @@ function objectIsSubset(subset, superset) {
     return true;
 }
 
-export function addObject(type, data) {
-    global_sharedData.setData({
-        ...global_sharedData.data,
-        [type]: {
-            ...global_sharedData.data[type],
-            [data.key]: data
-        }
-    });
-}
-
-export function setGlobal(key, value) {
-    global_sharedData.setData({
-        ...global_sharedData.data,
-        [key]: value
-    });
-}
-
 export function setModulePublicData({siloKey='test', moduleKey, data}) {
     mock_setFirebaseData(['silo', siloKey, 'module-public', moduleKey], data);
-}
-
-export function setFeatures(features) {
-    setGlobal('features', features);
 }
 

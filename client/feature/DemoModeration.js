@@ -1,8 +1,5 @@
 import { Banner, TopBanner } from "../component/banner";
-import { IconInfo } from "../component/icon";
 import { RichText } from "../component/richtext";
-import { UtilityText } from "../component/text";
-import { pauseAsync } from "../util/util";
 
 export const DemoModerationFeature = {
     name: 'Demo Moderation',

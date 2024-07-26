@@ -40,46 +40,6 @@ export const DesignSystemDemoFeature = {
     }
 }
 
-export const CommentDemoFeature = {
-    key: 'commentdemo',
-    name: 'Comment Demo',
-    subscreens: {
-        comment: CommentScreen,
-        composer: params => <ComposerScreen {...params} contentType='Public Comment' />,
-    },
-    config: {
-        componentSections: [
-            {label: 'Comments', pages: [
-                {label: 'Comment', key: 'comment'},
-            ]}
-        ],
-        structures: [
-            {label: 'Simple Comments', key: 'simplecomments', instanceKey: 'demo'}
-        ]
-    },
-    defaultConfig: {        
-        commentAboveWidgets: [],
-        replyAboveWidgets: [],
-        commentFilters: [],
-        replyFilters: [],
-        commentAllowEmpty: false,
-        commentActions: [ActionReply],
-        commentRightActions: [ActionReport, ActionEdit],
-        commentEditBottomWidgets: [],
-        commentPostBlockers: [],
-        commentPostCheckers: [],
-        commentInputPlaceholder: 'Share your thoughts...',
-        commentReplyPlaceholder: 'Reply to {authorName}...',
-        commentInputLoginAction: 'comment',
-        noCommentsMessage: 'No responses yet. Start the conversation!',
-        noMoreCommentsMessage: 'No more responses'       
-    }
-}
-
-function DefaultWidget() {
-    return <UtilityText label='Default Widget'/>
-}
-
 function TextScreen() {
     const [text, setText] = useState(null);
 

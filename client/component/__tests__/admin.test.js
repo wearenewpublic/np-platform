@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { UtilityText } from "../text";
 import { useIsAdmin } from "../admin";
 import { WithEnv } from "../../util/testutil";
+import { Datastore } from '../../util/datastore';
 
 function IsAdmin() {
     const isAdmin = useIsAdmin();
@@ -14,11 +15,11 @@ function IsAdmin() {
 }
 
 test('not admin', () => {    
-    render(<WithEnv><IsAdmin /></WithEnv>);
+    render(<Datastore><IsAdmin /></Datastore>);
     screen.getByText('Not Admin');
 })
 
 test('is Admin', async () => {    
-    render(<WithEnv isAdmin><IsAdmin /></WithEnv>);
+    render(<Datastore isAdmin><IsAdmin /></Datastore>);
     await screen.findByText('Is Admin');
 })

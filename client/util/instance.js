@@ -5,11 +5,10 @@ import { IBMPlexSans_400Regular, IBMPlexSans_500Medium, IBMPlexSans_600SemiBold 
 import { IBMPlexMono_400Regular, IBMPlexMono_500Medium, IBMPlexMono_600SemiBold } from '@expo-google-fonts/ibm-plex-mono';
 import { LoginScreen } from '../organizer/Login';
 import { Datastore, WaitForData, useGlobalProperty, useLoaded } from '../util/datastore';
-import { SharedData } from '../util/shareddata';
 import { useFonts } from 'expo-font';
 import { Catcher } from '../component/catcher';
 import { structures } from '../structure';
-import { ConfigContext, assembleConfig, assembleScreenSet } from './features';
+import { assembleConfig, assembleScreenSet } from './features';
 import { useFirebaseData } from './firebase';
 import { useIsAdminForSilo } from '../component/admin';
 
@@ -29,22 +28,23 @@ export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKe
     const s = ScreenStackStyle;
     
     const structure = getStructureForKey(structureKey);
-    const instance = {isLive: true}
     const language = useFirebaseData(['silo', siloKey, 'module-public', 'language'])
+    const activeFeatures = useFirebaseData(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global', 'features']) || [];
+    const config = assembleConfig({structure, activeFeatures});
+    const screenSet = assembleScreenSet({structure, activeFeatures});
     const isAdmin = useIsAdminForSilo({siloKey});
 
     if (!structureKey || !instanceKey || !siloKey) {
-        console.log('ScreenStack missing keys', {structureKey, instanceKey, siloKey});
+        console.error('ScreenStack missing keys', {structureKey, instanceKey, siloKey});
     }
  
     return <View style={s.stackHolder}>
-      <SharedData key={url}>
-          <Datastore instance={instance} siloKey={siloKey} instanceKey={instanceKey} structure={structure} structureKey={structureKey} language={language} isAdmin={isAdmin} isLive={true}>
-               {screenStack.map((screenInstance, index) => 
-                    <StackedScreen screenInstance={screenInstance} index={index} key={index} />
-                )}
-            </Datastore>
-      </SharedData>
+        <Datastore key={url} siloKey={siloKey} instanceKey={instanceKey} structureKey={structureKey} 
+                language={language} isAdmin={isAdmin} isLive={true} config={config} >
+            {screenStack.map((screenInstance, index) => 
+                <StackedScreen screenSet={screenSet} screenInstance={screenInstance} index={index} key={index} />
+            )}
+        </Datastore>
     </View>
 }
   
@@ -58,43 +58,36 @@ const ScreenStackStyle = StyleSheet.create({
   
 
 
-export function StackedScreen({screenInstance, index, features}) {
+export function StackedScreen({screenSet, screenInstance, index, features}) {
     const {structureKey, instanceKey, screenKey, params} = screenInstance;
-    
+    const loaded = useLoaded();
+
     if (structureKey == 'login' || instanceKey == 'login' || screenKey == 'login') {
         return <FullScreen zIndex={index}>
             <TopBar title='Log In' />
             <LoginScreen {...params} />
         </FullScreen>
-    }
-  
-    const structure = getStructureForKey(structureKey);
-    const instance = chooseInstanceByKey({structure, instanceKey});
-    const activeFeatures = useGlobalProperty('features') || features || [];
-    const config = assembleConfig({structure, activeFeatures});
-    const screenSet = assembleScreenSet({structure, activeFeatures});
-    const loaded = useLoaded();
+    }  
 
+    const structure = getStructureForKey(structureKey);
     var screen = getScreen({screenSet, structure, screenKey, instanceKey});
-    var title = getScreenTitle({screenSet, structure, screenKey, instance, params}); 
+    var title = getScreenTitle({screenSet, structure, screenKey, params}); 
     const showTopBar = screenKey != 'teaser';
   
     if (!screen) {
         if (loaded) { // Don't show this error waiting for screen set to resolve
-            console.error('Screen not found', {loaded, activeFeatures, screenSet, structure: structure, screenKey, instanceKey, screen});
+            console.error('Screen not found', {loaded, screenSet, structure: structure, screenKey, instanceKey, screen});
         }
         return null;
     }
 
     return <FullScreen zIndex={index}>
-        <ConfigContext.Provider value={config} >
-            {showTopBar && <TopBar title={title} index={index} params={params} subtitle={structure.name} showPersonas={!instance.isLive} />}
-            <WaitForData>
-                <Catcher>
-                    {React.createElement(screen, params)}
-                </Catcher>
-            </WaitForData>
-      </ConfigContext.Provider>
+        {showTopBar && <TopBar title={title} index={index} params={params} subtitle={structure.name} />}
+        <WaitForData>
+            <Catcher>
+                {React.createElement(screen, params)}
+            </Catcher>
+        </WaitForData>
     </FullScreen>  
   }  
 
@@ -108,7 +101,7 @@ function getScreen({screenSet, structure, screenKey}) {
     }
 }
   
-function getScreenTitle({screenSet, structure, instance, screenKey, params}) {
+function getScreenTitle({screenSet, structure, screenKey, params}) {
     const name = useGlobalProperty('name');
     if (screenKey) {
         const title = screenSet?.[screenKey]?.title;
@@ -119,7 +112,7 @@ function getScreenTitle({screenSet, structure, instance, screenKey, params}) {
         } else {
             return null;
         }
-    } else if (instance) {
+    } else if (name) {
         return name;
     } else {
         return structure.name

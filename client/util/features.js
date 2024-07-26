@@ -1,11 +1,14 @@
 import React, { useContext } from "react";
 import { defaultFeatureConfig, features } from "../feature";
+import { useDatastore } from "./datastore";
 
-export const ConfigContext = React.createContext({});
+// export const ConfigContext = React.createContext({});
 
 export function useConfig() {
-    const config = useContext(ConfigContext);
-    return config;
+    const datastore = useDatastore();
+    return datastore.getConfig();
+    // const config = useContext(ConfigContext);
+    // return config;
 }
 
 export function REPLACE(array) {

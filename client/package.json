@@ -1,10 +1,11 @@
 {
   "name": "np-platform-client",
-  "version": "0.2.50",
+  "version": "0.3.0",
   "license": "Apache-2.0",
   "scripts": {
     "demo": "expo start --web",
     "test": "jest",
+    "testsummary": "jest 2>&1 | grep 'FAIL'",
     "coverage": "jest --coverage",
     "build": "babel . --out-dir dist --ignore node_modules,dist",
     "prepublishOnly": "yarn build",

@@ -1,21 +1,29 @@
 import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { WithFeatures, addObject, getMatchingObject } from "../../util/testutil"
-import { Comment } from "../comment";
+import { WithConfig, WithFeatures, WithMiniFeatures, addObject, getMatchingObject } from "../../util/testutil"
+import { ActionEdit, Comment } from "../comment";
 import { pushSubscreen } from "../../util/navigate";
+import { Datastore } from "../../util/datastore";
+import React from "react";
 
 jest.mock("../../util/navigate");
 
 test('View comment', () => {
-    addObject('comment', {key: 'test', from: 'a', text: 'This is a comment'});
+    const collections = {comment: [
+        {key: 'test', from: 'a', text: 'This is a comment'},
+    ]}
 
-    render(<WithFeatures><Comment commentKey='test' /></WithFeatures>);    
-
+    render(<Datastore collections={collections}><Comment commentKey='test' /></Datastore>);    
     screen.getByText('This is a comment');
 })
 
 test('Edit top level comment', async () => {
-    addObject('comment', {key: 'test', from: 'a', text: 'This is a comment'});
-    render(<WithFeatures features={{lengthlimit: false}}><Comment commentKey='test' /></WithFeatures>);  
+    const collections = {comment: [
+        {key: 'test', from: 'a', text: 'This is a comment'},
+    ]}
+    const config = {commentRightActions: [ActionEdit]}
+
+    render(<Datastore collections={collections} config={config}><Comment commentKey='test' /></Datastore>);
+
     const comment = screen.getByTestId('test');
     const editButton = within(comment).getByRole('button', {name: 'Edit'});
     fireEvent.click(editButton);
@@ -23,9 +31,14 @@ test('Edit top level comment', async () => {
 })
 
 test('Edit Reply', async () => {
-    addObject('comment', {key: 'test', from: 'b', text: 'This is a comment'});
-    addObject('comment', {key: 'reply', from: 'a', replyTo: 'test', text: 'This is a reply'});
-    render(<WithFeatures features={{lengthlimit: false}}><Comment commentKey='reply' /></WithFeatures>);  
+    const dataRef = React.createRef();
+    const collections = {comment: [
+        {key: 'test', from: 'b', text: 'This is a comment'},
+        {key: 'reply', from: 'a', replyTo: 'test', text: 'This is a reply'},
+    ]}
+    const config = {commentRightActions: [ActionEdit]}
+
+    render(<Datastore ref={dataRef} collections={collections} config={config}><Comment commentKey='reply' /></Datastore>);
     const comment = screen.getByTestId('reply');
     const editButton = within(comment).getByRole('button', {name: 'Edit'});
     fireEvent.click(editButton);
@@ -35,18 +48,25 @@ test('Edit Reply', async () => {
     await act(async () => {
         fireEvent.click(screen.getByRole('button', {name: 'Update'})); 
     });
-    getMatchingObject('comment', {text: 'My edited reply'});
+    getMatchingObject(dataRef, 'comment', {text: 'My edited reply'});
 })
 
 test('Cancel editing reply', async () => {
-    addObject('comment', {key: 'test', from: 'b', text: 'This is a comment'});
-    addObject('comment', {key: 'reply', from: 'a', replyTo: 'test', text: 'This is a reply'});
-    render(<WithFeatures features={{lengthlimit: false}}><Comment commentKey='reply' /></WithFeatures>);  
+    const dataRef = React.createRef();
+    const collections = {
+        comment: [
+            {key: 'test', from: 'b', text: 'This is a comment'},
+            {key: 'reply', from: 'a', replyTo: 'test', text: 'This is a reply'},
+        ]
+    }
+    const config = {commentRightActions: [ActionEdit]}
+
+    render(<Datastore ref={dataRef} collections={collections} config={config}><Comment commentKey='reply' /></Datastore>);  
     const comment = screen.getByTestId('reply');
     const editButton = within(comment).getByRole('button', {name: 'Edit'});
     fireEvent.click(editButton);
     const input = await screen.findByDisplayValue('This is a reply');
     fireEvent.change(input, {target: {value: 'My edited reply'}});     
     fireEvent.click(screen.getByRole('button', {name: 'Cancel'})); 
-    getMatchingObject('comment', {text: 'This is a comment'});
+    getMatchingObject(dataRef, 'comment', {text: 'This is a comment'});
 })

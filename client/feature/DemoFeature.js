@@ -148,7 +148,6 @@ function replyBooster({comments}) {
 }
 
 function commentRanker({datastore, comments}) {
-    console.log('commentRanker', comments);
     const newestFirst = comments.sort((a, b) => b.time - a.time);
     const topComments = newestFirst.filter(comment => comment.text.toLowerCase().includes('godzilla'));
     const bottomComments = newestFirst.filter(comment => !comment.text.toLowerCase().includes('godzilla'));

@@ -1,17 +1,24 @@
-import { fireEvent, getByText, render, screen, within } from "@testing-library/react";
-import { TestInstance, addObject, getMatchingObject } from "../../util/testutil";
+import { fireEvent, render, screen, within } from "@testing-library/react";
+import { getMatchingObject } from "../../util/testutil";
+import { Comment } from "../../component/comment";
+import { Datastore } from "../../util/datastore";
+import { ActionUpvote } from "../UpvoteFeature";
+import React from "react";
 
 test('Upvote to comment', async () => {
-    addObject('comment', {key: 'test', from: 'b', text: 'This is a comment'});
-    render(<TestInstance structureKey='simplecomments' />);
+    const dataRef = React.createRef();
+    const collections = {comment: [
+        {key: 'test', from: 'b', text: 'This is a comment'},
+    ]}
+    const config = {commentActions: [ActionUpvote]}
+
+    render(<Datastore ref={dataRef} collections={collections} config={config}><Comment commentKey='test' /></Datastore>);
     const comment = screen.getByTestId('test');
     const upvoteButton = within(comment).getByLabelText('upvote');
     fireEvent.click(upvoteButton);
-    // screen.getByText('Upvoted (1)');
-    getMatchingObject('upvote', {comment: 'test'});
+    getMatchingObject(dataRef, 'upvote', {comment: 'test'});
 
     fireEvent.click(upvoteButton);
-    // screen.getByText('Upvote');
 })
 
 
