@@ -1,14 +1,14 @@
-import React, { useContext, useState } from "react";
-import { useCollection, useDatastore, useObject, usePersona, usePersonaKey, useSessionData } from "../util/datastore"
-import { Byline, FacePile, Persona } from "./people"
-import { Card, ConversationScreen, PadBox, Pad, HorizBox, Separator, ShadowBox } from "./basics";
-import { CharacterCounter, Heading, Paragraph, TextField, TextFieldButton, UtilityText, checkValidLength } from "./text";
-import { CTAButton, ExpandButton, IconButton, SubtleButton, TextButton } from "./button";
-import { IconEdit, IconReply, IconReport, IconUpvote, IconUpvoted } from "./icon";
+import React, { useState } from "react";
+import { useCollection, useDatastore, useObject, usePersonaKey, useSessionData } from "../util/datastore";
+import { Byline } from "./people";
+import { ConversationScreen, PadBox, Pad, HorizBox, Separator, ShadowBox } from "./basics";
+import { Heading, TextField, TextFieldButton } from "./text";
+import { CTAButton, ExpandButton, SubtleButton, TextButton } from "./button";
+import { IconEdit, IconReply, IconReport } from "./icon";
 import { goBack, pushSubscreen } from "../util/navigate";
-import { Image, StyleSheet, Text, View } from "react-native";
-import { deepClone, getFirstName } from "../util/util";
-import { colorBlueBackground, colorDisabledText, colorGreyPopupBackground, colorLightBlueBackground, colorPurpleBackground, colorTeaserBackground, colorTextBlue, colorTextGrey } from "./color";
+import { StyleSheet, View } from "react-native";
+import { getFirstName } from "../util/util";
+import { colorLightBlueBackground, colorTextGrey } from "./color";
 import { RichText } from "./richtext";
 import { CatchList, Catcher } from "./catcher";
 import { TopBarActionProvider } from "../organizer/TopBar";
@@ -23,14 +23,20 @@ import { useIsAdmin } from "./admin";
 export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
-    const {commentAboveWidgets, commentBelowWidgets} = useConfig();
+    const {commentAboveWidgets, commentBelowWidgets, commentBodyRenderer} = useConfig();
     return <View testID={commentKey} id={commentKey} >
         <PadBox top={20} horiz={20}>
             {commentAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
             <Byline type='large' userId={comment.from} time={comment.time} edited={comment.edited} />
             <Pad size={20} />
             <PadBox left={48}>
-                <Catcher><CommentBody commentKey={commentKey} /></Catcher>
+                <Catcher>
+                    {commentBodyRenderer ?
+                        React.createElement(commentBodyRenderer, {comment, commentKey})
+                    : 
+                        <CommentBody commentKey={commentKey} />
+                    }
+                </Catcher>
                 {commentBelowWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
                 {!editing && <PadBox top={20}><CommentActions commentKey={commentKey} /></PadBox>}
                 <MaybeCommentReply commentKey={commentKey} />
@@ -71,7 +77,7 @@ const ReplyCommentStyle = StyleSheet.create({
 })
 
 
-function CommentBody({commentKey}) {
+export function CommentBody({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
     const [editedComment, setEditedComment] = useState(null);

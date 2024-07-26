@@ -141,10 +141,10 @@ const IconReplyStyle = StyleSheet.create({
     }
 });
 
-export function SubtleButton({label, text, ariaLabel, disabled, formatParams, color=colorTextGrey, strong=false, icon=null, padRight, onPress}) {
+export function SubtleButton({label, text, ariaLabel, disabled, formatParams, color=colorTextGrey, strong=false, icon=null, padLeft, padRight, onPress}) {
     const s = SubtleButtonStyle;
     const [hover, setHover] = useState(false);
-    return <HoverView style={[s.button, padRight && {marginRight: 20}]} 
+    return <HoverView style={[s.button, padLeft && {marginLeft: 20}, padRight && {marginRight: 20}]} 
             disabled={disabled} role={!disabled ? 'button' : null}
             ariaLabel={ariaLabel}
             onPress={onPress} setHover={setHover}>

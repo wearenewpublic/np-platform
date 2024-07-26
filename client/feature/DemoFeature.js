@@ -2,6 +2,7 @@ import { Banner } from "../component/banner";
 import { Center, Pad, PadBox, ShadowBox } from "../component/basics";
 import { CTAButton, SubtleButton, Tag } from "../component/button";
 import { colorBannerGreen } from "../component/color";
+import { CommentBody } from "../component/comment";
 import { Heading, Paragraph, UtilityText } from "../component/text"
 import { useConfig } from "../util/features"
 import { Star } from '@carbon/icons-react';
@@ -15,6 +16,7 @@ export const DemoFeature = {
         commentTopWidgets: [CommentTopWidget],
         commentAboveWidgets: [CommentAboveWidget],
         commentAllowEmpty: true,
+        commentBodyRenderer: CommentBodyRenderer,
         commentEditBottomWidgets: [CommentEditBottomWidget],
         commentEditTopWidgets: [CommentEditTopWidget],
         commentPostBlockers: [commentPostBlocker],
@@ -121,6 +123,16 @@ function ComposerTopWidget({comment, setComment}) {
             <CTAButton onPress={onPress} label='Add Komodo Dragon' />
         </PadBox>
     </ShadowBox></PadBox>
+}
+
+function CommentBodyRenderer({comment, commentKey}) {
+    return <ShadowBox>
+        <PadBox horiz={16} vert={16}>
+            <UtilityText label='Comment Body Renderer' />
+            <Pad />
+            <CommentBody comment={comment} commentKey={commentKey} />
+        </PadBox>
+    </ShadowBox>
 }
 
 function commentFilter({comment}) {
