@@ -1,6 +1,6 @@
 import { Linking, StyleSheet, Text, TextInput, View } from "react-native";
 import { TranslatableText, useTranslation } from "./translation"
-import { colorBannerGreen, colorBlack, colorDisabledText, colorGreyBorder, colorGreyHoverBorder, colorRed, colorTextBlue, colorTextGrey, colorWhite } from "./color";
+import { colorBannerGreen, colorBlack, colorDisabledText, colorGreyBorder, colorGreyHover, colorGreyHoverBorder, colorRed, colorTextBlue, colorTextGrey, colorWhite } from "./color";
 import { HorizBox, HoverView, Pad, PadBox } from "./basics";
 import { useEffect, useState } from "react";
 import { IconCheckmark, IconEdit, IconEditBig } from "./icon";
@@ -220,12 +220,12 @@ export function AutoSizeTextInput({value, onChange, placeholder, style, hoverSty
     </View>
 }
 
-export function TextField({value, big=false, autoFocus=false, placeholder, placeholderParams, onChange}) {
+export function TextField({value, error=false, big=false, autoFocus=false, placeholder, placeholderParams, onChange}) {
     const s = TextFieldStyle;
     const tPlaceholder = useTranslation(placeholder, placeholderParams);
     return <AutoSizeTextInput value={value ?? ''} onChange={onChange} 
         emptyHeight={big ? 300 : 50} autoFocus={autoFocus}
-        style={s.textField} hoverStyle={s.hover}
+        style={[s.textField, error ? {borderColor: colorRed} : null]} hoverStyle={s.hover}
         placeholder={tPlaceholder} placeholderTextColor={colorDisabledText} />
 }
 
@@ -319,4 +319,21 @@ export function checkValidLength({text, min, max}) {
     const count = text?.length ?? 0;
     return count >= min && count <= max;
 }
+
+export function CircleCount({count}) {
+    const s = CircleCountStyle;
+    return <View style={s.circle}>
+        <UtilityText strong text={String(count)} />
+    </View>
+}
+const CircleCountStyle = StyleSheet.create({
+    circle: {
+        backgroundColor: colorGreyHover,
+        borderRadius: 100,
+        width: 20,
+        height: 20,
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
+});
 

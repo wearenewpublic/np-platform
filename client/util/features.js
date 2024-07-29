@@ -17,13 +17,13 @@ export function REPLACE(array) {
 
 export function assembleConfig({structure, activeFeatures}) {
     var config = cloneConfig(structure.defaultConfig);
-    const availableFeatures = features[structure.key] ?? [];
-
+    const availableFeatures = getAvailableFeaturesForStructure(structure.key);
     const defaultFeatures = defaultFeatureConfig[structure.key];
     const mergedActiveFeatures = {...defaultFeatures, ...activeFeatures} 
 
     try {
         availableFeatures.forEach(feature => {
+            if (feature.parentFeature && !mergedActiveFeatures[feature.parentFeature]) return;
             if (mergedActiveFeatures[feature.key]) {
                 Object.keys(feature.config ?? {}).forEach(key => {
                     if (!(key in config)) {
@@ -54,7 +54,8 @@ export function assembleConfig({structure, activeFeatures}) {
 
  
 export function assembleScreenSet({structure, activeFeatures}) {
-    const availableFeatures = features[structure.key] ?? [];
+    const availableFeatures = getAvailableFeaturesForStructure(structure.key);
+    // const availableFeatures = features[structure.key] ?? [];
     const defaultFeatures = defaultFeatureConfig[structure.key];
     const mergedActiveFeatures = {...defaultFeatures, ...activeFeatures} 
 
@@ -78,8 +79,26 @@ function cloneConfig(config) {
     return config;
 }
 
+export function flattenFeatureBlocks(featureList) {
+    var flattened = [];
+    featureList.forEach(feature => {
+        if (feature.parent) {
+            flattened.push(feature.parent);
+        }
+        if (feature.features) {
+            flattened = [...flattened, ...flattenFeatureBlocks(feature.features)];
+        } else {
+            flattened.push(feature);
+        }
+    })
+    return flattened;
+}
+
 export function getAvailableFeaturesForStructure(structureKey) {
+    return flattenFeatureBlocks(features[structureKey] || []);
+}
+
+export function getFeatureBlocks(structureKey) {
     return features[structureKey] || [];
 }
 
-  

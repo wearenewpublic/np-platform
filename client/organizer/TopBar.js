@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { closeSidebar, goBack, gotoInstance, pushSubscreen } from "../util/navigate";
 import { firebaseSignOut, useFirebaseUser } from "../util/firebase";
 import { Popup } from "../platform-specific/popup";
@@ -6,15 +6,18 @@ import { useDatastore, useGlobalProperty, useInstanceKey, usePersonaKey, useStru
 import { useState } from "react";
 import { IconChevronDownSmall, IconChevronUpSmall, IconCloseBig, IconLeftArrowBig } from "../component/icon";
 import { Byline } from "../component/people";
-import { BreadCrumb, CTAButton, TextButton, Toggle } from "../component/button";
+import { BreadCrumb, CTAButton, TextButton } from "../component/button";
 import { HorizBox, Pad, PadBox, Separator } from "../component/basics";
 import { ObservableProvider, ObservableValue, useObservable } from "../util/observable";
-import { getAvailableFeaturesForStructure } from "../util/features";
+import { flattenFeatureBlocks, getAvailableFeaturesForStructure, getFeatureBlocks, getFeatureTreeNodes } from "../util/features";
 import { callServerApiAsync } from "../util/servercall";
 import { defaultFeatureConfig } from "../feature";
 import { Catcher } from "../component/catcher";
 import { historyGetState } from "../platform-specific/url";
 import { useIsAdmin } from "../component/admin";
+import { CircleCount, UtilityText } from "../component/text";
+import { AccordionField, RadioGroup, RadioOption, Toggle } from "../component/form";
+import { colorGreyBorder, colorGreyPopupBackground, colorLightBlueBackground } from "../component/color";
 
 const global_toolbarAction = new ObservableValue(null);
 
@@ -81,19 +84,101 @@ const TopBarStyle = StyleSheet.create({
 
 export function FeatureToggles() {
     const structureKey = useStructureKey();
-    const features = getAvailableFeaturesForStructure(structureKey)
-    const defaultFeatures = defaultFeatureConfig[structureKey] ?? {};
-    if (!features) return null;
-    return <PadBox top={20}>
+    const featureBlocks = getFeatureBlocks(structureKey);
+    // const defaultFeatures = defaultFeatureConfig[structureKey] ?? {};
+    if (!featureBlocks) return null;
+    return <View>
+        <Pad />
         <Separator />
-        <Pad/>
-        {features.map(feature => 
-            <FeatureToggle key={feature.key} defaultState={defaultFeatures[feature.key]} feature={feature} />
+        <View style={{width: 300}} />
+        <Pad size={12} />
+        <UtilityText type='tiny' label='Admin' caps />
+        {featureBlocks.map((featureBlock,i) => 
+            <FeatureTreeNode key={i} featureBlock={featureBlock} />
         )}
-    </PadBox>
+    </View>
 }
 
-function FeatureToggle({feature, defaultState=false}) {
+function FeatureTreeNode({featureBlock}) {
+    const s = FeatureTreeNodeStyle;
+    const enabledFeatures = useGlobalProperty('features');
+    if (featureBlock.section) {
+        const enabledCount = featureBlock.features.filter(fb => enabledFeatures?.[fb.key]).length;
+        const titleContent = <HorizBox center spread>
+            <UtilityText strong label={featureBlock.label} />
+            <Pad size={8} />
+            {enabledCount ? <CircleCount count={enabledCount} /> : null}
+        </HorizBox>
+        return <AccordionField titleContent={titleContent}>
+            {featureBlock.features.map((fb,i) => 
+                <FeatureTreeNode key={i} featureBlock={fb} />
+            )}
+        </AccordionField>
+    } else if (featureBlock.composite) {
+        const enabled = enabledFeatures?.[featureBlock.parent.key] ?? false;
+        if (!enabled) {
+            return <FeatureToggle feature={featureBlock.parent} />
+        } else {
+            return <View>
+                <FeatureToggle feature={featureBlock.parent} />
+                <View style={s.subFeatures} >
+                    {featureBlock.features.map((fb,i) => 
+                        <FeatureTreeNode key={i} featureBlock={fb} />
+                    )}
+                </View>
+            </View>
+        }
+    } else if (featureBlock.chooseOne) {
+        return <ChooseOneFeature label={featureBlock.label} featureList={featureBlock.features} />
+    } else if (featureBlock.name) {
+        return <FeatureToggle feature={featureBlock} />
+    } else {
+        console.error('Unknown feature node', featureBlock);
+        return null;
+    }
+}
+const FeatureTreeNodeStyle = StyleSheet.create({
+    subFeatures: {
+        backgroundColor: colorGreyPopupBackground,
+        padding: 12,
+        borderRadius: 8
+    }
+})
+
+function ChooseOneFeature({label, featureList}) {
+    const enabledFeatures = useGlobalProperty('features');
+    const firstEnabled = featureList.find(f => enabledFeatures?.[f.key])?.key;
+    const [chosenFeature, setChosenFeature] = useState(firstEnabled);
+    const datastore = useDatastore();
+    console.log('ChooseOneFeature', {firstEnabled, chosenFeature, enabledFeatures, featureList});
+    function onChange(value) {
+        const newFeatures = {
+            ...enabledFeatures,
+            [chosenFeature]: false,
+            [value]: true
+        }
+        callServerApiAsync({
+            datastore, component: 'features', 
+            funcname: 'setFeatures', 
+            params: {features: newFeatures}
+        });  
+        setChosenFeature(value);
+    }
+    return <View>
+        <UtilityText strong type='tiny' label={label} />
+        <RadioGroup value={chosenFeature} onChange={onChange}>
+            {featureList.map(f =>
+                <RadioOption key={f.key} radioKey={f.key} label={f.name} />
+        )}
+        </RadioGroup>
+    </View>
+}
+
+function FeatureToggle({feature}) {
+    const structureKey = useStructureKey();
+    const defaultFeatures = defaultFeatureConfig[structureKey] ?? {};
+    const defaultState = defaultFeatures[feature.key] ?? false;
+    
     const features = useGlobalProperty('features');
     const enabled = features?.[feature.key] ?? defaultState;
     const datastore = useDatastore();
@@ -112,8 +197,7 @@ function FeatureToggle({feature, defaultState=false}) {
         });  
     }
 
-    return <View style={{alignSelf: 'flex-end'}}><Toggle label={feature.name} value={enabled || false} 
-        onChange={onToggle} /></View>
+    return <Toggle label={feature.name} spread value={enabled || false} onChange={onToggle} />
 }
 
 function UserInfo() {
@@ -156,7 +240,8 @@ const UserInfoStyle = StyleSheet.create({
         marginLeft: 12
     },
     popup: {
-        marginRight: 20
+        marginRight: 20,
+        // padding: 0,
     }
 });
 

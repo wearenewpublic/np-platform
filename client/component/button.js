@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
-import { colorAccent, colorAccentHover, colorAccentPress, colorBlack, colorBlackHover, colorDisabledBackground, colorDisabledText, colorGreen, colorGreyBorder, colorGreyHover, colorGreyPopupBackground, colorIconButtonPress, colorLightBlueBackground, colorLightGreen, colorNearBlack, colorPink, colorPinkHover, colorPinkPress, colorPrimaryPress, colorPurpleBackground, colorRed, colorSecondaryPress, colorTextBlue, colorTextGrey, colorWhite } from "./color";
+import { colorAccent, colorAccentHover, colorAccentPress, colorBlack, colorBlackHover, colorDisabledBackground, colorDisabledText, colorGreyBorder, colorGreyHover, colorIconButtonPress, colorLightBlueBackground, colorNearBlack, colorPrimaryPress, colorRed, colorSecondaryPress, colorTextBlue, colorTextGrey, colorWhite } from "./color";
 import { EditorialHeading, Paragraph, UtilityText } from "./text";
 import { HorizBox, HoverView, Pad, PadBox } from "./basics";
-import { IconChevronDown, IconChevronUpSmall, IconChevronUp, IconCircleCheck, IconSwitchOff, IconSwitchOn, IconChevronDownSmall } from "./icon";
+import { IconChevronDown, IconChevronUpSmall, IconChevronUp, IconChevronDownSmall } from "./icon";
 import { FacePile } from "./people";
 import { Popup } from "../platform-specific/popup";
-import { closeActivePopup } from "../platform-specific/popup";
-import { Information, Close, CheckboxCheckedFilled, Checkbox as CheckboxOpen } from '@carbon/icons-react'
+import { Information, Close } from '@carbon/icons-react';
 
 
 export function CTAButton({label, icon, type='primary', disabled, compact=false, wide=false, onPress}) {
@@ -357,96 +356,6 @@ const PopupPanelStyle = StyleSheet.create({
     }
 })
 
-
-export function Checkbox({emoji, text, label, value, onChange}) {
-    const s = CheckboxStyle;
-    return <HoverView hoverStyle={s.hover} pressedStyle={s.pressed}
-            onPress={() => onChange(!value)} role='checkbox'>
-        <PadBox vert={8}>
-            <HorizBox center>
-                {value ? <CheckboxCheckedFilled size={32} /> : <CheckboxOpen size={32} style={{fill: colorGreyBorder}} />}
-                <Pad size={12} />
-                {emoji && <PadBox right={6}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
-                <UtilityText text={text} label={label} />
-            </HorizBox>
-        </PadBox>
-    </HoverView>
-}
-const CheckboxStyle = StyleSheet.create({
-    hover: {
-        backgroundColor: colorGreyPopupBackground
-    },
-    pressed: {
-        backgroundColor: colorGreyHover    
-    }
-})
-
-
-export function Toggle({emoji, text, label, value, spread, onChange}) {
-    const s = ToggleStyle;
-    return <HoverView hoverStyle={s.hover}
-            onPress={() => onChange(!value)} role='checkbox'>
-        <PadBox vert={8}>
-            <HorizBox center spread={spread}>        
-                    <HorizBox center>
-                        {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
-                        <UtilityText text={text} label={label} />
-                    </HorizBox>
-                    <Pad size={12} />
-                    <View style={value ? s.toggleZoneSelected : s.toggleZone} onPress={() => onChange(!value)}>
-                        <View style={value ? s.toggleBallSelected : s.toggleBall} />
-                    </View>
-            </HorizBox>
-        </PadBox>
-    </HoverView>
-}
-const ToggleStyle = StyleSheet.create({
-    toggleZone: {
-        width: 56,
-        height: 32,
-        backgroundColor: colorGreyBorder,
-        borderRadius: 100,
-        transition: 'background-color 0.2s ease-in-out'
-    },
-    toggleBall: {
-        boxShadow: '2px 0px 10px rgba(0, 0, 0, 0.30)',
-        elevation: 5,  // for Android,
-        position: 'absolute',
-        left: 2,
-        top: 2,
-        width: 28,
-        height: 28,
-        borderRadius: 100,
-        backgroundColor: colorWhite,
-        transition: 'left 0.2s ease-in-out, background-color 0.2s ease-in-out'
-    },
-    toggleZoneSelected: {
-        width: 56,
-        height: 32,
-        backgroundColor: colorPurpleBackground,
-        borderRadius: 100,
-        transition: 'background-color 0.2s ease-in-out'
-    },
-    toggleBallSelected: {
-        backgroundColor: colorAccent,
-        left: 56-28-2,
-        top: 2,
-        width: 28,
-        height: 28,
-        borderRadius: 100,
-        transition: 'left 0.2s ease-in-out, background-color 0.2s ease-in-out'
-    },
-    hover: {
-        backgroundColor: colorGreyPopupBackground,
-        // borderTopRightRadius: 100,
-        // borderBottomRightRadius: 100,
-    },
-    pressed: {
-        backgroundColor: colorGreyHover,
-        borderTopRightRadius: 100,
-        borderBottomRightRadius: 100,    
-    }
-})
 
 
 export function BannerIconButton({type, onPress}) {

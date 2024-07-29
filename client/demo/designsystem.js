@@ -1,9 +1,10 @@
 import { Byline, FacePile, ProfilePhoto } from "../component/people";
 import { usePersonaKey } from "../util/datastore";
 import { IconAudio, IconChevronDown, IconClose, IconCloseBig, IconComment, IconCommentBig, IconEdit, IconEmoji, IconImage, IconLeftArrowBig, IconReply, IconReport, IconSave, IconUpvote, IconUpvoted, IconVideo } from "../component/icon";
-import { CharacterCounter, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
+import { CharacterCounter, CircleCount, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
 import { colorBlack, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
-import { BannerIconButton, BreadCrumb, Checkbox, CTAButton, DropDownSelector, ExpandButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, TextButton, Toggle } from "../component/button";
+import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, TextButton } from "../component/button";
+import { Checkbox, Toggle, RadioOption, RadioGroup, FormField, AccordionField } from "../component/form";
 import { useState } from "react";
 import { ActionEdit, ActionReply, ActionReport, BasicComments, CommentsInput, ComposerScreen } from "../component/comment";
 import { RichText } from "../component/richtext";
@@ -13,7 +14,7 @@ import { Banner, ClickableBanner, TopBanner } from "../component/banner";
 import { TrashCan, Pin } from "@carbon/icons-react";
 import { Modal } from "../component/modal";
 import { DemoHeader, DemoSection, SpacedArray } from "../component/demo";
-
+import { Image } from "react-native";
 
 export const DesignSystemDemoFeature = {
     key: 'demo_designsystem',
@@ -22,6 +23,7 @@ export const DesignSystemDemoFeature = {
         text: TextScreen,
         profile: ProfileScreen,
         button: ButtonScreen,
+        form: FormScreen,
         teaserDemo: TeaserDemoScreen,
         banner: BannerDemoScreen,
         modal: ModalScreen,
@@ -32,6 +34,7 @@ export const DesignSystemDemoFeature = {
                 {label: 'Text', key: 'text'},
                 {label: 'Profile', key: 'profile'},
                 {label: 'Button', key: 'button'},
+                {label: 'Form', key: 'form'},
                 {label: 'Teaser', key: 'teaserDemo'},
                 {label: 'Banner', key: 'banner'},
                 {label: 'Modal', key: 'modal'},
@@ -134,11 +137,68 @@ function ProfileScreen() {
      </ConversationScreen>
 }
 
+function FormScreen() {
+    const [switchValue, setSwitchValue] = useState(false);
+    const [radioValue, setRadioValue] = useState(null);
+    // const [oldRadioValue, setRadioValue] = useState(null);
+
+    return <ConversationScreen>
+        <Narrow>
+            <DemoSection label='Form Field'>
+                <FormField label='Field label'>
+                    <TextField placeholder='Text Field' />
+                </FormField>
+                <FormField label='Required Field' required>
+                    <TextField placeholder='Text Field' />
+                </FormField>
+                <FormField label='Fiend with Description' descriptionLabel='Description appears below' >
+                    <TextField placeholder='Text Field' />
+                </FormField>
+                <FormField label='Fiend with Error' errorLabel='This is an error' >
+                    <TextField error placeholder='Text Field' value='Invalid Text' />
+                </FormField>
+            </DemoSection>
+            <DemoSection label='Toggle'>
+                <Toggle label='Toggle' value={switchValue} onChange={setSwitchValue} />
+                <Toggle emoji='😭' label='Toggle with emoji' value={switchValue} onChange={setSwitchValue} />
+                <Toggle emoji='😭' label='Spread Toggle' spread value={switchValue} onChange={setSwitchValue} />
+            </DemoSection>
+            <DemoSection label='Checkbox'>
+                <Checkbox label='Checkbox' value={switchValue} onChange={setSwitchValue} />
+                <Checkbox emoji='🔥' label='Checkbox with emoji' value={switchValue} onChange={setSwitchValue} />
+            </DemoSection>
+            <DemoSection label='Radio Group'>
+                <RadioGroup value={radioValue} onSet={setRadioValue} onUnset={setOldRadioValue}>
+                    <RadioOption label='Cat' radioKey='cat' />
+                    <RadioOption label='Dog' radioKey='dog' />
+                    <RadioOption label='Komodo Dragon' radioKey='Komodo Dragon' />                       
+                </RadioGroup>
+                <UtilityText label='Selected: {value}' formatParams={{value: radioValue}} />
+            </DemoSection>
+            <DemoSection label='Accordion Field'>
+                <AccordionField titleContent={<UtilityText strong label='Title'/>}>
+                    <UtilityText label='Content' />
+                </AccordionField>
+                <AccordionField titleContent={
+                        <HorizBox center>
+                            <UtilityText strong label='With Count'/>
+                            <Pad size={8} />
+                            <CircleCount count={3} />
+                        </HorizBox>                        
+                    }>
+                    <UtilityText label='Content' />
+                </AccordionField>
+            </DemoSection>
+        </Narrow>
+    </ConversationScreen>
+}
+
 function ButtonScreen() {
     const [switchValue, setSwitchValue] = useState(false);
     const [dropDownValue, setDropDownValue] = useState(null);
     const [expanded, setExpanded] = useState(false);
     const inputString = 'Check this link [OpenAI](https://www.openai.com) or visit https://www.example.com directly.';
+    const faceUri = 'https://psi.newpublic.org/faces/face1.jpeg';
 
     function onPress() {
         console.log('press');
@@ -237,15 +297,11 @@ function ButtonScreen() {
                 <PopupPanel popupContent={() => <UtilityText label='Panel content'/>}>
                     <UtilityText label='Open Panel'/>
                </PopupPanel>
-            </DemoSection>
-            <DemoSection label='Toggle'>
-                <Toggle label='Toggle' value={switchValue} onChange={setSwitchValue} />
-                <Toggle emoji='😭' label='Toggle with emoji' value={switchValue} onChange={setSwitchValue} />
-                <Toggle emoji='😭' label='Spread Toggle' spread value={switchValue} onChange={setSwitchValue} />
-            </DemoSection>
-            <DemoSection label='Checkbox'>
-                <Checkbox label='Checkbox' value={switchValue} onChange={setSwitchValue} />
-                <Checkbox emoji='🔥' label='Checkbox with emoji' value={switchValue} onChange={setSwitchValue} />
+               <PopupPanel popupContent={() => 
+                        <Image style={{width: 1000, height: 1000}} source={{uri: faceUri}} />
+                    }>
+                    <UtilityText label='Open Tall Panel'/>
+               </PopupPanel>
             </DemoSection>
             <DemoSection label='Link'>
                 {/* <LinkText type='small' url='https://www.google.com' label='Link' /> */}

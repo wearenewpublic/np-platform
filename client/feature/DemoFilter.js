@@ -1,7 +1,7 @@
-import { Toggle } from "../component/button"
 import { useDatastore, useSessionData } from "../util/datastore"
 import { PadBox } from "../component/basics"
 import { UtilityText } from "../component/text"
+import { Toggle } from "../component/form";
 
 export const DemoFilterFeature = {
     name: 'Demo Filter',

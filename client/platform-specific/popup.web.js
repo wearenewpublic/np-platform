@@ -76,10 +76,12 @@ function global_layoutPopup() {
 
     if (rect.top > windowHeight / 2) {
         node.style.top = null;
-        node.style.bottom = (windowHeight - rect.top) + 'px';       
+        node.style.bottom = (windowHeight - rect.top) + 'px'; 
+        node.style.maxHeight = (rect.top - 16) + 'px';
     } else {
         node.style.top = rect.bottom + 'px';
         node.style.bottom = null;
+        node.style.maxHeight = (windowHeight - rect.bottom - 16) + 'px';
     }
     if ((rect.left > windowWidth / 2) || global_popup_align_right) {
         node.style.right = (windowWidth - rect.right) + 'px';
@@ -177,7 +179,8 @@ const PopupButtonStyle = StyleSheet.create({
         backgroundColor: colorWhite,
         boxShadow: '0px 4px 20px 0px rgba(0, 0, 0, 0.10)',
         borderRadius: 8,
-        padding: 20  
+        padding: 20,
+        overflow: 'auto',  
     },
     up: {
         bottom: 0

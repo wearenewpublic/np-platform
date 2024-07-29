@@ -8,8 +8,13 @@ import { ProfileCommentsFeature } from "./ProfileCommentsFeature";
 import { ReplyNotificationsFeature } from "./ReplyNotifsFeature";
 import { DesignSystemDemoFeature } from "../demo/designsystem";
 import { CommentDemoFeature } from "../demo/commentdemo";
+import { CatFeature, DogFeature, GroomingFeature, KomodoDragonFeature, PetSittingFeature, WalkingFeature } from "../demo/fakefeatures";
 
 const { DemoFeature, DemoSecondaryFeature } = require("./DemoFeature");
+
+function SECTION(label, features) {return {section: true, label, features}}
+function COMPOSITE(parent, features) {return {composite: true, parent, features}}
+function CHOOSEONE(label, features) {return {chooseOne: true, label, features}}
 
 export var features = {
     simplecomments: [
@@ -27,8 +32,19 @@ export var features = {
         ProfileCommentsFeature
     ],
     componentdemo: [
-        DesignSystemDemoFeature,
-        CommentDemoFeature,
+        SECTION('Component Sets', [
+            DesignSystemDemoFeature,
+            CommentDemoFeature,
+        ]),
+        SECTION('Demo Feature Menu', [
+            COMPOSITE(PetSittingFeature, [
+                CHOOSEONE('Pet Type', [DogFeature, CatFeature, KomodoDragonFeature]),
+                SECTION('Extra Services', [
+                    GroomingFeature,
+                    WalkingFeature
+                ])
+            ]),
+        ]),
     ]
 }
 
