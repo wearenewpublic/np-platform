@@ -20,6 +20,10 @@ export const colorGreyHover = '#E9E9E9';
 export const colorAccentHover = '#4718C4';
 export const colorGreyHoverBorder = '#0f0f0f';
 
+export const colorGreyFormHover ='#f2f2f2';
+export const colorGreyFormPress = '#e5e5e5';
+
+
 export const colorPrimaryPress = '#6f6f6f';
 export const colorSecondaryPress = '#cccccc';
 export const colorAccentPress = '#361293';

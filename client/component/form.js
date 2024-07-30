@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { UtilityText } from "./text";
 import { Pad } from "./basics";
 import { StyleSheet } from "react-native";
-import { colorAccent, colorGreyBorder, colorGreyHover, colorGreyPopupBackground, colorPurpleBackground, colorRed, colorTextGrey, colorWhite } from "./color";
+import { colorAccent, colorGreyBorder, colorGreyFormHover, colorGreyFormPress, colorGreyHover, colorGreyPopupBackground, colorPurpleBackground, colorRed, colorSecondaryPress, colorTextGrey, colorWhite } from "./color";
 import { HorizBox, HoverView, PadBox } from "./basics";
 import { ChevronDown, ChevronUp, RadioButton, RadioButtonChecked, CheckboxCheckedFilled, Checkbox as CheckboxOpen } from '@carbon/icons-react';
 
@@ -60,10 +60,10 @@ export function RadioOption({emoji, text, radioKey, label}) {
 }
 const RadioItemStyle = StyleSheet.create({
     hover: {
-        backgroundColor: colorGreyPopupBackground
+        backgroundColor: colorGreyFormHover
     },
     pressed: {
-        backgroundColor: colorGreyHover    
+        backgroundColor: colorGreyFormPress    
     }
 })
 
@@ -84,10 +84,10 @@ export function Checkbox({emoji, text, label, value, onChange}) {
 }
 const CheckboxStyle = StyleSheet.create({
     hover: {
-        backgroundColor: colorGreyPopupBackground
+        backgroundColor: colorGreyFormHover
     },
     pressed: {
-        backgroundColor: colorGreyHover    
+        backgroundColor: colorGreyFormPress    
     }
 })
 
@@ -115,10 +115,10 @@ const AccordionFieldStyle = StyleSheet.create({
         // paddingHorizontal: 16
     }, 
     hover: {
-        backgroundColor: colorGreyPopupBackground
+        backgroundColor: colorGreyFormHover,
     },
     pressed: {
-        backgroundColor: colorGreyHover    
+        backgroundColor: colorGreyFormPress    
     }
 });
 
@@ -178,10 +178,10 @@ const ToggleStyle = StyleSheet.create({
         transition: 'left 0.2s ease-in-out, background-color 0.2s ease-in-out'
     },
     hover: {
-        backgroundColor: colorGreyPopupBackground,
+        backgroundColor: colorGreyFormHover,
     },
     pressed: {
-        backgroundColor: colorGreyHover,
+        backgroundColor: colorGreyFormPress,
         borderTopRightRadius: 100,
         borderBottomRightRadius: 100,    
     }
