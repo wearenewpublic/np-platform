@@ -1,19 +1,57 @@
-
-import { Heading } from "../component/text";
+import React from "react";
+import { EditorialHeading, Heading, LinkText, UtilityText } from "../component/text";
 import { CTAButton } from "../component/button";
 import { gotoInstance, pushSubscreen } from "../util/navigate";
-import { ConversationScreen, Narrow, Pad, PadBox, WrapBox } from "../component/basics";
+import { ConversationScreen, HeaderBox, Narrow, Pad, PadBox, Separator, WrapBox } from "../component/basics";
 import { useConfig } from "../util/features";
+import { colorRed } from "../component/color";
 
 
 export const ComponentDemoStructure = {
     key: 'componentdemo',
     name: 'Component Demo',
     screen: ComponentDemoScreen,
+    subscreens: {
+        page: PageScreen,
+    },
     defaultConfig: {
         componentSections: [],
         structures: [],  
     }
+}
+
+function findPage({componentSections, pageKey}) {
+    var foundPage = null;
+    var foundSection = null;
+    componentSections.forEach(section => {
+        section.pages.forEach(page => {
+            if (page.key == pageKey) {
+                foundSection = section;
+                foundPage = page;
+            }
+        })
+    })
+    return {section: foundSection, page:foundPage};
+}
+
+function PageScreen({pageKey}) {
+    const {componentSections} = useConfig();
+    const {page, section} = findPage({componentSections, pageKey});
+    const designUrl = page.designUrl ?? section.designUrl;;
+    return <ConversationScreen>
+        <HeaderBox>
+            <Heading level={1} label={page.label} />
+            <Pad size={8} />
+            {designUrl && <LinkText label='Design' url={designUrl} />}
+            {!designUrl && <UtilityText color={colorRed} label='No design link' />}
+        </HeaderBox>
+        <Pad />
+        {/* <PadBox horiz={20} vert={20}> */}
+        <Narrow>
+            {React.createElement(page.screen)}
+        </Narrow>
+        {/* </PadBox> */}
+    </ConversationScreen>
 }
 
 function ComponentDemoScreen() {
@@ -30,7 +68,7 @@ function ComponentDemoScreen() {
                         {section.pages.map((page, j) => 
                             <PadBox vert={10} horiz={10} key={page.key}>
                                 <CTAButton label={page.label} onPress={() => 
-                                    pushSubscreen(page.key)
+                                    pushSubscreen('page', {pageKey: page.key})
                                 }  />
                             </PadBox>                    
                         )}

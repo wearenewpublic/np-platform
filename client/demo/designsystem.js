@@ -13,30 +13,25 @@ import { Banner, ClickableBanner, TopBanner } from "../component/banner";
 import { TrashCan, Pin } from "@carbon/icons-react";
 import { Modal } from "../component/modal";
 import { DemoSection, SpacedArray } from "../component/demo";
-import { Image } from "react-native";
+import { Image, View } from "react-native";
+import { FeatureMenuScreen } from "./featuremenudemo";
 
 export const DesignSystemDemoFeature = {
     key: 'demo_designsystem',
     name: 'Core Design System',
-    subscreens: {
-        text: TextScreen,
-        profile: ProfileScreen,
-        button: ButtonScreen,
-        form: FormScreen,
-        teaserDemo: TeaserDemoScreen,
-        banner: BannerDemoScreen,
-        modal: ModalScreen,
-    },
     config: {
         componentSections: [
-            {label: 'Core Design System', pages: [
-                {label: 'Text', key: 'text'},
-                {label: 'Profile', key: 'profile'},
-                {label: 'Button', key: 'button'},
-                {label: 'Form', key: 'form'},
-                {label: 'Teaser', key: 'teaserDemo'},
-                {label: 'Banner', key: 'banner'},
-                {label: 'Modal', key: 'modal'},
+            {label: 'Core Design System', designUrl: 'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=3-32&m=dev', pages: [
+                {
+                    label: 'Text', key: 'text', screen: TextScreen,
+                    designUrl: 'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=1102-2973&m=dev',
+                },
+                {label: 'Profile', key: 'profile', screen: ProfileScreen },
+                {label: 'Button', key: 'button', screen: ButtonScreen },
+                {label: 'Form', key: 'form', screen: FormScreen},
+                {label: 'Banner', key: 'banner', screen: BannerDemoScreen},
+                {label: 'Modal', key: 'modal', screen: ModalScreen},
+                {label: 'Feature Menu', key: 'featuremenu', screen: FeatureMenuScreen}
             ]}
         ]
     }
@@ -45,8 +40,7 @@ export const DesignSystemDemoFeature = {
 function TextScreen() {
     const [text, setText] = useState(null);
 
-    return <ConversationScreen>
-        <Narrow>
+    return <View>
             <DemoSection label='UI Text'>
                 <Heading label='Heading 1' level={1} />
                 <Heading label='Heading 2' level={2} />
@@ -92,15 +86,13 @@ function TextScreen() {
                 <CharacterCounter min={10} max={80} text={text} />
 
             </DemoSection>
-        </Narrow>
-    </ConversationScreen>
+        </View>
 }
 
 function ProfileScreen() {
     const personaKey = usePersonaKey();
     const p = personaKey;
-    return <ConversationScreen >
-        <Narrow>
+    return <View>
             <DemoSection label='Profile Photo'>
                 <SpacedArray horiz pad={8}>
                     <ProfilePhoto userId={personaKey} />
@@ -132,8 +124,7 @@ function ProfileScreen() {
                 <Byline name='Anonymous User' photoType='large' type='small' time={Date.now()} />
                 <Byline name='Anonymous User' photoType='large' type='small' />
             </DemoSection>
-        </Narrow>
-     </ConversationScreen>
+        </View>
 }
 
 function FormScreen() {
@@ -141,8 +132,7 @@ function FormScreen() {
     const [radioValue, setRadioValue] = useState(null);
     // const [oldRadioValue, setRadioValue] = useState(null);
 
-    return <ConversationScreen>
-        <Narrow>
+    return <View>
             <DemoSection label='Form Field'>
                 <FormField label='Field label'>
                     <TextField placeholder='Text Field' />
@@ -189,8 +179,7 @@ function FormScreen() {
                     <UtilityText label='Content' />
                 </AccordionField>
             </DemoSection>
-        </Narrow>
-    </ConversationScreen>
+        </View>
 }
 
 function ButtonScreen() {
@@ -203,21 +192,18 @@ function ButtonScreen() {
         console.log('press');
     }
 
-    return <ConversationScreen >
-        <Narrow>
+    return <View>
             <DemoSection label='CTA Button'>
                 <SpacedArray horiz>
-                    <CTAButton label='Primary Button' type='primary' onPress={onPress} />
-                    <CTAButton label='Secondary Button' type='secondary' onPress={onPress} />
-                    <CTAButton label='Accent Button' type='accent' onPress={onPress} />
+                    <CTAButton label='Primary' type='primary' onPress={onPress} />
+                    <CTAButton label='Secondary' type='secondary' onPress={onPress} />
+                    <CTAButton label='Accent' type='accent' onPress={onPress} />
+                    <CTAButton icon={<TrashCan style={{fill: colorRed}} />} label='Delete' type='delete' onPress={onPress} />
+                    <CTAButton label='✨ Emoji' type='accent' onPress={onPress} />
+                    <CTAButton label='Disabled' type='primary' disabled />
                 </SpacedArray>
-                <SpacedArray horiz>
-                    <CTAButton icon={<TrashCan style={{fill: colorRed}} />} label='Delete Button' type='delete' onPress={onPress} />
-                    <CTAButton label='✨ Accent with Emoji' type='accent' onPress={onPress} />
-                    <CTAButton label='Disabled Button' type='primary' disabled />
-                </SpacedArray>
-                <CTAButton wide label='Wide Button' onPress={onPress} />
-                <CTAButton compact label='Compact Button' onPress={onPress} />
+                <CTAButton wide label='Wide' onPress={onPress} />
+                <CTAButton compact label='Compact' onPress={onPress} />
             </DemoSection>
             <DemoSection label='Action Button'>
                 <SpacedArray horiz>
@@ -225,8 +211,6 @@ function ButtonScreen() {
                     <IconButton icon={IconComment} label='Respond' onPress={onPress} />
                     <IconButton icon={IconEdit} label='Edit' onPress={onPress} />
                     <IconButton icon={IconSave} label='Save' onPress={onPress} />
-                </SpacedArray>
-                <SpacedArray horiz>
                     <IconButton icon={IconImage} label='Image' onPress={onPress} />
                     <IconButton icon={IconAudio} label='Audio' onPress={onPress} />
                     <IconButton icon={IconVideo} label='Video' onPress={onPress} />
@@ -250,12 +234,14 @@ function ButtonScreen() {
                     <TextButton leftIcon={IconClose} label='Close' onPress={onPress} />
                     <TextButton label='Show more comments' rightIcon={IconChevronDown} color={colorTextBlue} onPress={onPress} />
                     <TextButton label='Cancel' underline color={colorTextGrey} onPress={onPress} />
+                </SpacedArray>
+                <SpacedArray horiz>
                     <TextButton type='small' text={'This is a question'} strong onPress={onPress} />
                     <TextButton type='small' paragraph text={'This is a paragraph question'} strong onPress={onPress} />
                 </SpacedArray>
-                <SpacedArray>
-                    <TextButton label='Editoral 1 Italic' editorial italic onPress={onPress} />
-                    <TextButton label='Editoral 2 Italic' editorial level={2} italic onPress={onPress} />
+                <SpacedArray horiz>
+                    <TextButton label='Editoral Large Italic' editorial type='large' italic onPress={onPress} />
+                    <TextButton label='Editoral Small Italic' editorial type='small' italic onPress={onPress} />
                 </SpacedArray>
             </DemoSection>
             <DemoSection label='Expand Button'>
@@ -321,8 +307,7 @@ function ButtonScreen() {
                 </SpacedArray>
             </DemoSection>
 
-        </Narrow>
-     </ConversationScreen>
+        </View>
 }
 
 function ModalScreen() {
@@ -335,7 +320,7 @@ function ModalScreen() {
         <CTAButton wide label='Action 2' onPress={() => setShown2(false)} />
     </HorizBox>
 
-    return <ConversationScreen>
+    return <View>
         <DemoSection label='Modal'>
             <CTAButton label='Basic Modal' onPress={() => setShown(true)} />
             {shown && <Modal onClose={() => setShown(false)}>
@@ -346,15 +331,13 @@ function ModalScreen() {
                 <PadBox horiz={20} vert={20}><UtilityText text='Content'/></PadBox>
             </Modal>}
         </DemoSection>
-    </ConversationScreen>
+    </View>
 }
 
 function TeaserDemoScreen() {
-    return <ConversationScreen>
-        <Narrow>
+    return <View>
             <BasicTeaser formatParams={{count: 22, singular: 'comment', plural: 'comments'}} />
-        </Narrow>
-    </ConversationScreen>
+        </View>
 }
 
 function BannerDemoScreen() {

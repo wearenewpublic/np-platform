@@ -161,7 +161,7 @@ const SubtleButtonStyle = StyleSheet.create({
 });
 
 
-export function TextButton({label, level=1, text, type='large', paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, rightIcon, color=colorBlack, alignStart=false, onPress}) {
+export function TextButton({label, text, type='large', paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, rightIcon, color=colorBlack, alignStart=false, onPress}) {
     const s = TextButtonStyle;
     const [hover, setHover] = useState(false);
     return <HoverView shrink style={[s.button, alignStart ? {alignSelf: 'flex-start'} : null]} setHover={setHover} onPress={onPress} role='button'>

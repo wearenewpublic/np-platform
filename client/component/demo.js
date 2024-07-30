@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import { Pad } from "./basics";
+import { Pad, PadBox } from "./basics";
 import { Catcher } from "./catcher";
 
 export function DemoSection({label, horiz=false, children}) {
@@ -26,11 +26,10 @@ const DemoHeaderStyle = StyleSheet.create({
 
 export function SpacedArray({pad=16, horiz=false, children}) {
     if (children.length > 1) {
-        return <View style={horiz ? {flexDirection: 'row'} : null}>
-            {children.map((c, i) => <View key={i} style={horiz ? {flexDirection: 'row'} : null}>
-                <Catcher>{c}</Catcher>
-                {i < children.length - 1 ? <Pad size={pad} /> : null}
-            </View>)}
+        return <View style={horiz ? {flexDirection: 'row', flexWrap: horiz ? 'wrap' : null} : null} >
+            {children.map((c, i) => 
+                <PadBox key={i} right={horiz ? pad : 0} bottom={pad}><Catcher>{c}</Catcher></PadBox>
+            )}
         </View>
     } else {
         return children;

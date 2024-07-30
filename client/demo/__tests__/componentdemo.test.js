@@ -1,42 +1,27 @@
 const { TestInstance, WithFeatures } = require("../../util/testutil")
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { pushSubscreen } from '../../util/navigate';
+import { features } from '../../feature';
+import { flattenFeatureBlocks } from '../../util/features';
 
 jest.mock("../../util/navigate");
 
-test('Menu', async () => {
-    render(<TestInstance structureKey='componentdemo' />);
-    fireEvent.click(screen.getByRole('button', {name: 'Text'}));
-    fireEvent.click(screen.getByRole('button', {name: 'Profile'}));
 
-    expect(pushSubscreen).toHaveBeenCalledWith('text');
-    expect(pushSubscreen).toHaveBeenNthCalledWith(2, 'profile');
+const componentDemoFeatures = flattenFeatureBlocks(features['componentdemo']);
+// console.log('componentDemoFeatures', componentDemoFeatures);
+
+var pages = [];
+componentDemoFeatures.forEach(feature => {
+    feature.config.componentSections.forEach(section => {
+        section.pages.forEach(page => {
+            pages.push(page);
+        });
+    });
 });
 
-test('Text', async () => {
-    render(<TestInstance structureKey='componentdemo' screenKey='text' />);
+describe.each(pages)('Page $label', page => {
+    test('Render', async () => {
+        render(<TestInstance structureKey='componentdemo' screenKey={page.key} />);
+    });
 });
 
-test('Profile', async () => {
-    render(<TestInstance structureKey='componentdemo' screenKey='profile' />);
-});
-
-test('Button', async () => {
-    render(<TestInstance structureKey='componentdemo' screenKey='button' />);
-});
-
-test('Comment', async () => {
-    render(<TestInstance structureKey='componentdemo' screenKey='comment' />);
-});
-
-test('Banner', async () => {
-    render(<TestInstance structureKey='componentdemo' screenKey='banner' />);
-});
-
-test('Teaser', async () => {
-    render(<TestInstance structureKey='componentdemo' screenKey='teaserDemo' />);
-});
-
-test('Composer', async () => {
-    render(<TestInstance structureKey='componentdemo' screenKey='composer' />);
-});

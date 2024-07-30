@@ -9,13 +9,12 @@ export const CommentDemoFeature = {
     key: 'demo_comment',
     name: 'Comment Demo',
     subscreens: {
-        comment: CommentScreen,
         composer: params => <ComposerScreen {...params} contentType='Public Comment' />,
     },
     config: {
         componentSections: [
             {label: 'Comments', pages: [
-                {label: 'Comment', key: 'comment'},
+                {label: 'Comment', key: 'comment', screen: CommentScreen},
             ]}
         ],
         structures: [

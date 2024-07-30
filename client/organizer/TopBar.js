@@ -99,7 +99,7 @@ export function FeatureToggles() {
     </View>
 }
 
-function FeatureTreeNode({featureBlock}) {
+export function FeatureTreeNode({featureBlock}) {
     const s = FeatureTreeNodeStyle;
     const enabledFeatures = useEnabledFeatures();
     function isEnabled(fb) {
@@ -159,11 +159,7 @@ function ChooseOneFeature({label, featureList}) {
             [chosenFeature]: false,
             [value]: true
         }
-        callServerApiAsync({
-            datastore, component: 'features', 
-            funcname: 'setFeatures', 
-            params: {features: newFeatures}
-        });  
+        datastore.setGlobalProperty('features', newFeatures);
         setChosenFeature(value);
     }
     return <View>
@@ -192,11 +188,7 @@ function FeatureToggle({feature}) {
             ...features,
             [feature.key]: !enabled
         }
-        callServerApiAsync({
-            datastore, component: 'features', 
-            funcname: 'setFeatures', 
-            params: {features: newFeatures}
-        });  
+        datastore.setGlobalProperty('features', newFeatures);
     }
 
     return <Toggle label={feature.name} spread value={enabled || false} onChange={onToggle} />
