@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { closeSidebar, goBack, gotoInstance, pushSubscreen } from "../util/navigate";
 import { firebaseSignOut, useFirebaseUser } from "../util/firebase";
 import { Popup } from "../platform-specific/popup";
@@ -9,7 +9,7 @@ import { Byline } from "../component/people";
 import { BreadCrumb, CTAButton, TextButton } from "../component/button";
 import { HorizBox, Pad, PadBox, Separator } from "../component/basics";
 import { ObservableProvider, ObservableValue, useObservable } from "../util/observable";
-import { flattenFeatureBlocks, getAvailableFeaturesForStructure, getFeatureBlocks, getFeatureTreeNodes } from "../util/features";
+import { getFeatureBlocks, useEnabledFeatures } from "../util/features";
 import { callServerApiAsync } from "../util/servercall";
 import { defaultFeatureConfig } from "../feature";
 import { Catcher } from "../component/catcher";
@@ -17,7 +17,7 @@ import { historyGetState } from "../platform-specific/url";
 import { useIsAdmin } from "../component/admin";
 import { CircleCount, UtilityText } from "../component/text";
 import { AccordionField, RadioGroup, RadioOption, Toggle } from "../component/form";
-import { colorGreyBorder, colorGreyPopupBackground, colorLightBlueBackground } from "../component/color";
+import { colorGreyPopupBackground } from "../component/color";
 
 const global_toolbarAction = new ObservableValue(null);
 
@@ -85,7 +85,6 @@ const TopBarStyle = StyleSheet.create({
 export function FeatureToggles() {
     const structureKey = useStructureKey();
     const featureBlocks = getFeatureBlocks(structureKey);
-    // const defaultFeatures = defaultFeatureConfig[structureKey] ?? {};
     if (!featureBlocks) return null;
     return <View>
         <Pad />
@@ -101,7 +100,7 @@ export function FeatureToggles() {
 
 function FeatureTreeNode({featureBlock}) {
     const s = FeatureTreeNodeStyle;
-    const enabledFeatures = useGlobalProperty('features');
+    const enabledFeatures = useEnabledFeatures();
     if (featureBlock.section) {
         const enabledCount = featureBlock.features.filter(fb => enabledFeatures?.[fb.key]).length;
         const titleContent = <HorizBox center spread>
@@ -146,7 +145,7 @@ const FeatureTreeNodeStyle = StyleSheet.create({
 })
 
 function ChooseOneFeature({label, featureList}) {
-    const enabledFeatures = useGlobalProperty('features');
+    const enabledFeatures = useEnabledFeatures();
     const firstEnabled = featureList.find(f => enabledFeatures?.[f.key])?.key;
     const [chosenFeature, setChosenFeature] = useState(firstEnabled);
     const datastore = useDatastore();

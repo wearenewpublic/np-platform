@@ -12,9 +12,9 @@ import { CatFeature, DogFeature, GroomingFeature, KomodoDragonFeature, PetSittin
 
 const { DemoFeature, DemoSecondaryFeature } = require("./DemoFeature");
 
-function SECTION(label, features) {return {section: true, label, features}}
-function COMPOSITE(parent, features) {return {composite: true, parent, features}}
-function CHOOSEONE(label, features) {return {chooseOne: true, label, features}}
+export function SECTION(label, features) {return {section: true, label, features}}
+export function COMPOSITE(parent, features) {return {composite: true, parent, features}}
+export function CHOOSEONE(label, features) {return {chooseOne: true, label, features}}
 
 export var features = {
     simplecomments: [

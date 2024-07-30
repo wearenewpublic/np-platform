@@ -1,18 +1,20 @@
-import React, { useContext } from "react";
 import { defaultFeatureConfig, features } from "../feature";
-import { useDatastore } from "./datastore";
-
-// export const ConfigContext = React.createContext({});
+import { useDatastore, useGlobalProperty, useStructureKey } from "./datastore";
 
 export function useConfig() {
     const datastore = useDatastore();
     return datastore.getConfig();
-    // const config = useContext(ConfigContext);
-    // return config;
 }
 
 export function REPLACE(array) {
     return {REPLACE: array};
+}
+
+export function useEnabledFeatures() {
+    const structureKey = useStructureKey();
+    const tunnedOnFeatures = useGlobalProperty('features');
+    const defaultFeatures = defaultFeatureConfig[structureKey];
+    return {...defaultFeatures, ...tunnedOnFeatures};
 }
 
 export function assembleConfig({structure, activeFeatures}) {
