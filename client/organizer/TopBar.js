@@ -101,8 +101,11 @@ export function FeatureToggles() {
 function FeatureTreeNode({featureBlock}) {
     const s = FeatureTreeNodeStyle;
     const enabledFeatures = useEnabledFeatures();
+    function isEnabled(fb) {
+        return enabledFeatures?.[fb.key] || enabledFeatures?.[fb.parent?.key]
+    }
     if (featureBlock.section) {
-        const enabledCount = featureBlock.features.filter(fb => enabledFeatures?.[fb.key]).length;
+        const enabledCount = featureBlock.features.filter(isEnabled).length;
         const titleContent = <HorizBox center spread>
             <UtilityText strong label={featureBlock.label} />
             <Pad size={8} />
