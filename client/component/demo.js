@@ -1,11 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Pad } from "./basics";
+import { Catcher } from "./catcher";
 
 export function DemoSection({label, horiz=false, children}) {
     return <View style={{marginBottom: 32}}>
         <DemoHeader label={label} />
         <Pad size={8} />
-        <SpacedArray horiz={horiz}>{children}</SpacedArray>
+        <Catcher>
+            <SpacedArray horiz={horiz}>{children}</SpacedArray>
+        </Catcher>
     </View>
 }
 
@@ -25,7 +28,7 @@ export function SpacedArray({pad=16, horiz=false, children}) {
     if (children.length > 1) {
         return <View style={horiz ? {flexDirection: 'row'} : null}>
             {children.map((c, i) => <View key={i} style={horiz ? {flexDirection: 'row'} : null}>
-                {c}
+                <Catcher>{c}</Catcher>
                 {i < children.length - 1 ? <Pad size={pad} /> : null}
             </View>)}
         </View>

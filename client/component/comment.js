@@ -24,9 +24,11 @@ export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
     const {commentAboveWidgets, commentBelowWidgets, commentBodyRenderer} = useConfig();
-    return <View testID={commentKey} id={commentKey} >
+    return <Catcher testID={commentKey} id={commentKey} >
         <PadBox top={20} horiz={20}>
-            {commentAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
+            <Catcher>
+                {commentAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
+            </Catcher>
             <Byline type='large' userId={comment.from} time={comment.time} edited={comment.edited} />
             <Pad size={20} />
             <PadBox left={48}>
@@ -37,14 +39,16 @@ export function Comment({commentKey}) {
                         <CommentBody commentKey={commentKey} />
                     }
                 </Catcher>
-                {commentBelowWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
-                {!editing && <PadBox top={20}><CommentActions commentKey={commentKey} /></PadBox>}
+                <Catcher>
+                    {commentBelowWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
+                </Catcher>
+                {!editing && <PadBox top={20}><Catcher><CommentActions commentKey={commentKey} /></Catcher></PadBox>}
                 <MaybeCommentReply commentKey={commentKey} />
                 <CommentReplies commentKey={commentKey} />
             </PadBox>
         </PadBox>
         <PadBox horiz={20}><Separator /></PadBox>
-    </View>
+    </Catcher>
 }
 
 export function ReplyComment({commentKey, depth={depth}, isFinal=false}) {
@@ -53,13 +57,13 @@ export function ReplyComment({commentKey, depth={depth}, isFinal=false}) {
     const editing = useSessionData(['editComment', commentKey]);
     const {replyAboveWidgets} = useConfig();
     return <View testID={commentKey} style={depth == 1 ? s.firstLevel : s.secondLevel}>
-        {replyAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
+        <Catcher>{replyAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}</Catcher>
         <Byline type='small' userId={comment.from} time={comment.time} edited={comment.edited} />
         <Pad size={20} />
         <PadBox left={40}>
             <CommentBody commentKey={commentKey} />
             <Pad size={20} />
-            {!editing && <CommentActions commentKey={commentKey} depth={depth} />}
+            {!editing && <Catcher><CommentActions commentKey={commentKey} depth={depth} /></Catcher>}
             <MaybeCommentReply commentKey={commentKey} />
             <CommentReplies commentKey={commentKey} depth={depth+1} />
         </PadBox>

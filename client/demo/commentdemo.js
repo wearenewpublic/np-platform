@@ -41,12 +41,6 @@ export const CommentDemoFeature = {
     }
 }
 
-function DumpDatastore() {
-    const datastore = useDatastore();
-    const data = datastore.getData();
-    console.log('Datastore Data:', data);
-}
-
 function CommentScreen() {
     const collections = {
         comment: [
@@ -66,14 +60,13 @@ function CommentScreen() {
     }
     return <ConversationScreen >
         <Narrow>
-            <DemoSection label='Comment with Standard Actions'>
-                <Datastore collections={collections} config={config} sessionData={sessionData}>
+            <Datastore collections={collections} config={config} sessionData={sessionData}>
+                <DemoSection label='Comment with Standard Actions'>
                     <Comment commentKey={1} />
                     <Comment commentKey={2} />
                     <Comment commentKey={5} />
-                </Datastore>
-            </DemoSection>
-
+                </DemoSection>
+            </Datastore>
             <DemoSection label='CommentsInput'>
                 <CommentsInput />
             </DemoSection>
