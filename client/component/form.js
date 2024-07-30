@@ -127,7 +127,7 @@ export function Toggle({emoji, text, label, value, spread, onChange}) {
             onPress={() => onChange(!value)} role='checkbox'>
         <PadBox vert={8}>
             <HorizBox center spread={spread}>        
-                    <HorizBox center>
+                    <HorizBox center shrink>
                         {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
                         <UtilityText text={text} label={label} />
                     </HorizBox>

@@ -161,6 +161,7 @@ function FormScreen() {
                 <Toggle label='Toggle' value={switchValue} onChange={setSwitchValue} />
                 <Toggle emoji='😭' label='Toggle with emoji' value={switchValue} onChange={setSwitchValue} />
                 <Toggle emoji='😭' label='Spread Toggle' spread value={switchValue} onChange={setSwitchValue} />
+                <Toggle label='This is a toggle with a very long label that needs to be wrapped onto another screen in order to not look bag' value={switchValue} onChange={setSwitchValue} />
             </DemoSection>
             <DemoSection label='Checkbox'>
                 <Checkbox label='Checkbox' value={switchValue} onChange={setSwitchValue} />
