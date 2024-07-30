@@ -8,7 +8,7 @@ import { ProfileCommentsFeature } from "./ProfileCommentsFeature";
 import { ReplyNotificationsFeature } from "./ReplyNotifsFeature";
 import { DesignSystemDemoFeature } from "../demo/designsystem";
 import { CommentDemoFeature } from "../demo/commentdemo";
-import { CatFeature, DogFeature, GroomingFeature, KomodoDragonFeature, PetSittingFeature, WalkingFeature } from "../demo/fakefeatures";
+import { CatFeature, ColorGreenFeature, ColorPinkFeature, DogFeature, GroomingFeature, KomodoDragonFeature, PetSittingFeature, WalkingFeature } from "../demo/fakefeatures";
 
 const { DemoFeature, DemoSecondaryFeature } = require("./DemoFeature");
 
@@ -39,6 +39,7 @@ export var features = {
         SECTION('Demo Feature Menu', [
             COMPOSITE(PetSittingFeature, [
                 CHOOSEONE('Pet Type', [DogFeature, CatFeature, KomodoDragonFeature]),
+                CHOOSEONE('Fur Dye Color', [ColorPinkFeature, ColorGreenFeature]),
                 SECTION('Extra Services', [
                     GroomingFeature,
                     WalkingFeature

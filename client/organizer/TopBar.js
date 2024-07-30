@@ -92,6 +92,7 @@ export function FeatureToggles() {
         <View style={{width: 300}} />
         <Pad size={12} />
         <UtilityText type='tiny' label='Admin' caps />
+        <Pad size={12} />
         {featureBlocks.map((featureBlock,i) => 
             <FeatureTreeNode key={i} featureBlock={featureBlock} />
         )}
@@ -142,7 +143,7 @@ function FeatureTreeNode({featureBlock}) {
 const FeatureTreeNodeStyle = StyleSheet.create({
     subFeatures: {
         backgroundColor: colorGreyPopupBackground,
-        padding: 12,
+        paddingHorizontal: 12,
         borderRadius: 8
     }
 })
@@ -152,7 +153,6 @@ function ChooseOneFeature({label, featureList}) {
     const firstEnabled = featureList.find(f => enabledFeatures?.[f.key])?.key;
     const [chosenFeature, setChosenFeature] = useState(firstEnabled);
     const datastore = useDatastore();
-    console.log('ChooseOneFeature', {firstEnabled, chosenFeature, enabledFeatures, featureList});
     function onChange(value) {
         const newFeatures = {
             ...enabledFeatures,
@@ -167,7 +167,7 @@ function ChooseOneFeature({label, featureList}) {
         setChosenFeature(value);
     }
     return <View>
-        <UtilityText strong type='tiny' label={label} />
+        <PadBox vert={12}><UtilityText strong caps type='tiny' label={label} /></PadBox>
         <RadioGroup value={chosenFeature} onChange={onChange}>
             {featureList.map(f =>
                 <RadioOption key={f.key} radioKey={f.key} label={f.name} />

@@ -6,14 +6,13 @@ import { colorBlack, colorPink, colorRed, colorTextBlue, colorTextGrey } from ".
 import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, TextButton } from "../component/button";
 import { Checkbox, Toggle, RadioOption, RadioGroup, FormField, AccordionField } from "../component/form";
 import { useState } from "react";
-import { ActionEdit, ActionReply, ActionReport, BasicComments, CommentsInput, ComposerScreen } from "../component/comment";
 import { RichText } from "../component/richtext";
-import { ConversationScreen, HeaderBox, HorizBox, Narrow, Pad, PadBox } from "../component/basics";
+import { ConversationScreen, HorizBox, Narrow, Pad, PadBox } from "../component/basics";
 import { BasicTeaser } from "../component/teaser";
 import { Banner, ClickableBanner, TopBanner } from "../component/banner";
 import { TrashCan, Pin } from "@carbon/icons-react";
 import { Modal } from "../component/modal";
-import { DemoHeader, DemoSection, SpacedArray } from "../component/demo";
+import { DemoSection, SpacedArray } from "../component/demo";
 import { Image } from "react-native";
 
 export const DesignSystemDemoFeature = {
@@ -168,7 +167,7 @@ function FormScreen() {
                 <Checkbox emoji='🔥' label='Checkbox with emoji' value={switchValue} onChange={setSwitchValue} />
             </DemoSection>
             <DemoSection label='Radio Group'>
-                <RadioGroup value={radioValue} onSet={setRadioValue} onUnset={setOldRadioValue}>
+                <RadioGroup value={radioValue} onChange={setRadioValue} >
                     <RadioOption label='Cat' radioKey='cat' />
                     <RadioOption label='Dog' radioKey='dog' />
                     <RadioOption label='Komodo Dragon' radioKey='Komodo Dragon' />                       
@@ -194,7 +193,6 @@ function FormScreen() {
 }
 
 function ButtonScreen() {
-    const [switchValue, setSwitchValue] = useState(false);
     const [dropDownValue, setDropDownValue] = useState(null);
     const [expanded, setExpanded] = useState(false);
     const inputString = 'Check this link [OpenAI](https://www.openai.com) or visit https://www.example.com directly.';
@@ -348,19 +346,6 @@ function ModalScreen() {
             </Modal>}
         </DemoSection>
     </ConversationScreen>
-}
-
-function CommentScreen() {
-    return <ConversationScreen >
-        <Narrow pad={false}>
-            <HeaderBox horiz={20} vert={20}>
-                <DemoHeader label='Comments' />
-                <Pad/>
-                <CommentsInput />
-            </HeaderBox>
-            <BasicComments intro={null} />
-        </Narrow>
-     </ConversationScreen>
 }
 
 function TeaserDemoScreen() {

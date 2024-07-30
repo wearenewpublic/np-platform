@@ -28,13 +28,11 @@ export function FormField({label, descriptionLabel, errorLabel, required, childr
 
 const RadioContext = React.createContext();
 
-export function RadioGroup({children, value, onChange, onSet, onUnSet}) {
+export function RadioGroup({children, value, onChange}) {
     const [radioSelection, setRadioSelection] = React.useState(value);
 
     function onSetRadio(value) {
-        // onUnSet && onUnSet(radioSelection);
         setRadioSelection(value);
-        // onSet(value);
         onChange(value);
     }
     return <RadioContext.Provider value={{radioSelection, onSetRadio}}>

@@ -28,11 +28,30 @@ export const KomodoDragonFeature = {
     }
 }
 
+export const ColorPinkFeature = {
+    key: 'color_pink',
+    name: 'Pink',
+    parentFeature: 'pet_sitting',
+    config: {
+        furColor: 'pink'
+    }
+}
+
+export const ColorGreenFeature = {
+    key: 'color_green',
+    name: 'Green',
+    parentFeature: 'pet_sitting',
+    config: {
+        furColor: 'green'
+    }
+}
+
 export const PetSittingFeature = {
     key: 'pet_sitting',
     name: 'Pet Sitting',
     defaultConfig: {
-        favoritePet: null
+        favoritePet: null,
+        furColor: null
     }
 }
 
