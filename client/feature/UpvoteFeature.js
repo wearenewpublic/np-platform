@@ -1,5 +1,5 @@
 import { SubtleButton } from "../component/button";
-import { colorDisabledText, colorTextBlue, colorTextGrey } from "../component/color";
+import { colorBlack, colorDisabledText, colorTextBlue, colorTextGrey } from "../component/color";
 import { IconUpvote, IconUpvoted } from "../component/icon";
 import { UtilityText } from "../component/text";
 import { needsLogin } from "../organizer/Login";
@@ -35,6 +35,7 @@ export function ActionUpvote({commentKey}) {
 
     return <SubtleButton icon={upvoted ? IconUpvoted : IconUpvote} bold={upvoted}
         ariaLabel='upvote'
+        color={upvoted ? colorBlack : colorTextGrey}
         disabled={disabled}
         text={count.toString()}
         onPress={needsLogin(onUpvote, 'upvote')} />
