@@ -24,7 +24,7 @@ export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
     const {commentAboveWidgets, commentBelowWidgets, commentBodyRenderer} = useConfig();
-    return <Catcher testID={commentKey} id={commentKey} >
+    return <View testID={commentKey} id={commentKey}>
         <PadBox top={20} horiz={20}>
             <Catcher>
                 {commentAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
@@ -48,7 +48,7 @@ export function Comment({commentKey}) {
             </PadBox>
         </PadBox>
         <PadBox horiz={20}><Separator /></PadBox>
-    </Catcher>
+    </View>
 }
 
 export function ReplyComment({commentKey, depth={depth}, isFinal=false}) {

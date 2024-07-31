@@ -235,7 +235,6 @@ const UserInfoStyle = StyleSheet.create({
     },
     popup: {
         marginRight: 20,
-        // padding: 0,
     }
 });
 

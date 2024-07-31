@@ -1,14 +1,13 @@
-const { TestInstance, WithFeatures } = require("../../util/testutil")
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { pushSubscreen } from '../../util/navigate';
+import React from 'react';
+import { render } from '@testing-library/react';
 import { features } from '../../feature';
 import { flattenFeatureBlocks } from '../../util/features';
+import { Datastore } from '../../util/datastore';
 
 jest.mock("../../util/navigate");
 
 
 const componentDemoFeatures = flattenFeatureBlocks(features['componentdemo']);
-// console.log('componentDemoFeatures', componentDemoFeatures);
 
 var pages = [];
 componentDemoFeatures.forEach(feature => {
@@ -21,7 +20,7 @@ componentDemoFeatures.forEach(feature => {
 
 describe.each(pages)('Page $label', page => {
     test('Render', async () => {
-        render(<TestInstance structureKey='componentdemo' screenKey={page.key} />);
+        render(<Datastore>{React.createElement(page.screen)}</Datastore>);
     });
 });
 
