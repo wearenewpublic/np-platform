@@ -17,3 +17,6 @@ web-build/
 .metro-health-check*
 
 coverage/
+
+# Don't store snapshots in github. 
+__snapshots__/

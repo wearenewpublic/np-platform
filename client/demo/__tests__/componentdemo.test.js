@@ -18,9 +18,11 @@ componentDemoFeatures.forEach(feature => {
     });
 });
 
-describe.each(pages)('Page $label', page => {
+describe.each(pages)('$label', page => {
     test('Render', async () => {
-        render(<Datastore>{React.createElement(page.screen)}</Datastore>);
+        const rendered = render(<Datastore>{React.createElement(page.screen)}</Datastore>);
+        expect(rendered).toMatchSnapshot();
     });
 });
+
 
