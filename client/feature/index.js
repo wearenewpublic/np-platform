@@ -13,6 +13,7 @@ import { CatFeature, ColorGreenFeature, ColorPinkFeature, DogFeature, GroomingFe
 const { DemoFeature, DemoSecondaryFeature } = require("./DemoFeature");
 
 export function SECTION(label, features) {return {section: true, label, features}}
+export function SUBSECTION(label, features) {return {section: true, level:2, label, features}}
 export function COMPOSITE(parent, features) {return {composite: true, parent, features}}
 export function CHOOSEONE(label, features) {return {chooseOne: true, label, features}}
 

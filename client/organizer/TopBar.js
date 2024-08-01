@@ -94,7 +94,9 @@ export function FeatureToggles() {
         <UtilityText type='tiny' label='Admin' caps />
         <Pad size={12} />
         {featureBlocks.map((featureBlock,i) => 
-            <FeatureTreeNode key={i} featureBlock={featureBlock} />
+            <Catcher key={i}>
+                <FeatureTreeNode featureBlock={featureBlock} />
+            </Catcher>
         )}
     </View>
 }
@@ -108,13 +110,19 @@ export function FeatureTreeNode({featureBlock}) {
     if (featureBlock.section) {
         const enabledCount = featureBlock.features.filter(isEnabled).length;
         const titleContent = <HorizBox center spread>
-            <UtilityText strong label={featureBlock.label} />
+            {featureBlock.level == 2 ? 
+                <UtilityText type='tiny' caps strong label={featureBlock.label} />
+            :
+                <UtilityText strong label={featureBlock.label} />
+            }
             <Pad size={8} />
             {enabledCount ? <CircleCount count={enabledCount} /> : null}
         </HorizBox>
         return <AccordionField titleContent={titleContent}>
             {featureBlock.features.map((fb,i) => 
-                <FeatureTreeNode key={i} featureBlock={fb} />
+                <Catcher key={i}>
+                    <FeatureTreeNode featureBlock={fb} />
+                </Catcher>
             )}
         </AccordionField>
     } else if (featureBlock.composite) {
@@ -126,7 +134,9 @@ export function FeatureTreeNode({featureBlock}) {
                 <FeatureToggle feature={featureBlock.parent} />
                 <View style={s.subFeatures} >
                     {featureBlock.features.map((fb,i) => 
-                        <FeatureTreeNode key={i} featureBlock={fb} />
+                        <Catcher key={i}>
+                            <FeatureTreeNode featureBlock={fb} />
+                        </Catcher>
                     )}
                 </View>
             </View>

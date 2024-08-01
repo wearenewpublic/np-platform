@@ -4,7 +4,7 @@
 import { ConversationScreen, Narrow } from "../component/basics"
 import { DemoSection } from "../component/demo"
 import { FormField } from "../component/form"
-import { CHOOSEONE, COMPOSITE, SECTION } from "../feature"
+import { CHOOSEONE, COMPOSITE, SECTION, SUBSECTION } from "../feature"
 import { FeatureTreeNode } from "../organizer/TopBar"
 import { Datastore } from "../util/datastore"
 
@@ -21,8 +21,15 @@ const demoFeatures = SECTION('Demo Feature Menu', [
     COMPOSITE(PetSittingFeature, [
         CHOOSEONE('Pet Type', [DogFeature, CatFeature, KomodoDragonFeature]),
         CHOOSEONE('Fur Dye Color', [ColorPinkFeature, ColorGreenFeature]),
-        SECTION('Radio in here has no title', [
+        SUBSECTION('Radio in here has no title', [
             CHOOSEONE(null, [
+                DogFeature,
+                CatFeature,
+                KomodoDragonFeature
+            ])
+        ]),
+        SUBSECTION('Section with a toggle in it', [
+            COMPOSITE(GroomingFeature, [
                 DogFeature,
                 CatFeature,
                 KomodoDragonFeature
