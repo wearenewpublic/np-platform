@@ -90,7 +90,7 @@ export function FeatureToggles() {
         <Pad />
         <Separator />
         <View style={{width: 300}} />
-        <Pad size={12} />
+        <Pad size={20} />
         <UtilityText type='tiny' label='Admin' caps />
         <Pad size={12} />
         {featureBlocks.map((featureBlock,i) => 
