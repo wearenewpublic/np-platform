@@ -18,5 +18,6 @@ web-build/
 
 coverage/
 
-# Don't store snapshots in github. 
+# Don't store snapshots it github, since they clutter up the repo
+# Devs should make sure they run unit tests before making any changes 
 __snapshots__/

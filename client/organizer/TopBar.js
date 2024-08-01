@@ -163,7 +163,7 @@ function ChooseOneFeature({label, featureList}) {
         setChosenFeature(value);
     }
     return <View>
-        <PadBox vert={12}><UtilityText strong caps type='tiny' label={label} /></PadBox>
+        {label && <PadBox vert={12}><UtilityText strong caps type='tiny' label={label} /></PadBox>}
         <RadioGroup value={chosenFeature} onChange={onChange}>
             {featureList.map(f =>
                 <RadioOption key={f.key} radioKey={f.key} label={f.name} />

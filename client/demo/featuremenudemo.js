@@ -21,6 +21,13 @@ const demoFeatures = SECTION('Demo Feature Menu', [
     COMPOSITE(PetSittingFeature, [
         CHOOSEONE('Pet Type', [DogFeature, CatFeature, KomodoDragonFeature]),
         CHOOSEONE('Fur Dye Color', [ColorPinkFeature, ColorGreenFeature]),
+        SECTION('Radio in here has no title', [
+            CHOOSEONE(null, [
+                DogFeature,
+                CatFeature,
+                KomodoDragonFeature
+            ])
+        ]),
         SECTION('Extra Services', [
             GroomingFeature,
             WalkingFeature
