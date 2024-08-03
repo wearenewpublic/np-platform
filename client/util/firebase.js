@@ -3,9 +3,6 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, conne
 import { connectDatabaseEmulator, getDatabase, onValue, push, ref, set } from "firebase/database";
 import { useEffect, useState } from 'react';
 
-console.log('Loading firebase.js');
-console.trace();
-
 var app = null;
 var auth = null;
 var database = null;
