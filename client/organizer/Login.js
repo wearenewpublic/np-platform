@@ -1,5 +1,5 @@
 import React from 'react';
-import { GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, auth, getFirebaseUser } from '../util/firebase';
+import { GoogleAuthProvider, signInWithPopup, auth, getFirebaseUser, signInWithGoogle } from '../util/firebase';
 import { goBack, pushSubscreen } from '../util/navigate';
 import { Pad, PadBox } from '../component/basics';
 import { Image, View } from 'react-native';
@@ -17,16 +17,15 @@ export function LoginScreen({action}) {
     const datastore = useDatastore();
     async function handleGoogleSignIn() {
         logEventAsync(datastore, 'login-request', {method: 'google'});
-        const provider = new GoogleAuthProvider();
         try {
-            const result = await signInWithPopup(auth, provider);
+            const result = signInWithGoogle();
             logEventAsync(datastore, 'login-success', {
                 method: 'google', 
                 email: result?.user?.email ?? 'unknown',
             });
             goBack();
-        } catch (error) {
-            console.error(error);
+        } catch (error) {            
+            console.error(error);   
         }
     };
 

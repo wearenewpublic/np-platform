@@ -1,29 +1,42 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, signInWithEmailAndPassword, onAuthStateChanged, connectAuthEmulator } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, connectAuthEmulator } from 'firebase/auth';
 import { connectDatabaseEmulator, getDatabase, onValue, push, ref, set } from "firebase/database";
 import { useEffect, useState } from 'react';
 
-const firebaseConfig = {
-    apiKey: "AIzaSyDIg3OR3i51VYrUyUd_L5iIownjdSnExlc",
-    authDomain: "np-psi-dev.firebaseapp.com",
-    databaseURL: "https://np-psi-dev-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "np-psi-dev",
-    storageBucket: "np-psi-dev.appspot.com",
-    messagingSenderId: "768032889623",
-    appId: "1:768032889623:web:634a1604eda03820ab7552"
-};
+console.log('Loading firebase.js');
+console.trace();
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const database = getDatabase(app);
+var app = null;
+var auth = null;
+var database = null;
+var global_firebaseUser = null;
+var global_fbuser_watchers = [];
 
-if (window.location.hostname === "localhost") {
-    console.log('Using local database and auth emulator');
-    connectDatabaseEmulator(database, "localhost", 9000);
-    connectAuthEmulator(auth, "http://localhost:9099");
+export function setFirebaseConfig(firebaseConfig) {
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    database = getDatabase(app);
+
+    if (window.location.hostname === "localhost") {
+        console.log('Using local database and auth emulator');
+        connectDatabaseEmulator(database, "localhost", 9000);
+        connectAuthEmulator(auth, "http://localhost:9099");
+    }
+
+    onAuthStateChanged(auth, (user) => {
+        global_firebaseUser = user;
+        global_fbuser_watchers.forEach(watcher => watcher(user));
+    });    
 }
 
-var global_firebaseUser = null;
+export function getFirebaseApp() {
+    return app;
+
+}
+
+export function getFirebaseUser() {
+    return global_firebaseUser;
+}
 
 export function useFirebaseUser() {
     const [user, setUser] = useState(null);
@@ -37,14 +50,6 @@ export function useFirebaseUser() {
     return user;           
 }
 
-export function getFirebaseUser() {
-    return global_firebaseUser;
-}
-
-onAuthStateChanged(auth, (user) => {
-    global_firebaseUser = user;
-});
-
 export async function getFirebaseIdTokenAsync() {
     return await auth.currentUser?.getIdToken() || null;
 }
@@ -54,7 +59,7 @@ export function firebaseSignOut() {
 }
 
 export function onFbUserChanged(callback) {
-    return onAuthStateChanged(auth, callback);
+    global_fbuser_watchers.push(callback);
 }
 
 export function firebaseNewKey() {
@@ -99,7 +104,7 @@ function makeFirebasePath(pathList) {
     return pathList.join('/');
 }
 
-function fbKeyToString(input) {
+export function fbKeyToString(input) {
     const reverseMapping = {
         '%d': '.',
         '%h': '#',
@@ -114,6 +119,9 @@ function fbKeyToString(input) {
     return input.replace(/%d|%h|%s|%f|%l|%r|%%|%q/g, match => reverseMapping[match]);
 }
 
+export function signInWithGoogle() {
+    const provider = new GoogleAuthProvider();
+    return signInWithPopup(auth, provider);
+}
 
-export {fbKeyToString, auth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup, signInWithEmailAndPassword};
 

@@ -7,6 +7,7 @@ export async function getFirebaseIdTokenAsync() {return 'token'}
 export function useFirebaseUser() {return {uid: 'a', displayName: 'Alice Adams', email: 'alice@adams.org'}}
 
 export const signInWithPopup = jest.fn();
+export const signInWithGoogle = jest.fn();
 // export function signInWithPopup() {}
 export function signInWithEmailAndPassword() {}
 export function firebaseWatchValue() {}

@@ -1,7 +1,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { adminPersonaList, defaultPersona, defaultPersonaList, memberPersonaList, personaListToMap } from '../data/personas';
-import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseUser, onFbUserChanged, useFirebaseData } from './firebase';
+import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseApp, getFirebaseUser, onFbUserChanged, useFirebaseData } from './firebase';
 import { deepClone, expandDataList, expandDataListMap } from './util';
 import { LoadingScreen } from '../component/basics';
 import { SharedData, SharedDataContext } from './shareddata';

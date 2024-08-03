@@ -8,9 +8,9 @@ import { ProfileCommentsFeature } from "./ProfileCommentsFeature";
 import { ReplyNotificationsFeature } from "./ReplyNotifsFeature";
 import { DesignSystemDemoFeature } from "../demo/designsystem";
 import { CommentDemoFeature } from "../demo/commentdemo";
-import { CatFeature, ColorGreenFeature, ColorPinkFeature, DogFeature, GroomingFeature, KomodoDragonFeature, PetSittingFeature, WalkingFeature } from "../demo/featuremenudemo";
+import { DemoFeature, DemoSecondaryFeature } from "./DemoFeature";
 
-const { DemoFeature, DemoSecondaryFeature } = require("./DemoFeature");
+// const { DemoFeature, DemoSecondaryFeature } = require("./DemoFeature");
 
 export function SECTION(label, features) {return {section: true, label, features}}
 export function SUBSECTION(label, features) {return {section: true, level:2, label, features}}

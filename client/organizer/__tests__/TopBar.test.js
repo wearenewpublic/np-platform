@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { WithFeatures, setFeatures } from "../../util/testutil";
+import { WithFeatures } from "../../util/testutil";
 import { FeatureToggles, TopBar } from "../TopBar";
 
 test('TopBar Renders', () => {
