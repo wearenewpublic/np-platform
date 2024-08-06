@@ -46,7 +46,7 @@ function createGptPrompt({promptKey, params, language='English', model=null}) {
 function selectModel(model) {
     switch (model) {
         case 'gpt4': return 'gpt-4-turbo';
-        default: return 'gpt-3.5-turbo';
+        default: return 'gpt-4o-mini';
     }
 }
 
