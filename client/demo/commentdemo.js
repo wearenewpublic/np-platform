@@ -19,7 +19,6 @@ export const CommentDemoFeature = {
             ]}
         ],
         structureDemos: [
-            // {label: 'Simple Comments', key: 'simplecomments', instanceKey: 'demo'},
             {label: 'Simple Comments', key: 'simplecomments', screen: SimpleCommentsScreen},
             {label: 'Comment Config Slots', key: 'commentconfigslots', screen: CommentConfigSlotsScreen}
         ]

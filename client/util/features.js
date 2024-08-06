@@ -19,9 +19,9 @@ export function useEnabledFeatures() {
 
 export function assembleConfig({structure, activeFeatures}) {
     var config = cloneConfig(structure.defaultConfig);
-    const availableFeatures = getAvailableFeaturesForStructure(structure.key);
     const defaultFeatures = defaultFeatureConfig[structure.key];
     const mergedActiveFeatures = {...defaultFeatures, ...activeFeatures} 
+    const availableFeatures = getAvailableFeaturesForStructure(structure.key, mergedActiveFeatures);
 
     try {
         availableFeatures.forEach(feature => {
@@ -56,11 +56,10 @@ export function assembleConfig({structure, activeFeatures}) {
 
  
 export function assembleScreenSet({structure, activeFeatures}) {
-    const availableFeatures = getAvailableFeaturesForStructure(structure.key);
-    // const availableFeatures = features[structure.key] ?? [];
     const defaultFeatures = defaultFeatureConfig[structure.key];
     const mergedActiveFeatures = {...defaultFeatures, ...activeFeatures} 
-
+    const availableFeatures = getAvailableFeaturesForStructure(structure.key, mergedActiveFeatures);
+   
     var screenSet = {...structure.subscreens};
     availableFeatures.forEach(feature => {
         if (mergedActiveFeatures[feature.key]) {
@@ -81,14 +80,18 @@ function cloneConfig(config) {
     return config;
 }
 
-export function flattenFeatureBlocks(featureList) {
+export function flattenFeatureBlocks(featureList, mergedActiveFeatures=null) {
     var flattened = [];
     featureList.forEach(feature => {
         if (feature.parent) {
             flattened.push(feature.parent);
         }
-        if (feature.features) {
-            flattened = [...flattened, ...flattenFeatureBlocks(feature.features)];
+        if (feature.composite) {
+            if (!mergedActiveFeatures || mergedActiveFeatures[feature.parent.key]) {
+                flattened = [...flattened, ...flattenFeatureBlocks(feature.features, mergedActiveFeatures)];
+            }
+        } else if (feature.features) {
+            flattened = [...flattened, ...flattenFeatureBlocks(feature.features, mergedActiveFeatures)];
         } else {
             flattened.push(feature);
         }
@@ -96,8 +99,8 @@ export function flattenFeatureBlocks(featureList) {
     return flattened;
 }
 
-export function getAvailableFeaturesForStructure(structureKey) {
-    return flattenFeatureBlocks(features[structureKey] || []);
+export function getAvailableFeaturesForStructure(structureKey, mergedActiveFeatures) {
+    return flattenFeatureBlocks(features[structureKey] || [], mergedActiveFeatures);
 }
 
 export function getFeatureBlocks(structureKey) {
