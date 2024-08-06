@@ -5,7 +5,8 @@ import { gotoInstance, pushSubscreen } from "../util/navigate";
 import { ConversationScreen, HeaderBox, Narrow, Pad, PadBox, Separator, WrapBox } from "../component/basics";
 import { useConfig } from "../util/features";
 import { colorRed } from "../component/color";
-
+import { View } from "react-native";
+import { useDatastore } from "../util/datastore";
 
 export const ComponentDemoStructure = {
     key: 'componentdemo',
@@ -13,10 +14,11 @@ export const ComponentDemoStructure = {
     screen: ComponentDemoScreen,
     subscreens: {
         page: PageScreen,
+        demo: DemoScreen,
     },
     defaultConfig: {
         componentSections: [],
-        structures: [],  
+        structureDemos: [],  
     }
 }
 
@@ -38,6 +40,7 @@ function PageScreen({pageKey}) {
     const {componentSections} = useConfig();
     const {page, section} = findPage({componentSections, pageKey});
     const designUrl = page.designUrl ?? section.designUrl;;
+
     return <ConversationScreen>
         <HeaderBox>
             <Heading level={1} label={page.label} />
@@ -46,16 +49,25 @@ function PageScreen({pageKey}) {
             {!designUrl && <UtilityText color={colorRed} label='No design link' />}
         </HeaderBox>
         <Pad />
-        {/* <PadBox horiz={20} vert={20}> */}
         <Narrow>
             {React.createElement(page.screen)}
         </Narrow>
-        {/* </PadBox> */}
     </ConversationScreen>
 }
 
+function DemoScreen({demoKey}) {
+    const {structureDemos} = useConfig();
+    const demo = structureDemos.find(demo => demo.key == demoKey);
+    
+    return <View style={{position: 'absolute', left:0, right:0, top:0, bottom:0, backgroundColor: 'red'}}>
+        {React.createElement(demo.screen)}
+    </View>
+}
+
+
 function ComponentDemoScreen() {
-    const {componentSections, structures} = useConfig();
+    const {componentSections, structureDemos} = useConfig();
+    const datastore = useDatastore();
 
     return <ConversationScreen>
         <Narrow>
@@ -68,22 +80,19 @@ function ComponentDemoScreen() {
                         {section.pages.map((page, j) => 
                             <PadBox vert={10} horiz={10} key={page.key}>
                                 <CTAButton label={page.label} onPress={() => 
-                                    pushSubscreen('page', {pageKey: page.key})
+                                    datastore.pushSubscreen('page', {pageKey: page.key})
                                 }  />
                             </PadBox>                    
                         )}
                     </WrapBox>
                 </PadBox>
             )}
-            <Heading level={1} label='Structure Demos' />
+            <Heading level={1} label='Structure/Feature Demos' />
             <Pad size={10} />
-            {structures.map(structure =>  
+            {structureDemos.map(structure =>  
                 <PadBox key={structure.key} vert={10}>
                     <CTAButton label={structure.label} onPress={() => 
-                        gotoInstance({
-                            structureKey: structure.key, 
-                            instanceKey: structure.instanceKey ?? 'demo'})} 
-                    />  
+                        datastore.pushSubscreen('demo', {demoKey: structure.key})} />
                 </PadBox>          
             )}
         </Narrow>

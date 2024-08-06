@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import { closeSidebar, goBack, gotoInstance, pushSubscreen } from "../util/navigate";
+import { closeSidebar, goBack, gotoInstance } from "../util/navigate";
 import { firebaseSignOut, useFirebaseUser } from "../util/firebase";
 import { Popup } from "../platform-specific/popup";
 import { useDatastore, useGlobalProperty, useInstanceKey, usePersonaKey, useStructureKey } from "../util/datastore";
@@ -10,7 +10,6 @@ import { BreadCrumb, CTAButton, TextButton } from "../component/button";
 import { HorizBox, Pad, PadBox, Separator } from "../component/basics";
 import { ObservableProvider, ObservableValue, useObservable } from "../util/observable";
 import { getFeatureBlocks, useEnabledFeatures } from "../util/features";
-import { callServerApiAsync } from "../util/servercall";
 import { defaultFeatureConfig } from "../feature";
 import { Catcher } from "../component/catcher";
 import { historyGetState } from "../platform-specific/url";
@@ -25,10 +24,11 @@ export function TopBar() {
     const s = TopBarStyle;
     const instanceKey = useInstanceKey();
     const toolbarAction = useObservable(global_toolbarAction);
+    const datastore = useDatastore();
     return <View style={s.topBox}>        
         <View style={s.leftRow}>    
             {historyGetState() ? 
-                <BreadCrumb icon={IconLeftArrowBig} onPress={goBack} />
+                <BreadCrumb icon={IconLeftArrowBig} onPress={() => datastore.goBack()} />
             : 
                 <BreadCrumb icon={IconCloseBig} onPress={closeSidebar} />
             }
@@ -211,6 +211,7 @@ function UserInfo() {
     const [hover, setHover] = useState(false);
     const [shown, setShown] = useState(false);
     const isAdmin = useIsAdmin();
+    const datastore = useDatastore();
 
     function popup() {
         return <View>
@@ -232,7 +233,7 @@ function UserInfo() {
             </PadBox>
         </Popup>
     } else {        
-        return <PadBox horiz={20}><CTAButton type='secondary' onPress={() => pushSubscreen('login')} compact label='Log in' /></PadBox>
+        return <PadBox horiz={20}><CTAButton type='secondary' onPress={() => datastore.pushSubscreen('login')} compact label='Log in' /></PadBox>
     }
 }
 

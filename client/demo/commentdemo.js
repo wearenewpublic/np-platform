@@ -1,8 +1,9 @@
-import { ActionEdit, ActionReply, ActionReport, BasicComments, Comment, CommentsInput, ComposerScreen } from "../component/comment";
-import { ConversationScreen, HeaderBox, Narrow, Pad } from "../component/basics";
-import { DemoHeader, DemoSection } from "../component/demo";
-import { Datastore, useDatastore } from "../util/datastore";
+import { ActionEdit, ActionReply, ActionReport, Comment, CommentsInput, ComposerScreen } from "../component/comment";
+import { ConversationScreen, Narrow } from "../component/basics";
+import { DemoSection } from "../component/demo";
+import { Datastore } from "../util/datastore";
 import { ActionUpvote } from "../feature/UpvoteFeature";
+import { StructureDemo } from "../util/instance";
 
 
 export const CommentDemoFeature = {
@@ -17,8 +18,10 @@ export const CommentDemoFeature = {
                 {label: 'Comment', key: 'comment', screen: CommentScreen},
             ]}
         ],
-        structures: [
-            {label: 'Simple Comments', key: 'simplecomments', instanceKey: 'demo'}
+        structureDemos: [
+            // {label: 'Simple Comments', key: 'simplecomments', instanceKey: 'demo'},
+            {label: 'Simple Comments', key: 'simplecomments', screen: SimpleCommentsScreen},
+            {label: 'Comment Config Slots', key: 'commentconfigslots', screen: CommentConfigSlotsScreen}
         ]
     },
     defaultConfig: {        
@@ -73,4 +76,17 @@ function CommentScreen() {
      </ConversationScreen>
 }
 
+const comments = [
+    {key: 1, from: 'a', text: 'I love this movie!'},
+    {key: 2, from: 'b', text: 'I hate it'},
+]
 
+function SimpleCommentsScreen() {
+    const collections = {comment: comments}
+    return <StructureDemo collections={collections} structureKey='simplecomments' />
+}
+
+function CommentConfigSlotsScreen() {
+    const collections = {comment: comments}
+    return <StructureDemo collections={collections} structureKey='simplecomments' features={{demo:true}}/>
+}

@@ -33,10 +33,6 @@ export function pushSubscreen(key, params = {}) {
     gotoUrl(makeUrl(parts, query));
 }
 
-export function gotoLogin() {
-    pushSubscreen('login');
-}
-
 export function gotoStructure(structureKey) {
     gotoUrl(makeUrl([structureKey]));
 }

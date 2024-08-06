@@ -28,14 +28,15 @@ export const EventLogStructure = {
 }
 
 function HomeScreen() {
+    const datastore = useDatastore();
     return <ConversationScreen>
         <WindowTitle title='Log Dashboard' />
         <Pad />
         <Heading level={1} label='Logs Dashboard' />
         <Pad />
-        <CTAButton label='Sessions' onPress={() => pushSubscreen('sessions')}/>
+        <CTAButton label='Sessions' onPress={() => datastore.pushSubscreen('sessions')}/>
         <Pad />
-        <CTAButton label='Event Types' onPress={() => pushSubscreen('events')} />
+        <CTAButton label='Event Types' onPress={() => datastore.pushSubscreen('events')} />
     </ConversationScreen>
 }
 
@@ -50,8 +51,9 @@ function EventTypesScreen() {
 }
 
 function EventType({eventType}) {
+    const datastore = useDatastore();
     const [hover, setHover] = useState(false);
-    return <HoverView setHover={setHover} onPress={() => pushSubscreen('eventlog', {eventType})}>
+    return <HoverView setHover={setHover} onPress={() => datastore.pushSubscreen('eventlog', {eventType})}>
         <UtilityText strong label={eventType} underline={hover} />
         <UtilityText color={colorTextGrey} label={eventTypes[eventType]} />
     </HoverView>
@@ -87,7 +89,8 @@ function SessionListScreen() {
 
 function Session({session}) {
     const language = useLanguage();
-    return <HoverView onPress={() => pushSubscreen('eventlog', {sessionKey: session.key})}>
+    const datastore = useDatastore();
+    return <HoverView onPress={() => datastore.pushSubscreen('eventlog', {sessionKey: session.key})}>
         <Byline type='large' userId={session.userId} name={session.userName} photo={session.userPhoto} 
             clickable={false} time={session.endTime ?? session.startTime} 
             subtitleLabel={session.deviceInfo && '{time} - {mobileDesktop} - {browserName} - {browserVersion} - {os} - {screenWidth}x{screenHeight}'}
@@ -168,6 +171,7 @@ function EventPreview({event}) {
 }
 
 function ExpandedEvent({event}) {
+    const datastore = useDatastore();
     const extraKeys = Object.keys(event).filter(key => ![
         'time', 'eventType', 'userName', 'text', 'url',
         'siloKey', 'sessionKey', 'instanceKey', 'structureKey'
@@ -176,8 +180,8 @@ function ExpandedEvent({event}) {
         <EventPreview event={event} />
         <Separator />
         <PadBox horiz={10} vert={10}>
-            {event.eventType && <LinkedField label='Event Type' value={event.eventType} onPress={() => pushSubscreen('eventlog', {eventType: event.eventType})} />}
-            {event.sessionKey && <LinkedField label='Session' value={event.sessionKey} onPress={() => pushSubscreen('eventlog', {sessionKey: event.sessionKey})} />} 
+            {event.eventType && <LinkedField label='Event Type' value={event.eventType} onPress={() => datastore.pushSubscreen('eventlog', {eventType: event.eventType})} />}
+            {event.sessionKey && <LinkedField label='Session' value={event.sessionKey} onPress={() => datastore.pushSubscreen('eventlog', {sessionKey: event.sessionKey})} />} 
             {event.structureKey && event.instanceKey && <LinkedField label='Instance' value={event.structureKey + '/' + event.instanceKey} onPress={() => gotoInstance({structureKey: event.structureKey, instanceKey: event.instanceKey})} />} 
             {event.url && <LinkedField label='URL' value={event.url} onPress={() => window.open(event.url, '_blank')} />}
             {event.text && <Paragraph text={event.text} />}
@@ -191,7 +195,7 @@ function LinkedField({label, value, onPress}) {
         <HorizBox>
             <UtilityText type='large' strong label={label + ': '} />
             {onPress && <TextButton onPress={onPress} text={value} />}
-            {!onPress && <UtilityText type='large' label={value} />}
+            {!onPress && <UtilityText type='large' text={value} />}
        </HorizBox>
        <Pad size={4} />
     </View>

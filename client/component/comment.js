@@ -5,7 +5,6 @@ import { ConversationScreen, PadBox, Pad, HorizBox, Separator, ShadowBox } from 
 import { Heading, TextField, TextFieldButton } from "./text";
 import { CTAButton, ExpandButton, SubtleButton, TextButton } from "./button";
 import { IconEdit, IconReply, IconReport } from "./icon";
-import { goBack, pushSubscreen } from "../util/navigate";
 import { StyleSheet, View } from "react-native";
 import { getFirstName } from "../util/util";
 import { colorLightBlueBackground, colorTextGrey } from "./color";
@@ -350,7 +349,7 @@ export function ActionEdit({commentKey}) {
     function onEdit() {
         if (!comment.replyTo) {
             logEventAsync(datastore, 'edit-start-top', {commentKey});
-            pushSubscreen('composer', {commentKey});
+            datastore.pushSubscreen('composer', {commentKey});
         } else {
             logEventAsync(datastore, 'edit-start-reply', {commentKey});
             const old = datastore.getSessionData(['editComment', commentKey]);
@@ -369,7 +368,7 @@ export function ActionReport({commentKey}) {
 
     function onReport() {
         logEventAsync(datastore, 'report-start', {commentKey});
-        pushSubscreen('report', {commentKey});
+        datastore.pushSubscreen('report', {commentKey});
     }
 
     if (comment.from == personaKey) return null;
@@ -387,12 +386,12 @@ export function Composer({about=null, commentKey, goBackAfterPost=false, topLeve
     function onEditingDone(finalComment) {
         setEditedComment({text: '', about});
         if (goBackAfterPost) {
-            goBack();
+            datastore.goBack();
         }
     }
     function onCancel() {
         logEventAsync(datastore, commentKey ? 'edit-cancel' : 'post-cancel', {commentKey});
-        goBack();
+        datastore.goBack();
     }
 
     return <View>
@@ -428,9 +427,10 @@ function filterComments({datastore, comments, isAdmin, commentFilters}) {
 
 export function CommentsInput({about=null}) {
     const {commentInputPlaceholder, commentInputLoginAction} = useConfig();
+    const datastore = useDatastore();
     return <TextFieldButton placeholder={commentInputPlaceholder} 
                 onPress={needsLogin(
-                    () => pushSubscreen('composer', {about}), 
+                    () => datastore.pushSubscreen('composer', {about}), 
                     commentInputLoginAction)} 
     />
 }

@@ -154,7 +154,7 @@ const LoadingScreenStyle = StyleSheet.create({
 
 export function Narrow({children, pad=true}) {
     return <View style={{flexDirection: 'row', justifyContent: 'space-around', paddingVertical: pad && 16}}>
-        <View style={{maxWidth: 500, flexShrink: 1, flexGrow: 1, marginHorizontal: pad && 8}}>
+        <View style={{maxWidth: 600, flexShrink: 1, flexGrow: 1, marginHorizontal: pad && 8}}>
             {children}
         </View>
     </View>

@@ -11,6 +11,7 @@ import { structures } from '../structure';
 import { assembleConfig, assembleScreenSet } from './features';
 import { useFirebaseData } from './firebase';
 import { useIsAdminForSilo } from '../component/admin';
+import { goBack } from './navigate';
 
 export function useStandardFonts() {
     let [fontsLoaded] = useFonts({
@@ -55,7 +56,36 @@ const ScreenStackStyle = StyleSheet.create({
         backgroundColor: 'white',
     }
 })
-  
+
+
+export function StructureDemo({structureKey, screenKey, features, isAdmin, globals, collections, sessionData, language='english', personaKey='a'}) {
+    const s = ScreenStackStyle;
+    const [screenStack, setScreenStack] = React.useState([{siloKey: 'demo', structureKey, instanceKey: null, screenKey}]);
+    const structure = getStructureForKey(structureKey);
+    const screenSet = assembleScreenSet({structure, activeFeatures: features});
+    const config = assembleConfig({structure, activeFeatures: features});
+
+    function pushSubscreen(screenKey, params) {
+        setScreenStack([...screenStack, {siloKey: 'demo', structureKey, instanceKey: null, screenKey, params}]);
+    }
+    function onGoBack() {
+        if (screenStack.length == 1) {
+            goBack();
+        } else {
+            setScreenStack(screenStack.slice(0, screenStack.length-1));
+        }
+    }
+
+    return <View style={s.stackHolder}>
+        <Datastore globals={globals} collections={collections} sessionData={sessionData}
+                language={language} isAdmin={isAdmin} isLive={false} config={config} 
+                pushSubscreen={pushSubscreen} goBack={onGoBack} >
+            {screenStack.map((screenInstance, index) =>
+                <StackedScreen screenSet={screenSet} screenInstance={screenInstance} index={index} key={index} />
+            )}  
+        </Datastore>
+    </View>
+}
 
 
 export function StackedScreen({screenSet, screenInstance, index, features}) {
@@ -135,10 +165,6 @@ const FullScreenStyle = StyleSheet.create({
 export function getStructureForKey(key) {
     if (!key) return null;
     return structures.find(structure => structure.key === key);
-}
-  
-function chooseInstanceByKey({structure, instanceKey}) {
-    return {isLive: true}
 }
   
   

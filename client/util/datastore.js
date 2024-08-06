@@ -6,6 +6,7 @@ import { deepClone, expandDataList, expandDataListMap } from './util';
 import { LoadingScreen } from '../component/basics';
 import { SharedData, SharedDataContext } from './shareddata';
 import { callServerApiAsync } from './servercall';
+import { goBack, pushSubscreen } from './navigate';
 
 const DatastoreContext = React.createContext({});
 
@@ -204,7 +205,20 @@ export class Datastore extends React.Component {
     getIsLive() {return this.props.isLive}
     getLanguage() {return this.props.language}
     getLoaded() {return this.state.loaded}
-        
+    pushSubscreen(screenKey, params) {
+        if (this.props.pushSubscreen) {
+            this.props.pushSubscreen(screenKey, params);
+        } else {
+            pushSubscreen(screenKey, params);
+        }   
+    }     
+    goBack() {
+        if (this.props.goBack) {
+            this.props.goBack();
+        } else {
+            goBack();
+        }
+    }
     render() {
         // if (!this.state.loaded && !this.props.isLive) {
         //     return null;
