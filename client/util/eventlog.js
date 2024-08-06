@@ -99,7 +99,7 @@ function getSessionTime(session) {
 
 export async function getSessionsAsync({siloKey = null} = {}) {
     const sessionObjs = await callServerApiAsync({component: 'eventlog', funcname: 'getSessions', params: {siloKey}});
-    const sessionKeys = Object.keys(sessionObjs).sort((a, b) => getSessionTime(a) - getSessionTime(b));
+    const sessionKeys = Object.keys(sessionObjs).sort((a, b) => getSessionTime(sessionObjs[b]) - getSessionTime(sessionObjs[a]));
     return sessionKeys.map(key => ({key, ...sessionObjs[key]}));
 }
 
