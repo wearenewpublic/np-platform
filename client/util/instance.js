@@ -4,7 +4,7 @@ import { TopBar } from '../organizer/TopBar';
 import { IBMPlexSans_400Regular, IBMPlexSans_500Medium, IBMPlexSans_600SemiBold } from '@expo-google-fonts/ibm-plex-sans';
 import { IBMPlexMono_400Regular, IBMPlexMono_500Medium, IBMPlexMono_600SemiBold } from '@expo-google-fonts/ibm-plex-mono';
 import { LoginScreen } from '../organizer/Login';
-import { Datastore, WaitForData, useGlobalProperty, useLoaded } from '../util/datastore';
+import { ConfigContext, Datastore, WaitForData, useGlobalProperty, useLoaded } from '../util/datastore';
 import { useFonts } from 'expo-font';
 import { Catcher } from '../component/catcher';
 import { structures } from '../structure';
@@ -58,12 +58,8 @@ const ScreenStackStyle = StyleSheet.create({
 })
 
 
-export function StructureDemo({structureKey, screenKey, features, isAdmin, globals, collections, sessionData, language='english', personaKey='a'}) {
-    const s = ScreenStackStyle;
+export function StructureDemo({structureKey, screenKey, features, isAdmin=true, globals, collections, sessionData, language='english', personaKey='a'}) {
     const [screenStack, setScreenStack] = React.useState([{siloKey: 'demo', structureKey, instanceKey: null, screenKey}]);
-    const structure = getStructureForKey(structureKey);
-    const screenSet = assembleScreenSet({structure, activeFeatures: features});
-    const config = assembleConfig({structure, activeFeatures: features});
 
     function pushSubscreen(screenKey, params) {
         setScreenStack([...screenStack, {siloKey: 'demo', structureKey, instanceKey: null, screenKey, params}]);
@@ -76,14 +72,30 @@ export function StructureDemo({structureKey, screenKey, features, isAdmin, globa
         }
     }
 
-    return <View style={s.stackHolder}>
-        <Datastore globals={globals} collections={collections} sessionData={sessionData}
-                language={language} isAdmin={isAdmin} isLive={false} config={config} 
+    return <Datastore globals={{...globals, features}} collections={collections} sessionData={sessionData}
+                language={language} isAdmin={isAdmin} isLive={false} 
+                siloKey='demo' structureKey={structureKey} instanceKey='demo' personaKey={personaKey}
                 pushSubscreen={pushSubscreen} goBack={onGoBack} >
+            <StructureDemoConfiguredScreenStack structureKey={structureKey} screenStack={screenStack}/>
+        </Datastore>
+}
+
+// This has to be inside the Datastore, to allow the user to change the 
+// features (in the datastore) while playing with the demo.
+export function StructureDemoConfiguredScreenStack({structureKey, screenStack}) {
+    const s = ScreenStackStyle;
+
+    const activeFeatures = useGlobalProperty('features');
+    const structure = getStructureForKey(structureKey);
+    const screenSet = assembleScreenSet({structure, activeFeatures});
+    const config = assembleConfig({structure, activeFeatures});
+
+    return <View style={s.stackHolder}>
+        <ConfigContext.Provider value={config}>
             {screenStack.map((screenInstance, index) =>
                 <StackedScreen screenSet={screenSet} screenInstance={screenInstance} index={index} key={index} />
             )}  
-        </Datastore>
+        </ConfigContext.Provider>
     </View>
 }
 

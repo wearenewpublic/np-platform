@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native";
 import { closeSidebar, goBack, gotoInstance } from "../util/navigate";
 import { firebaseSignOut, useFirebaseUser } from "../util/firebase";
 import { Popup } from "../platform-specific/popup";
-import { useDatastore, useGlobalProperty, useInstanceKey, usePersonaKey, useStructureKey } from "../util/datastore";
+import { useDatastore, useGlobalProperty, useInstanceKey, usePersona, usePersonaKey, usePersonaObject, useStructureKey } from "../util/datastore";
 import { useState } from "react";
 import { IconChevronDownSmall, IconChevronUpSmall, IconCloseBig, IconLeftArrowBig } from "../component/icon";
 import { Byline } from "../component/people";
@@ -206,8 +206,8 @@ function FeatureToggle({feature}) {
 
 function UserInfo() {
     const s = UserInfoStyle;
-    const fbUser = useFirebaseUser();
     const personaKey = usePersonaKey();
+    const persona = usePersonaObject(personaKey);
     const [hover, setHover] = useState(false);
     const [shown, setShown] = useState(false);
     const isAdmin = useIsAdmin();
@@ -222,11 +222,11 @@ function UserInfo() {
         </View>
     }
 
-    if (fbUser) {
+    if (personaKey) {
         return <Popup popupContent={popup} setHover={setHover} setShown={setShown} popupStyle={s.popup}>
             <PadBox vert={6} right={20}>
                 <HorizBox center>
-                    <Byline userId={personaKey} clickable={false} name={fbUser.displayName} underline={hover} />
+                    <Byline userId={personaKey} clickable={false} name={persona.name} underline={hover} />
                     <Pad size={8} />
                     {shown ? <IconChevronUpSmall/> : <IconChevronDownSmall />}
                 </HorizBox>

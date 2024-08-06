@@ -1,9 +1,11 @@
 import { defaultFeatureConfig, features } from "../feature";
-import { useDatastore, useGlobalProperty, useStructureKey } from "./datastore";
+import { ConfigContext, useDatastore, useGlobalProperty, useStructureKey } from "./datastore";
+import React, { useContext } from 'react';
+
 
 export function useConfig() {
-    const datastore = useDatastore();
-    return datastore.getConfig();
+    const config = useContext(ConfigContext);
+    return config;
 }
 
 export function REPLACE(array) {

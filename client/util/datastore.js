@@ -9,6 +9,8 @@ import { callServerApiAsync } from './servercall';
 import { goBack, pushSubscreen } from './navigate';
 
 const DatastoreContext = React.createContext({});
+export const ConfigContext = React.createContext();
+
 
 // TODO: Make this more efficient: Currently every data update updates everything.
 
@@ -224,7 +226,9 @@ export class Datastore extends React.Component {
         //     return null;
         // }
         return <DatastoreContext.Provider value={this}>
-            {this.props.children}
+            <ConfigContext.Provider value={this.props.config ?? {}}>
+                {this.props.children}
+            </ConfigContext.Provider>
         </DatastoreContext.Provider>
     }
 }
