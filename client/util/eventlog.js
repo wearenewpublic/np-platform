@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 const hourMillis = 60*60*1000;
 
 export var eventTypes = {
+    'error': 'An error occurred',
     'login-screen': 'Open the Login Screen',
     'login-request': 'Request to login',
     'login-success': 'Successful login',
@@ -34,6 +35,12 @@ onFbUserChanged((userId) => {
         setSessionUserAsync(userId.uid);
     }
 });
+
+window.addEventListener('error', event => {
+    const error = event.error;
+    console.log('Caught an error', {error});
+    logEventAsync(null, 'error', {message: error.message, stack: error.stack});
+})
 
 var global_last_event = null;
 
