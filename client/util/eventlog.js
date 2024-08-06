@@ -93,9 +93,13 @@ export async function getLogEventsAsync({siloKey, eventType, sessionKey} = {}) {
     return eventKeys.map(key => ({key, ...eventObjs[key]}));
 }
 
+function getSessionTime(session) {
+    return session.endTime ?? session.startTime ?? 0;
+}
+
 export async function getSessionsAsync({siloKey = null} = {}) {
     const sessionObjs = await callServerApiAsync({component: 'eventlog', funcname: 'getSessions', params: {siloKey}});
-    const sessionKeys = Object.keys(sessionObjs).sort((a, b) => (sessionObjs[b].endTime || sessionObjs[b].startTime) - (sessionObjs[a].endTime || sessionObjs[a].startTime));
+    const sessionKeys = Object.keys(sessionObjs).sort((a, b) => getSessionTime(a) - getSessionTime(b));
     return sessionKeys.map(key => ({key, ...sessionObjs[key]}));
 }
 
