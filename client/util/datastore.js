@@ -113,10 +113,8 @@ export class Datastore extends React.Component {
             delete typeData[key]
         }
         this.setData({...this.getData(), [typeName]: typeData});
-        // this.notifyWatchers();
 
         if (isLive) {
-            // addInstanceToMyInstancesAsync({structureKey, instanceKey, dataTree: this.getData()});
             await firebaseWriteAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', typeName, key], value);
             await callServerApiAsync({datastore: this, component: 'derivedviews', funcname: 'runTriggers', params: {type: typeName, key}});
         }

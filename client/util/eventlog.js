@@ -42,6 +42,12 @@ window.addEventListener('error', event => {
     logEventAsync(null, 'error', {message: error.message, stack: error.stack});
 })
 
+window.addEventListener('unhandledrejection', event => {
+    const error = event.reason;
+    console.log('Caught an unhandled promise rejection', {error});
+    logEventAsync(null, 'error', {message: error.message, stack: error.stack});
+})
+
 var global_last_event = null;
 
 export async function setSessionUserAsync(userId) {

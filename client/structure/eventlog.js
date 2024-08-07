@@ -1,15 +1,15 @@
 import { useIsAdmin } from "../component/admin";
-import { ConversationScreen, HorizBox, HoverSelectBox, HoverView, Pad, PadBox, Separator, WindowTitle } from "../component/basics"
+import { ConversationScreen, HorizBox, HoverSelectBox, HoverView, Pad, PadBox, Separator, WindowTitle } from "../component/basics";
 import { CTAButton, TextButton } from "../component/button";
 import { formatDate } from "../component/date";
-import { Byline, ProfilePhoto } from "../component/people";
+import { Byline } from "../component/people";
 import { RichText } from "../component/richtext";
-import { Heading, Paragraph, UtilityText } from "../component/text"
+import { Heading, Paragraph, UtilityText } from "../component/text";
 import { useDatastore, useSessionData } from "../util/datastore";
 import { eventTypes, getLogEventsAsync, getSessionsAsync, useSession } from "../util/eventlog";
 import { useState, useEffect } from "react";
 import { View } from 'react-native';
-import { gotoInstance, pushSubscreen } from "../util/navigate";
+import { gotoInstance } from "../util/navigate";
 import { colorTextGrey } from "../component/color";
 import { useLanguage } from "../component/translation";
 
