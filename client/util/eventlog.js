@@ -37,18 +37,29 @@ onFbUserChanged((userId) => {
 });
 
 window.addEventListener('error', event => {
+    if (global_in_error_handler) {
+        return; // avoid infinite error loop if this fails
+    }
+    global_in_error_handler = true;
     const error = event.error;
     console.log('Caught an error', {error});
     logEventAsync(null, 'error', {message: error.message, stack: error.stack});
+    global_in_error_handler = true;
 })
 
 window.addEventListener('unhandledrejection', event => {
+    if (global_in_error_handler) {
+        return; // avoid infinite error loop if this fails
+    }
+    global_in_error_handler = true;
     const error = event.reason;
     console.log('Caught an unhandled promise rejection', {error});
     logEventAsync(null, 'error', {message: error.message, stack: error.stack});
+    global_in_error_handler = false;
 })
 
 var global_last_event = null;
+var global_in_error_handler = false;
 
 export async function setSessionUserAsync(userId) {
     const sessionKey = localStorage.getItem('sessionKey');
