@@ -14,13 +14,17 @@ const fontFamilyMonoRegular = 'IBMPlexMono_400Regular, Arial, Helvetica, sans-se
 const fontFamilyMonoMedium = 'IBMPlexMono_500Medium, Arial, Helvetica, sans-serif';
 const fontFamilyMonoSemiBold = 'IBMPlexMono_600SemiBold, Arial, Helvetica, sans-serif'
 
-export function Heading({text, center, label, level=2, formatParams}) {
+export function Heading({text, center, label, level=2, underline=false, formatParams}) {
     const styleMap = {
         1: HeadingStyle.heading1,
         2: HeadingStyle.heading2,
     }
     return <TranslatableText text={text} label={label} formatParams={formatParams} 
-        style={[styleMap[level], center ? {textAlign: 'center'} : null]} />
+        style={[
+            styleMap[level], 
+            underline && {textDecorationLine: 'underline'},
+            center ? {textAlign: 'center'} : null
+        ]} />
 }
 
 const HeadingStyle = StyleSheet.create({

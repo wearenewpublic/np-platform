@@ -242,6 +242,9 @@ function ButtonScreen() {
                 <SpacedArray horiz>
                     <TextButton label='Editoral Large Italic' editorial type='large' italic onPress={onPress} />
                     <TextButton label='Editoral Small Italic' editorial type='small' italic onPress={onPress} />
+                    <TextButton label='Heading 1' heading level={1} onPress={onPress} />
+                    <TextButton label='Heading 2' heading level={2} onPress={onPress} />
+
                 </SpacedArray>
             </DemoSection>
             <DemoSection label='Expand Button'>

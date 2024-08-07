@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { colorAccent, colorAccentHover, colorAccentPress, colorBlack, colorBlackHover, colorDisabledBackground, colorDisabledText, colorGreyBorder, colorGreyHover, colorIconButtonPress, colorLightBlueBackground, colorNearBlack, colorPrimaryPress, colorRed, colorSecondaryPress, colorTextBlue, colorTextGrey, colorWhite } from "./color";
-import { EditorialHeading, Paragraph, UtilityText } from "./text";
+import { EditorialHeading, Heading, Paragraph, UtilityText } from "./text";
 import { HorizBox, HoverView, Pad, PadBox } from "./basics";
 import { IconChevronDown, IconChevronUpSmall, IconChevronUp, IconChevronDownSmall } from "./icon";
 import { FacePile } from "./people";
@@ -161,7 +161,7 @@ const SubtleButtonStyle = StyleSheet.create({
 });
 
 
-export function TextButton({label, text, type='large', paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, rightIcon, color=colorBlack, alignStart=false, onPress}) {
+export function TextButton({label, text, level=1, type='large', heading=false, paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, rightIcon, color=colorBlack, alignStart=false, onPress}) {
     const s = TextButtonStyle;
     const [hover, setHover] = useState(false);
     return <HoverView shrink style={[s.button, alignStart ? {alignSelf: 'flex-start'} : null]} setHover={setHover} onPress={onPress} role='button'>
@@ -173,6 +173,9 @@ export function TextButton({label, text, type='large', paragraph=false, editoria
         : editorial ?
             <EditorialHeading type={type} label={label} text={text} formatParams={formatParams}
                 color={color} underline={hover ^ underline} italic={italic} strong={strong} />
+        : heading ?
+            <Heading label={label} text={text} formatParams={formatParams} level={level}
+                color={color} underline={hover ^ underline} strong={strong} />
         :
             <UtilityText label={label} text={text} formatParams={formatParams} type={type} 
                 color={color} underline={hover ^ underline} strong={strong} />
