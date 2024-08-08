@@ -15,6 +15,11 @@ class TriggerDatastore{
         return keys.map(key => collection[key]);
     }
 
+    getObject(type, key) {
+        const collection = this.collections[type];
+        return collection[key];
+    }
+
     getGlobal(key) {
         return this.globals[key];
     }
