@@ -24,11 +24,8 @@ async function callOpenAIAsync({action, data}) {
     })        
     return await response.json();
 }
+exports.callOpenAIAsync = callOpenAIAsync;
 
-
-async function helloAsync({name}) {
-    return {data: "Hello " + name};
-}
 
 function createGptPrompt({promptKey, params, language='English', model=null}) {
     console.log('createGptPrompt', {promptKey});
@@ -143,7 +140,6 @@ exports.getEmbeddingsArrayAsync = getEmbeddingsArrayAsync;
 
 
 exports.apiFunctions = {
-    hello: helloAsync,
     chat: callGptAsync,
     conversation: conversationAsync,
     embedding: getEmbeddingsAsync,
