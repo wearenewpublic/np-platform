@@ -24,6 +24,10 @@ class TriggerDatastore{
         return this.globals[key];
     }
 
+    setGlobal({structureKey, instanceKey, key, value}) {
+        this.output['structure/' + structureKey + '/instance/' + instanceKey + '/global/' + key] = value;
+    }
+
     setDerivedObject({structureKey, instanceKey, type, key, value}) {
         this.output['structure/' + structureKey + '/instance/' + instanceKey + '/collection/derived_' + type + '/' + key] = value;     
     }
