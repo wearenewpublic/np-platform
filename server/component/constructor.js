@@ -2,10 +2,10 @@ const { writeGlobalAsync } = require("np-platform-server/util/firebaseutil");
 const { getConstructor } = require("../constructor");
 
 async function runConstructorApi({siloKey, structureKey, instanceKey}) {
-    const constructorObj = getConstructor(structureKey);
-    if (constructorObj?.constructor) {
+    const constructor = getConstructor(structureKey);
+    if (constructor) {
         try {
-            await constructorObj.constructor({siloKey, structureKey, instanceKey});
+            await constructor({siloKey, structureKey, instanceKey});
             await writeGlobalAsync({siloKey, structureKey, instanceKey, key: 'initialized', value: Date.now()});
             return {success: true}
         } catch (e) {
@@ -15,6 +15,7 @@ async function runConstructorApi({siloKey, structureKey, instanceKey}) {
         return {success: false, error: 'No constructor found for ' + structureKey};
     }
 }
+exports.runConstructorApi = runConstructorApi;
 
 exports.apiFunctions = {
     runConstructor: runConstructorApi

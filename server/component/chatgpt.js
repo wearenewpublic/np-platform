@@ -77,28 +77,11 @@ async function getGptJsonAsync({promptKey, params, language, model}) {
 }
 exports.getGptJsonAsync = getGptJsonAsync;
 
-
-async function conversationAsync({messages}) {
-    // const messages = params.messages;
-    console.log('conversationAsync', messages);
-    const result = await callOpenAIAsync({action: 'chat/completions', data: {
-        temperature: 0,
-        model: 'gpt-3.5-turbo',
-        max_tokens: 1000,
-        messages: messages
-    }});
-    console.log('result', result);
-    console.log(result.choices?.[0]?.message?.content);
-    const data = result.choices?.[0]?.message?.content;
-    return {data}
-}
-
 async function getEmbeddingsAsync({text}) {
     const result = await callOpenAIAsync({action: 'embeddings', data: {
         input: text,
         'model': 'text-embedding-ada-002'
-    }});
-    // console.log('result', result);
+    }});    
     if (result.data?.[0].embedding) {
         return {data: result.data?.[0].embedding};
     } else {
@@ -109,14 +92,11 @@ async function getEmbeddingsAsync({text}) {
 exports.getEmbeddingsAsync = getEmbeddingsAsync;
 
 async function getEmbeddingsArrayAsync({textArray}) {
-    // console.log('textArray', textArray);
     const expandEmptyTextArray = textArray.map(t => t || ' ');
     const result = await callOpenAIAsync({action: 'embeddings', data: {
         input: expandEmptyTextArray,
         'model': 'text-embedding-ada-002'
     }});
-    // console.log('result', result);
-    // console.log('result', result);
     if (result.data?.[0].embedding) {
         const embeddings = result.data.map(d => d.embedding)
         return {data: embeddings};
@@ -132,7 +112,6 @@ exports.getEmbeddingsArrayAsync = getEmbeddingsArrayAsync;
 
 exports.apiFunctions = {
     chat: callGptAsync,
-    conversation: conversationAsync,
     embedding: getEmbeddingsAsync,
     embeddingArray: getEmbeddingsArrayAsync
 }

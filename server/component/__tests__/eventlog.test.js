@@ -1,0 +1,136 @@
+const { readObjectAsync, firebaseReadAsync, firebaseWriteAsync } = require("../../util/firebaseutil");
+const { getTestData, clearTestData } = require("../../util/testutil");
+const { logEventApi, setSessionUserApi, getEventsApi, getSessionsApi, getSingleSessionApi } = require("../eventlog");
+
+describe('logEventApi', () => {
+    test('New Session', async () => {
+        const result = await logEventApi({siloKey: 'cbc', 
+            userId: 'testuser',
+            structureKey: 'wibble', instanceKey: 'demo',
+            isNewSession: true, sessionKey: 'newsession',
+            eventType: 'test', params: {foo: 'bar'}
+        });
+        expect(result.success).toBe(true);
+        const event = await firebaseReadAsync(['log', 'event', result.data.eventKey]);
+        expect(event.eventType).toBe('test');         
+
+        const session = await firebaseReadAsync(['log', 'session', 'newsession']);
+        expect(session.userName).toBe('Test User');
+
+        expect(getTestData()).toMatchSnapshot();
+    });
+
+    test('Existing Session', async () => {
+        jest.useFakeTimers();
+        jest.setSystemTime(1000);
+
+        await firebaseWriteAsync(['log', 'session', 'newsession'], {
+            userId: 'testuser', siloKey: 'cbc', userName: 'Test User', userPhoto: null,
+            startTime: 10, endTime: 10
+        });
+        const result = await logEventApi({siloKey: 'cbc', 
+            userId: 'testuser',
+            structureKey: 'wibble', instanceKey: 'demo',
+            isNewSession: false, sessionKey: 'newsession',
+            eventType: 'test', params: {foo: 'bar'}
+        });
+        expect(result.success).toBe(true);
+
+        const session = await firebaseReadAsync(['log', 'session', 'newsession']);
+        expect(session.endTime).toBe(1000);
+
+        expect(getTestData()).toMatchSnapshot();
+    });
+});
+
+test('setSessionUserApi', async () => {
+    // Log an event before we have logged in
+    await logEventApi({siloKey: 'cbc', 
+        userId: null,
+        structureKey: 'wibble', instanceKey: 'demo',
+        isNewSession: true, sessionKey: 'newsession',
+        eventType: 'test', params: {foo: 'bar'}
+    });  
+    
+    // a second event
+    await logEventApi({siloKey: 'cbc', 
+        userId: null,
+        structureKey: 'wibble', instanceKey: 'demo',
+        isNewSession: false, sessionKey: 'newsession',
+        eventType: 'test', params: {foo: 'blob'}
+    });
+
+    const session = await firebaseReadAsync(['log', 'session', 'newsession']);
+    expect(session.userId).toBe(null);        
+
+    // update the session with the user, now they have logged in
+    await setSessionUserApi({sessionKey: 'newsession', userId: 'testuser'});
+    const session2 = await firebaseReadAsync(['log', 'session', 'newsession']);
+    expect(session2.userId).toBe('testuser');        
+});
+
+describe('getEventsApi', () => {
+    test('Not authorized', async () => {
+        const result = await getEventsApi({userEmail: 'bad@bad.com'});
+        expect(result.success).toBe(false);
+    });
+
+    test('Event Filters', async () => {
+        clearTestData();
+        await firebaseWriteAsync(['log', 'event', '1'], {
+            siloKey: 'cbc', eventType: 'test', sessionKey: 'a'
+        });
+        await firebaseWriteAsync(['log', 'event', '2'], {
+            siloKey: 'cbc', eventType: 'bla', sessionKey: 'b'
+        });
+        await firebaseWriteAsync(['log', 'event', '3'], {
+            siloKey: 'rc', eventType: 'test', sessionKey: 'b'
+        });
+
+        const result = await getEventsApi({userEmail: 'rob@newpublic.org'});
+        expect(result.success).toBe(true);
+        expect(Object.keys(result.data)).toEqual(['1','2', '3']);
+
+        const result2 = await getEventsApi({userEmail: 'rob@newpublic.org', siloKey: 'cbc'});
+        expect(Object.keys(result2.data)).toEqual(['1','2']);
+
+        const result3 = await getEventsApi({userEmail: 'rob@newpublic.org', eventType: 'test'});
+        expect(Object.keys(result3.data)).toEqual(['1','3']);
+
+        const result4 = await getEventsApi({userEmail: 'rob@newpublic.org', sessionKey: 'b'});
+        expect(Object.keys(result4.data)).toEqual(['2','3']);
+    });
+})
+
+test('getSessionsApi', async () => {
+    clearTestData();
+    await firebaseWriteAsync(['log', 'session', '1'], {
+        siloKey: 'cbc', startTime: 1, endTime: 2
+    });
+    await firebaseWriteAsync(['log', 'session', '2'], {
+        siloKey: 'cbc', startTime: 3, endTime: 4
+    });
+    await firebaseWriteAsync(['log', 'session', '3'], {
+        siloKey: 'rc', startTime: 5, endTime: 6
+    });
+
+    const result = await getSessionsApi({userEmail: 'rob@newpublic.org'});
+    expect(result.success).toBe(true);
+    expect(Object.keys(result.data)).toEqual(['1','2','3']);
+
+    const result2 = await getSessionsApi({userEmail: 'rob@newpublic.org', siloKey: 'cbc'});
+    expect(result2.success).toBe(true);
+    expect(Object.keys(result2.data)).toEqual(['1','2']);
+});
+
+test('getSingleSessionApi', async () => {
+    clearTestData();
+    firebaseWriteAsync(['log', 'session', '1'], {
+        siloKey: 'cbc', startTime: 1, endTime: 2
+    });
+
+    const result = await getSingleSessionApi({userEmail: 'rob@newpublic.org', sessionKey: '1'});
+    expect(result.success).toBe(true);
+    expect(result.data.startTime).toBe(1);
+})
+

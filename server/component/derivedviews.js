@@ -33,7 +33,6 @@ class TriggerDatastore{
     }
     
     async commitDataAsync() {
-        // console.log('commitDataAsync', this.output);
         return await firebaseUpdateAsync('/silo/' + this.siloKey + '/', this.output);
     }
 }
@@ -41,7 +40,6 @@ exports.TriggerDatastore = TriggerDatastore;
 
 
 async function runSingleTriggerAsync({view, siloKey, structureKey, instanceKey, key, value}) {
-    // console.log('runSingleTrigger', view);
     const pGlobals = await readAllGlobalsAsync({siloKey, structureKey, instanceKey});
     const collections = await readMultipleCollectionsAsync({
         siloKey, structureKey: view.input.structure, 
@@ -55,11 +53,11 @@ async function runTriggersApi({siloKey, structureKey, instanceKey, type, key}) {
     const value = await readObjectAsync({siloKey, structureKey, instanceKey, collection: type, key});
     const derived_views = getDerivedViews();
     const triggers = derived_views.filter(dv => dv.input.structure === structureKey && dv.input.triggerType === type);
-    // console.log('triggers matched', triggers);
     await Promise.all(triggers.map(trigger => 
         runSingleTriggerAsync({view: trigger, siloKey, structureKey, instanceKey, key, value})))
     return {success: true}
 }
+exports.runTriggersApi = runTriggersApi;
 
 exports.apiFunctions = {
     runTriggers: runTriggersApi

@@ -33,6 +33,7 @@ async function logEventApi({
 
     return {success: true, data: {eventKey}}
 }
+exports.logEventApi = logEventApi;
 
 async function setSessionUserApi({sessionKey, userId, eventKey}) {
     if (userId) {
@@ -46,6 +47,7 @@ async function setSessionUserApi({sessionKey, userId, eventKey}) {
     }
     return {success: true}
 }
+exports.setSessionUserApi = setSessionUserApi;
 
 function getIsGlobalAdmin(userEmail) {
     const emailDomain = userEmail.split('@')[1];
@@ -73,6 +75,7 @@ async function getEventsApi({userId, userEmail, siloKey, eventType, sessionKey})
 
     return {success: true, data: events}
 }
+exports.getEventsApi = getEventsApi;
 
 async function getSessionsApi({userId, userEmail, siloKey}) {
     const isAdmin = getIsGlobalAdmin(userEmail);
@@ -87,6 +90,7 @@ async function getSessionsApi({userId, userEmail, siloKey}) {
     }
     return {success: true, data: sessions}
 }
+exports.getSessionsApi = getSessionsApi;
 
 async function getSingleSessionApi({userId, userEmail, sessionKey}) {
     const isAdmin = getIsGlobalAdmin(userEmail);
@@ -96,6 +100,7 @@ async function getSingleSessionApi({userId, userEmail, sessionKey}) {
     const session = await firebaseReadAsync(['log', 'session', sessionKey]);
     return {success: true, data: session}
 }
+exports.getSingleSessionApi = getSingleSessionApi;
 
 
 exports.apiFunctions = {

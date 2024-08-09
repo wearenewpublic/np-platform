@@ -8,3 +8,6 @@ jest.mock('axios');
 jest.mock('postmark');
 jest.mock('fs');
 
+jest.useFakeTimers();
+jest.setSystemTime(1000);
+

@@ -139,3 +139,8 @@ public_out/
 .expo
 
 keys.js 
+
+
+# Don't store snapshots in github, since they clutter up the repo
+# Devs should make sure they run unit tests before making any changes 
+__snapshots__/

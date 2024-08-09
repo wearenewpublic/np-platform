@@ -3,7 +3,6 @@ const { readObjectAsync, firebaseGetUserAsync, readGlobalAsync, firebaseReadAsyn
 
 
 async function sendNotifsForReplyApi({language, siloKey, structureKey, instanceKey, parentKey, replyKey}) {
-    console.log('sendNotifsForReplyApi', {language, siloKey, structureKey, instanceKey, parentKey, replyKey});
     const pParentComment = readObjectAsync({siloKey, structureKey, instanceKey, collection: 'comment', key: parentKey});
     const pReplyComment = readObjectAsync({siloKey, structureKey, instanceKey, collection: 'comment', key: replyKey});
     const pConversationName = readGlobalAsync({siloKey, structureKey, instanceKey, key: 'name'});
@@ -11,14 +10,10 @@ async function sendNotifsForReplyApi({language, siloKey, structureKey, instanceK
 
     const parentComment = await pParentComment;
     const replyComment = await pReplyComment;
+
     const conversationName = await pConversationName;
     const siloName = await pSiloName ?? siloKey.toUpperCase();
-
     const replyAuthor = await firebaseGetUserAsync(replyComment.from);
-
-    console.log('language', language);
-    console.log('parentComment', parentComment);
-    console.log('replyAuthor', replyAuthor);
 
     await sendTemplatedEmailAsync({
         templateId: 'reply-notif', language, 
@@ -31,7 +26,7 @@ async function sendNotifsForReplyApi({language, siloKey, structureKey, instanceK
 
     return {success: true, data: null};
 }
-
+exports.sendNotifsForReplyApi = sendNotifsForReplyApi;
 
 exports.apiFunctions = {
     sendNotifsForReply: sendNotifsForReplyApi,

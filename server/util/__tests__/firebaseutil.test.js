@@ -1,6 +1,6 @@
 const { read } = require("fs");
-const { setFirebaseAdmin, firebaseWriteAsync, firebaseReadAsync, firebaseReadWithFilterAsync, firebaseUpdateAsync, firebaseGetUserAsync, createNewKey, writeGlobalAsync, readGlobalAsync, stringToFbKey, fbKeyToString } = require("../../util/firebaseutil");
-const { fakeFirebaseAdmin, clearTestData } = require("../../util/testutil");
+const { setFirebaseAdmin, firebaseWriteAsync, firebaseReadAsync, firebaseReadWithFilterAsync, firebaseUpdateAsync, firebaseGetUserAsync, createNewKey, writeGlobalAsync, readGlobalAsync, stringToFbKey, fbKeyToString } = require("../firebaseutil");
+const { fakeFirebaseAdmin, clearTestData } = require("../testutil");
 
 
 test('firebaseWriteAsync', async () => {
@@ -16,7 +16,10 @@ test('firebaseReadWithFilterAsync', async () => {
     await firebaseWriteAsync(['foo', 'blob', 4], {animal:'cat', name:'mog'});
 
     const result = await firebaseReadWithFilterAsync(['foo', 'bar'], 'animal', 'cat');
-    expect(result).toEqual([{animal:'cat', name:'fluffy'}, {animal:'cat', name:'whiskers'}]);    
+    expect(result).toEqual({
+        '1': {animal:'cat', name:'fluffy'},
+        '2': {animal:'cat', name:'whiskers'}
+    });
 });
 
 test('firebaseUpdateAsync', async () => {
@@ -24,6 +27,14 @@ test('firebaseUpdateAsync', async () => {
     await firebaseUpdateAsync(['foo', 'won', 1], {name: 'whiskers'});
     const result = await firebaseReadAsync(['foo', 'won', 1]);
     expect(result).toEqual({animal: 'cat', name: 'whiskers'});
+});
+
+test('firebaseUpdateAsync deep', async () => {
+    await firebaseWriteAsync(['foo', 'won', 1], {animal: 'cat', name: 'fluffy'});
+    await firebaseUpdateAsync(['foo'], {'won/1/name': 'whiskers', 'won/1/color': 'grey'});
+    const result = await firebaseReadAsync(['foo', 'won', 1]);
+    expect(result).toEqual({animal: 'cat', name: 'whiskers', color: 'grey'});
+
 });
 
 test('firebaseGetUserAsync', async () => {

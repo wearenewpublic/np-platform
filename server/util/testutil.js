@@ -16,6 +16,13 @@ async function clearTestData() {
 }
 exports.clearTestData = clearTestData
 
+async function setTestData(data) {
+    global_data = data;
+}
+exports.setTestData = setTestData;
+
+exports.getTestData = () => global_data;
+
 async function writeTestData(path, value) {
     const parts = path.split('/').filter(part => part);
     var result = global_data;
@@ -41,13 +48,20 @@ async function readTestData(path) {
 }
 exports.readTestData = readTestData;
 
+async function updateTestData(path, updateMap) {
+    const keys = Object.keys(updateMap);
+    keys.forEach(key => {
+        writeTestData(path + '/' + key, updateMap[key]);
+    });
+}
+
 async function readFilteredTestData(path, key, value) {
     const items = await readTestData(path);
-    var filtered = [];
+    var filtered = {};
     for (var itemKey in items) {
         const item = items[itemKey];
         if (item[key] == value) {
-            filtered.push(item);
+            filtered[itemKey] = item;
         }
     }
     return filtered;
@@ -62,11 +76,12 @@ const fakeFirebaseAdmin = {
         ref: path => ({
             set: value => writeTestData(path, value),
             once: () => ({val: () => readTestData(path)}),
-            update: async value => {
-                const old = await readTestData(path);
-                const updated = {...old, ...value};
-                writeTestData(path, updated);
-            },
+            update: updateMap => updateTestData(path, updateMap),
+            // update: async value => {
+            //     const old = await readTestData(path);
+            //     const updated = {...old, ...value};
+            //     writeTestData(path, updated);
+            // },
             orderByChild: key => ({
                 equalTo: value => ({
                     once: () => ({

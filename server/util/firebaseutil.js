@@ -71,6 +71,13 @@ async function readMultipleCollectionsAsync({siloKey, structureKey, instanceKey,
     types.forEach((typeName, i) => resultMap[typeName] = dataArray[i]);
     return resultMap;
 }
+async function readModulePublicAsync({siloKey, moduleKey, key}) {
+    return firebaseReadAsync(['silo', siloKey, 'module-public', moduleKey, key]);
+}
+async function writeModulePublicAsync({siloKey, moduleKey, key, value}) {
+    return firebaseWriteAsync(['silo', siloKey, 'module-public', moduleKey, key], value);
+}
+
 
 async function readAllGlobalsAsync({siloKey, structureKey, instanceKey}) {
     return firebaseReadAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global']);
@@ -134,6 +141,7 @@ module.exports = {firebaseWriteAsync, firebaseReadAsync, firebaseUpdateAsync, st
     readGlobalAsync, writeGlobalAsync, readCollectionAsync, createInstanceAsync, writeCollectionAsync,
     readInstanceAsync, setObjectAsync, readMultipleCollectionsAsync, updateCollectionAsync,
     readObjectAsync, readAllGlobalsAsync, updateObjectAsync, firebaseReadWithFilterAsync,
+    readModulePublicAsync, writeModulePublicAsync,
 
     verifyIdTokenAsync, createNewKey, firebaseGetUserAsync,
 

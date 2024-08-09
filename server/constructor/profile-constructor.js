@@ -1,12 +1,6 @@
 const {firebaseGetUserAsync, setObjectAsync} = require('../util/firebaseutil');
 
-const ProfileConstructor = {
-    constructor: constructorAsync
-}
-exports.ProfileConstructor = ProfileConstructor;
-
-async function constructorAsync({siloKey, instanceKey}) {
-    console.log('ProfileConstructor.constructor', {siloKey, instanceKey});
+async function profileConstructorAsync({siloKey, instanceKey}) {
     const userId = instanceKey;
     const fbUser = await firebaseGetUserAsync(userId);
     if (!fbUser) {
@@ -16,6 +10,7 @@ async function constructorAsync({siloKey, instanceKey}) {
         collection: 'persona', key: userId, value: {
             name: fbUser.displayName || null,
             photoUrl: fbUser.photoURL || null
-        }})
+        }}
+    );
 }
-
+exports.profileConstructorAsync = profileConstructorAsync;
