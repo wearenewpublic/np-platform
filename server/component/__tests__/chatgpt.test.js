@@ -1,16 +1,36 @@
-const { callOpenAIAsync } = require("../chatgpt");
-const { fetch } = require('node-fetch');
+const { post } = require("axios");
+const { callOpenAIAsync, callGptAsync, createGptPrompt } = require("../chatgpt");
+const { readFileSync, existsSync } = require("fs");
 
-jest.mock('node-fetch');
-
-// TODO: Get rid of the dynamic import in callOpenAIAsync so we can test it properly
 test('callOpenAIAsync', async () => {
-    // fetch.mockResolvedValue(JSON.stringify({hello: 'world'}));
-    // const result = await callOpenAIAsync({action: 'chat/completions', data: {
-    //     temperature: 0,
-    //     model: 'gpt-3.5-turbo',
-    //     max_tokens: 1000,
-    //     messages: ['Hello', 'How are you?']
-    // }});
-    // expect(result).toEqual({hello: 'world'});
+    post.mockResolvedValue({data: 'Result'});
+
+    const result = await callOpenAIAsync({action: 'chat/completions', data: {
+        property: 'whatever'
+    }});
+
+    expect(result).toEqual('Result');
 });
+
+test('createGptPrompt', () => {
+    readFileSync.mockReturnValue('What is your favorite {{thing}}?');
+    existsSync.mockReturnValue(true);
+    const result = createGptPrompt({promptKey: 'favorite', params: {thing: 'animal'}});
+    expect(result).toBe('What is your favorite animal?');
+    expect(readFileSync).toBeCalledWith('prompts/favorite.txt');
+});
+
+
+test('callOpenAIAsync', async () => {
+    readFileSync.mockResolvedValue('What is your favorite {{thing}}?');
+    existsSync.mockReturnValue(true);
+    post.mockResolvedValue({data: {
+        choices: [{message: {content: 'I like cats'}}]
+    }});
+
+    const result = await callGptAsync({
+        promptKey: 'favorite', params: {thing: 'animal'}
+    });
+    expect(result).toEqual({data: 'I like cats'});
+});
+

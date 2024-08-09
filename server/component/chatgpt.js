@@ -1,7 +1,8 @@
 const { readFileSync, existsSync } = require('fs');
-// const keys = require('../keys');
 const Mustache = require('mustache');
 const { extractAndParseJSON } = require('../util/messyjson');
+const axios = require('axios');
+
 
 var openai_key = null;
 
@@ -10,25 +11,19 @@ function setGptKey(key) {
 }
 exports.setGptKey = setGptKey;
 
-async function callOpenAIAsync({action, data}) {
-    const fetch = await import('node-fetch');
-
+async function callOpenAIAsync({ action, data }) {
     const url = 'https://api.openai.com/v1/' + action;
-    const response = await fetch.default(url, {
+    const response = await axios.post(url, data, {
         headers: {
             'Authorization': 'Bearer ' + openai_key,
             'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify(data)
-    })        
-    return await response.json();
+        }
+    });
+    return response.data;
 }
 exports.callOpenAIAsync = callOpenAIAsync;
 
-
 function createGptPrompt({promptKey, params, language='English', model=null}) {
-    console.log('createGptPrompt', {promptKey});
     const modelPrefix = (model == 'gpt4') ? 'gpt4/' : ''
     const filename = 'prompts/' + modelPrefix + promptKey + '.txt';
     if (!existsSync(filename)) {
@@ -39,6 +34,7 @@ function createGptPrompt({promptKey, params, language='English', model=null}) {
     const prompt = Mustache.render(promptTemplate, {...params, language});
     return prompt;
 }
+exports.createGptPrompt = createGptPrompt;
 
 function selectModel(model) {
     switch (model) {
@@ -48,8 +44,6 @@ function selectModel(model) {
 }
 
 async function callGptAsync({promptKey, params, language, model, json_mode=false}) {
-    console.log('callGptAsync', {promptKey})
-
     const prompt = createGptPrompt({promptKey, params, language, model});
     if (!prompt) {
         return {success: false, error: 'Unknown prompt: ' + promptKey}
@@ -59,7 +53,7 @@ async function callGptAsync({promptKey, params, language, model, json_mode=false
     const result = await callOpenAIAsync({action: 'chat/completions', data: {
         temperature: 0,
         model: selectModel(model),
-        // response_format: { type: json_mode ? 'json_object' : 'text' },
+        response_format: { type: json_mode ? 'json_object' : 'text' },
         max_tokens: 1000,
         messages: [
             {role: 'user', content: prompt}
@@ -69,10 +63,7 @@ async function callGptAsync({promptKey, params, language, model, json_mode=false
         console.error('result', result);
         return {success: false, error: result.error}
     }
-    // console.log('result', result);
-    // console.log(result.choices?.[0]?.message?.content);
     const data = result.choices?.[0]?.message?.content;
-
     return {data};
 }
 

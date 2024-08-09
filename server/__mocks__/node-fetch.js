@@ -1,2 +1,0 @@
-
-exports.fetch = jest.fn();

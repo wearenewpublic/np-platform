@@ -1,4 +1,10 @@
+const { setFirebaseAdmin } = require("./firebaseutil");
+const { fakeFirebaseAdmin, clearTestData } = require("./testutil");
 
-jest.mock('./util/firebaseutil');
-jest.mock('node-fetch');
+clearTestData();
+setFirebaseAdmin(fakeFirebaseAdmin);
+
+jest.mock('axios');
+jest.mock('postmark');
+jest.mock('fs');
 

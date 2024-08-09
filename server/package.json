@@ -1,44 +1,49 @@
 {
-  "name": "np-platform-server",
-  "description": "Back end for the New Public Platform",
-  "version": "0.3.0",
-  "license": "Apache-2.0",
-  "scripts": {
-    "lint": "eslint .",
-    "test": "jest",
-    "coverage": "jest --coverage"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wearenewpublic/np-platform"
-  },
-  "engines": {
-    "node": "20"
-  },
-  "exports": {
-    "./component/*": "./component/*.js",
-    "./component": "./component/index.js",
-    "./constructor/*": "./constructor/*.js",
-    "./constructor": "./constructor/index.js",
-    "./derived-views/*": "./derived-views/*.js",
-    "./derived-views": "./derived-views/index.js",
-    "./util/*": "./util/*.js"
-  },
-  "dependencies": {
-    "busboy": "^1.6.0",
-    "cors": "^2.8.5",
-    "form-data": "^4.0.0",
-    "fs": "^0.0.1-security",
-    "json5": "^2.2.3",
-    "mustache": "^4.2.0",
-    "node-fetch": "^3.3.1",
-    "path": "^0.12.7",
-    "postmark": "^4.0.4",
-    "unfluff": "^3.2.0"
-  },
-  "devDependencies": {
-    "eslint": "^8.15.0",
-    "eslint-config-google": "^0.14.0",
-    "jest": "^29.7.0"
-  }
+    "name": "np-platform-server",
+    "description": "Back end for the New Public Platform",
+    "version": "0.3.0",
+    "license": "Apache-2.0",
+    "scripts": {
+        "lint": "eslint .",
+        "test": "jest",
+        "coverage": "jest --coverage"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/wearenewpublic/np-platform"
+    },
+    "engines": {
+        "node": "20"
+    },
+    "jest": {
+        "setupFilesAfterEnv": [
+            "./util/setuptests.js"
+        ]
+    },
+    "exports": {
+        "./component/*": "./component/*.js",
+        "./component": "./component/index.js",
+        "./constructor/*": "./constructor/*.js",
+        "./constructor": "./constructor/index.js",
+        "./derived-views/*": "./derived-views/*.js",
+        "./derived-views": "./derived-views/index.js",
+        "./util/*": "./util/*.js"
+    },
+    "dependencies": {
+        "busboy": "^1.6.0",
+        "cors": "^2.8.5",
+        "form-data": "^4.0.0",
+        "fs": "^0.0.1-security",
+        "json5": "^2.2.3",
+        "mustache": "^4.2.0",
+        "node-fetch": "^3.3.1",
+        "path": "^0.12.7",
+        "postmark": "^4.0.4",
+        "unfluff": "^3.2.0"
+    },
+    "devDependencies": {
+        "eslint": "^8.15.0",
+        "eslint-config-google": "^0.14.0",
+        "jest": "^29.7.0"
+    }
 }
