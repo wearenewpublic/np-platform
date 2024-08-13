@@ -15,7 +15,10 @@ export const CommentDemoFeature = {
     config: {
         componentSections: [
             {label: 'Core Design System', key: 'core', pages: [
-                {label: 'Comment', key: 'comment', storySets: commentStorySets},
+                {
+                    label: 'Comment', key: 'comment', storySets: commentStorySets,
+                    designUrl: 'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=1104-13687&t=MC9nppcf9h2iJDKP-1'
+                },
             ]}
         ],
         structureSections: [

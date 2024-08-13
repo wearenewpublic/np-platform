@@ -24,22 +24,50 @@ export const DesignSystemDemoFeature = {
             {label: 'Core Design System', key: 'core', designUrl: 'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=3-32&m=dev', pages: [
                 {
                     label: 'Text', key: 'text', screen: TextScreen,
-                    designUrl: 'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=1102-2973&m=dev',
+                    designUrl: 'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=1102-3167&t=MC9nppcf9h2iJDKP-1',
                 },
-                {label: 'Profile', key: 'profile', screen: ProfileScreen },
-                {label: 'Button', key: 'button', screen: ButtonScreen },
-                {label: 'Form', key: 'form', screen: FormScreen},
-                {label: 'Banner', key: 'banner', screen: BannerDemoScreen},
-                {label: 'Modal', key: 'modal', screen: ModalScreen},
-                {label: 'Feature Menu', key: 'featuremenu', screen: FeatureMenuScreen}
+                {  
+                    label: 'Text Fields', key: 'textfield', screen: TextFieldScreen,
+                    designUrl: 'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=1112-30186&t=MC9nppcf9h2iJDKP-1'
+                },
+                {
+                    label: 'People', key: 'profile', screen: ProfileScreen,
+                    designUrl: 'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=1102-4732&t=MC9nppcf9h2iJDKP-1'
+                },
+                {
+                    label: 'Buttons & Links', key: 'button', screen: ButtonsAndLinksScreen,
+                    designUrl: 'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=1104-5678&t=MC9nppcf9h2iJDKP-1' 
+                },
+                {
+                    label: 'Dropdowns', key: 'dropdown', screen: DropdownScreen,
+                    designUrl: 'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=6295-30781&t=MC9nppcf9h2iJDKP-1',                    
+                },
+                {
+                    label: 'Tags & Badges', key: 'tags', screen: TagsScreen,
+                    designUrl: 'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=1418-6360&t=MC9nppcf9h2iJDKP-1'
+                },
+                {
+                    label: 'Form', key: 'form', screen: FormScreen,
+                    designUrl:'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=1415-5890&t=MC9nppcf9h2iJDKP-1'
+                },
+                {
+                    label: 'Banner', key: 'banner', screen: BannerDemoScreen,
+                    designUrl:'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=1278-9461&t=MC9nppcf9h2iJDKP-1',
+                },
+                {
+                    label: 'Modal', key: 'modal', screen: ModalScreen,
+                    designUrl: 'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=6308-21252&t=MC9nppcf9h2iJDKP-1'
+                },
+                {
+                    label: 'Feature Menu', key: 'featuremenu', screen: FeatureMenuScreen,
+                    designUrl:'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=6311-21920&t=MC9nppcf9h2iJDKP-1'
+                }
             ]}
         ]
     }
 }
 
 function TextScreen() {
-    const [text, setText] = useState(null);
-
     return <View>
             <DemoSection label='UI Text'>
                 <Heading label='Heading 1' level={1} />
@@ -73,6 +101,14 @@ function TextScreen() {
                 <DataVizText type='labelStrong' label='Data Viz Label Strong' />
 
             </DemoSection>
+
+        </View>
+}
+
+function TextFieldScreen() {
+    const [text, setText] = useState(null);
+
+    return <View>
             <DemoSection label='Text Field'>
                 <TextField value={text} placeholder='Enter some text' onChange={setText} />
                 <TextFieldButton placeholder='I am actually a button' onPress={() => {}} />
@@ -86,7 +122,7 @@ function TextScreen() {
                 <CharacterCounter min={10} max={80} text={text} />
 
             </DemoSection>
-        </View>
+    </View>
 }
 
 function ProfileScreen() {
@@ -182,11 +218,10 @@ function FormScreen() {
         </View>
 }
 
-function ButtonScreen() {
-    const [dropDownValue, setDropDownValue] = useState(null);
+
+function ButtonsAndLinksScreen() {
     const [expanded, setExpanded] = useState(false);
     const inputString = 'Check this link [OpenAI](https://www.openai.com) or visit https://www.example.com directly.';
-    const faceUri = 'https://psi.newpublic.org/faces/face1.jpeg';
 
     function onPress() {
         console.log('press');
@@ -247,7 +282,7 @@ function ButtonScreen() {
 
                 </SpacedArray>
             </DemoSection>
-            <DemoSection label='Expand Button'>
+            <DemoSection horiz label='Expand Button'>
                 <ExpandButton userList={['a','b','c','d']} label='{count} {noun}' 
                     formatParams={{count: 22, singular: 'reply', plural: 'replies'}} expanded={expanded} setExpanded={setExpanded} />
                 <ExpandButton photoUrlList={['https://picsum.photos/100/100', 'https://picsum.photos/100/100', 'https://picsum.photos/100/100']} 
@@ -255,17 +290,17 @@ function ButtonScreen() {
                     formatParams={{count: 22, singular: 'article', plural: 'articles'}} expanded={expanded} setExpanded={setExpanded} />
 
             </DemoSection>
-            <DemoSection label='Photo Pile'>
+            <DemoSection horiz label='Photo Pile'>
                 <PhotoPile photoUrlList={['https://picsum.photos/100/100']} />
                 <PhotoPile photoUrlList={['https://picsum.photos/100/100', 'https://picsum.photos/100/100']} />
                 <PhotoPile photoUrlList={['https://picsum.photos/100/100', 'https://picsum.photos/100/100', 'https://picsum.photos/100/100']} />
             </DemoSection>
-            <DemoSection label='Tag'>
+            <DemoSection horiz label='Tag'>
                 <Tag label='Subtle Tag' type='subtle' />
                 <Tag emoji='🔥' label='Emphasized Tag' type='emphasized' color={colorPink} />
                 <Tag label='Tiny Tag' type='tiny' />
             </DemoSection>
-            <DemoSection label='Reaction Button'>
+            <DemoSection horiz label='Reaction Button'>
                 <ReactionButton emoji='🤝🏽' label='Respect' count={0} onPress={onPress} />
                 <ReactionButton emoji='🤝🏽' label='Respect' count={1} onPress={onPress} />
                 <ReactionButton emoji='🤝🏽' label='Selected' count={1} selected onPress={onPress} />                
@@ -273,6 +308,38 @@ function ButtonScreen() {
                 <ReactionButton emoji='🤝🏽' text='Text not label' onPress={onPress} />
 
             </DemoSection>
+            <DemoSection label='Link'>
+                <RichText text={inputString} />
+                <RichText label='Text with a {param} and a [link]({url})' formatParams={{param: 'parameter', url: 'https://example.com'}} />
+            </DemoSection>
+            <DemoSection horiz label='Breadcrumb'>
+                <BreadCrumb icon={IconCloseBig} onPress={onPress} />
+                <BreadCrumb icon={IconLeftArrowBig} onPress={onPress} />
+                <BreadCrumb icon={IconCommentBig} onPress={onPress} />
+            </DemoSection>
+            <DemoSection horiz label='Banner Icon Button'>
+                <BannerIconButton type='close' onPress={onPress} />
+                <BannerIconButton type='info' onPress={onPress} />
+            </DemoSection>
+
+        </View>
+}
+
+function TagsScreen() {
+    return <View>
+        <DemoSection label='Tag'>
+            <Tag label='Subtle Tag' type='subtle' />
+            <Tag emoji='🔥' label='Emphasized Tag' type='emphasized' color={colorPink} />
+            <Tag label='Tiny Tag' type='tiny' />
+        </DemoSection>
+    </View>
+}
+
+function DropdownScreen() {
+    const [dropDownValue, setDropDownValue] = useState(null);
+    const faceUri = 'https://psi.newpublic.org/faces/face1.jpeg';
+
+    return <View>
             <DemoSection label='DropDownSelector'>
                 <DropDownSelector label='Sort by' 
                     value={dropDownValue} onChange={setDropDownValue}
@@ -291,25 +358,6 @@ function ButtonScreen() {
                     <UtilityText label='Open Tall Panel'/>
                </PopupPanel>
             </DemoSection>
-            <DemoSection label='Link'>
-                {/* <LinkText type='small' url='https://www.google.com' label='Link' /> */}
-                <RichText text={inputString} />
-                <RichText label='Text with a {param} and a [link]({url})' formatParams={{param: 'parameter', url: 'https://example.com'}} />
-            </DemoSection>
-            <DemoSection label='Breadcrumb'>
-                <SpacedArray horiz>
-                    <BreadCrumb icon={IconCloseBig} onPress={onPress} />
-                    <BreadCrumb icon={IconLeftArrowBig} onPress={onPress} />
-                    <BreadCrumb icon={IconCommentBig} onPress={onPress} />
-                </SpacedArray>
-            </DemoSection>
-            <DemoSection label='Banner Icon Button'>
-                <SpacedArray>
-                    <BannerIconButton type='close' onPress={onPress} />
-                    <BannerIconButton type='info' onPress={onPress} />
-                </SpacedArray>
-            </DemoSection>
-
         </View>
 }
 
