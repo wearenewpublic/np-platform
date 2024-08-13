@@ -31,7 +31,7 @@ test('callOpenAIAsync', async () => {
     const result = await callGptAsync({
         promptKey: 'favorite', params: {thing: 'animal'}
     });
-    expect(result).toEqual({data: 'I like cats'});
+    expect(result).toEqual('I like cats');
 });
 
 test('getGptJsonAsync', async () => {

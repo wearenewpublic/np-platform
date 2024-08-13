@@ -1,7 +1,8 @@
-const { firebaseReadAsync } = require("../util/firebaseutil");
 
-async function getIsUserAdminAsync({siloKey, userEmail}) {
-    const adminEmails = await firebaseReadAsync(['silo', siloKey, 'module-public', 'admin', 'adminEmails']);
+async function getIsUserAdminAsync({serverstore}) {
+    const userEmail = serverstore.getUserEmail();
+    const adminEmails = await serverstore.getModulePublicAsync('admin', 'adminEmails');
+
     const emailDomain = userEmail?.split('@')[1];
     const isTest = process.env.NODE_ENV == 'test';
     const isEmulator = process.env.FUNCTIONS_EMULATOR === 'true';

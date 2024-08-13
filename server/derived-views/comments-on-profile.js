@@ -1,15 +1,16 @@
 const { triggerOnObjectWrite } = require("./templates");
 
-function CommentsOnProfileAsync({datastore, structureKey,instanceKey, value: comment}) {
-    datastore.setDerivedObject({
+exports.CommentsOnProfile = triggerOnObjectWrite('simplecomments', 'comment', 
+    CommentsOnProfileAsync
+);
+
+async function CommentsOnProfileAsync({serverstore, value: comment, structureKey, instanceKey}) {
+    await serverstore.setDerivedObjectAsync({
         structureKey: 'profile', 
         instanceKey: comment.from, 
-        type: 'comment', 
+        type: 'derived_comment', 
         key: comment.key, 
         value: {...comment, instanceKey, structureKey}
     });
 }
 
-exports.CommentsOnProfile = triggerOnObjectWrite('simplecomments', 'comment', 
-    CommentsOnProfileAsync
-);

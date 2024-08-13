@@ -1,23 +1,23 @@
 const { sendTemplatedEmailAsync } = require("../util/email");
-const { readObjectAsync, firebaseGetUserAsync, readGlobalAsync, firebaseReadAsync } = require("../util/firebaseutil");
+const { firebaseGetUserAsync } = require("../util/firebaseutil");
 
 
-async function sendNotifsForReplyApi({language, siloKey, structureKey, instanceKey, parentKey, replyKey}) {
-    const pParentComment = readObjectAsync({siloKey, structureKey, instanceKey, collection: 'comment', key: parentKey});
-    const pReplyComment = readObjectAsync({siloKey, structureKey, instanceKey, collection: 'comment', key: replyKey});
-    const pConversationName = readGlobalAsync({siloKey, structureKey, instanceKey, key: 'name'});
-    const pSiloName = firebaseReadAsync(['silo', siloKey, 'module-public', 'admin', 'name']);
+async function sendNotifsForReplyApi({serverstore, language, parentKey, replyKey}) {
+    const pParentComment = serverstore.getObjectAsync('comment', parentKey);
+    const pReplyComment = serverstore.getObjectAsync('comment', replyKey);
+    const pConversationName = serverstore.getGlobalPropertyAsync('name');
+    const pSiloName = serverstore.getModulePublicAsync('admin', 'name');
 
     const parentComment = await pParentComment;
     const replyComment = await pReplyComment;
-
     const conversationName = await pConversationName;
-    const siloName = await pSiloName ?? siloKey.toUpperCase();
+    const siloName = await pSiloName ?? serverstore.getSiloKey().toUpperCase();
     const replyAuthor = await firebaseGetUserAsync(replyComment.from);
 
     await sendTemplatedEmailAsync({
         templateId: 'reply-notif', language, 
-        siloKey, structureKey, instanceKey, 
+        siloKey: serverstore.getSiloKey(), structureKey: serverstore.getStructureKey(), 
+        instanceKey: serverstore.getInstanceKey(),
         toUserId: parentComment.from, replyText: replyComment.text,
         siloName,
         replyAuthorName: replyAuthor.displayName,
@@ -28,7 +28,7 @@ async function sendNotifsForReplyApi({language, siloKey, structureKey, instanceK
 }
 exports.sendNotifsForReplyApi = sendNotifsForReplyApi;
 
-exports.apiFunctions = {
+exports.publicFunctions = {
     sendNotifsForReply: sendNotifsForReplyApi,
 }
 

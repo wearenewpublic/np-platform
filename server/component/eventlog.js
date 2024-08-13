@@ -103,9 +103,12 @@ async function getSingleSessionApi({userId, userEmail, sessionKey}) {
 exports.getSingleSessionApi = getSingleSessionApi;
 
 
-exports.apiFunctions = {
+exports.publicFunctions = {
     logEvent: logEventApi,
     setSessionUser: setSessionUserApi,
+}
+
+exports.adminFunctions = {
     getEvents: getEventsApi,
     getSessions: getSessionsApi,
     getSingleSession: getSingleSessionApi

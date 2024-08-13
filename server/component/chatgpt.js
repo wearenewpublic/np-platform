@@ -45,11 +45,8 @@ function selectModel(model) {
 
 async function callGptAsync({promptKey, params, language, model, json_mode=false}) {
     const prompt = createGptPrompt({promptKey, params, language, model});
-    if (!prompt) {
-        return {success: false, error: 'Unknown prompt: ' + promptKey}
-    }
+    if (!prompt) {throw new Error('Unknown prompt: ' + promptKey)}
 
-    // console.log('prompt', prompt);
     const result = await callOpenAIAsync({action: 'chat/completions', data: {
         temperature: 0,
         model: selectModel(model),
@@ -60,11 +57,9 @@ async function callGptAsync({promptKey, params, language, model, json_mode=false
         ]
     }});
     if (!result.choices) {
-        console.error('result', result);
-        return {success: false, error: result.error}
+        throw new Error('Bad response from OpenAI: ' + JSON.stringify(result));
     }
-    const data = result.choices?.[0]?.message?.content;
-    return {data};
+    return result.choices?.[0]?.message?.content;
 }
 
 exports.callGptAsync = callGptAsync;
@@ -72,7 +67,7 @@ exports.callGptAsync = callGptAsync;
 
 async function getGptJsonAsync({promptKey, params, language, model}) {
     const result = await callGptAsync({promptKey, params, language, model, json_mode: true});
-    const json = extractAndParseJSON(result.data);
+    const json = extractAndParseJSON(result);
     return json;
 }
 exports.getGptJsonAsync = getGptJsonAsync;
@@ -110,7 +105,7 @@ exports.getEmbeddingsArrayAsync = getEmbeddingsArrayAsync;
 
 
 
-exports.apiFunctions = {
+exports.publicFunctions = {
     chat: callGptAsync,
     embedding: getEmbeddingsAsync,
     embeddingArray: getEmbeddingsArrayAsync

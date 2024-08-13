@@ -3,6 +3,9 @@ const os = require('os');
 const path = require('path');
 const fs = require('fs');
 const { verifyIdTokenAsync } = require('./firebaseutil');
+const { Server } = require('http');
+const { ServerStore } = require('./serverstore');
+const { getIsUserAdminAsync } = require('./admin');
 const cors = require('cors')({origin: true})
 
 function handleApiRequest(req, res, components) {
@@ -100,11 +103,23 @@ async function callApiFunctionAsync(request, fields, components) {
         const {componentId, apiId} = parsePath(request.path);
 
         const component = components[componentId];
-        const apiFunction = component?.apiFunctions?.[apiId];
+        var apiFunction = component?.publicFunctions?.[apiId];
+        const adminFunction = component?.adminFunctions?.[apiId];
         const user = await getValidatedUser(request);
         const userId = user?.uid ?? null;
         const userEmail = user?.email ?? null;
         const params = {...request.query, ...fields, userId, userEmail};
+
+        const serverstore = new ServerStore(params);
+
+        if (adminFunction) {
+            const isAdmin = await getIsUserAdminAsync({serverstore});
+            if (!isAdmin) {
+                return ({statusCode: 401, result: JSON.stringify({success: false, error: 'Not authorized'})});
+            } else {
+                apiFunction = adminFunction;
+            }
+        }
 
         if (userId == 'error') {
             return ({statusCode: 500, result: JSON.stringify({success: false, error: 'Error validating user'})});
@@ -117,7 +132,7 @@ async function callApiFunctionAsync(request, fields, components) {
 
         console.log('apiFunction', apiFunction);
 
-        const apiResult = await apiFunction(params); 
+        const apiResult = await apiFunction({serverstore, ...params}); 
 
         if (apiResult.data) {
             return ({statusCode: 200, result: JSON.stringify({success: true, data: apiResult.data})});
@@ -126,15 +141,14 @@ async function callApiFunctionAsync(request, fields, components) {
         } else if (apiResult.success) {
             return ({statusCode: 200, result: JSON.stringify({success: true})})
         } else {
-            console.error('Unknown error', apiResult);
-            return ({statusCode: 500, result: JSON.stringify({success: false, error: 'Unknown error'})});
+            return ({statusCode: 200, result: JSON.stringify({success: true, data: apiResult ?? null})})
         }
     } catch (error) {
         console.error('Error in callApiFunctionAsync', error);
         return ({statusCode: 500, result: JSON.stringify({success: false, error: error.message})});
     }
 }
-
+exports.callApiFunctionAsync = callApiFunctionAsync;
 
 function parsePath(path) {
     var parts = path.split('/').filter(x => x);

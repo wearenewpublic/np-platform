@@ -25,7 +25,6 @@ function expandPath(path) {
     }
 } 
 
-
 async function firebaseWriteAsync(path, data) {
     const ref  = admin.database().ref(expandPath(path));
     return await ref.set(data);
@@ -143,7 +142,7 @@ module.exports = {firebaseWriteAsync, firebaseReadAsync, firebaseUpdateAsync, st
     readObjectAsync, readAllGlobalsAsync, updateObjectAsync, firebaseReadWithFilterAsync,
     readModulePublicAsync, writeModulePublicAsync,
 
-    verifyIdTokenAsync, createNewKey, firebaseGetUserAsync,
+    verifyIdTokenAsync, createNewKey, firebaseGetUserAsync, expandPath,
 
     setFirebaseAdmin, getFirebaseAdmin
 };
