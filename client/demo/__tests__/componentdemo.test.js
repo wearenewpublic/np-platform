@@ -9,20 +9,56 @@ jest.mock("../../util/navigate");
 
 const componentDemoFeatures = flattenFeatureBlocks(features['componentdemo']);
 
-var pages = [];
+var componentPages = [];
+var structurePages = [];
+var featurePages = [];
 componentDemoFeatures.forEach(feature => {
-    feature.config.componentSections.forEach(section => {
+    feature.config.componentSections?.forEach(section => {
         section.pages.forEach(page => {
-            pages.push(page);
+            componentPages.push(page);
+        });
+    });
+    feature.config.structureSections?.forEach(section => {
+        section.pages.forEach(page => {
+            structurePages.push(page);
+        });
+    });
+    feature.config.featureSections?.forEach(section => {
+        section.pages.forEach(page => {
+            featurePages.push(page);
         });
     });
 });
 
-describe.each(pages)('$label', page => {
+describe.each(componentPages)('Components: $label', page => {
     test('Render', async () => {
         const rendered = render(<Datastore>{React.createElement(page.screen)}</Datastore>);
         expect(rendered).toMatchSnapshot();
     });
 });
 
+if (structurePages.length > 0) {
+    test.each(structurePages)('Structure: $label', page => {
+        const rendered = render(<Datastore>{React.createElement(page.screen)}</Datastore>);
+        expect(rendered).toMatchSnapshot();
+    });
+}
+
+if (featurePages.length > 0) {
+    test.each(featurePages)('Feature: $label', page => {
+        const rendered = render(<Datastore>{React.createElement(page.screen)}</Datastore>);
+        expect(rendered).toMatchSnapshot();
+    });
+}
+
+
+
+var componentPages = [];
+componentDemoFeatures.forEach(feature => {
+    feature.config.componentSections?.forEach(section => {
+        section.pages.forEach(page => {
+            componentPages.push(page);
+        });
+    });
+});
 

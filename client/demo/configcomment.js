@@ -3,18 +3,19 @@ import { Center, Pad, PadBox, ShadowBox } from "../component/basics";
 import { CTAButton, SubtleButton, Tag } from "../component/button";
 import { colorBannerGreen } from "../component/color";
 import { CommentBody } from "../component/comment";
+import { DemoPageWidget, DemoWidget } from "../component/demo";
 import { Heading, Paragraph, UtilityText } from "../component/text"
 import { useConfig } from "../util/features"
 import { Star } from '@carbon/icons-react';
 
 export const DemoFeature = {
-    name: 'Demo Feature',
-    key: 'demo',
+    name: 'Show Config Slots',
+    key: 'config_comment',
     config: {
         commentActions: [CommentAction],
         commentRightActions: [CommentRightAction],
-        commentTopWidgets: [CommentTopWidget],
-        commentAboveWidgets: [CommentAboveWidget],
+        commentTopWidgets: [() => <DemoWidget text='Comment Top Widget' />],
+        commentAboveWidgets: [() => <DemoWidget text='Comment Above Widget' />],
         commentAllowEmpty: true,
         commentBodyRenderer: CommentBodyRenderer,
         commentEditBottomWidgets: [CommentEditBottomWidget],
@@ -25,7 +26,7 @@ export const DemoFeature = {
         commentFilters: [commentFilter],
         commentRankers: [{label: 'Boost Godzilla', ranker: commentRanker}],
 
-        replyAboveWidgets: [ReplyAboveWidget],    
+        replyAboveWidgets: [() => <DemoWidget text='Reply Above Widget' />],    
         replyFilters: [replyFilter],
         replyBoosters: [replyBooster],
 
@@ -47,7 +48,7 @@ export const DemoFeature = {
 }
 
 export const DemoSecondaryFeature = {
-    parentFeature: 'demo',
+    parentFeature: 'config_comment',
     name: 'Demo Secondary Feature',
     key: 'demo_secondary',
     config: {
@@ -63,20 +64,7 @@ function CommentRightAction() {
     return <SubtleButton icon={Star} onPress={()=>alert('onPress')} padLeft label='Comment Right Action' />
 }
 
-function CommentAboveWidget() {
-    const {demoAboveMessage} = useConfig();
-    return <PadBox bottom={10}><Tag label={demoAboveMessage} /></PadBox>
-}
-
-function ReplyAboveWidget() {
-    return <PadBox bottom={10}><Tag label='Reply Above Widget' /></PadBox>
-}
-
-function CommentTopWidget() {
-    return <PadBox bottom={10}><Tag label='Comment Top Widget' /></PadBox>
-}
-
-function commentPostBlocker({comment}) {
+function commentPostBlocker({datastore, comment}) {
     return comment.text.includes('cat');
 }
 
@@ -173,9 +161,9 @@ function TopBanner() {
 }
 
 function PageTopWidget() {
-    return <PadBox bottom={10} top={20}><Center><Tag label='Page Top Widget' /></Center></PadBox>
+    return <DemoPageWidget text='Page Top Widget' />
 }
 
 function PageBottomWidget() {
-    return <PadBox bottom={10} top={20}><Center><Tag label='Page Bottom Widget' /></Center></PadBox>
+    return <DemoPageWidget text='Page Bottom Widget' />
 }

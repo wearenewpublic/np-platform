@@ -14,13 +14,22 @@ export const CommentDemoFeature = {
     },
     config: {
         componentSections: [
-            {label: 'Comments', pages: [
+            {label: 'Core Design System', key: 'core', pages: [
                 {label: 'Comment', key: 'comment', screen: CommentScreen},
             ]}
         ],
-        structureDemos: [
-            {label: 'Simple Comments', key: 'simplecomments', screen: SimpleCommentsScreen},
-            {label: 'Comment Config Slots', key: 'commentconfigslots', screen: CommentConfigSlotsScreen}
+        structureSections: [
+            {label: 'Core Structures', key: 'core', pages: [
+                {label: 'Simple Comments', key: 'simplecomments', screen: SimpleCommentsScreen},
+            ]},
+            {label: 'Config Slots', key: 'slots', pages: [
+                {label: 'Comment Config', key: 'commentconfigslots', screen: CommentConfigSlotsScreen}
+            ]}
+        ],
+        featureSections: [
+            {label: 'Simple Comments', key: 'simplecomments', pages: [
+                {label: 'Upvote', key: 'upvotecomments', screen: UpvoteCommentsScreen},
+            ]}
         ]
     },
     defaultConfig: {        
@@ -75,17 +84,28 @@ function CommentScreen() {
      </ConversationScreen>
 }
 
-const comments = [
+const comment = [
     {key: 1, from: 'a', text: 'I love this movie!'},
     {key: 2, from: 'b', text: 'I hate it'},
+    {key: 3, from: 'c', replyTo: 1, text: 'I can reply'},
+    {key: 4, from: 'd', replyTo: 3, text: 'I can reply to the reply'},
 ]
 
 function SimpleCommentsScreen() {
-    const collections = {comment: comments}
-    return <StructureDemo collections={collections} structureKey='simplecomments' />
+    return <StructureDemo collections={{comment}} structureKey='simplecomments' />
 }
 
+function UpvoteCommentsScreen() {
+    return <StructureDemo structureKey='simplecomments'
+        collections={{comment}} features={{upvote: true}} />
+}
+
+
 function CommentConfigSlotsScreen() {
-    const collections = {comment: comments}
-    return <StructureDemo collections={collections} structureKey='simplecomments' features={{demo:true}}/>
+    const sessionData = {
+        'showReplies/1': true
+    }
+    return <StructureDemo collections={{comment}} sessionData={sessionData}
+        structureKey='simplecomments' features={{config_comment:true}}
+    />
 }

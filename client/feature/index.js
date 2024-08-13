@@ -3,12 +3,13 @@ import { LengthLimitFeature } from "./LengthLimitFeature";
 import { DemoModerationFeature } from "./DemoModeration";
 import { UpvoteFeature } from "./UpvoteFeature";
 import { BasicTeaserFeature } from "./BasicTeaserFeature";
-import { DemoProfileFeature } from "./DemoProfileFeature";
+import { DemoProfileFeature } from "../demo/configprofile";
 import { ProfileCommentsFeature } from "./ProfileCommentsFeature";
 import { ReplyNotificationsFeature } from "./ReplyNotifsFeature";
 import { DesignSystemDemoFeature } from "../demo/designsystem";
 import { CommentDemoFeature } from "../demo/commentdemo";
-import { DemoFeature, DemoSecondaryFeature } from "./DemoFeature";
+import { DemoFeature, DemoSecondaryFeature } from "../demo/configcomment";
+import { ProfileDemoFeature } from "../demo/demoprofile";
 
 // const { DemoFeature, DemoSecondaryFeature } = require("./DemoFeature");
 
@@ -19,23 +20,33 @@ export function CHOOSEONE(label, features) {return {chooseOne: true, label, feat
 
 export var features = {
     simplecomments: [
-        DemoFeature,
-        DemoSecondaryFeature,
-        UpvoteFeature,
-        LengthLimitFeature,
-        DemoModerationFeature,
-        DemoFilterFeature,
-        BasicTeaserFeature,
-        ReplyNotificationsFeature,
+        SECTION('Developer', [
+            COMPOSITE(DemoFeature, [
+                DemoSecondaryFeature,
+            ]),               
+            DemoModerationFeature,
+            DemoFilterFeature,    
+        ]),
+        SECTION('General', [
+            UpvoteFeature,
+            LengthLimitFeature,
+            BasicTeaserFeature,
+            ReplyNotificationsFeature,
+        ])
     ],
     profile: [
-        DemoProfileFeature,
-        ProfileCommentsFeature
+        SECTION('Developer', [
+            DemoProfileFeature,
+        ]),
+        SECTION('Activity', [
+            ProfileCommentsFeature
+        ])
     ],
     componentdemo: [
         SECTION('Core Component Sets', [
             DesignSystemDemoFeature,
             CommentDemoFeature,
+            ProfileDemoFeature
         ])
     ]
 }
@@ -43,14 +54,11 @@ export var features = {
 export var defaultFeatureConfig = {
     componentdemo: {
         demo_designsystem: true,
-        demo_comment: true
+        demo_comment: true,
+        demo_profile: true
     },
-    simplecomments: {
-        upvote: true
-    },
-    profile: {
-        profilecomments: true    
-    }
+    simplecomments: {},
+    profile: {}
 }
 
 export function addFeatures(newFeaturesForStructs) {

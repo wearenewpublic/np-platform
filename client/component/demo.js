@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
-import { Pad, PadBox } from "./basics";
+import { Center, Pad, PadBox } from "./basics";
 import { Catcher } from "./catcher";
+import { Tag } from "./button";
 
 export function DemoSection({label, horiz=false, children}) {
     return <View style={{marginBottom: 32}}>
@@ -34,4 +35,16 @@ export function SpacedArray({pad=16, horiz=false, children}) {
     } else {
         return children;
     }
+}
+
+export function DemoWidget({text}) {
+    return <PadBox bottom={10}><Tag text={text} /></PadBox>
+}
+
+export function DemoPageWidget({text}) {
+    return <PadBox bottom={10} top={20}>
+        <Center>
+            <Tag text={text} />
+        </Center>
+    </PadBox>
 }

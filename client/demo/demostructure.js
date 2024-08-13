@@ -13,19 +13,41 @@ export const ComponentDemoStructure = {
     name: 'Component Demo',
     screen: ComponentDemoScreen,
     subscreens: {
-        page: PageScreen,
-        demo: DemoScreen,
+        page: ComponentPageScreen,
+        structure: StructureScreen,
+        feature: FeatureScreen,
     },
     defaultConfig: {
         componentSections: [],
+        structureSections: [],
+        featureSections: [],
         structureDemos: [],  
     }
 }
 
-function findPage({componentSections, pageKey}) {
+function mergeSectionsWithSameKey(sectionLists) {
+    const mergedSections = {};
+
+    sectionLists.forEach(section => {
+        const { label, key, pages } = section;
+        
+        if (!mergedSections[key]) {
+            mergedSections[key] = { label, key, pages: [...pages] };
+        } else {
+            mergedSections[key].pages = [
+                ...mergedSections[key].pages,
+                ...pages
+            ];
+        }
+    });
+
+    return Object.values(mergedSections);
+}
+
+function findPage({sections, pageKey}) {
     var foundPage = null;
     var foundSection = null;
-    componentSections.forEach(section => {
+    sections.forEach(section => {
         section.pages.forEach(page => {
             if (page.key == pageKey) {
                 foundSection = section;
@@ -36,9 +58,9 @@ function findPage({componentSections, pageKey}) {
     return {section: foundSection, page:foundPage};
 }
 
-function PageScreen({pageKey}) {
+function ComponentPageScreen({pageKey}) {
     const {componentSections} = useConfig();
-    const {page, section} = findPage({componentSections, pageKey});
+    const {page, section} = findPage({sections:componentSections, pageKey});
     const designUrl = page.designUrl ?? section.designUrl;;
 
     return <ConversationScreen>
@@ -55,46 +77,63 @@ function PageScreen({pageKey}) {
     </ConversationScreen>
 }
 
-function DemoScreen({demoKey}) {
-    const {structureDemos} = useConfig();
-    const demo = structureDemos.find(demo => demo.key == demoKey);
+function StructureScreen({pageKey}) {
+    const {structureSections} = useConfig();
+    const {page, section} = findPage({sections:structureSections, pageKey});
     
     return <View style={{position: 'absolute', left:0, right:0, top:0, bottom:0, backgroundColor: 'red'}}>
-        {React.createElement(demo.screen)}
+        {React.createElement(page.screen)}
+    </View>
+}
+
+function FeatureScreen({pageKey}) {
+    const {featureSections} = useConfig();
+    const {page, section} = findPage({sections:featureSections, pageKey});
+    console.log('featureScreen', {page, section, pageKey,featureSections});
+    
+    return <View style={{position: 'absolute', left:0, right:0, top:0, bottom:0, backgroundColor: 'red'}}>
+        {React.createElement(page.screen)}
+    </View>
+}
+
+
+
+function DemoPageSection({label, screenKey, sections}) {
+    const datastore = useDatastore();
+
+    return <View>
+        <Heading level={1} label={label} />
+        {sections.map(section => 
+            <PadBox vert={20} key={section.label}>
+                <Heading level={2} label={section.label} />
+                <Pad size={8} />
+                <WrapBox>
+                    {section.pages.map((page, j) => 
+                        <PadBox vert={10} horiz={10} key={page.key}>
+                            <CTAButton label={page.label} onPress={() => 
+                                datastore.pushSubscreen(screenKey, {pageKey: page.key})
+                            }  />
+                        </PadBox>                    
+                    )}
+                </WrapBox>
+            </PadBox>
+        )}
     </View>
 }
 
 
 function ComponentDemoScreen() {
-    const {componentSections, structureDemos} = useConfig();
-    const datastore = useDatastore();
+    const {componentSections, structureSections, featureSections} = useConfig();
+
+    const mergedCommentSections = mergeSectionsWithSameKey(componentSections);
+    const mergedStructureSections = mergeSectionsWithSameKey(structureSections);
+    const mergedFeatureSections = mergeSectionsWithSameKey(featureSections);
 
     return <ConversationScreen>
         <Narrow>
-            <Heading level={1} label='Component Demos' />
-            {componentSections.map(section => 
-                <PadBox vert={20} key={section.label}>
-                    <Heading level={2} label={section.label} />
-                    <Pad size={8} />
-                    <WrapBox>
-                        {section.pages.map((page, j) => 
-                            <PadBox vert={10} horiz={10} key={page.key}>
-                                <CTAButton label={page.label} onPress={() => 
-                                    datastore.pushSubscreen('page', {pageKey: page.key})
-                                }  />
-                            </PadBox>                    
-                        )}
-                    </WrapBox>
-                </PadBox>
-            )}
-            <Heading level={1} label='Structure/Feature Demos' />
-            <Pad size={10} />
-            {structureDemos.map(structure =>  
-                <PadBox key={structure.key} vert={10}>
-                    <CTAButton label={structure.label} onPress={() => 
-                        datastore.pushSubscreen('demo', {demoKey: structure.key})} />
-                </PadBox>          
-            )}
+            <DemoPageSection label='Components' screenKey='page' sections={mergedCommentSections} />
+            <DemoPageSection label='Structures' screenKey='structure' sections={mergedStructureSections} />
+            <DemoPageSection label='Features' screenKey='feature' sections={mergedFeatureSections} />
         </Narrow>
     </ConversationScreen>
 }

@@ -21,6 +21,11 @@ async function setTestData(data) {
 }
 exports.setTestData = setTestData;
 
+function logData() {
+    console.log(JSON.stringify(global_data, null, 2));
+}
+exports.logData = logData;
+
 exports.getTestData = () => global_data;
 
 async function writeTestData(path, value) {

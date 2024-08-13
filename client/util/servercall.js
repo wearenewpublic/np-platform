@@ -5,6 +5,10 @@ import { getFirebaseIdTokenAsync } from "./firebase";
 
 // TODO: Do user-based authentication, once we have a database
 export async function callServerApiAsync({datastore, component, funcname, params}) {
+    if (datastore?.getMockServerCall()) {
+        return datastore.getMockServerCall()({datastore, component, funcname, params});
+    }
+
     const idToken = await getFirebaseIdTokenAsync();
     const expandedParams = {...params, 
         siloKey: datastore?.getSiloKey() || null,
@@ -33,6 +37,15 @@ export async function callServerApiAsync({datastore, component, funcname, params
         console.error('Error in fetch', component, funcname, params, error?.message);
     }
 }
+
+export async function callMockServerApiAsync({mockServerCall, datastore, component, funcname, params}) {
+    if (mockServerCall[component][funcname]) {
+        return mockServerCall[component][funcname]({datastore, component, funcname, params});
+    } else {
+        throw new Error('No mock server call for ' + component + '/' + funcname);
+    }
+};
+
 
 export async function callServerMultipartApiAsync({datastore, component, funcname, params, fileParams={}}) {
     console.log('callMultipartServerApi', component, funcname, params);

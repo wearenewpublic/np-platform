@@ -21,7 +21,7 @@ export const DesignSystemDemoFeature = {
     name: 'Core Design System',
     config: {
         componentSections: [
-            {label: 'Core Design System', designUrl: 'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=3-32&m=dev', pages: [
+            {label: 'Core Design System', key: 'core', designUrl: 'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=3-32&m=dev', pages: [
                 {
                     label: 'Text', key: 'text', screen: TextScreen,
                     designUrl: 'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=1102-2973&m=dev',
