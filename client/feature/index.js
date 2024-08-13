@@ -3,13 +3,13 @@ import { LengthLimitFeature } from "./LengthLimitFeature";
 import { DemoModerationFeature } from "./DemoModeration";
 import { UpvoteFeature } from "./UpvoteFeature";
 import { BasicTeaserFeature } from "./BasicTeaserFeature";
-import { DemoProfileFeature } from "../demo/configprofile";
+import { DemoProfileFeature } from "../demo/profile-config";
 import { ProfileCommentsFeature } from "./ProfileCommentsFeature";
 import { ReplyNotificationsFeature } from "./ReplyNotifsFeature";
-import { DesignSystemDemoFeature } from "../demo/designsystem";
-import { CommentDemoFeature } from "../demo/commentdemo";
-import { DemoFeature, DemoSecondaryFeature } from "../demo/configcomment";
-import { ProfileDemoFeature } from "../demo/demoprofile";
+import { DesignSystemDemoFeature } from "../demo/designsystem-demo";
+import { CommentDemoFeature } from "../demo/comment-demo";
+import { DemoFeature, DemoSecondaryFeature } from "../demo/comment-config";
+import { ProfileDemoFeature } from "../demo/profile-demo";
 
 // const { DemoFeature, DemoSecondaryFeature } = require("./DemoFeature");
 

@@ -14,7 +14,7 @@ import { TrashCan, Pin } from "@carbon/icons-react";
 import { Modal } from "../component/modal";
 import { DemoSection, SpacedArray } from "../component/demo";
 import { Image, View } from "react-native";
-import { FeatureMenuScreen } from "./featuremenudemo";
+import { FeatureMenuScreen } from "./featuremenu-demo";
 
 export const DesignSystemDemoFeature = {
     key: 'demo_designsystem',
