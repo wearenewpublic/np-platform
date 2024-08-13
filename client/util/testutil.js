@@ -2,6 +2,9 @@ import { StackedScreen, getStructureForKey } from './instance';
 import { Datastore, useDatastore } from './datastore';
 import { assembleConfig, assembleScreenSet } from './features';
 import { mock_setFirebaseData } from './firebase';
+import { act } from 'react-dom/test-utils';
+import { fireEvent, screen } from '@testing-library/react';
+import { global_textinput_test_handlers } from '../component/text';
 
 export function WithFeatures({dataRef, siloKey='test', structureKey='componentdemo', instanceKey='test', 
         isAdmin=false, features={}, globals, collections, sessionData, children}) {
@@ -65,3 +68,22 @@ export function setModulePublicData({siloKey='test', moduleKey, data}) {
     mock_setFirebaseData(['silo', siloKey, 'module-public', moduleKey], data);
 }
 
+
+async function testStoryActionAsync(action) {
+    if (action.action === 'click') {
+        fireEvent.click(await screen.findByTestId(action.matcher));
+    } else if (action.action === 'input') {
+        const onChangeText = global_textinput_test_handlers[action.matcher];
+        await onChangeText(action.text);
+    } else {
+        throw new Error('Unsupported action: ' + action.action);
+    }
+}
+
+export async function testStoryActionListAsync(actions) {
+    for (let action of actions) {
+        await act(async () => {
+            await testStoryActionAsync(action);
+        });
+    }
+}

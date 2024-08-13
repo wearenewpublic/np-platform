@@ -12,7 +12,7 @@ export function Pad({size=20}) {
 }
 
 // Note: react-testing-library only supports DOM events, so we can't test hover events right now
-export function HoverView({style, ariaLabel, role, hoverStyle, pressedStyle, children, disabled=false, onPress, shrink, setHover=()=>{}, setPressed=()=>{}}) {
+export function HoverView({style, ariaLabel, testID, role, hoverStyle, pressedStyle, children, disabled=false, onPress, shrink, setHover=()=>{}, setPressed=()=>{}}) {
     const [localHover, setLocalHover] = useState(false);
     const [localPressed, setLocalPressed] = useState(false);
     if (disabled || !onPress) {
@@ -21,6 +21,7 @@ export function HoverView({style, ariaLabel, role, hoverStyle, pressedStyle, chi
     return <Pressable
         role={role}
         aria-label={ariaLabel}
+        testID={testID}
         style={[style, localHover ? hoverStyle : null, localPressed ? pressedStyle : null, shrink ? {flexShrink: 1} : null]}
         onPressIn={() => {setLocalPressed(true); setPressed(true)}}
         onPressOut={() => {setLocalPressed(false); setPressed(false)}}

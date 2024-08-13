@@ -1,6 +1,6 @@
 import { ActionEdit, ActionReply, ActionReport, Comment, CommentsInput, ComposerScreen } from "../component/comment";
 import { ConversationScreen, Narrow } from "../component/basics";
-import { DemoSection } from "../component/demo";
+import { CLICK, DemoSection, INPUT } from "../component/demo";
 import { Datastore } from "../util/datastore";
 import { ActionUpvote } from "../feature/UpvoteFeature";
 import { StructureDemo } from "../util/instance";
@@ -15,7 +15,7 @@ export const CommentDemoFeature = {
     config: {
         componentSections: [
             {label: 'Core Design System', key: 'core', pages: [
-                {label: 'Comment', key: 'comment', screen: CommentScreen},
+                {label: 'Comment', key: 'comment', storySets: commentStorySets},
             ]}
         ],
         structureSections: [
@@ -51,20 +51,22 @@ export const CommentDemoFeature = {
     }
 }
 
+const collections = {
+    comment: [
+        {key: 1, from: 'a', text: 'I love this movie!'},
+        {key: 2, from: 'b', text: 'My comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.'},
+        {key: 3, from: 'c', replyTo: 1, text: 'I think this movie is okay.'},
+        {key: 4, from: 'a', replyTo: 2, text: 'This reply should be shown'},
+        {key: 5, from: 'e', text: 'Comment with no replies'}
+    ]
+}
+
+const config = {
+    commentActions: [ActionReply, ActionUpvote],
+    commentRightActions: [ActionEdit]
+}
+
 function CommentScreen() {
-    const collections = {
-        comment: [
-            {key: 1, from: 'a', text: 'I love this movie!'},
-            {key: 2, from: 'b', text: 'My comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.\nMy comment is very long.'},
-            {key: 3, from: 'c', replyTo: 1, text: 'I think this movie is okay.'},
-            {key: 4, from: 'd', replyTo: 2, text: 'This reply should be shown'},
-            {key: 5, from: 'e', text: 'Comment with no replies'}
-        ]
-    }
-    const config = {
-        commentActions: [ActionReply, ActionUpvote],
-        commentRightActions: [ActionEdit]
-    }
     const sessionData = {
         'showReplies/2': true
     }
@@ -83,6 +85,28 @@ function CommentScreen() {
         </Narrow>
      </ConversationScreen>
 }
+
+function commentStorySets() {return [
+    {
+        label: 'Comment Actions',
+        collections, config, sessionData: {'showReplies/2': true},
+        content: <Comment commentKey={2} />,
+        stories: [
+            {label: 'Edit Reply', actions: 
+                [CLICK('Edit'), INPUT('comment-edit', 'Edited Comment'), CLICK('Update')]
+            },
+            {label: 'Cancel Editing Reply', actions: 
+                [CLICK('Edit'), CLICK('Cancel')]
+            },
+            {label: 'Hide Replies', actions:
+                [CLICK('toggle-replies')]
+            },
+            {label: 'Read More', actions:
+                [CLICK('Read more')]
+            }
+        ]
+    },
+]}
 
 const comment = [
     {key: 1, from: 'a', text: 'I love this movie!'},

@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import { features } from '../../feature';
 import { flattenFeatureBlocks } from '../../util/features';
 import { Datastore } from '../../util/datastore';
+import { testStoryActionListAsync } from '../../util/testutil';
 
 jest.mock("../../util/navigate");
 
@@ -31,9 +32,24 @@ componentDemoFeatures.forEach(feature => {
 });
 
 describe.each(componentPages)('Components: $label', page => {
-    test('Render', async () => {
-        const rendered = render(<Datastore>{React.createElement(page.screen)}</Datastore>);
-        expect(rendered).toMatchSnapshot();
+    if (page.screen) {
+        test('Render', async () => {
+            const rendered = render(<Datastore>{React.createElement(page.screen)}</Datastore>);
+            expect(rendered).toMatchSnapshot();
+        });
+    } 
+    if (!page.storySets) return;
+    describe.each(page.storySets())('Story: $label', storySet => {
+        test.each(storySet.stories || [])('Action: $label', async story => {
+            const rendered = render(
+            <Datastore config={storySet.config} collections={storySet.collections} 
+                globals={storySet.globals}
+                sessionData={storySet.sessionData} serverCall={storySet.serverCall}>
+                {storySet.content}
+            </Datastore>);
+            await testStoryActionListAsync(story.actions);
+            expect(rendered).toMatchSnapshot();            
+        });
     });
 });
 

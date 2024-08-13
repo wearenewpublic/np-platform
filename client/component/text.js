@@ -193,10 +193,25 @@ export function LinkText({type='small', text, url, label, formatParams}) {
     </HoverView>
 }
 
+// HACK: This is a hack to allow the test to access the onChangeText function
+// In theory it should be possible to do this with dispatchEvent on the DOM
+// node, but that doesn't seem to work in current versions of react-native-web
+export var global_textinput_test_handlers = {};
 
-export function AutoSizeTextInput({value, onChange, placeholder, style, hoverStyle=null, maxHeight = 400, emptyHeight = 50, ...props}) {
+export function AutoSizeTextInput({value, onChange, placeholder, style, hoverStyle=null, maxHeight = 400, emptyHeight = 50, testID, ...props}) {
     const [height, setHeight] = useState(0);
     const [hover, setHover] = useState(false);
+
+    useEffect(() => {
+        if (testID) {
+            global_textinput_test_handlers[testID] = onChange;
+        }
+        return () => {
+            if (testID) {
+                delete global_textinput_test_handlers[testID];
+            }
+        }
+    }, []);
 
     useEffect(() => {
         if (value == '' && height > 0) {
@@ -224,11 +239,11 @@ export function AutoSizeTextInput({value, onChange, placeholder, style, hoverSty
     </View>
 }
 
-export function TextField({value, error=false, big=false, autoFocus=false, placeholder, placeholderParams, onChange}) {
+export function TextField({value, error=false, big=false, autoFocus=false, placeholder, testID, placeholderParams, onChange}) {
     const s = TextFieldStyle;
     const tPlaceholder = useTranslation(placeholder, placeholderParams);
     return <AutoSizeTextInput value={value ?? ''} onChange={onChange} 
-        emptyHeight={big ? 300 : 50} autoFocus={autoFocus}
+        emptyHeight={big ? 300 : 50} autoFocus={autoFocus} testID={testID}
         style={[s.textField, error ? {borderColor: colorRed} : null]} hoverStyle={s.hover}
         placeholder={tPlaceholder} placeholderTextColor={colorDisabledText} />
 }

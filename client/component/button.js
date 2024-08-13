@@ -21,7 +21,7 @@ export function CTAButton({label, icon, type='primary', disabled, compact=false,
     }
     const {normal, hover, pressed, textColor} = styleMap[disabled ? 'disabled' : type] ?? styleMap.primary;
         
-    return <HoverView disabled={disabled} role='button'
+    return <HoverView disabled={disabled} role='button' testID={label}
             style={[compact ? s.compactButton : s.button, wide && s.wide, normal]} hoverStyle={[s.hover, hover]} 
             pressedStyle={pressed} onPress={onPress} >
         {icon && <PadBox right={8}>{icon}</PadBox>}
@@ -145,7 +145,7 @@ export function SubtleButton({label, text, ariaLabel, disabled, formatParams, co
     const [hover, setHover] = useState(false);
     return <HoverView style={[s.button, padLeft && {marginLeft: 20}, padRight && {marginRight: 20}]} 
             disabled={disabled} role={!disabled ? 'button' : null}
-            ariaLabel={ariaLabel}
+            ariaLabel={ariaLabel} testID={label}
             onPress={onPress} setHover={setHover}>
         {React.createElement(icon, {color})}
         {(label || text) && <Pad size={4} />}
@@ -164,7 +164,9 @@ const SubtleButtonStyle = StyleSheet.create({
 export function TextButton({label, text, level=1, type='large', heading=false, paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, rightIcon, color=colorBlack, alignStart=false, onPress}) {
     const s = TextButtonStyle;
     const [hover, setHover] = useState(false);
-    return <HoverView shrink style={[s.button, alignStart ? {alignSelf: 'flex-start'} : null]} setHover={setHover} onPress={onPress} role='button'>
+    return <HoverView shrink testID={label}
+            style={[s.button, alignStart ? {alignSelf: 'flex-start'} : null]} 
+            setHover={setHover} onPress={onPress} role='button'>
         {leftIcon && React.createElement(leftIcon, {color})}
         {leftIcon && <Pad size={8} />}        
         {paragraph ? 
@@ -214,12 +216,16 @@ export function TextLinkButton({label, text, type='large', paragraph=false, edit
 
 
 
-export function ExpandButton({userList, photoUrlList, label, text, type='tiny', formatParams, expanded, setExpanded=()=>{}}) {
+export function ExpandButton({
+        userList, photoUrlList, label, text, type='tiny', 
+        formatParams, expanded, setExpanded=()=>{},
+        testID,
+    }) {
     const s = ExpanderButtonStyle;
     const [hover, setHover] = useState(false);
 
     return <HoverView style={s.button} setHover={setHover} role='button'
-            onPress={() => setExpanded(!expanded)}>        
+            onPress={() => setExpanded(!expanded)} testID={testID}>        
         {userList && <FacePile type={type} userIdList={userList} />}
         {photoUrlList && <PhotoPile photoUrlList={photoUrlList} />}
         {(userList || photoUrlList) && <Pad size={4} />}

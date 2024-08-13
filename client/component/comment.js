@@ -219,7 +219,7 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
         <EditWidgets widgets={commentEditTopWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
         {big && <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />}
         <TextField value={comment.text} onChange={text => setComment({...comment, text})} 
-            placeholder={placeholder} autoFocus big={big}
+            placeholder={placeholder} autoFocus big={big} testID='comment-edit'
             placeholderParams={{authorName: getFirstName(author?.name)}} />
         <Pad size={12} />
         {!big && <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />}
@@ -277,7 +277,7 @@ function CommentReplies({commentKey, depth=1}) {
         </ShadowBox></PadBox>}
         <Pad />
             <ExpandButton userList={replyUsers} label='{count} {noun}' 
-                expanded={expanded} setExpanded={setExpanded}
+                expanded={expanded} setExpanded={setExpanded} testID='toggle-replies'
                 formatParams={{count: replies.length, singular: 'reply', plural: 'replies'}} />
         <Pad />
         {expanded && <Separator />}
