@@ -6,7 +6,7 @@ import { getFirebaseIdTokenAsync } from "./firebase";
 // TODO: Do user-based authentication, once we have a database
 export async function callServerApiAsync({datastore, component, funcname, params}) {
     if (datastore?.getMockServerCall()) {
-        return datastore.getMockServerCall()({datastore, component, funcname, params});
+        return callMockServerApiAsync({datastore, component, funcname, params});
     }
 
     const idToken = await getFirebaseIdTokenAsync();
@@ -38,9 +38,10 @@ export async function callServerApiAsync({datastore, component, funcname, params
     }
 }
 
-export async function callMockServerApiAsync({mockServerCall, datastore, component, funcname, params}) {
-    if (mockServerCall[component][funcname]) {
-        return mockServerCall[component][funcname]({datastore, component, funcname, params});
+export async function callMockServerApiAsync({datastore, component, funcname, params}) {
+    const mockServerCall = datastore.getMockServerCall();
+    if (mockServerCall?.[component]?.[funcname]) {
+        return mockServerCall[component][funcname]({datastore, ...params});
     } else {
         throw new Error('No mock server call for ' + component + '/' + funcname);
     }

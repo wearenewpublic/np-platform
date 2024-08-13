@@ -59,7 +59,11 @@ const ScreenStackStyle = StyleSheet.create({
 })
 
 
-export function StructureDemo({siloKey='demo', structureKey, instanceKey='demo', screenKey, features, isAdmin=true, globals, collections, sessionData, language='english', personaKey='a'}) {
+export function StructureDemo({
+        siloKey='demo', structureKey, instanceKey='demo', screenKey, 
+        features, isAdmin=true, globals, collections, sessionData, serverCall,
+        language='english', personaKey='a'
+    }) {
     requireParams('StructureDemo', {structureKey});
     const [screenStack, setScreenStack] = React.useState([{siloKey: 'demo', structureKey, instanceKey: null, screenKey}]);
 
@@ -75,7 +79,7 @@ export function StructureDemo({siloKey='demo', structureKey, instanceKey='demo',
     }
 
     return <Datastore globals={{...globals, features}} collections={collections} sessionData={sessionData}
-                language={language} isAdmin={isAdmin} isLive={false} 
+                language={language} isAdmin={isAdmin} isLive={false} serverCall={serverCall}
                 siloKey={siloKey} structureKey={structureKey} instanceKey={instanceKey} personaKey={personaKey}
                 pushSubscreen={pushSubscreen} goBack={onGoBack} >
             <StructureDemoConfiguredScreenStack structureKey={structureKey} screenStack={screenStack}/>

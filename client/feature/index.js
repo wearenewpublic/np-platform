@@ -10,6 +10,7 @@ import { DesignSystemDemoFeature } from "../demo/designsystem-demo";
 import { CommentDemoFeature } from "../demo/comment-demo";
 import { DemoFeature, DemoSecondaryFeature } from "../demo/comment-config";
 import { ProfileDemoFeature } from "../demo/profile-demo";
+import { EventlogDemoFeature } from "../demo/eventlog-demo";
 
 // const { DemoFeature, DemoSecondaryFeature } = require("./DemoFeature");
 
@@ -46,7 +47,8 @@ export var features = {
         SECTION('Core Component Sets', [
             DesignSystemDemoFeature,
             CommentDemoFeature,
-            ProfileDemoFeature
+            ProfileDemoFeature,
+            EventlogDemoFeature
         ])
     ]
 }

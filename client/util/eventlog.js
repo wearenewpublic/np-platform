@@ -111,8 +111,8 @@ export async function useLogEvent(eventKey, params, skip=false) {
     }, [eventKey, JSON.stringify(params), skip]);
 }
 
-export async function getLogEventsAsync({siloKey, eventType, sessionKey} = {}) {
-    const eventObjs = await callServerApiAsync({component: 'eventlog', funcname: 'getEvents', params: {siloKey, eventType, sessionKey}});
+export async function getLogEventsAsync({datastore, siloKey, eventType, sessionKey} = {}) {
+    const eventObjs = await callServerApiAsync({datastore, component: 'eventlog', funcname: 'getEvents', params: {siloKey, eventType, sessionKey}});
     const eventKeys = Object.keys(eventObjs).sort((a, b) => eventObjs[b].time - eventObjs[a].time);
     return eventKeys.map(key => ({key, ...eventObjs[key]}));
 }
@@ -121,17 +121,18 @@ function getSessionTime(session) {
     return session.endTime ?? session.startTime ?? 0;
 }
 
-export async function getSessionsAsync({siloKey = null} = {}) {
-    const sessionObjs = await callServerApiAsync({component: 'eventlog', funcname: 'getSessions', params: {siloKey}});
+export async function getSessionsAsync({datastore, siloKey = null} = {}) {
+    const sessionObjs = await callServerApiAsync({datastore, component: 'eventlog', funcname: 'getSessions', params: {siloKey}});
     const sessionKeys = Object.keys(sessionObjs).sort((a, b) => getSessionTime(sessionObjs[b]) - getSessionTime(sessionObjs[a]));
     return sessionKeys.map(key => ({key, ...sessionObjs[key]}));
 }
 
 export function useSession({sessionKey}) {
     const [session, setSession] = useState(null);
+    const datastore = useDatastore();
 
     useEffect(() => {
-        callServerApiAsync({
+        callServerApiAsync({datastore,
             component: 'eventlog', funcname: 'getSingleSession', 
             params: {sessionKey}
         }).then(session => setSession(session));

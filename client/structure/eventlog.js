@@ -12,6 +12,7 @@ import { View } from 'react-native';
 import { gotoInstance } from "../util/navigate";
 import { colorTextGrey } from "../component/color";
 import { useLanguage } from "../component/translation";
+import { Banner } from "../component/banner";
 
 // TODO: Make this code less hideous. Written in haste before going on vacation.
 
@@ -40,7 +41,7 @@ function HomeScreen() {
     </ConversationScreen>
 }
 
-function EventTypesScreen() {
+export function EventTypesScreen() {
     return <ConversationScreen>
         <WindowTitle title='Event Types' />
         <Pad />
@@ -59,16 +60,18 @@ function EventType({eventType}) {
     </HoverView>
 }
 
-function SessionListScreen() {
+export function SessionListScreen() {
     const [sessions, setSessions] = useState([]);
     const [limit, setLimit] = useState(20);
+    const datastore = useDatastore();
 
     async function onRefresh() {
-        const sessions = await getSessionsAsync();
+        const sessions = await getSessionsAsync({datastore});
         setSessions(sessions);
     }
 
     useEffect(() => {
+        if (process.env.NODE_ENV === 'test') return; // Auto-load doesn't work in tests
         onRefresh();
     }, []);
 
@@ -82,12 +85,12 @@ function SessionListScreen() {
             <CTAButton label='Refresh' onPress={onRefresh} />
         </HorizBox>
         <Pad />
-        {shownSessions.map((session, i) => <PadBox vert={4} key={i}><Session session={session} /></PadBox>)}
+        {shownSessions.map((session, i) => <PadBox vert={4} key={i}><SessionPreview session={session} /></PadBox>)}
         {sessions.length > limit && <PadBox top={20}><CTAButton label='Load more' onPress={() => setLimit(limit * 2)} /></PadBox>}
     </ConversationScreen>
 }
 
-function Session({session}) {
+export function SessionPreview({session}) {
     const language = useLanguage();
     const datastore = useDatastore();
     return <HoverView onPress={() => datastore.pushSubscreen('eventlog', {sessionKey: session.key})}>
@@ -102,19 +105,25 @@ function Session({session}) {
     </HoverView>
 }
 
-function EventLogScreen({eventType, sessionKey, siloKey}) {
+
+export function EventLogScreen({eventType, sessionKey, siloKey}) {
     const isAdmin = useIsAdmin();
-    const [events, setEvents] = useState([]); 
+    const [events, setEvents] = useState(null); 
     const [limit, setLimit] = useState(20);
+    const datastore = useDatastore();
 
     async function onRefresh() {
-        const events = await getLogEventsAsync({sessionKey, siloKey, eventType});
+        const events = await getLogEventsAsync({datastore, sessionKey, siloKey, eventType});
         setEvents(events);
     }
 
     useEffect(() => {
         onRefresh();
     }, []);
+
+    if (!events) {
+        return <Banner label='Loading Events...' />
+    }
 
     const sortedEvents = events.sort((a, b) => b.time - a.time);
     const filteredEvents = sortedEvents.filter(event => 
@@ -146,10 +155,10 @@ function SessionSummary({sessionKey}) {
     const session = useSession({sessionKey});
     if (!session) {return null};
 
-    return <Session session={session} />
+    return <SessionPreview session={session} />
 }
 
-function LogEvent({event}) {
+export function LogEvent({event}) {
     const datastore = useDatastore();
     const selectedIdx = useSessionData(['event-selected-key']);
     const selected = selectedIdx == event.key;

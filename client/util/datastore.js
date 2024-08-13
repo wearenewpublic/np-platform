@@ -205,7 +205,7 @@ export class Datastore extends React.Component {
     getIsLive() {return this.props.isLive}
     getLanguage() {return this.props.language}
     getLoaded() {return this.state.loaded}
-    getMockServerCall() {return this.props.mockServerCall}
+    getMockServerCall() {return this.props.serverCall}
     pushSubscreen(screenKey, params) {
         if (this.props.pushSubscreen) {
             this.props.pushSubscreen(screenKey, params);
@@ -221,9 +221,6 @@ export class Datastore extends React.Component {
         }
     }
     render() {
-        // if (!this.state.loaded && !this.props.isLive) {
-        //     return null;
-        // }
         return <DatastoreContext.Provider value={this}>
             <ConfigContext.Provider value={this.props.config ?? {}}>
                 {this.props.children}
