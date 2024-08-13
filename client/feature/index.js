@@ -57,7 +57,8 @@ export var defaultFeatureConfig = {
     componentdemo: {
         demo_designsystem: true,
         demo_comment: true,
-        demo_profile: true
+        demo_profile: true,
+        demo_eventlog: true
     },
     simplecomments: {},
     profile: {}

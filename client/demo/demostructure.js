@@ -1,6 +1,6 @@
 import React from "react";
 import { EditorialHeading, Heading, LinkText, UtilityText } from "../component/text";
-import { CTAButton } from "../component/button";
+import { CTAButton, IconButton, SubtleButton } from "../component/button";
 import { gotoInstance, pushSubscreen } from "../util/navigate";
 import { ConversationScreen, HeaderBox, Narrow, Pad, PadBox, Separator, WrapBox } from "../component/basics";
 import { useConfig } from "../util/features";
@@ -8,6 +8,7 @@ import { colorRed } from "../component/color";
 import { View } from "react-native";
 import { useDatastore } from "../util/datastore";
 import { DemoStory, DemoStorySet } from "../component/demo";
+import { AccordionField } from "../component/form";
 
 export const ComponentDemoStructure = {
     key: 'componentdemo',
@@ -110,20 +111,19 @@ function DemoPageSection({label, screenKey, sections}) {
     return <View>
         <Heading level={1} label={label} />
         {sections.map(section => 
-            <PadBox vert={20} key={section.label}>
-                <Heading level={2} label={section.label} />
-                <Pad size={8} />
+            <AccordionField key={section.label} titleContent={<UtilityText strong label={section.label} />} >
                 <WrapBox>
                     {section.pages.map((page, j) => 
                         <PadBox vert={10} horiz={10} key={page.key}>
-                            <CTAButton label={page.label} onPress={() => 
+                            <IconButton compact type='secondary' label={page.label} onPress={() => 
                                 datastore.pushSubscreen(screenKey, {pageKey: page.key})
                             }  />
                         </PadBox>                    
                     )}
                 </WrapBox>
-            </PadBox>
+            </AccordionField>
         )}
+        <Pad />
     </View>
 }
 
