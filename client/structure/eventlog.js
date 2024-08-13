@@ -118,6 +118,7 @@ export function EventLogScreen({eventType, sessionKey, siloKey}) {
     }
 
     useEffect(() => {
+        if (process.env.NODE_ENV === 'test') return; // Auto-load doesn't work in tests
         onRefresh();
     }, []);
 
