@@ -7,7 +7,7 @@ async function runConstructorApi({serverstore}) {
     }
 
     await constructor({serverstore});
-    await serverstore.setGlobalPropertyAsync('initialized', Date.now());
+    serverstore.setGlobalProperty('initialized', Date.now());
 }
 exports.runConstructorApi = runConstructorApi;
 

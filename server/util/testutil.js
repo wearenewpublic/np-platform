@@ -2,10 +2,11 @@
 var global_user = {
     uid: 'testuser',
     email: 'test@test.org',
-    displayName: 'Test User'
+    displayName: 'Test User',
+    photoURL: 'https://test.org/photo.jpg'
 };
 const verifyIdToken = jest.fn();
-
+exports.verifyIdToken = verifyIdToken;
 
 var global_data = {};
 var global_next_key = 1;

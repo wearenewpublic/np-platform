@@ -5,7 +5,7 @@ exports.CommentsOnProfile = triggerOnObjectWrite('simplecomments', 'comment',
 );
 
 async function CommentsOnProfileAsync({serverstore, value: comment, structureKey, instanceKey}) {
-    await serverstore.setDerivedObjectAsync({
+    serverstore.setDerivedObject({
         structureKey: 'profile', 
         instanceKey: comment.from, 
         type: 'derived_comment', 

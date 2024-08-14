@@ -19,7 +19,8 @@ describe('runConstructorApi', () => {
     test('Profile constructor', async () => {
         const serverstore = mockServerStore({structureKey: 'profile', instanceKey: 'testuser'});
         await runConstructorApi({serverstore});
-        
+        serverstore.commitDataAsync();
+
         const profile = await serverstore.getObjectAsync('profile', 'testuser');
         expect(profile.name).toBe('Test User');
     });

@@ -1,18 +1,14 @@
-const { clearMockFirebaseAsync, firebaseWriteAsync, setFirebaseAdmin, firebaseReadAsync } = require('../firebaseutil');
-const { ServerStore, mockServerStore } = require('../serverstore');
-const { fakeFirebaseAdmin } = require('../testutil');
+const { mockServerStore } = require('../serverstore');
 const { getIsUserAdminAsync } = require('../admin');
-
-
-
 
 test('getIsUserAdminAsync', async () => {
     const serverstore = mockServerStore({userEmail: 'rob@newpublic.org'});
     const isAdmin = await getIsUserAdminAsync({serverstore});
     expect(isAdmin).toBe(false);
 
-    serverstore.setModulePublicAsync('admin', ['adminEmails'], 'rob@newpublic.org');
-    // await firebaseWriteAsync(['silo', 'cbc', 'module-public', 'admin', 'adminEmails'], 'rob@newpublic.org');
+    serverstore.setModulePublic('admin', ['adminEmails'], 'rob@newpublic.org');
+    serverstore.commitDataAsync();
+
     const isAdmin2 = await getIsUserAdminAsync({serverstore});
     expect(isAdmin2).toBe(true);
 

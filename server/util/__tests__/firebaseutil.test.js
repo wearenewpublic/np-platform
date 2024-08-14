@@ -1,5 +1,5 @@
 const { read } = require("fs");
-const { setFirebaseAdmin, firebaseWriteAsync, firebaseReadAsync, firebaseReadWithFilterAsync, firebaseUpdateAsync, firebaseGetUserAsync, createNewKey, writeGlobalAsync, readGlobalAsync, stringToFbKey, fbKeyToString } = require("../firebaseutil");
+const { setFirebaseAdmin, firebaseWriteAsync, firebaseReadAsync, firebaseReadWithFilterAsync, firebaseUpdateAsync, firebaseGetUserAsync, createNewKey, writeGlobalAsync, readGlobalAsync, stringToFbKey, fbKeyToString, urlToKey, keyToUrl } = require("../firebaseutil");
 const { fakeFirebaseAdmin, clearTestData } = require("../testutil");
 
 
@@ -69,3 +69,16 @@ test('stringToFbKey', async () => {
     expect(result2).toBe('foo.bar#baz');
 });
 
+test('urlToKey', async () => {
+    const url = 'https://www.google.com';
+
+    const result = urlToKey(url);
+    expect(result).toBe('https%3A%25f%25fwww%25dgoogle%25dcom');
+
+    expect(keyToUrl(result)).toBe(url);
+});
+
+test('keyToUrl', async () => {
+    const result = keyToUrl('https%3A%25f%25fwww%25dgoogle%25dcom');
+    expect(result).toBe('https://www.google.com');
+})

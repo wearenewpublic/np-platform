@@ -98,7 +98,6 @@ async function getValidatedUser(req) {
 
 
 async function callApiFunctionAsync(request, fields, components) {
-    console.log('callApiFunctionAsync', request.path);
     try {
         const {componentId, apiId} = parsePath(request.path);
 
@@ -130,15 +129,14 @@ async function callApiFunctionAsync(request, fields, components) {
             return ({statusCode: 400, result: JSON.stringify({success: false, error: 'Unknown api', path: request.path, componentId, apiId})});
         }
 
-        console.log('apiFunction', apiFunction);
-
         const apiResult = await apiFunction({serverstore, ...params}); 
+        await serverstore.commitDataAsync();
 
-        if (apiResult.data) {
+        if (apiResult?.data) {
             return ({statusCode: 200, result: JSON.stringify({success: true, data: apiResult.data})});
-        } else if (apiResult.error) {
+        } else if (apiResult?.error) {
             return ({statusCode: 400, result: JSON.stringify({success: false, error: apiResult.error})});
-        } else if (apiResult.success) {
+        } else if (apiResult?.success) {
             return ({statusCode: 200, result: JSON.stringify({success: true})})
         } else {
             return ({statusCode: 200, result: JSON.stringify({success: true, data: apiResult ?? null})})
@@ -160,4 +158,5 @@ function parsePath(path) {
         apiId: parts[1],
     }
 }
+exports.parsePath = parsePath;
 

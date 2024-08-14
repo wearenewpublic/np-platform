@@ -1,6 +1,6 @@
 
 async function setGlobalPropertyApi({serverstore, key, value}) {
-    await serverstore.setGlobalPropertyAsync(key, value);
+    serverstore.setGlobalProperty(key, value);
 }
 exports.setGlobalPropertyApi = setGlobalPropertyApi;
     

@@ -6,7 +6,7 @@ async function profileConstructorAsync({serverstore}) {
     if (!fbUser) {
         throw new Error('User not found');
     }
-    await serverstore.setObjectAsync('profile', userId, {
+    serverstore.setObject('profile', userId, {
         name: fbUser.displayName || null,
         photoUrl: fbUser.photoURL || null
     });
