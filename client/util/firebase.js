@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, connectAuthEmulator } from 'firebase/auth';
-import { connectDatabaseEmulator, getDatabase, onValue, push, ref, set } from "firebase/database";
+import { connectDatabaseEmulator, getDatabase, onValue, push, get, ref, set } from "firebase/database";
 import { useEffect, useState } from 'react';
 
 var app = null;
@@ -92,13 +92,32 @@ export function useFirebaseData(pathList, defaultValue=null) {
     return data;
 }
 
-export function getFirebaseDataAsync(pathList) {
+export async function getFirebaseDataAsync(pathList) {
     const pathString = makeFirebasePath(pathList);
-    return ref(database, pathString).get().then(snapshot => snapshot.val());
+
+    try {
+        const snapshot = await get(ref(database, pathString));
+        return snapshot.exists() ? snapshot.val() : null;
+    } catch (error) {
+        throw new Error('Error fetching data at path: ' + pathString + ' - ' + error.message);
+    }
 }
 
-function makeFirebasePath(pathList) {
-    return pathList.join('/');
+
+// function makeFirebasePath(pathList) {
+//     return pathList.join('/');
+// }
+
+function makeFirebasePath(path) {
+    if (typeof path == 'string') {
+        return path;
+    } else {
+        if (path.some(p => !p)) {
+            console.error('Bad firebase path', path);
+            throw new Error('Firebase path cannot contain null or undefined elements: ' + JSON.stringify(path));
+        }
+        return path.join('/');
+    }
 }
 
 export function fbKeyToString(input) {

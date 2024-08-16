@@ -74,6 +74,7 @@ function findStoryActionNode({domRef, matcher}) {
 
 async function playStoryAction({domRef, action}) {
     const node = findStoryActionNode({domRef, matcher: action.matcher});
+    console.log('playStoryAction', action, node);
     if (action.action === 'click') {
         node.click();
     } else if (action.action === 'input') {
@@ -93,7 +94,10 @@ async function playStoryActionListAsync({domRef, actions}) {
 }
 
 export function DemoStorySet({storySet}) {
-    const {collections, content, config, globals, sessionData, serverCall} = storySet;
+    const { collections, content, structureKey='testStruct', instanceKey='testInstance', 
+        personaKey, config, modulePublic,
+        globals, sessionData, serverCall, pad=true, firebaseUser, siloKey='demo'
+    } = storySet;
     const domRef = React.createRef();
     const dataRef = React.createRef();
     const [key, setKey] = useState(0);
@@ -103,8 +107,10 @@ export function DemoStorySet({storySet}) {
         setKey(key+1);
     }
 
-    return <Datastore ref={dataRef} config={config} collections={collections} globals={globals}  
-            sessionData={sessionData} serverCall={serverCall}>
+    return <Datastore ref={dataRef} config={config} siloKey={siloKey}
+            structureKey={structureKey} instanceKey={instanceKey} personaKey={personaKey}
+            collections={collections} globals={globals} firebaseUser={firebaseUser}
+            sessionData={sessionData} serverCall={serverCall} modulePublic={modulePublic}>
         <FlowBox>
             {storySet.stories.map(story =>
                 <PadBox right={10} key={story.label}>
@@ -116,11 +122,13 @@ export function DemoStorySet({storySet}) {
         </FlowBox>
         <Pad size={10} />
         <ShadowBox>
-            <View key={key}>
-                <div ref={domRef}>
-                    {content}
-                </div>
-            </View>
+            <PadBox horiz={pad ? 20 : 0} vert={pad ? 20 : 0}>
+                <View key={key}>
+                    <div ref={domRef}>
+                        {content}
+                    </div>
+                </View>
+            </PadBox>
         </ShadowBox>
         <Pad size={32} />
     </Datastore>    

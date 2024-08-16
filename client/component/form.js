@@ -44,7 +44,7 @@ export function RadioOption({emoji, text, radioKey, label}) {
     const s = RadioItemStyle;
     const {radioSelection, onSetRadio} = React.useContext(RadioContext);
     const value = radioSelection === radioKey;
-    return <HoverView hoverStyle={s.hover} pressedStyle={s.pressed}
+    return <HoverView hoverStyle={s.hover} pressedStyle={s.pressed} testID={label ?? text}
         onPress={() => onSetRadio(radioKey)} role='checkbox'>
         <PadBox vert={8}>
             <HorizBox center>

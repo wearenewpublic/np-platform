@@ -1,8 +1,8 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { adminPersonaList, defaultPersona, defaultPersonaList, memberPersonaList, personaListToMap } from '../data/personas';
-import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseApp, getFirebaseUser, onFbUserChanged, useFirebaseData } from './firebase';
-import { deepClone, expandDataList, expandDataListMap } from './util';
+import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseApp, getFirebaseDataAsync, getFirebaseUser, onFbUserChanged, useFirebaseData } from './firebase';
+import { deepClone, expandDataList, expandDataListMap, getObjectPropertyPath } from './util';
 import { LoadingScreen } from '../component/basics';
 import { SharedData, SharedDataContext } from './shareddata';
 import { callServerApiAsync } from './servercall';
@@ -170,10 +170,14 @@ export class Datastore extends React.Component {
         return sortObjectList(items, props);
     }
 
+    getFirebaseUser() {
+        return this.props.firebaseUser ?? getFirebaseUser();
+    }
+
     addCurrentUser() {
         if (this.props.isLive) {
             const personaKey = this.getPersonaKey();
-            const fbUser = getFirebaseUser();
+            const fbUser = this.getFirebaseUser();
             const myPersona = this.getObject('persona', personaKey);
             if (!myPersona || myPersona.photoUrl != fbUser.photoURL || myPersona.name != fbUser.displayName) {
                 this.setObject('persona', personaKey, {
@@ -196,8 +200,15 @@ export class Datastore extends React.Component {
             callServerApiAsync({datastore: this, component: 'global', funcname: 'setGlobalProperty', params: {key, value}});
         }
     }
+    getModulePublicAsync(moduleKey, path) {
+        if (this.props.isLive) {
+            return getFirebaseDataAsync(['silo', this.getSiloKey(), 'module-public', moduleKey, ...path]);
+        } else {
+            return getObjectPropertyPath(this.props.modulePublic, [moduleKey, ...path]);
+        }
+    }
 
-    getSiloKey() {return this.props.siloKey}
+    getSiloKey() {return this.props.siloKey ?? (this.props.isLive ? null : 'demo')}
     getStructureKey() {return this.props.structureKey}
     getInstanceKey() {return this.props.instanceKey}
     getConfig() {return this.props.config ?? {}}
@@ -277,11 +288,6 @@ export function useSessionData(path) {
 
 export function usePersonaKey() {
     return useSessionData('personaKey');
-}
-
-export function usePersona() {
-    const personaKey = usePersonaKey();
-    return usePersonaObject('persona', personaKey);
 }
 
 export function usePersonaObject(key) {
@@ -425,7 +431,6 @@ export function useModulePublicData(moduleKey, path = []) {
     const datastore = useDatastore();
     return useFirebaseData(['silo', datastore.getSiloKey(), 'module-public', moduleKey, ...path]);
 }
-
 
 export function useInstanceContext() {
     const datastore = useDatastore();

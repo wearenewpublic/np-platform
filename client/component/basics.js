@@ -239,3 +239,18 @@ export function FlowBox({children, center=false}) {
         {children}
     </View>
 }
+
+export function Container({children}) {
+    const s = ContainerStyle;
+    return <View style={s.outer}>
+        {children}
+    </View>
+}
+
+const ContainerStyle = StyleSheet.create({
+    outer: {
+        borderColor: colorGreyBorder,
+        borderWidth: 1,
+        borderRadius: 12,
+    }
+});

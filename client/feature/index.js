@@ -11,6 +11,8 @@ import { CommentDemoFeature } from "../demo/comment-demo";
 import { DemoFeature, DemoSecondaryFeature } from "../demo/comment-config";
 import { ProfileDemoFeature } from "../demo/profile-demo";
 import { EventlogDemoFeature } from "../demo/eventlog-demo";
+import { ProfileEditDemo } from "../demo/profileedit-demo";
+import { ProfileOldPhotoNameFeature, ProfileOldStuff, ProfilePhotoAndNameFeature } from "./ProfilePhotoAndName";
 
 // const { DemoFeature, DemoSecondaryFeature } = require("./DemoFeature");
 
@@ -41,6 +43,10 @@ export var features = {
         ]),
         SECTION('Activity', [
             ProfileCommentsFeature
+        ]),
+        SECTION('General', [
+            ProfilePhotoAndNameFeature,
+            ProfileOldStuff        
         ])
     ],
     componentdemo: [
@@ -48,7 +54,8 @@ export var features = {
             DesignSystemDemoFeature,
             CommentDemoFeature,
             ProfileDemoFeature,
-            EventlogDemoFeature
+            EventlogDemoFeature,
+            ProfileEditDemo
         ])
     ]
 }
@@ -61,7 +68,9 @@ export var defaultFeatureConfig = {
         demo_eventlog: true
     },
     simplecomments: {},
-    profile: {}
+    profile: {
+        profile_old: true,
+    }
 }
 
 export function addFeatures(newFeaturesForStructs) {

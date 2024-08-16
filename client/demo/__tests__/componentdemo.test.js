@@ -40,10 +40,17 @@ describe.each(componentPages)('Components: $label', page => {
     } 
     if (!page.storySets) return;
     describe.each(page.storySets())('Story: $label', storySet => {
+        if (!storySet.stories || storySet.stories.length == 0) return;
         test.each(storySet.stories || [])('Action: $label', async story => {
             const rendered = render(
-            <Datastore config={storySet.config} collections={storySet.collections} 
-                globals={storySet.globals}
+            <Datastore config={storySet.config} collections={storySet.collections}
+                instanceKey={storySet.instanceKey ?? 'testInstance'} 
+                siloKey={storySet.siloKey ?? 'demo'}
+                modulePublic={storySet.modulePublic}
+                personaKey={storySet.personaKey}
+                firebaseUser={storySet.firebaseUser}
+                structureKey={storySet.structureKey ?? 'testStruct'} 
+                globals={storySet.globals} filebaseUser={storySet.firebaseUser}
                 sessionData={storySet.sessionData} serverCall={storySet.serverCall}>
                 {storySet.content}
             </Datastore>);

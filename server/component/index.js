@@ -5,9 +5,9 @@ var coreComponents = {
     eventlog: require('./eventlog'),
     notifs: require('./notifs'),
     global: require('./global'),
+    profile: require('./profile'),
 }
 
 exports.coreComponents = coreComponents;
-
 
 

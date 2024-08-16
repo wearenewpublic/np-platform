@@ -69,31 +69,12 @@ const config = {
     commentRightActions: [ActionEdit]
 }
 
-function CommentScreen() {
-    const sessionData = {
-        'showReplies/2': true
-    }
-    return <ConversationScreen >
-        <Narrow>
-            <Datastore collections={collections} config={config} sessionData={sessionData}>
-                <DemoSection label='Comment with Standard Actions'>
-                    <Comment commentKey={1} />
-                    <Comment commentKey={2} />
-                    <Comment commentKey={5} />
-                </DemoSection>
-            </Datastore>
-            <DemoSection label='CommentsInput'>
-                <CommentsInput />
-            </DemoSection>
-        </Narrow>
-     </ConversationScreen>
-}
-
 function commentStorySets() {return [
     {
         label: 'Comment Actions',
         collections, config, sessionData: {'showReplies/2': true},
         content: <Comment commentKey={2} />,
+        pad: false,
         stories: [
             {label: 'Edit Reply', actions: 
                 [CLICK('Edit'), INPUT('comment-edit', 'Edited Comment'), CLICK('Update')]

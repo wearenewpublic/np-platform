@@ -9,7 +9,7 @@ import { Popup } from "../platform-specific/popup";
 import { Information, Close } from '@carbon/icons-react';
 
 
-export function CTAButton({label, icon, type='primary', disabled, compact=false, wide=false, onPress}) {
+export function CTAButton({label, formatParams, icon, type='primary', disabled, compact=false, wide=false, onPress}) {
     const s = CTAButtonStyle;
 
     const styleMap = {
@@ -25,7 +25,7 @@ export function CTAButton({label, icon, type='primary', disabled, compact=false,
             style={[compact ? s.compactButton : s.button, wide && s.wide, normal]} hoverStyle={[s.hover, hover]} 
             pressedStyle={pressed} onPress={onPress} >
         {icon && <PadBox right={8}>{icon}</PadBox>}
-        <UtilityText type='large' label={label} color={textColor} />
+        <UtilityText type='large' label={label} formatParams={formatParams} color={textColor} />
     </HoverView>
 }
 

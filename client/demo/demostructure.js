@@ -9,6 +9,7 @@ import { View } from "react-native";
 import { useDatastore } from "../util/datastore";
 import { DemoStory, DemoStorySet } from "../component/demo";
 import { AccordionField } from "../component/form";
+import { Catcher } from "../component/catcher";
 
 export const ComponentDemoStructure = {
     key: 'componentdemo',
@@ -65,8 +66,6 @@ function ComponentPageScreen({pageKey}) {
     const {page, section} = findPage({sections:componentSections, pageKey});
     const designUrl = page.designUrl ?? section.designUrl;;
 
-    console.log('page', page);
-
     return <ConversationScreen>
         <HeaderBox>
             <Heading level={1} label={page.label} />
@@ -78,7 +77,9 @@ function ComponentPageScreen({pageKey}) {
         <Narrow>
             {page.screen && React.createElement(page.screen)}
             {page.storySets && page.storySets()?.map((storySet, i) =>
-                <DemoStorySet key={i} storySet={storySet} />
+                <Catcher key={i}>
+                    <DemoStorySet storySet={storySet} />
+                </Catcher>
             )}
         </Narrow>
     </ConversationScreen>
