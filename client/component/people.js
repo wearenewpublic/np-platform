@@ -1,11 +1,11 @@
-import { useIsLive, useObject, usePersonaKey, usePersonaObject } from "../util/datastore";
+import { useIsLive, useObject, usePersonaKey, usePersonaObject, usePersonaPreview as usePersonaPreview } from "../util/datastore";
 import { getFirebaseUser } from "../util/firebase";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { IconCircleCheck } from "./icon";
 import { UtilityText } from "./text";
-import { Pad } from "./basics";
+import { HoverView, Pad } from "./basics";
 import { formatDate, formatMiniDate } from "./date";
-import { colorDisabledBackground, colorTextGrey } from "./color";
+import { colorBlack, colorDisabledBackground, colorTextGrey, colorWhite } from "./color";
 import { TextButton } from "./button";
 import { gotoInstance } from "../util/navigate";
 import { useLanguage } from "./translation";
@@ -17,10 +17,12 @@ export function ProfilePhoto({userId, type='large', photo=null, faint=false, che
     const meKey = usePersonaKey();
 
     if (meKey == userId && isLive) {
-        const fbUser = getFirebaseUser();
-        if (fbUser) {
-            return <FaceImage photoUrl={photo ?? fbUser.photoURL} type={type} faint={faint} 
+        const personaPreview = usePersonaPreview();
+        if (personaPreview?.photoUrl) {
+            return <FaceImage photoUrl={photo ?? personaPreview.photoUrl} type={type} faint={faint} 
                 border={border} check={check} />
+        } else if (personaPreview?.hue && personaPreview?.name) {
+            return <LetterFace name={personaPreview.name} hue={personaPreview.hue} type={type} />
         } else {
             return <AnonymousFace faint={faint} type={type} border={border} />
         }
@@ -29,6 +31,8 @@ export function ProfilePhoto({userId, type='large', photo=null, faint=false, che
         if (face || photo || persona?.photoUrl) {
             return <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} 
                 border={border} faint={faint} check={check} />
+        } else if (persona?.hue && persona?.name) {
+            return <LetterFace name={persona.name} hue={persona.hue} type={type} />
         } else {
             return <AnonymousFace faint={faint} type={type} border={border} />    
         }
@@ -69,6 +73,31 @@ export function FaceImage({face, photoUrl=null, type='small', faint=false, check
         }
     </View>
 }
+
+const fontFamilySansMedium = 'IBMPlexSans_500Medium, Arial, Helvetica, sans-serif';
+
+export function LetterFace({name, hue, type='large'}) {
+    const s = LetterFaceStyle;
+    const sizeMap = {
+        huge: 80,
+        large: 40,
+        small: 32,
+        tiny: 24,
+    }
+    const size = sizeMap[type] ?? 32;
+    const color = 'hsl('+hue+', 96%, 27%)';
+    const letter = name.substring(0,1).toUpperCase();
+
+    return <View style={{width: size, height: size, borderRadius: size /2, backgroundColor: color, justifyContent: 'center', alignItems: 'center'}}>
+        <Text style={[{fontSize: size / 2}, s.letter]}>{letter}</Text>
+    </View>    
+}
+const LetterFaceStyle = StyleSheet.create({
+    letter: {
+        color: colorWhite,
+        fontFamily: fontFamilySansMedium
+    }
+});
 
 export function AnonymousFace({faint, type, border, check}) {
     return <FaceImage face='anonymous2.jpeg' faint={faint} type={type} border={border} check={check} />
@@ -159,3 +188,34 @@ const BylineStyle = StyleSheet.create({
     }
 })
 
+export function FaceSelect({selected, onSelect, testID, children}) {
+    return <FaceButton testID={testID} selected={selected} onPress={!selected && onSelect}>
+        {children}
+    </FaceButton>
+}
+
+export function FaceButton({selected, onPress, testID, children}) {
+    const s = FaceButtonStyle;
+    return <HoverView style={s.ring} onPress={onPress} testID={testID}>
+        <View style={selected ? s.blackRing : s.whiteRing}>
+            <View style={s.whiteRing}>
+                {children}
+            </View>
+        </View>
+    </HoverView>
+}
+const FaceButtonStyle = StyleSheet.create({
+    ring: {
+        alignSelf: 'flex-start',
+    },
+    whiteRing: {
+        borderWidth: 3,
+        borderColor: colorWhite,
+        borderRadius: 50
+    }, 
+    blackRing: {
+        borderWidth: 3,
+        borderColer: colorBlack,
+        borderRadius: 50
+    },
+});

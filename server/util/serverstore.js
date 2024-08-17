@@ -127,6 +127,15 @@ class ServerStore {
         ], {...value, key: this.instanceKey});
     }
 
+    async setGenericBacklink(structureKey, instanceKey, value={}) {
+        this.doDelayedWrite([
+            'silo', this.siloKey, 'structure', structureKey, 
+            'instance', instanceKey, 'collection',
+            'backlink_' + this.structureKey, this.instanceKey
+        ], {...value, key: this.instanceKey, structureKey: this.structureKey});
+    }
+
+
     async updateDerivedObjectAsync({structureKey, instanceKey, type, key, updateMap}) {
         if (!type.startsWith('derived_')) {
             throw new Error('derived type ' + type + ' does not start with derived_');

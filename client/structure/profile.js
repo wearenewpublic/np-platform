@@ -10,6 +10,7 @@ import { View } from "react-native";
 import { CTAButton, TextButton } from "../component/button";
 import { useTranslation } from "../component/translation";
 import { callServerApiAsync } from "../util/servercall";
+import { removeUndefinedFields } from "../util/util";
 
 export const ProfileStructure = {
     key: 'profile',
@@ -53,8 +54,8 @@ export function ProfileModuleHolder({module}) {
     const instanceKey = useInstanceKey(); 
     const isMyProfile = personaKey === instanceKey;
     const tLabel  = useTranslation(module.label);
-    const oldState = useGlobalProperty(module.key);
-    const [updates, setUpdates] = useState(oldState ?? {});
+    const oldState = useGlobalProperty('fields') ?? {};
+    const [updates, setUpdates] = useState(oldState);
     const [errors, setErrors] = useState({});
     const [inProgress, setInProgress] = useState(false);
     const moduleData = useGlobalProperty(module.key);
@@ -73,16 +74,18 @@ export function ProfileModuleHolder({module}) {
         }
         var preview = null;
         if (makePreview) {
-            preview = makePreview({updates});
+            preview = removeUndefinedFields(makePreview({updates}));
         }
         await callServerApiAsync({datastore, component: 'profile', funcname: 'update', 
             params: {moduleKey: module.key, updates, preview}});
         setInProgress(false);
         setEditing(false);
+        setErrors({});
     }
 
     function onCancel() {
         setEditing(false);
+        setErrors({});
         setUpdates(oldState ?? {});
     }
 
@@ -133,12 +136,14 @@ export function useProfileFields() {
 
 export function useEditableField(key, defaultValue) {
     const {updates, updateField} = React.useContext(FieldEditContext);
-    return [updates[key] ?? defaultValue, value => updateField(key, value)];
+    const value = updates[key];
+    return [updates[key] === undefined ? defaultValue : value, value => updateField(key, value)];
 }
 
 export function useProfileField(key, defaultValue=null) {
     const {updates} = React.useContext(FieldEditContext);
-    return updates[key] ?? defaultValue;
+    const value = updates[key];
+    return value === undefined ? defaultValue : value;
 }
 
 export function useProfileFieldsSetter() {

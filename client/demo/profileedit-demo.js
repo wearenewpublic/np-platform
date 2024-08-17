@@ -33,7 +33,12 @@ function profileStorySets() {return [
         modulePublic: {profile: {pseudonym: {takenname: 'b'}}},
         firebaseUser: {displayName: 'Alice Adams', photoURL: 'https://psi.newpublic.org/faces/face9.jpeg'},
         content: <ProfileModuleHolder module={ProfilePhotoAndNameFeature.config.profileModules[0]} />,
-        serverCall: {profile: {update: () => {}}},
+        serverCall: {profile: {
+            update: ({datastore, updates, preview}) => {
+                datastore.updateGlobalProperty('fields', updates);
+                datastore.updateObject('persona', 'a', preview);
+            }
+        }},
         stories: [
             {label: 'Good Pseudonym', actions: [
                 CLICK('Edit {tLabel}'), CLICK('A pseudonym'), 
@@ -57,6 +62,22 @@ function profileStorySets() {return [
                 CLICK('Edit {tLabel}'), CLICK('A pseudonym'), 
                 INPUT('pseudonym', 'malice'), CLICK('Cancel')
             ]},
+            {label: 'Letter Pic', actions: [
+                CLICK('Edit {tLabel}'), CLICK('letter'),
+                CLICK('Save'),
+            ]},
+            {label: 'Back to Photo', actions: [
+                CLICK('Edit {tLabel}'), CLICK('letter'),
+                CLICK('Save'),
+                CLICK('Edit {tLabel}'), CLICK('photo'),
+                CLICK('Save'),
+            ]},
+            {label: 'Photo and Pseudonym', actions: [
+                CLICK('Edit {tLabel}'), CLICK('letter'),
+                CLICK('A pseudonym'), INPUT('pseudonym', 'malice'), 
+                CLICK('Save'),
+            ]},
+
 
         ]
     }

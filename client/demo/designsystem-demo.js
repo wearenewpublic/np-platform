@@ -1,5 +1,5 @@
-import { Byline, FacePile, ProfilePhoto } from "../component/people";
-import { usePersonaKey } from "../util/datastore";
+import { Byline, FaceButton, FacePile, LetterFace, ProfilePhoto } from "../component/people";
+import { Datastore, usePersonaKey } from "../util/datastore";
 import { IconAudio, IconChevronDown, IconClose, IconCloseBig, IconComment, IconCommentBig, IconEdit, IconEmoji, IconImage, IconLeftArrowBig, IconReply, IconReport, IconSave, IconUpvote, IconUpvoted, IconVideo } from "../component/icon";
 import { CharacterCounter, CircleCount, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
 import { colorBlack, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
@@ -126,31 +126,40 @@ function TextFieldScreen() {
 }
 
 function ProfileScreen() {
-    const personaKey = usePersonaKey();
-    const p = personaKey;
-    return <View>
+    const [selected, setSelected] = useState(false)
+    function onPress() {console.log('press')}
+    return <Datastore>
             <DemoSection label='Profile Photo'>
                 <SpacedArray horiz pad={8}>
-                    <ProfilePhoto userId={personaKey} />
-                    <ProfilePhoto userId={personaKey} type="small"/>
-                    <ProfilePhoto userId={personaKey} type="tiny"/>
-                    <ProfilePhoto userId={personaKey} check={true} />
-                    <ProfilePhoto userId={personaKey} type="small" check/>
-                    <ProfilePhoto userId={personaKey} type="tiny" check/>
+                    <ProfilePhoto userId='a' />
+                    <ProfilePhoto userId='b' type="small"/>
+                    <ProfilePhoto userId='c' type="tiny"/>
+                    <ProfilePhoto userId='d' check={true} />
+                    <ProfilePhoto userId='e' type="small" check/>
+                    <ProfilePhoto userId='f' type="tiny" check/>
+                </SpacedArray>
+                <SpacedArray horiz pad={8}>
+                    <ProfilePhoto userId='x' />
+                    <ProfilePhoto userId='y' type="small"/>
+                    <ProfilePhoto userId='z' type="tiny"/>
                 </SpacedArray>
             </DemoSection>
             <DemoSection label='Facepile'>
-                <FacePile userIdList={[p,p,p]} type='small' />
-                <FacePile userIdList={[p,p,p,p,p,p,p]} type='tiny' />
+                <FacePile userIdList={['a','b','c','z']} type='small' />
+                <FacePile userIdList={['x','d','e','f','g','h','i','j']} type='tiny' />
             </DemoSection>
             <DemoSection label='Byline'>
-                <Byline userId={personaKey} type='large' time={Date.now()} />
-                <Byline userId={personaKey} type='large' time={Date.now() - 1000 * 60 * 10} edited={Date.now()} />
-                <Byline userId={personaKey} type='small' time={Date.now()} />
-                <Byline userId={personaKey} type='small' />
-                <Byline userId={personaKey} type='small' time={Date.now()} />
-                <Byline userId={personaKey} type='small' photoType='large' />
-                <Byline userId={personaKey} type='small' photoType='large' time={Date.now()} />
+                <Byline userId={'a'} type='large' time={Date.now()} />
+                <Byline userId={'b'} type='large' time={Date.now() - 1000 * 60 * 10} edited={Date.now()} />
+                <Byline userId={'y'} type='large' time={Date.now() - 1000 * 60 * 60 * 10} edited={Date.now()} />
+                <Byline userId={'c'} type='small' time={Date.now()} />
+                <Byline userId={'d'} type='small' />
+                <Byline userId={'e'} type='small' time={Date.now()} />
+                <Byline userId={'f'} type='small' photoType='large' />
+                <Byline userId={'g'} type='small' photoType='large' time={Date.now()} />
+                <Byline userId='x' type='small' photoType='large' time={Date.now()} />
+                <Byline userId='z' type='small' photoType='large' time={Date.now()} />
+
             </DemoSection>
             <DemoSection label='Anonymous'>
                 <Byline name='Anonymous User' type='large' time={Date.now()} />
@@ -160,7 +169,25 @@ function ProfileScreen() {
                 <Byline name='Anonymous User' photoType='large' type='small' time={Date.now()} />
                 <Byline name='Anonymous User' photoType='large' type='small' />
             </DemoSection>
-        </View>
+            <DemoSection label='Letter face' horiz>
+                <LetterFace name='dave' type='huge' hue={183} />
+                <LetterFace name='bill' type='huge' hue={0} />
+                <LetterFace name='jane' type='large' hue={45} />
+                <LetterFace name='sarah' type='large' hue={90} />
+                <LetterFace name='ella' type='small' hue={135} />
+                <LetterFace name='carl' type='small' hue={180} />
+                <LetterFace name='mica' type='tiny' hue={225} />
+                <LetterFace name='betty' type='tiny' hue={300} />
+            </DemoSection>
+            <DemoSection horiz label='Face Button'>
+                <FaceButton selected={selected} onPress={() => setSelected(!selected)}>
+                    <LetterFace name='dave' type='huge' hue={183} />
+                </FaceButton>
+                <FaceButton selected={!selected} onPress={() => setSelected(!selected)}>
+                    <ProfilePhoto userId='a' type='huge' hue={183} />
+                </FaceButton>
+            </DemoSection>
+        </Datastore>
 }
 
 function FormScreen() {

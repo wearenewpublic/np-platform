@@ -76,10 +76,31 @@ export const personaL = {
     photoUrl: faceUrl('face4.jpeg'),
 }
 
+export const personaX = {
+    key: 'x',
+    name: 'Xavier Xerxes',
+    hue: 183
+}
+
+export const personaY = {
+    key: 'y',
+    name: 'yoghurt',
+    hue: 50
+}
+
+export const personaZ = {
+    key: 'z',
+    name: 'zipedeedoodah',
+    hue: 250
+}
+
+
 export const defaultPersona = 'a';
 
 export const defaultPersonaList = [personaA, personaB, personaC, personaD, personaE, personaF,
-    personaG, personaH, personaI, personaJ, personaK, personaL]
+    personaG, personaH, personaI, personaJ, personaK, personaL,
+    personaX, personaY, personaZ
+];
 
 
 export function personaListToMap(personas) {

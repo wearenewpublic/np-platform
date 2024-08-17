@@ -115,6 +115,9 @@ export class Datastore extends React.Component {
         this.setData({...this.getData(), [typeName]: typeData});
 
         if (isLive) {
+            if (typeName != 'persona') {
+                this.addCurrentUser(); // don't call on persona or you get a loop
+            }
             await firebaseWriteAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', typeName, key], value);
             await callServerApiAsync({datastore: this, component: 'derivedviews', funcname: 'runTriggers', params: {type: typeName, key}});
         }
@@ -123,7 +126,6 @@ export class Datastore extends React.Component {
         const {isLive} = this.props;
         const key = isLive ? firebaseNewKey() : newLocalKey();
         const personaKey = this.getPersonaKey();
-        this.addCurrentUser();
         const objectData = {key, from: personaKey, time: Date.now(), ...value};
         this.setObject(typeName, key, objectData);
         return key;
@@ -174,16 +176,22 @@ export class Datastore extends React.Component {
         return this.props.firebaseUser ?? getFirebaseUser();
     }
 
+    getPersonaPreview() {
+        return this.props.personaPreview;
+    }
+
     addCurrentUser() {
         if (this.props.isLive) {
             const personaKey = this.getPersonaKey();
-            const fbUser = this.getFirebaseUser();
+            const fbUser = this.getPersonaPreview();
             const myPersona = this.getObject('persona', personaKey);
-            if (!myPersona || myPersona.photoUrl != fbUser.photoURL || myPersona.name != fbUser.displayName) {
+            if (!myPersona || !persona.link || myPersona.photoUrl != fbUser.photoURL || myPersona.name != fbUser.displayName) {
+                callServerApiAsync({datastore: this, component: 'profile', funcname: 'linkInstannce', params: {}})
                 this.setObject('persona', personaKey, {
                     photoUrl: fbUser.photoURL, 
                     name: fbUser.displayName, 
                     key: personaKey,
+                    link: true,
                     member: myPersona?.member || null
                 });
             }
@@ -199,6 +207,11 @@ export class Datastore extends React.Component {
         if (this.props.isLive) {
             callServerApiAsync({datastore: this, component: 'global', funcname: 'setGlobalProperty', params: {key, value}});
         }
+    }
+    updateGlobalProperty(key, value) {
+        const oldValue = this.getGlobalProperty(key);
+        const newValue = {...oldValue, ...value};
+        this.setGlobalProperty(key, newValue);
     }
     getModulePublicAsync(moduleKey, path) {
         if (this.props.isLive) {
@@ -281,6 +294,11 @@ export function useData() {
     return {dataTree, sessionData};
 }
 
+export function usePersonaPreview() {
+    const datastore = useDatastore();
+    return datastore.getPersonaPreview();
+}
+
 export function useSessionData(path) {
     const {sessionData} = useData();
     return sessionData[pathToName(path)];
@@ -293,19 +311,11 @@ export function usePersonaKey() {
 export function usePersonaObject(key) {
     const persona = useObject('persona', key);
     const meKey = usePersonaKey();
+    const preview = usePersonaPreview();
     const isLive = useIsLive();
 
-    if (key == meKey && isLive) {
-        const fbUser = getFirebaseUser();
-        if (fbUser) {
-            return {
-                name: fbUser.displayName,
-                photoUrl: fbUser.photoURL,
-                key: key
-            }
-        } else {
-            return persona;
-        }
+    if (key == meKey && isLive && !persona) {
+        return {...preview, key};
     } else {
         return persona;
     }

@@ -77,9 +77,11 @@ export function firebaseWatchValue(pathList, callback) {
     });
 }
 
+// This needs to cope with temporarily null path elements, so that we can
+// use it to look up properties of a user, even when the user isn't logged in yet.
 export function useFirebaseData(pathList, defaultValue=null) {
     const [data, setData] = useState(null);
-    const pathString = makeFirebasePath(pathList);
+    const pathString = makeFirebasePath(pathList, true);
     const nullPath = pathList.some(p => p == null || p == undefined);
 
     useEffect(() => {
@@ -108,12 +110,12 @@ export async function getFirebaseDataAsync(pathList) {
 //     return pathList.join('/');
 // }
 
-function makeFirebasePath(path) {
+function makeFirebasePath(path, skipCheck=false) {
     if (typeof path == 'string') {
         return path;
     } else {
-        if (path.some(p => !p)) {
-            console.error('Bad firebase path', path);
+        if (!skipCheck && path.some(p => !p)) {
+            console.error('Bad firebase path', path, skipCheck);
             throw new Error('Firebase path cannot contain null or undefined elements: ' + JSON.stringify(path));
         }
         return path.join('/');
@@ -133,6 +135,21 @@ export function fbKeyToString(input) {
     };
 
     return input.replace(/%d|%h|%s|%f|%l|%r|%%|%q/g, match => reverseMapping[match]);
+}
+
+export function stringToFbKey(input) {
+    const mapping = {
+        '.': '%d',
+        '#': '%h',
+        '$': '%s',
+        '/': '%f',
+        '[': '%l',
+        ']': '%r',
+        '%': '%%',
+        "'": '%q'
+    };
+
+    return input.replace(/[.$#/[\]%]/g, match => mapping[match]);
 }
 
 export function signInWithGoogle() {

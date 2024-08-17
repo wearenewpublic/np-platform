@@ -4,12 +4,12 @@ import { TopBar } from '../organizer/TopBar';
 import { IBMPlexSans_400Regular, IBMPlexSans_500Medium, IBMPlexSans_600SemiBold } from '@expo-google-fonts/ibm-plex-sans';
 import { IBMPlexMono_400Regular, IBMPlexMono_500Medium, IBMPlexMono_600SemiBold } from '@expo-google-fonts/ibm-plex-mono';
 import { LoginScreen } from '../organizer/Login';
-import { ConfigContext, Datastore, WaitForData, useGlobalProperty, useLoaded } from '../util/datastore';
+import { ConfigContext, Datastore, WaitForData, useGlobalProperty, useLoaded, usePersonaKey } from '../util/datastore';
 import { useFonts } from 'expo-font';
 import { Catcher } from '../component/catcher';
 import { structures } from '../structure';
 import { assembleConfig, assembleScreenSet } from './features';
-import { useFirebaseData } from './firebase';
+import { useFirebaseData, useFirebaseUser } from './firebase';
 import { useIsAdminForSilo } from '../component/admin';
 import { goBack } from './navigate';
 import { requireParams } from './util';
@@ -26,6 +26,18 @@ export function useStandardFonts() {
     return fontsLoaded
 }
 
+function usePersonaPreviewForSilo({siloKey}) {
+    const fbUser = useFirebaseUser();
+    const defaultPersonaPreview = {name: fbUser?.displayName, photoUrl: fbUser?.photoURL};
+    const personaPreview = useFirebaseData(
+        ['silo', siloKey, 'structure', 'profile', 'instance', fbUser?.uid, 'global', 'preview'], 
+        defaultPersonaPreview
+    );
+    console.log('personaPreview', personaPreview);
+    if (!fbUser) return null;
+    return personaPreview;
+}
+
 export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKey}) {
     const s = ScreenStackStyle;
     
@@ -34,15 +46,18 @@ export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKe
     const activeFeatures = useFirebaseData(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global', 'features']) || [];
     const config = assembleConfig({structure, activeFeatures});
     const screenSet = assembleScreenSet({structure, activeFeatures});
+    const personaPreview = usePersonaPreviewForSilo({siloKey});
     const isAdmin = useIsAdminForSilo({siloKey});
 
     if (!structureKey || !instanceKey || !siloKey) {
         console.error('ScreenStack missing keys', {structureKey, instanceKey, siloKey});
     }
- 
+
+    console.log('Person preview', personaPreview);
+
     return <View style={s.stackHolder}>
         <Datastore key={url} siloKey={siloKey} instanceKey={instanceKey} structureKey={structureKey} 
-                language={language} isAdmin={isAdmin} isLive={true} config={config} >
+                language={language} isAdmin={isAdmin} isLive={true} config={config} personaPreview={personaPreview}>
             {screenStack.map((screenInstance, index) => 
                 <StackedScreen screenSet={screenSet} screenInstance={screenInstance} index={index} key={index} />
             )}
