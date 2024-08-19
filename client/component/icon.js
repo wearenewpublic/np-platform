@@ -1,4 +1,5 @@
 import { colorTextBlue } from "./color"
+import { ArrowShiftDown } from '@carbon/icons-react';
 
 export function IconCircleCheck() {
     return <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -81,10 +82,8 @@ export function IconSave() {
     </svg>
 }
 
-export function IconUpvote({color='black'}) {
-    return <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M4.50011 13L4.50011 8L2.00011 8C1.90123 7.99998 1.80458 7.97064 1.72238 7.9157C1.64017 7.86076 1.5761 7.78268 1.53827 7.69133C1.50043 7.59998 1.49053 7.49946 1.50982 7.40248C1.5291 7.30551 1.5767 7.21642 1.64661 7.1465L7.64661 1.1465C7.74037 1.05276 7.86753 1.00011 8.00011 1.00011C8.13269 1.00011 8.25984 1.05276 8.35361 1.1465L14.3536 7.1465C14.4235 7.21643 14.4711 7.30551 14.4904 7.40248C14.5097 7.49946 14.4998 7.59998 14.4619 7.69133C14.4241 7.78268 14.36 7.86076 14.2778 7.9157C14.1956 7.97064 14.099 7.99998 14.0001 8L11.5001 8L11.5001 13C11.4998 13.2651 11.3944 13.5193 11.2069 13.7068C11.0194 13.8943 10.7652 13.9997 10.5001 14L5.50011 14C5.23501 13.9996 4.98089 13.8941 4.79344 13.7067C4.60599 13.5192 4.5005 13.2651 4.50011 13ZM8.00011 2.207L3.20711 7L5.50011 7L5.50011 13L10.5001 13L10.5001 7L12.7931 7L8.00011 2.207Z" fill={color}/>
-    </svg>
+export function IconUpvote() {
+    return <ArrowShiftDown style={{ transform: 'rotate(180deg)' }} />
 }
 
 export function IconUpvoted({color=colorTextBlue}) {

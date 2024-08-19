@@ -3,7 +3,7 @@ import { TranslatableText, useTranslation } from "./translation"
 import { colorBannerGreen, colorBlack, colorDisabledText, colorGreyBorder, colorGreyHover, colorGreyHoverBorder, colorRed, colorTextBlue, colorTextGrey, colorWhite } from "./color";
 import { HorizBox, HoverView, Pad, PadBox } from "./basics";
 import { useEffect, useState } from "react";
-import { IconCheckmark, IconEdit, IconEditBig } from "./icon";
+import { Edit, Checkmark } from "@carbon/icons-react";
 import { usePersonaKey } from "../util/datastore";
 import { ProfilePhoto } from "./people";
 
@@ -14,7 +14,7 @@ const fontFamilyMonoRegular = 'IBMPlexMono_400Regular, Arial, Helvetica, sans-se
 const fontFamilyMonoMedium = 'IBMPlexMono_500Medium, Arial, Helvetica, sans-serif';
 const fontFamilyMonoSemiBold = 'IBMPlexMono_600SemiBold, Arial, Helvetica, sans-serif'
 
-export function Heading({text, color={color}, center, label, level=2, underline=false, formatParams}) {
+export function Heading({text, center, label, level=2, underline=false, formatParams}) {
     const styleMap = {
         1: HeadingStyle.heading1,
         2: HeadingStyle.heading2,
@@ -273,7 +273,7 @@ export function TextFieldButton({placeholder, placeholderParams, onPress}) {
             {personaKey && <PadBox right={10}><ProfilePhoto userId={personaKey} type='small' /></PadBox>}
             <Text style={s.textFieldText}>{tPlaceholder}</Text>
         </HorizBox>
-        <IconEditBig />
+        <Edit size={24} />
     </HoverView>
 }
 const TextFieldButtonStyle = StyleSheet.create({
@@ -326,7 +326,7 @@ export function CharacterCounter({max, min, text}) {
             color={colorRed} />
     } else {
         return <HorizBox>
-            <IconCheckmark />
+            <Checkmark />
             <Pad size={8} />
             <UtilityText type='tiny' label='{count}/{max} characters max' formatParams={{count,max}} />
         </HorizBox>
@@ -354,4 +354,3 @@ const CircleCountStyle = StyleSheet.create({
         alignItems: 'center'
     }
 });
-

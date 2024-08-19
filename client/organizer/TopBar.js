@@ -4,7 +4,6 @@ import { firebaseSignOut, useFirebaseUser } from "../util/firebase";
 import { Popup } from "../platform-specific/popup";
 import { useDatastore, useGlobalProperty, useInstanceKey, usePersona, usePersonaKey, usePersonaObject, useStructureKey } from "../util/datastore";
 import { useState } from "react";
-import { IconChevronDownSmall, IconChevronUpSmall, IconCloseBig, IconLeftArrowBig } from "../component/icon";
 import { Byline } from "../component/people";
 import { BreadCrumb, CTAButton, TextButton } from "../component/button";
 import { HorizBox, Pad, PadBox, Separator } from "../component/basics";
@@ -17,6 +16,7 @@ import { useIsAdmin } from "../component/admin";
 import { CircleCount, UtilityText } from "../component/text";
 import { AccordionField, RadioGroup, RadioOption, Toggle } from "../component/form";
 import { colorGreyPopupBackground } from "../component/color";
+import { ChevronDown, ChevronUp, Close, ArrowLeft } from '@carbon/icons-react';
 
 const global_toolbarAction = new ObservableValue(null);
 
@@ -28,9 +28,9 @@ export function TopBar() {
     return <View style={s.topBox}>        
         <View style={s.leftRow}>    
             {historyGetState() ? 
-                <BreadCrumb icon={IconLeftArrowBig} onPress={() => datastore.goBack()} />
+                <BreadCrumb icon={ArrowLeft} iconProps={{size:32}} onPress={() => datastore.goBack()} />
             : 
-                <BreadCrumb icon={IconCloseBig} onPress={closeSidebar} />
+                <BreadCrumb icon={Close} iconProps={{size:32}}  onPress={closeSidebar} />
             }
         </View>
         <Catcher>
@@ -228,7 +228,7 @@ function UserInfo() {
                 <HorizBox center>
                     <Byline userId={personaKey} clickable={false} name={persona.name} underline={hover} />
                     <Pad size={8} />
-                    {shown ? <IconChevronUpSmall/> : <IconChevronDownSmall />}
+                    {shown ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                 </HorizBox>
             </PadBox>
         </Popup>
