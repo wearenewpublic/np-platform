@@ -183,17 +183,11 @@ export class Datastore extends React.Component {
     addCurrentUser() {
         if (this.props.isLive) {
             const personaKey = this.getPersonaKey();
-            const fbUser = this.getPersonaPreview();
+            const personaPreview = this.getPersonaPreview();
             const myPersona = this.getObject('persona', personaKey);
-            if (!myPersona || !persona.link || myPersona.photoUrl != fbUser.photoURL || myPersona.name != fbUser.displayName) {
-                callServerApiAsync({datastore: this, component: 'profile', funcname: 'linkInstannce', params: {}})
-                this.setObject('persona', personaKey, {
-                    photoUrl: fbUser.photoURL, 
-                    name: fbUser.displayName, 
-                    key: personaKey,
-                    link: true,
-                    member: myPersona?.member || null
-                });
+            if (!myPersona || !myPersona.linked || myPersona.photoUrl != personaPreview.photoURL || myPersona.name != personaPreview.displayName) {
+                callServerApiAsync({datastore: this, component: 'profile', funcname: 'linkInstance', params: {}})
+                this.setObject('persona', personaKey, personaPreview);
             }
         }    
     }

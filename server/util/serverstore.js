@@ -128,11 +128,12 @@ class ServerStore {
     }
 
     async setGenericBacklink(structureKey, instanceKey, value={}) {
+        const key = this.structureKey + '_' + this.instanceKey;
         this.doDelayedWrite([
             'silo', this.siloKey, 'structure', structureKey, 
             'instance', instanceKey, 'collection',
-            'backlink_' + this.structureKey, this.instanceKey
-        ], {...value, key: this.instanceKey, structureKey: this.structureKey});
+            'backlink', key
+        ], {...value, key, structureKey: this.structureKey, instanceKey: this.instanceKey});
     }
 
 
