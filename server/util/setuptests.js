@@ -11,3 +11,6 @@ jest.mock('fs');
 jest.useFakeTimers();
 jest.setSystemTime(1000);
 
+beforeEach(() => {
+    clearTestData();
+});

@@ -21,17 +21,6 @@ class ServerStore {
         };
     }
 
-
-    getInstanceStore(structureKey, instanceKey) {
-        return new ServerStore({
-            siloKey: this.siloKey,
-            structureKey,
-            instanceKey,
-            userId: this.userId,
-            userEmail: this.userEmail
-        });
-    }
-
     getSiloKey() {return this.siloKey;}
     getStructureKey() {return this.structureKey;}
     getInstanceKey() {return this.instanceKey;}
@@ -158,6 +147,16 @@ class ServerStore {
             siloKey=this.siloKey, structureKey=this.structureKey, instanceKey=this.instanceKey, key
         }) {
         return await firebaseReadAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global', key]);
+    }
+
+    setRemoteObject({
+            siloKey=this.siloKey, structureKey=this.structureKey, 
+            instanceKey=this.instanceKey, type, key, value
+        }) {
+        return this.doDelayedWrite([
+            'silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 
+            'collection', type, key
+        ], value);
     }
 
     updateRemoteObject({
