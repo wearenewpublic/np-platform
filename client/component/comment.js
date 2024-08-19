@@ -4,7 +4,7 @@ import { Byline } from "./people";
 import { ConversationScreen, PadBox, Pad, HorizBox, Separator, ShadowBox } from "./basics";
 import { Heading, TextField, TextFieldButton } from "./text";
 import { CTAButton, ExpandButton, SubtleButton, TextButton } from "./button";
-import { IconEdit, IconReply, IconReport } from "./icon";
+import { Reply, Edit, Flag } from "@carbon/icons-react";
 import { StyleSheet, View } from "react-native";
 import { getFirstName } from "../util/util";
 import { colorLightBlueBackground, colorTextGrey } from "./color";
@@ -339,7 +339,7 @@ export function ActionReply({commentKey, depth}) {
     if (depth == 1 && parent.from != personaKey) return null;
     if (depth > 1) return null;
 
-    return <SubtleButton icon={IconReply} label='Reply' onPress={needsLogin(onReply, 'reply')} padRight />
+    return <SubtleButton icon={Reply} label='Reply' onPress={needsLogin(onReply, 'reply')} padRight />
 }
 
 export function ActionEdit({commentKey}) {
@@ -358,7 +358,7 @@ export function ActionEdit({commentKey}) {
     }
 
     if (comment.from != personaKey) return null;
-    return <SubtleButton icon={IconEdit} label='Edit' onPress={onEdit} />
+    return <SubtleButton icon={Edit} label='Edit' onPress={onEdit} />
 }
 
 export function ActionReport({commentKey}) {
@@ -372,7 +372,7 @@ export function ActionReport({commentKey}) {
     }
 
     if (comment.from == personaKey) return null;
-    return <SubtleButton icon={IconReport} onPress={onReport}/>
+    return <SubtleButton icon={Flag} onPress={onReport}/>
 }
 
 export function Composer({about=null, commentKey, goBackAfterPost=false, topLevel=false}) {

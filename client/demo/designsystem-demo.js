@@ -1,6 +1,6 @@
 import { Byline, FaceButton, FacePile, LetterFace, ProfilePhoto } from "../component/people";
 import { Datastore, usePersonaKey } from "../util/datastore";
-import { IconAudio, IconChevronDown, IconClose, IconCloseBig, IconComment, IconCommentBig, IconEdit, IconEmoji, IconImage, IconLeftArrowBig, IconReply, IconReport, IconSave, IconUpvote, IconUpvoted, IconVideo } from "../component/icon";
+import { IconUpvote, IconUpvoted } from "../component/icon";
 import { CharacterCounter, CircleCount, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
 import { colorBlack, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
 import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, TextButton } from "../component/button";
@@ -10,7 +10,7 @@ import { RichText } from "../component/richtext";
 import { ConversationScreen, HorizBox, Narrow, Pad, PadBox } from "../component/basics";
 import { BasicTeaser } from "../component/teaser";
 import { Banner, ClickableBanner, TopBanner } from "../component/banner";
-import { TrashCan, Pin } from "@carbon/icons-react";
+import { TrashCan, Pin, Chat, ChevronDown, Reply, Image as CarbonImage, Hearing, Video, FaceAdd, Edit, Bookmark, Flag, Close, ArrowLeft } from "@carbon/icons-react";
 import { Modal } from "../component/modal";
 import { DemoSection, SpacedArray } from "../component/demo";
 import { Image, View } from "react-native";
@@ -269,32 +269,32 @@ function ButtonsAndLinksScreen() {
             </DemoSection>
             <DemoSection label='Action Button'>
                 <SpacedArray horiz>
-                    <IconButton icon={IconReply} label='Respond' onPress={onPress} />
-                    <IconButton icon={IconComment} label='Respond' onPress={onPress} />
-                    <IconButton icon={IconEdit} label='Edit' onPress={onPress} />
-                    <IconButton icon={IconSave} label='Save' onPress={onPress} />
-                    <IconButton icon={IconImage} label='Image' onPress={onPress} />
-                    <IconButton icon={IconAudio} label='Audio' onPress={onPress} />
-                    <IconButton icon={IconVideo} label='Video' onPress={onPress} />
-                    <IconButton icon={IconEmoji} label='Emoji' onPress={onPress} />
+                    <IconButton icon={Reply} label='Respond' onPress={onPress} />
+                    <IconButton icon={Chat} label='Respond' onPress={onPress} />
+                    <IconButton icon={Edit} label='Edit' onPress={onPress} />
+                    <IconButton icon={Bookmark} label='Save' onPress={onPress} />
+                    <IconButton icon={CarbonImage} label='Image' onPress={onPress} />
+                    <IconButton icon={Hearing} label='Audio' onPress={onPress} />
+                    <IconButton icon={Video} label='Video' onPress={onPress} />
+                    <IconButton icon={FaceAdd} label='Emoji' onPress={onPress} />
                 </SpacedArray>
-                <IconButton wide icon={IconComment} label='Wide Button' onPress={onPress} />
+                <IconButton wide icon={Chat} label='Wide Button' onPress={onPress} />
             </DemoSection>
             <DemoSection label='Subtle Button'>
                 <SpacedArray horiz>
-                    <SubtleButton icon={IconReply} label='Reply' onPress={onPress} />                    
+                    <SubtleButton icon={Reply} label='Reply' onPress={onPress} />                    
                     <SubtleButton icon={IconUpvote} label='Upvote ({count})' formatParams={{count: 22}} onPress={onPress} />
                     <SubtleButton icon={IconUpvoted} label='Upvoted ({count})' formatParams={{count: 23}} color={colorBlack} onPress={onPress} />
-                    <SubtleButton icon={IconReport} label='Report' onPress={onPress} />
-                    <SubtleButton icon={IconComment} label='{count} {noun}' 
+                    <SubtleButton icon={Flag} label='Report' onPress={onPress} />
+                    <SubtleButton icon={Chat} label='{count} {noun}' 
                         formatParams={{singular: 'comment', plural: 'comments', count: 12}} onPress={onPress} />
                     <SubtleButton icon={Pin} label='Community Guidelines' onPress={onPress} />
                 </SpacedArray>
             </DemoSection>
             <DemoSection label='Text Button'>
                 <SpacedArray horiz>
-                    <TextButton leftIcon={IconClose} label='Close' onPress={onPress} />
-                    <TextButton label='Show more comments' rightIcon={IconChevronDown} color={colorTextBlue} onPress={onPress} />
+                    <TextButton leftIcon={Close} leftIconProps={{size:24}} label='Close' onPress={onPress} />
+                    <TextButton label='Show more comments' rightIcon={ChevronDown} rightIconProps={{size:20}} color={colorTextBlue} onPress={onPress} />
                     <TextButton label='Cancel' underline color={colorTextGrey} onPress={onPress} />
                 </SpacedArray>
                 <SpacedArray horiz>
@@ -340,9 +340,9 @@ function ButtonsAndLinksScreen() {
                 <RichText label='Text with a {param} and a [link]({url})' formatParams={{param: 'parameter', url: 'https://example.com'}} />
             </DemoSection>
             <DemoSection horiz label='Breadcrumb'>
-                <BreadCrumb icon={IconCloseBig} onPress={onPress} />
-                <BreadCrumb icon={IconLeftArrowBig} onPress={onPress} />
-                <BreadCrumb icon={IconCommentBig} onPress={onPress} />
+                <BreadCrumb icon={Close} iconProps={{size:32}} onPress={onPress} />
+                <BreadCrumb icon={ArrowLeft} iconProps={{size:32}} onPress={onPress} />
+                <BreadCrumb icon={Chat} iconProps={{size:24}} onPress={onPress} />
             </DemoSection>
             <DemoSection horiz label='Banner Icon Button'>
                 <BannerIconButton type='close' onPress={onPress} />
@@ -457,4 +457,3 @@ function BannerDemoScreen() {
             </DemoSection>
     </ConversationScreen>
 }
-

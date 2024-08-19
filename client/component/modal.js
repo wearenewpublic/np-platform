@@ -1,8 +1,8 @@
 import { HorizBox, Pad, PadBox, Separator } from "../component/basics";
 import { BreadCrumb } from "../component/button";
-import { IconCloseBig } from "../component/icon";
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { DocumentLevelComponent } from "../platform-specific/popup";
+import { Close } from '@carbon/icons-react';
 
 
 export function Modal({children, buttonRow, onClose}) {
@@ -12,7 +12,7 @@ export function Modal({children, buttonRow, onClose}) {
             <View style={s.inner}>
                 <HorizBox spread center>
                     <Pad size={56} />
-                    <PadBox right={12}><BreadCrumb icon={IconCloseBig} onPress={onClose}/></PadBox>
+                    <PadBox right={12}><BreadCrumb icon={Close} iconProps={{size:32}} onPress={onClose}/></PadBox>
                 </HorizBox>
                 <Separator />
                 <ScrollView>

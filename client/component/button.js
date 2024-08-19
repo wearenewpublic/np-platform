@@ -3,10 +3,9 @@ import { Image, StyleSheet, View } from "react-native";
 import { colorAccent, colorAccentHover, colorAccentPress, colorBlack, colorBlackHover, colorDisabledBackground, colorDisabledText, colorGreyBorder, colorGreyHover, colorIconButtonPress, colorLightBlueBackground, colorNearBlack, colorPrimaryPress, colorRed, colorSecondaryPress, colorTextBlue, colorTextGrey, colorWhite } from "./color";
 import { EditorialHeading, Heading, Paragraph, UtilityText } from "./text";
 import { HorizBox, HoverView, Pad, PadBox } from "./basics";
-import { IconChevronDown, IconChevronUpSmall, IconChevronUp, IconChevronDownSmall } from "./icon";
 import { FacePile } from "./people";
 import { Popup } from "../platform-specific/popup";
-import { Information, Close } from '@carbon/icons-react';
+import { Information, Close, ChevronDown, ChevronUp } from '@carbon/icons-react';
 
 
 export function CTAButton({label, formatParams, icon, type='primary', disabled, compact=false, wide=false, onPress}) {
@@ -109,11 +108,11 @@ const CTAButtonStyle = StyleSheet.create({
 })
 
 
-export function IconButton({label, icon=null, wide=false, onPress}) {
+export function IconButton({label, icon=null, iconProps={}, wide=false, onPress}) {
     const s = IconReplyStyle;
     return <HoverView style={[s.button, wide ? s.wide : null]} hoverStyle={s.hover} 
             pressedStyle={s.pressed} onPress={onPress} role='button'>
-        {icon && React.createElement(icon)} 
+        {icon && React.createElement(icon, iconProps)} 
         {icon && label && <Pad size={8} />}
         <UtilityText label={label} />
     </HoverView>
@@ -140,14 +139,14 @@ const IconReplyStyle = StyleSheet.create({
     }
 });
 
-export function SubtleButton({label, text, ariaLabel, disabled, formatParams, color=colorTextGrey, strong=false, icon=null, padLeft, padRight, onPress}) {
+export function SubtleButton({label, text, ariaLabel, disabled, formatParams, color=colorTextGrey, strong=false, icon=null, iconProps={}, padLeft, padRight, onPress}) {
     const s = SubtleButtonStyle;
     const [hover, setHover] = useState(false);
     return <HoverView style={[s.button, padLeft && {marginLeft: 20}, padRight && {marginRight: 20}]} 
             disabled={disabled} role={!disabled ? 'button' : null}
             ariaLabel={ariaLabel} testID={label}
             onPress={onPress} setHover={setHover}>
-        {React.createElement(icon, {color})}
+        {React.createElement(icon, {...iconProps, color})}
         {(label || text) && <Pad size={4} />}
         <UtilityText label={label} text={text} strong={strong} underline={hover} 
             color={color} formatParams={formatParams} type='tiny' />
@@ -161,13 +160,13 @@ const SubtleButtonStyle = StyleSheet.create({
 });
 
 
-export function TextButton({label, text, level=1, type='large', heading=false, paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, rightIcon, color=colorBlack, alignStart=false, onPress}) {
+export function TextButton({label, text, level=1, type='large', heading=false, paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, leftIconProps={}, rightIcon, rightIconProps={}, color=colorBlack, alignStart=false, onPress}) {
     const s = TextButtonStyle;
     const [hover, setHover] = useState(false);
     return <HoverView shrink testID={label}
             style={[s.button, alignStart ? {alignSelf: 'flex-start'} : null]} 
             setHover={setHover} onPress={onPress} role='button'>
-        {leftIcon && React.createElement(leftIcon, {color})}
+        {leftIcon && React.createElement(leftIcon, {...leftIconProps, color})}
         {leftIcon && <Pad size={8} />}        
         {paragraph ? 
             <Paragraph label={label} text={text} formatParams={formatParams} type={type}
@@ -183,7 +182,7 @@ export function TextButton({label, text, level=1, type='large', heading=false, p
                 color={color} underline={hover ^ underline} strong={strong} />
         }
         {rightIcon && <Pad size={8} />}
-        {rightIcon && React.createElement(rightIcon, {color})}
+        {rightIcon && React.createElement(rightIcon, {...rightIconProps, color})}
     </HoverView>
 }
 const TextButtonStyle = StyleSheet.create({
@@ -232,7 +231,7 @@ export function ExpandButton({
         <UtilityText label={label} text={text} formatParams={formatParams} type={type} 
             underline={hover} strong />
         <Pad size={4} />
-        {expanded ? <IconChevronUp /> : <IconChevronDown />}
+        {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
     </HoverView>
 
 }
@@ -351,7 +350,7 @@ export function PopupPanel({children, popupContent, alignRight=false, setHover})
             <View style={s.button}>
                 {children}
                 <Pad size={8} />
-                {shown ? <IconChevronUpSmall /> : <IconChevronDownSmall />}
+                {shown ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             </View>        
         </Popup>
     </View>
@@ -393,11 +392,11 @@ const BannerIconButtonStyle = StyleSheet.create({
 })
 
 
-export function BreadCrumb({icon, onPress}) {
+export function BreadCrumb({icon, iconProps={}, onPress}) {
     const s = BreadCrumbStyle;
     return <HoverView style={s.regular} hoverStyle={s.hover} 
         pressedStyle={s.pressed} onPress={onPress}>
-        {React.createElement(icon)}
+        {React.createElement(icon, iconProps)}
     </HoverView>
 }
 
