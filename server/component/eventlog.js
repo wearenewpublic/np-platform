@@ -31,7 +31,7 @@ async function logEventApi({
         firebaseUpdateAsync(['log', 'session', sessionKey], {siloKey, endTime: Date.now()})
     }
 
-    return {success: true, data: {eventKey}}
+    return {eventKey}
 }
 exports.logEventApi = logEventApi;
 
@@ -45,23 +45,22 @@ async function setSessionUserApi({sessionKey, userId, eventKey}) {
             await firebaseUpdateAsync(['log', 'event', eventKey], {userName});
         }
     }
-    return {success: true}
 }
 exports.setSessionUserApi = setSessionUserApi;
 
-function getIsGlobalAdmin(userEmail) {
+function checkIsGlobalAdmin(userEmail) {
     const emailDomain = userEmail.split('@')[1];
-    return emailDomain == 'newpublic.org' || emailDomain == 'admin.org';
+    if (emailDomain == 'newpublic.org' || emailDomain == 'admin.org') {
+        return true;
+    }
+    throw new Error('Not authorized');
 }
 
 // TODO: Proper way of having global admin access
 // TODO: Support silo-limited version where you only see events from that silo
 // TODO: Index-based event filtering
-async function getEventsApi({userId, userEmail, siloKey, eventType, sessionKey}) {
-    const isAdmin = getIsGlobalAdmin(userEmail);
-    if (!isAdmin) {
-        return {success: false, error: 'Not authorized'};
-    }
+async function getEventsApi({userEmail, siloKey, eventType, sessionKey}) {
+    checkIsGlobalAdmin(userEmail);
     var events = null;
     if (sessionKey) {
         events = await firebaseReadWithFilterAsync(['log', 'event'], 'sessionKey', sessionKey);
@@ -73,32 +72,25 @@ async function getEventsApi({userId, userEmail, siloKey, eventType, sessionKey})
         events = await firebaseReadAsync(['log', 'event']);
     }
 
-    return {success: true, data: events}
+    return events;
 }
 exports.getEventsApi = getEventsApi;
 
-async function getSessionsApi({userId, userEmail, siloKey}) {
-    const isAdmin = getIsGlobalAdmin(userEmail);
-    if (!isAdmin) {
-        return {success: false, error: 'Not authorized'};
-    }
+async function getSessionsApi({userEmail, siloKey}) {
+    checkIsGlobalAdmin(userEmail);
     var sessions = null;
     if (siloKey) {
         sessions = await firebaseReadWithFilterAsync(['log', 'session'], 'siloKey', siloKey);
     } else {
         sessions = await firebaseReadAsync(['log', 'session']);
     }
-    return {success: true, data: sessions}
+    return sessions;
 }
 exports.getSessionsApi = getSessionsApi;
 
-async function getSingleSessionApi({userId, userEmail, sessionKey}) {
-    const isAdmin = getIsGlobalAdmin(userEmail);
-    if (!isAdmin) {
-        return {success: false, error: 'Not authorized'};
-    }
-    const session = await firebaseReadAsync(['log', 'session', sessionKey]);
-    return {success: true, data: session}
+async function getSingleSessionApi({userEmail, sessionKey}) {
+    checkIsGlobalAdmin(userEmail);
+    return await firebaseReadAsync(['log', 'session', sessionKey]);
 }
 exports.getSingleSessionApi = getSingleSessionApi;
 

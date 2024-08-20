@@ -23,8 +23,6 @@ async function sendNotifsForReplyApi({serverstore, language, parentKey, replyKey
         replyAuthorName: replyAuthor.displayName,
         conversationName: conversationName ?? 'Unnamed Conversation'
     });
-
-    return {success: true, data: null};
 }
 exports.sendNotifsForReplyApi = sendNotifsForReplyApi;
 

@@ -1,5 +1,6 @@
 
 
+var global_lastEmailDetails = null;
 
 class ServerClientMock {
     constructor(apiToken) {
@@ -7,6 +8,7 @@ class ServerClientMock {
     }
 
     sendEmail(emailDetails) {
+        global_lastEmailDetails = emailDetails;
         return Promise.resolve({
             To: emailDetails.To,
             SubmittedAt: new Date().toISOString(),
@@ -17,8 +19,13 @@ class ServerClientMock {
     }
 }
 
+function getLastEmailSent() {
+    return global_lastEmailDetails;
+}
+
 module.exports = {
-    ServerClient: ServerClientMock
+    ServerClient: ServerClientMock,
+    getLastEmailSent
 };
 
 

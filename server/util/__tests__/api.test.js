@@ -58,5 +58,12 @@ describe('callApiFunctionAsync', () => {
         expect(result.statusCode).toBe(401);
     });
 
-
+    test('missing component', async () => {
+        const req = {
+            path: '/api/foo/wible'
+        };
+        const result = await callApiFunctionAsync(req, {}, coreComponents);
+        expect(result.statusCode).toBe(400);
+     });
+    
 });

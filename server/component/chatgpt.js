@@ -80,8 +80,7 @@ async function getEmbeddingsAsync({text}) {
     if (result.data?.[0].embedding) {
         return {data: result.data?.[0].embedding};
     } else {
-        console.error('OpenAI Embeddings error', result.error)
-        return {success: false, error: result.error}
+        throw new Error('OpenAI Embeddings error: ' + JSON.stringify(result));
     }
 }
 exports.getEmbeddingsAsync = getEmbeddingsAsync;
@@ -96,8 +95,7 @@ async function getEmbeddingsArrayAsync({textArray}) {
         const embeddings = result.data.map(d => d.embedding)
         return {data: embeddings};
     } else {
-        console.error('OpenAI Embeddings error', result.error)
-        return {success: false, error: result.error}
+        throw new Error('OpenAI Embeddings error: ' + JSON.stringify(result));
     }
 }
 exports.getEmbeddingsArrayAsync = getEmbeddingsArrayAsync;

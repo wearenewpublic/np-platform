@@ -83,7 +83,7 @@ async function handleJsonRequest(request, response, components) {
 
 
 async function getValidatedUser(req) {
-    const tokenId = req.headers.authorization && req.headers.authorization.split('Bearer ')[1];
+    const tokenId = req.headers?.authorization && req.headers?.authorization.split('Bearer ')[1];
     if (!tokenId || tokenId == 'none') {
         return null;
     } 
@@ -134,8 +134,6 @@ async function callApiFunctionAsync(request, fields, components) {
 
         if (apiResult?.data) {
             return ({statusCode: 200, result: JSON.stringify({success: true, data: apiResult.data})});
-        } else if (apiResult?.error) {
-            return ({statusCode: 400, result: JSON.stringify({success: false, error: apiResult.error})});
         } else if (apiResult?.success) {
             return ({statusCode: 200, result: JSON.stringify({success: true})})
         } else {

@@ -1,5 +1,5 @@
 const { read } = require("fs");
-const { setFirebaseAdmin, firebaseWriteAsync, firebaseReadAsync, firebaseReadWithFilterAsync, firebaseUpdateAsync, firebaseGetUserAsync, createNewKey, writeGlobalAsync, readGlobalAsync, stringToFbKey, fbKeyToString, urlToKey, keyToUrl } = require("../firebaseutil");
+const { setFirebaseAdmin, firebaseWriteAsync, firebaseReadAsync, firebaseReadWithFilterAsync, firebaseUpdateAsync, firebaseGetUserAsync, createNewKey, writeGlobalAsync, readGlobalAsync, stringToFbKey, fbKeyToString, urlToKey, keyToUrl, checkPathsNotOverlapping } = require("../firebaseutil");
 const { fakeFirebaseAdmin, clearTestData } = require("../testutil");
 
 
@@ -82,3 +82,15 @@ test('keyToUrl', async () => {
     const result = keyToUrl('https%3A%25f%25fwww%25dgoogle%25dcom');
     expect(result).toBe('https://www.google.com');
 })
+
+test('checkPathsNotOverlapping', () => {
+    checkPathsNotOverlapping(['foo/bar', 'foo/baz']);
+    checkPathsNotOverlapping(['foo/bar', 'foo/barter']);
+    checkPathsNotOverlapping(['silo/global/module-public/profile/pseudonym/wibbleblo', 'silo/global/module-public/profile/pseudonym/wibble']);
+    expect(() => 
+        checkPathsNotOverlapping(['foo/bar', 'foo/bar'])
+    ).toThrow();
+    expect(() => 
+        checkPathsNotOverlapping(['foo/bar', 'foo/bar/wib'])
+    ).toThrow();
+});

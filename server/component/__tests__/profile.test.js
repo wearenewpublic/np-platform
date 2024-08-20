@@ -24,12 +24,26 @@ test('updateProfileAsync', async () => {
     expect(getTestData()).toMatchSnapshot();
 });
 
-test('linkInstanceAsync', async () => {
-    const serverstore = mockServerStore();
-    serverstore.setObject('persona', 'testuser', {name: 'testuser', photoUrl: 'url'});
-    await serverstore.commitDataAsync();
-    
-    await linkInstanceAsync({serverstore});
-    await serverstore.commitDataAsync();
-    expect(getTestData()).toMatchSnapshot();
+describe('linkInstanceAsync', () => {
+    test('no profile preview', async () => {
+        const serverstore = mockServerStore();
+        await serverstore.commitDataAsync();
+        
+        await linkInstanceAsync({serverstore});
+        await serverstore.commitDataAsync();
+        expect(getTestData()).toMatchSnapshot();
+    });
+    test('profile has preview', async () => {
+        const serverstore = mockServerStore();
+        serverstore.setRemoteGlobal({
+            structureKey: 'profile', instanceKey: 'testuser', key: 'preview',
+            value: {name: 'newname', photoUrl: 'newphoto'}
+        });
+        await serverstore.commitDataAsync();
+        
+        await linkInstanceAsync({serverstore});
+        await serverstore.commitDataAsync();
+        expect(getTestData()).toMatchSnapshot();
+    });
 });
+

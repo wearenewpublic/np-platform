@@ -31,8 +31,6 @@ exports.sendEmailAsync = sendEmailAsync;
 
 // TODO: Allow for templates to be stored outside np-platform
 async function sendTemplatedEmailAsync({toUserId, templateId, language, siloKey, structureKey, instanceKey, ...data}) {
-    console.log('sendTemplatedEmailAsync', {__dirname, templateId, language, siloKey, data});
-
     const toUser = await firebaseGetUserAsync(toUserId);
     const templateDir = path.join(path.dirname(__dirname), 'email-template');
     const jsonText = readFileSync(path.join(templateDir, templateId + '.json'), 'utf8').toString();
@@ -40,8 +38,6 @@ async function sendTemplatedEmailAsync({toUserId, templateId, language, siloKey,
     const textTemplate = readFileSync(path.join(templateDir, templateId + '.txt'), 'utf8').toString();
     const stringMap = JSON.parse(jsonText);
     const stringsForLanguage = stringMap[language.toLowerCase() ?? 'english'];
-
-    console.log('stringsForLanguage', stringsForLanguage);
 
     const LINK = domain + '/' + siloKey + '/' + structureKey + '/' + instanceKey;
 
@@ -53,8 +49,6 @@ async function sendTemplatedEmailAsync({toUserId, templateId, language, siloKey,
         To: toUser.displayName + ' <' + toUser.email + '>',
         Subject, HtmlBody, TextBody
     }
-
-    console.log('emailFields', emailFields);
 
     return await sendEmailAsync(emailFields);
 }

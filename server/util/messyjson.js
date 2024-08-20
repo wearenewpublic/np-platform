@@ -1,5 +1,8 @@
 const JSON5 = require('json5');
 
+// We need this function to extract JSON from LLM responses that are not well-formed JSON
+// GPT shouldn't need this any more since they added JSON mode, but other LLMs often do.
+
 function extractAndParseJSON(text) {
     // Find JSON pattern using regular expression
     const jsonPattern = /{[^{}]*}|(\[[^\[\]]*\])/g;
@@ -14,15 +17,16 @@ function extractAndParseJSON(text) {
         try {
             return JSON5.parse(jsonMatch[0]);
         } catch (e) {
-            console.log('failed to parse', jsonMatch[0]);
             const fixedJson = fixUnescapedQuotes(jsonMatch[0]);
-            console.log('Trying with fixed JSON', fixedJson);
             return JSON5.parse(fixedJson);
         }
     }
 }
 exports.extractAndParseJSON = extractAndParseJSON;
 
+// LLMs often return JSON with unescaped quotes, which is not valid JSON
+// We fix it by looking if the next tokens what you'd expect if this was 
+// the end of a string in a dictonary. If not, we escape the quote.
 function fixUnescapedQuotes(badJson) {
     var goodJson = "";
     var inQuote = false;
@@ -31,13 +35,11 @@ function fixUnescapedQuotes(badJson) {
         if (char == '"') {
             if (inQuote) {
                 const next = nextNonWhitespace(badJson, i+1);
-                console.log('next', next);
                 if ([':', '}', ']'].includes(next)) {
                     goodJson += '"';
                     inQuote = false;
                 } else if (next == ',') {
                     const nextNonComma = nextNonWhitespaceNonComma(badJson, i+1);
-                    console.log('noncomma', nextNonComma);
                     if (['"', '}', ']'].includes(nextNonComma)) {
                         goodJson += '"';
                         inQuote = false;

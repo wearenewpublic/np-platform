@@ -10,8 +10,7 @@ describe('logEventApi', () => {
             isNewSession: true, sessionKey: 'newsession',
             eventType: 'test', params: {foo: 'bar'}
         });
-        expect(result.success).toBe(true);
-        const event = await firebaseReadAsync(['log', 'event', result.data.eventKey]);
+        const event = await firebaseReadAsync(['log', 'event', result.eventKey]);
         expect(event.eventType).toBe('test');         
 
         const session = await firebaseReadAsync(['log', 'session', 'newsession']);
@@ -28,13 +27,12 @@ describe('logEventApi', () => {
             userId: 'testuser', siloKey: 'cbc', userName: 'Test User', userPhoto: null,
             startTime: 10, endTime: 10
         });
-        const result = await logEventApi({siloKey: 'cbc', 
+        await logEventApi({siloKey: 'cbc', 
             userId: 'testuser',
             structureKey: 'wibble', instanceKey: 'demo',
             isNewSession: false, sessionKey: 'newsession',
             eventType: 'test', params: {foo: 'bar'}
         });
-        expect(result.success).toBe(true);
 
         const session = await firebaseReadAsync(['log', 'session', 'newsession']);
         expect(session.endTime).toBe(1000);
@@ -71,8 +69,9 @@ test('setSessionUserApi', async () => {
 
 describe('getEventsApi', () => {
     test('Not authorized', async () => {
-        const result = await getEventsApi({userEmail: 'bad@bad.com'});
-        expect(result.success).toBe(false);
+        expect(async () => {
+            await getEventsApi({userEmail: 'bad@bad.com'});
+        }).rejects.toThrow('Not authorized');
     });
 
     test('Event Filters', async () => {
@@ -88,17 +87,16 @@ describe('getEventsApi', () => {
         });
 
         const result = await getEventsApi({userEmail: 'rob@newpublic.org'});
-        expect(result.success).toBe(true);
-        expect(Object.keys(result.data)).toEqual(['1','2', '3']);
+        expect(Object.keys(result)).toEqual(['1','2', '3']);
 
         const result2 = await getEventsApi({userEmail: 'rob@newpublic.org', siloKey: 'cbc'});
-        expect(Object.keys(result2.data)).toEqual(['1','2']);
+        expect(Object.keys(result2)).toEqual(['1','2']);
 
         const result3 = await getEventsApi({userEmail: 'rob@newpublic.org', eventType: 'test'});
-        expect(Object.keys(result3.data)).toEqual(['1','3']);
+        expect(Object.keys(result3)).toEqual(['1','3']);
 
         const result4 = await getEventsApi({userEmail: 'rob@newpublic.org', sessionKey: 'b'});
-        expect(Object.keys(result4.data)).toEqual(['2','3']);
+        expect(Object.keys(result4)).toEqual(['2','3']);
     });
 })
 
@@ -115,12 +113,10 @@ test('getSessionsApi', async () => {
     });
 
     const result = await getSessionsApi({userEmail: 'rob@newpublic.org'});
-    expect(result.success).toBe(true);
-    expect(Object.keys(result.data)).toEqual(['1','2','3']);
+    expect(Object.keys(result)).toEqual(['1','2','3']);
 
     const result2 = await getSessionsApi({userEmail: 'rob@newpublic.org', siloKey: 'cbc'});
-    expect(result2.success).toBe(true);
-    expect(Object.keys(result2.data)).toEqual(['1','2']);
+    expect(Object.keys(result2)).toEqual(['1','2']);
 });
 
 test('getSingleSessionApi', async () => {
@@ -130,7 +126,6 @@ test('getSingleSessionApi', async () => {
     });
 
     const result = await getSingleSessionApi({userEmail: 'rob@newpublic.org', sessionKey: '1'});
-    expect(result.success).toBe(true);
-    expect(result.data.startTime).toBe(1);
+    expect(result.startTime).toBe(1);
 })
 

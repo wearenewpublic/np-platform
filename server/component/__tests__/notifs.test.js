@@ -30,5 +30,4 @@ test('sendNotifsForReplyApi', async () => {
         toUserId: 'testuser', replyText: 'My reply',
         siloName: 'Radio Canada', replyAuthorName: 'Test User', conversationName: 'My Conversation'
     });
-    expect(result.success).toBe(true);
 });

@@ -2,6 +2,8 @@ const { post } = require("axios");
 const { callOpenAIAsync, callGptAsync, createGptPrompt, getEmbeddingsAsync, getEmbeddingsArrayAsync, setGptKey, getGptJsonAsync } = require("../chatgpt");
 const { readFileSync, existsSync } = require("fs");
 
+jest.mock('fs');
+
 test('callOpenAIAsync', async () => {
     post.mockResolvedValue({data: 'Result'});
     setGptKey('key');
