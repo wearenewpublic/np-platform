@@ -115,7 +115,7 @@ function checkPathsNotOverlapping(pathList) {
         for (let j = i + 1; j < pathList.length; j++) {
             const path1 = pathList[i];
             const path2 = pathList[j];
-            if (path1.startsWith(path2) || path2.startsWith(path1)) {
+            if (path1.startsWith(path2 + '/') || path2.startsWith(path1 + '/') || path1 == path2) {
                 throw new Error('Written paths overlap: ' + path1 + ' and ' + path2);
             }
         }
@@ -124,13 +124,12 @@ function checkPathsNotOverlapping(pathList) {
 }
 
 
-
 module.exports = {
     firebaseWriteAsync, firebaseReadAsync, firebaseUpdateAsync, stringToFbKey, fbKeyToString,
     readGlobalAsync, writeGlobalAsync, writeCollectionAsync,
     setObjectAsync, readObjectAsync, firebaseReadWithFilterAsync,
     keyToUrl, urlToKey,
-    
+
     verifyIdTokenAsync, createNewKey, firebaseGetUserAsync, expandPath, checkPathsNotOverlapping,
 
     setFirebaseAdmin, getFirebaseAdmin

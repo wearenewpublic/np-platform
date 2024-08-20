@@ -180,7 +180,7 @@ class ServerStore {
 
     async getPersonaAsync(userId) {
         const personaPreview = await this.getRemoteGlobalAsync({
-            structureKey: 'persona', instanceKey: userId, key: 'preview'
+            structureKey: 'profile', instanceKey: userId, key: 'preview'
         });
         if (personaPreview) {
             return personaPreview;
@@ -210,13 +210,10 @@ class ServerStore {
     }
     
     async addPersonaToInstanceAsync({structureKey, instanceKey, personaKey}) {
-        var personaPreview = await this.getObjectAsync('persona', personaKey);
-        if (!personaPreview) {
-
-        }
+        const persona = await this.getPersonaAsync(personaKey);
         this.setRemoteObject({
             structureKey, instanceKey, type: 'persona', key: personaKey, 
-            value: {...personaPreview, linked: true}
+            value: {...persona, linked: true}
         });
         const backlinkKey = structureKey + '_' + instanceKey;
         this.setRemoteObject({
