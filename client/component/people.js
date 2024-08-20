@@ -17,15 +17,7 @@ export function ProfilePhoto({userId, type='large', photo=null, faint=false, che
     const meKey = usePersonaKey();
 
     if (meKey == userId && isLive) {
-        const personaPreview = usePersonaPreview();
-        if (personaPreview?.photoUrl) {
-            return <FaceImage photoUrl={photo ?? personaPreview.photoUrl} type={type} faint={faint} 
-                border={border} check={check} />
-        } else if (personaPreview?.hue && personaPreview?.name) {
-            return <LetterFace name={personaPreview.name} hue={personaPreview.hue} type={type} />
-        } else {
-            return <AnonymousFace faint={faint} type={type} border={border} />
-        }
+        return <MyProfilePhoto type={type} photo={photo} faint={faint} check={check} border={border} />
     } else {
         const face = persona?.face;
         if (face || photo || persona?.photoUrl) {
@@ -38,6 +30,19 @@ export function ProfilePhoto({userId, type='large', photo=null, faint=false, che
         }
     }
 }
+
+export function MyProfilePhoto({type='large', photo=null, faint=false, check=false, border=false}) {
+    const personaPreview = usePersonaPreview();
+    if (personaPreview?.photoUrl) {
+        return <FaceImage photoUrl={photo ?? personaPreview.photoUrl} type={type} faint={faint} 
+            border={border} check={check} />
+    } else if (personaPreview?.hue && personaPreview?.name) {
+        return <LetterFace name={personaPreview.name} hue={personaPreview.hue} type={type} />
+    } else {
+        return <AnonymousFace faint={faint} type={type} border={border} />
+    }
+}
+
 
 export function FaceImage({face, photoUrl=null, type='small', faint=false, check=false, border=false}) {
     const sizeMap = {
