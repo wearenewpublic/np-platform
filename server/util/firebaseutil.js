@@ -61,47 +61,14 @@ async function readGlobalAsync({ siloKey, structureKey, instanceKey, key }) {
 async function writeGlobalAsync({ siloKey, structureKey, instanceKey, key, value }) {
     return firebaseWriteAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global', key], value);
 }
-async function readCollectionAsync({ siloKey, structureKey, instanceKey, type }) {
-    return firebaseReadAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', type]);
-}
-async function readMultipleCollectionsAsync({ siloKey, structureKey, instanceKey, types }) {
-    const dataArray = await Promise.all(types.map(type => readCollectionAsync({ siloKey, structureKey, instanceKey, type })));
-    var resultMap = {};
-    types.forEach((typeName, i) => resultMap[typeName] = dataArray[i]);
-    return resultMap;
-}
-async function readModulePublicAsync({ siloKey, moduleKey, key }) {
-    return firebaseReadAsync(['silo', siloKey, 'module-public', moduleKey, key]);
-}
-async function writeModulePublicAsync({ siloKey, moduleKey, key, value }) {
-    return firebaseWriteAsync(['silo', siloKey, 'module-public', moduleKey, key], value);
-}
-
-
-async function readAllGlobalsAsync({ siloKey, structureKey, instanceKey }) {
-    return firebaseReadAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global']);
-}
-
 async function writeCollectionAsync({ siloKey, structureKey, instanceKey, collection, items }) {
     return firebaseWriteAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', collection], items);
-}
-async function updateCollectionAsync({ siloKey, structureKey, instanceKey, collection, updates }) {
-    return firebaseUpdateAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', collection], updates);
 }
 async function setObjectAsync({ siloKey, structureKey, instanceKey, collection, key, value }) {
     return firebaseWriteAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', collection, key], value);
 }
-async function updateObjectAsync({ siloKey, structureKey, instanceKey, collection, key, value }) {
-    return firebaseUpdateAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', collection, key], value);
-}
 async function readObjectAsync({ siloKey, structureKey, instanceKey, collection, key }) {
     return firebaseReadAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', collection, key]);
-}
-async function createInstanceAsync({ siloKey, structureKey, instanceKey, collection = null, global = null }) {
-    return firebaseWriteAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey], { collection, global });
-}
-async function readInstanceAsync({ siloKey, structureKey, instanceKey }) {
-    return firebaseReadAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey]);
 }
 
 function stringToFbKey(input) {
@@ -160,11 +127,10 @@ function checkPathsNotOverlapping(pathList) {
 
 module.exports = {
     firebaseWriteAsync, firebaseReadAsync, firebaseUpdateAsync, stringToFbKey, fbKeyToString,
-    readGlobalAsync, writeGlobalAsync, readCollectionAsync, createInstanceAsync, writeCollectionAsync,
-    readInstanceAsync, setObjectAsync, readMultipleCollectionsAsync, updateCollectionAsync,
-    readObjectAsync, readAllGlobalsAsync, updateObjectAsync, firebaseReadWithFilterAsync,
-    readModulePublicAsync, writeModulePublicAsync, keyToUrl, urlToKey,
-
+    readGlobalAsync, writeGlobalAsync, writeCollectionAsync,
+    setObjectAsync, readObjectAsync, firebaseReadWithFilterAsync,
+    keyToUrl, urlToKey,
+    
     verifyIdTokenAsync, createNewKey, firebaseGetUserAsync, expandPath, checkPathsNotOverlapping,
 
     setFirebaseAdmin, getFirebaseAdmin

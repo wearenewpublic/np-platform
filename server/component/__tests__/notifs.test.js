@@ -1,5 +1,4 @@
-const { sendEmailAsync, sendTemplatedEmailAsync } = require("../../util/email");
-const { setObjectAsync, writeGlobalAsync, writeModulePublicAsync } = require("../../util/firebaseutil");
+const { sendTemplatedEmailAsync } = require("../../util/email");
 const { mockServerStore } = require("../../util/serverstore");
 const { setTestData } = require("../../util/testutil");
 const { sendNotifsForReplyApi } = require("../notifs");
@@ -25,9 +24,6 @@ test('sendNotifsForReplyApi', async () => {
     const serverstore = mockServerStore();
 
     const result = await sendNotifsForReplyApi({serverstore, parentKey: '1', replyKey: '2', language: 'English'});
-    //     siloKey: 'rc', structureKey: 'simplecomments', instanceKey: 'demo', 
-    //     parentKey: '1', replyKey: '2', language: 'English'
-    // });
     expect(sendTemplatedEmailAsync).toHaveBeenCalledWith({
         templateId: 'reply-notif', language: 'English',
         siloKey: 'testSilo', structureKey: 'testStruct', instanceKey: 'testInstance',
