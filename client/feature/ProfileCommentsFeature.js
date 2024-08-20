@@ -4,7 +4,7 @@ import { HorizBox, Pad, PadBox } from "../component/basics";
 import { ProfilePhoto } from "../component/people";
 
 export const ProfileCommentsFeature = {
-    name: 'Profile Comments',
+    name: 'Profile Comments (Demo)',
     key: 'profilecomments',
     config: {
         profileWidgets: [ProfileCommentsWidget]

@@ -40,13 +40,11 @@ export var features = {
     profile: [
         SECTION('Developer', [
             DemoProfileFeature,
-        ]),
-        SECTION('Activity', [
             ProfileCommentsFeature
         ]),
         SECTION('General', [
             ProfilePhotoAndNameFeature,
-            ProfileOldStuff        
+            // ProfileOldStuff        
         ])
     ],
     componentdemo: [
@@ -69,7 +67,7 @@ export var defaultFeatureConfig = {
     },
     simplecomments: {},
     profile: {
-        profile_old: true,
+        profileeditname: true,
     }
 }
 
