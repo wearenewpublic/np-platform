@@ -1,14 +1,10 @@
-const {firebaseGetUserAsync} = require('../util/firebaseutil');
 
 async function profileConstructorAsync({serverstore}) {
     const userId = serverstore.getInstanceKey();
-    const fbUser = await firebaseGetUserAsync(userId);
-    if (!fbUser) {
-        throw new Error('User not found');
-    }
-    serverstore.setObject('profile', userId, {
-        name: fbUser.displayName || null,
-        photoUrl: fbUser.photoURL || null
-    });
+    const persona = await serverstore.getPersonaAsync(userId);
+
+    serverstore.setObject('persona', userId, persona);
+    serverstore.setGlobalProperty('preview', persona);
+    serverstore.setGlobalProperty('fields', persona);
 }
 exports.profileConstructorAsync = profileConstructorAsync;

@@ -1,5 +1,9 @@
 
 async function updateProfileAsync({serverstore, updates, preview}) {
+    if (serverstore.getUserId() != serverstore.getInstanceKey()) {
+        throw new Error('Cannot update profile for another user');
+    }
+
     const pOldPreview = serverstore.getGlobalPropertyAsync('preview');
     const pOldModuleData = serverstore.getGlobalPropertyAsync('fields');
     const pBacklinks = serverstore.getCollectionAsync('backlink');
@@ -10,7 +14,10 @@ async function updateProfileAsync({serverstore, updates, preview}) {
 
     serverstore.setGlobalProperty('preview', {...oldPreview, ...preview});
     serverstore.setGlobalProperty('fields', {...oldModuleData, ...updates});
-    serverstore.updateObject('persona', serverstore.getUserId(), preview);
+
+    if (!isSelfInBacklinks({serverstore, backlinks})) {
+        serverstore.updateObject('persona', serverstore.getUserId(), preview);
+    }
 
     if (preview.name && updates.nameMode == 'custom') {
         serverstore.setModulePublic('profile', ['pseudonym', preview.name], serverstore.getUserId());
@@ -28,6 +35,12 @@ async function updateProfileAsync({serverstore, updates, preview}) {
 }
 exports.updateProfileAsync = updateProfileAsync;
 
+function isSelfInBacklinks({serverstore, backlinks}) {
+    return backlinks.find(backlink => 
+        backlink.structureKey == 'persona' && backlink.instanceKey == serverstore.getUserId()
+    );
+}
+
 function setPersonaPreviewForInstance({serverstore, structureKey, instanceKey, preview}) {
     serverstore.updateRemoteObject({
         structureKey, instanceKey, 
@@ -37,10 +50,12 @@ function setPersonaPreviewForInstance({serverstore, structureKey, instanceKey, p
 }
 
 async function linkInstanceAsync({serverstore}) {
-    await serverstore.addPersonaToInstanceAsync({
+    const persona = await serverstore.getPersonaAsync(serverstore.getUserId());
+    serverstore.addPersonaToInstance({
         structureKey: serverstore.getStructureKey(),
         instanceKey: serverstore.getInstanceKey(),
-        personaKey: serverstore.getUserId()
+        personaKey: serverstore.getUserId(),
+        persona
     }); 
     return null;
 }

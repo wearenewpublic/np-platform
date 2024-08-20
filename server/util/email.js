@@ -30,7 +30,7 @@ async function sendEmailAsync(emailFields) {
 exports.sendEmailAsync = sendEmailAsync;
 
 // TODO: Allow for templates to be stored outside np-platform
-async function sendTemplatedEmailAsync({toUserId, templateId, language, siloKey, structureKey, instanceKey, ...data}) {
+async function sendTemplatedEmailAsync({toUserId, toPersona, templateId, language, siloKey, structureKey, instanceKey, ...data}) {
     const toUser = await firebaseGetUserAsync(toUserId);
     const templateDir = path.join(path.dirname(__dirname), 'email-template');
     const jsonText = readFileSync(path.join(templateDir, templateId + '.json'), 'utf8').toString();
@@ -46,7 +46,7 @@ async function sendTemplatedEmailAsync({toUserId, templateId, language, siloKey,
     const Subject = Mustache.render(stringsForLanguage.SUBJECT, data);
     const emailFields = {
         From: Mustache.render(stringsForLanguage.FROM, {...data, siloKey}),
-        To: toUser.displayName + ' <' + toUser.email + '>',
+        To: toPersona.name + ' <' + toUser.email + '>',
         Subject, HtmlBody, TextBody
     }
 

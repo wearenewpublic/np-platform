@@ -42,6 +42,7 @@ class ServerStore {
         });
     }
 
+    // TODO: Maybe allow overlapping paths provided the data written is the same
     async commitDataAsync() {
         checkPathsNotOverlapping(Object.keys(this.delayedWrites));
         await firebaseUpdateAsync('/', this.delayedWrites);
@@ -209,8 +210,7 @@ class ServerStore {
         ], {global: globals, collection});
     }
     
-    async addPersonaToInstanceAsync({structureKey, instanceKey, personaKey}) {
-        const persona = await this.getPersonaAsync(personaKey);
+    addPersonaToInstance({structureKey, instanceKey, personaKey, persona}) {
         this.setRemoteObject({
             structureKey, instanceKey, type: 'persona', key: personaKey, 
             value: {...persona, linked: true}

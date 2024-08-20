@@ -12,15 +12,17 @@ async function sendNotifsForReplyApi({serverstore, language, parentKey, replyKey
     const replyComment = await pReplyComment;
     const conversationName = await pConversationName;
     const siloName = await pSiloName ?? serverstore.getSiloKey().toUpperCase();
-    const replyAuthor = await firebaseGetUserAsync(replyComment.from);
+    const replyAuthorPersona = await serverstore.getPersonaAsync(replyComment.from);
+    const toPersona = await serverstore.getPersonaAsync(parentComment.from);
 
     await sendTemplatedEmailAsync({
         templateId: 'reply-notif', language, 
         siloKey: serverstore.getSiloKey(), structureKey: serverstore.getStructureKey(), 
         instanceKey: serverstore.getInstanceKey(),
+        toPersona,
         toUserId: parentComment.from, replyText: replyComment.text,
         siloName,
-        replyAuthorName: replyAuthor.displayName,
+        replyAuthorName: replyAuthorPersona.name,
         conversationName: conversationName ?? 'Unnamed Conversation'
     });
 }

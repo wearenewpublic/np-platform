@@ -19,10 +19,11 @@ test('sendEmailAsync', async () => {
 
 test('sendTemplatedEmailAsync', async () => {
     setPostmarkKey('mocked-api-key');
+    const toPersona = {name: 'Test User'};
     await sendTemplatedEmailAsync({
         templateId: 'reply-notif', language: 'English',
         siloKey: 'testSilo', structureKey: 'testStruct', instanceKey: 'testInstance',
-        toUserId: 'testuser', replyText: 'My reply',
+        toPersona, toUserId: 'testuser', replyText: 'My reply',
         siloName: 'Radio Canada', replyAuthorName: 'Test User', conversationName: 'My Conversation'
     });
     expect(getLastEmailSent()).toMatchSnapshot();

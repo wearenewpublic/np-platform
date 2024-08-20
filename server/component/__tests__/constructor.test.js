@@ -20,7 +20,7 @@ describe('runConstructorApi', () => {
         await runConstructorApi({serverstore});
         serverstore.commitDataAsync();
 
-        const profile = await serverstore.getObjectAsync('profile', 'testuser');
+        const profile = await serverstore.getObjectAsync('persona', 'testuser');
         expect(profile.name).toBe('Test User');
     });
 });
