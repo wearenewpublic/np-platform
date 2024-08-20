@@ -37,9 +37,11 @@ function setPersonaPreviewForInstance({serverstore, structureKey, instanceKey, p
 }
 
 async function linkInstanceAsync({serverstore}) {
-    const userId = serverstore.getUserId();
-    serverstore.updateObject('persona', userId, {linked: true});
-    serverstore.setGenericBacklink('profile', userId);
+    await serverstore.addPersonaToInstanceAsync({
+        structureKey: serverstore.getStructureKey(),
+        instanceKey: serverstore.getInstanceKey(),
+        personaKey: serverstore.getUserId()
+    }); 
     return null;
 }
 exports.linkInstanceAsync = linkInstanceAsync;

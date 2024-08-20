@@ -36,7 +36,7 @@ class ServerStore {
     }
 
     doDelayedUpdate(path, updateMap) {
-        const updateKeys = Object.keys(updateMap);
+        const updateKeys = Object.keys(updateMap ?? {});
         updateKeys.forEach(k => {
             this.doDelayedWrite([...path, k], updateMap[k]); 
         });
@@ -137,22 +137,31 @@ class ServerStore {
     }
 
     async getRemoteObjectAsync({
-            siloKey=this.siloKey, structureKey=this.structureKey, 
-            instanceKey=this.instanceKey, type, key
-        }) {
+        siloKey=this.siloKey, structureKey=this.structureKey, 
+        instanceKey=this.instanceKey, type, key
+    }) {
         return await firebaseReadAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', type, key]);
     }
 
     async getRemoteGlobalAsync({
-            siloKey=this.siloKey, structureKey=this.structureKey, instanceKey=this.instanceKey, key
-        }) {
+        siloKey=this.siloKey, structureKey=this.structureKey, instanceKey=this.instanceKey, key
+    }) {
         return await firebaseReadAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global', key]);
     }
 
+    setRemoteGlobal({
+        siloKey=this.siloKey, structureKey=this.structureKey, 
+        instanceKey=this.instanceKey, key, value
+    }) {
+        this.doDelayedWrite([
+            'silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global', key
+        ], value);
+    }
+
     setRemoteObject({
-            siloKey=this.siloKey, structureKey=this.structureKey, 
-            instanceKey=this.instanceKey, type, key, value
-        }) {
+        siloKey=this.siloKey, structureKey=this.structureKey, 
+        instanceKey=this.instanceKey, type, key, value
+    }) {
         return this.doDelayedWrite([
             'silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 
             'collection', type, key
@@ -160,9 +169,9 @@ class ServerStore {
     }
 
     updateRemoteObject({
-            siloKey=this.siloKey, structureKey=this.structureKey, 
-            instanceKey=this.instanceKey, type, key, updateMap
-        }) {
+        siloKey=this.siloKey, structureKey=this.structureKey, 
+        instanceKey=this.instanceKey, type, key, updateMap
+    }) {
         return this.doDelayedUpdate([
             'silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 
             'collection', type, key
@@ -170,8 +179,15 @@ class ServerStore {
     }
 
     async getPersonaAsync(userId) {
-        const userInfo = await firebaseGetUserAsync(userId);
-        return {key: userId, name: userInfo.displayName, photoUrl: userInfo.photoURL};
+        const personaPreview = await this.getRemoteGlobalAsync({
+            structureKey: 'persona', instanceKey: userId, key: 'preview'
+        });
+        if (personaPreview) {
+            return personaPreview;
+        } else {
+            const userInfo = await firebaseGetUserAsync(userId);
+            return {key: userId, name: userInfo.displayName, photoUrl: userInfo.photoURL};    
+        }
     }
 
     async getMyPersonaAsync() {
@@ -193,6 +209,21 @@ class ServerStore {
         ], {global: globals, collection});
     }
     
+    async addPersonaToInstanceAsync({structureKey, instanceKey, personaKey}) {
+        var personaPreview = await this.getObjectAsync('persona', personaKey);
+        if (!personaPreview) {
+
+        }
+        this.setRemoteObject({
+            structureKey, instanceKey, type: 'persona', key: personaKey, 
+            value: {...personaPreview, linked: true}
+        });
+        const backlinkKey = structureKey + '_' + instanceKey;
+        this.setRemoteObject({
+            structureKey: 'profile', instanceKey: personaKey, type: 'backlink', key: backlinkKey,
+            value: {key: backlinkKey, structureKey, instanceKey}
+        });
+    }
 }
 
 exports.ServerStore = ServerStore;
