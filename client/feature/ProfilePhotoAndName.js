@@ -36,7 +36,7 @@ export const ProfileOldStuff = {
 }
 
 function ViewPhotoAndName() {
-    const personaKey = usePersonaKey();
+    const personaKey = useInstanceKey();
     const persona = usePersonaObject(personaKey);
 
     return <View>    

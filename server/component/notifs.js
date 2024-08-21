@@ -1,6 +1,4 @@
 const { sendTemplatedEmailAsync } = require("../util/email");
-const { firebaseGetUserAsync } = require("../util/firebaseutil");
-
 
 async function sendNotifsForReplyApi({serverstore, language, parentKey, replyKey}) {
     const pParentComment = serverstore.getObjectAsync('comment', parentKey);

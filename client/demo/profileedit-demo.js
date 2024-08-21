@@ -77,9 +77,12 @@ function profileStorySets() {return [
                 CLICK('A pseudonym'), INPUT('pseudonym', 'malice'), 
                 CLICK('Save'),
             ]},
-
-
         ]
+    },
+    {
+        label: 'Other User Profile', 
+        instanceKey: 'b', personaKey: 'a',
+        content: <ProfileModuleHolder module={ProfilePhotoAndNameFeature.config.profileModules[0]} />,
     }
 ]}
 

@@ -112,13 +112,13 @@ export function DemoStorySet({storySet}) {
             collections={collections} globals={globals} firebaseUser={firebaseUser}
             sessionData={sessionData} serverCall={serverCall} modulePublic={modulePublic}>
         <FlowBox>
-            {storySet.stories.map(story =>
+            {storySet.stories?.map(story =>
                 <PadBox right={10} key={story.label}>
                     <IconButton compact label={story.label} 
                     onPress={() => playStoryActionListAsync({domRef, actions: story.actions})} />
                 </PadBox>
             )}
-            <IconButton icon={Reset} compact type='secondary' label='Reset' onPress={onReset} />
+            {storySet.stories && <IconButton icon={Reset} compact type='secondary' label='Reset' onPress={onReset} />}
         </FlowBox>
         <Pad size={10} />
         <ShadowBox>
