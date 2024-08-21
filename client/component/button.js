@@ -322,6 +322,40 @@ const ReactionButtonStyle = StyleSheet.create({
     }
 })
 
+export function FilterButton({emoji, label, text, count, selected, onPress}) {
+    const s = FilterButtonStyle;
+    const [pressed, setPressed] = useState(false);
+
+    return <HoverView style={[s.button, selected && s.pressed]} pressedStyle={s.pressed} hoverStyle={s.hover} 
+            onPress={onPress} setPressed={setPressed}>
+        {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
+        <UtilityText label={label} text={text} type='tiny' 
+            color={(pressed || selected) ? colorTextBlue : colorBlack} />
+        {count ? <Pad size={8} /> : null}
+        <UtilityText text={count} type='tiny' color={colorRed} />
+    </HoverView>
+}
+const FilterButtonStyle = StyleSheet.create({
+    button: {
+        height: 32,
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'flex-start',
+        borderColor: colorGreyBorder,
+        borderWidth: 1,
+        borderRadius: 100,
+        paddingHorizontal: 12
+    },
+    hover: {
+        backgroundColor: colorGreyHover,
+    },
+    pressed: {
+        borderColor: colorTextBlue,        
+        backgroundColor: colorWhite,
+        borderColor: colorTextBlue,
+    }
+});
+
 export function DropDownSelector({label, options, value, onChange=()=>{}}) {
     const [hover, setHover] = useState(false);
     const selectedOption = options.find(o => o.key == value) || options[0];
