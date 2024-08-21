@@ -1,15 +1,16 @@
-import React from "react";
-import { EditorialHeading, Heading, LinkText, UtilityText } from "../component/text";
+import React, { useState } from "react";
+import { EditorialHeading, Heading, LinkText, TextField, UtilityText } from "../component/text";
 import { CTAButton, IconButton, SubtleButton } from "../component/button";
 import { gotoInstance, pushSubscreen } from "../util/navigate";
 import { ConversationScreen, HeaderBox, Narrow, Pad, PadBox, Separator, WrapBox } from "../component/basics";
 import { useConfig } from "../util/features";
-import { colorRed } from "../component/color";
+import { colorGreyPopupBackground, colorRed } from "../component/color";
 import { View } from "react-native";
 import { useDatastore } from "../util/datastore";
 import { DemoStory, DemoStorySet } from "../component/demo";
 import { AccordionField } from "../component/form";
 import { Catcher } from "../component/catcher";
+import { toBool } from "../util/util";
 
 export const ComponentDemoStructure = {
     key: 'componentdemo',
@@ -67,10 +68,10 @@ function ComponentPageScreen({pageKey}) {
     const designUrl = page.designUrl ?? section.designUrl;;
 
     return <ConversationScreen>
-        <HeaderBox>
+        <HeaderBox backgroundColor={colorGreyPopupBackground}>
             <Heading level={1} label={page.label} />
             <Pad size={8} />
-            {designUrl && <LinkText label='Design' url={designUrl} />}
+            {designUrl && <LinkText label='Design Link' url={designUrl} />}
             {!designUrl && <UtilityText color={colorRed} label='No design link' />}
         </HeaderBox>
         <Pad />
@@ -106,15 +107,17 @@ function FeatureScreen({pageKey}) {
 
 
 
-function DemoPageSection({label, screenKey, sections}) {
+function DemoPageSection({search, label, screenKey, sections}) {
     const datastore = useDatastore();
 
     return <View>
         <Heading level={1} label={label} />
         {sections.map(section => 
-            <AccordionField key={section.label} titleContent={<UtilityText strong label={section.label} />} >
+            <AccordionField key={section.label} forceOpen={toBool(search)}
+                titleContent={<UtilityText strong label={section.label} />} >
                 <WrapBox>
                     {section.pages.map((page, j) => 
+                        page.label.toLowerCase().includes(search.toLowerCase()) &&
                         <PadBox vert={10} horiz={10} key={page.key}>
                             <IconButton compact type='secondary' label={page.label} onPress={() => 
                                 datastore.pushSubscreen(screenKey, {pageKey: page.key})
@@ -131,6 +134,7 @@ function DemoPageSection({label, screenKey, sections}) {
 
 function ComponentDemoScreen() {
     const {componentSections, structureSections, featureSections} = useConfig();
+    const [search, setSearch] = useState('');
 
     const mergedCommentSections = mergeSectionsWithSameKey(componentSections);
     const mergedStructureSections = mergeSectionsWithSameKey(structureSections);
@@ -138,9 +142,11 @@ function ComponentDemoScreen() {
 
     return <ConversationScreen>
         <Narrow>
-            <DemoPageSection label='Components' screenKey='page' sections={mergedCommentSections} />
-            <DemoPageSection label='Structures' screenKey='structure' sections={mergedStructureSections} />
-            <DemoPageSection label='Features' screenKey='feature' sections={mergedFeatureSections} />
+            <TextField label='Search' placeholder='Search...' value={search} onChange={setSearch} />
+            <Pad />
+            <DemoPageSection search={search} label='Components' screenKey='page' sections={mergedCommentSections} />
+            <DemoPageSection search={search} label='Structures' screenKey='structure' sections={mergedStructureSections} />
+            <DemoPageSection search={search} label='Features' screenKey='feature' sections={mergedFeatureSections} />
         </Narrow>
     </ConversationScreen>
 }

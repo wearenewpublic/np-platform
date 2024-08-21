@@ -167,16 +167,9 @@ export function Center({children, pad=0}) {
     </View>  
 }
 
-export function HeaderBox({children, horiz=20, vert=20}) {
-    const s = HeaderBoxStyle;
-    return <View style={[s.box, {paddingHorizontal:horiz, paddingVertical:vert}]}>{children}</View>
+export function HeaderBox({children, backgroundColor=colorPinkBackground, horiz=20, vert=20}) {
+    return <View style={{paddingHorizontal:horiz, paddingVertical:vert, backgroundColor}}>{children}</View>
 }
-const HeaderBoxStyle = StyleSheet.create({
-    box: {
-        backgroundColor: colorPinkBackground,
-    }
-})
-
 
 export function Separator() {
     const s = SeparatorStyle;

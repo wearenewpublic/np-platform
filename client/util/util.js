@@ -188,3 +188,12 @@ export function removeUndefinedFields(obj) {
     }
     return clone;
 }
+
+export function toBool(arg) {
+    if (arg) {
+        return true;
+    } else {
+        return false;
+    }
+}
+

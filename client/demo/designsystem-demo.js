@@ -3,7 +3,7 @@ import { Datastore, usePersonaKey } from "../util/datastore";
 import { IconUpvote, IconUpvoted } from "../component/icon";
 import { CharacterCounter, CircleCount, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
 import { colorBlack, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
-import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, TextButton } from "../component/button";
+import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, FilterButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, TextButton } from "../component/button";
 import { Checkbox, Toggle, RadioOption, RadioGroup, FormField, AccordionField } from "../component/form";
 import { useState } from "react";
 import { RichText } from "../component/richtext";
@@ -193,18 +193,19 @@ function ProfileScreen() {
 function FormScreen() {
     const [switchValue, setSwitchValue] = useState(false);
     const [radioValue, setRadioValue] = useState(null);
+    const [text, setText] = useState(null);
     // const [oldRadioValue, setRadioValue] = useState(null);
 
     return <View>
             <DemoSection label='Form Field'>
                 <FormField label='Field label'>
-                    <TextField placeholder='Text Field' />
+                    <TextField placeholder='Text Field' value={text} onChange={setText} />
                 </FormField>
                 <FormField label='Required Field' required>
-                    <TextField placeholder='Text Field' />
+                    <TextField placeholder='Text Field' value={text} setText={setText} />
                 </FormField>
                 <FormField label='Fiend with Description' descriptionLabel='Description appears below' >
-                    <TextField placeholder='Text Field' />
+                    <TextField placeholder='Text Field' value={text} setText={setText} />
                 </FormField>
                 <FormField label='Fiend with Error' errorLabel='This is an error' >
                     <TextField error placeholder='Text Field' value='Invalid Text' />
@@ -333,8 +334,13 @@ function ButtonsAndLinksScreen() {
                 <ReactionButton emoji='🤝🏽' label='Selected' count={1} selected onPress={onPress} />                
                 <ReactionButton emoji='🤝🏽' label='View only' count={2} viewOnly onPress={onPress} />
                 <ReactionButton emoji='🤝🏽' text='Text not label' onPress={onPress} />
+            </DemoSection>
+            <DemoSection horiz label='Filter Button'>
+                <FilterButton emoji='🔍' label='Under Review' count={1} onPress={onPress} />
+                <FilterButton label='Selected' count={22} onPress={onPress} />
 
             </DemoSection>
+
             <DemoSection label='Link'>
                 <RichText text={inputString} />
                 <RichText label='Text with a {param} and a [link]({url})' formatParams={{param: 'parameter', url: 'https://example.com'}} />

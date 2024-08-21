@@ -90,7 +90,7 @@ const CheckboxStyle = StyleSheet.create({
 })
 
 
-export function AccordionField({titleContent, defaultOpen, children}) {
+export function AccordionField({titleContent, defaultOpen, forceOpen, children}) {
     const s = AccordionFieldStyle;
     const [open, setOpen] = React.useState(defaultOpen);
     return <View>
@@ -98,10 +98,10 @@ export function AccordionField({titleContent, defaultOpen, children}) {
             <HorizBox center spread>
                 {titleContent}
                 <Pad />
-                {open ? <ChevronUp /> : <ChevronDown />}
+                {!forceOpen && (open ? <ChevronUp /> : <ChevronDown />)}
             </HorizBox>
         </HoverView>
-        {open && children}
+        {(open || forceOpen) && children}
     </View>
 
 }

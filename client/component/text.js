@@ -197,7 +197,7 @@ export function LinkText({type='small', text, url, label, formatParams}) {
 // node, but that doesn't seem to work in current versions of react-native-web
 export var global_textinput_test_handlers = {};
 
-export function AutoSizeTextInput({value, onChange, placeholder, style, hoverStyle=null, maxHeight = 400, emptyHeight = 50, testID, ...props}) {
+export function AutoSizeTextInput({value, onChange, placeholder, style, hoverStyle=null, maxHeight = 400, emptyHeight = 54, testID, ...props}) {
     const [height, setHeight] = useState(0);
     const [hover, setHover] = useState(false);
 
@@ -242,7 +242,7 @@ export function TextField({value, error=false, big=false, autoFocus=false, place
     const s = TextFieldStyle;
     const tPlaceholder = useTranslation(placeholder, placeholderParams);
     return <AutoSizeTextInput value={value ?? ''} onChange={onChange} 
-        emptyHeight={big ? 300 : 50} autoFocus={autoFocus} testID={testID}
+        emptyHeight={big ? 300 : 54} autoFocus={autoFocus} testID={testID}
         style={[s.textField, error ? {borderColor: colorRed} : null]} hoverStyle={s.hover}
         placeholder={tPlaceholder} placeholderTextColor={colorDisabledText} />
 }

@@ -1,12 +1,13 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Center, FlowBox, Pad, PadBox, ShadowBox } from "./basics";
 import { Catcher } from "./catcher";
-import { IconButton, Tag } from "./button";
+import { FilterButton, IconButton, Tag } from "./button";
 import { Datastore } from "../util/datastore";
-import { global_textinput_test_handlers } from "./text";
+import { global_textinput_test_handlers, Heading } from "./text";
 import React, { useState } from "react";
 import { pauseAsync } from "../util/util";
 import { Reset } from "@carbon/icons-react";
+import { colorGreyBorder } from "./color";
 
 export function CLICK(matcher) {
     return {matcher, action: 'click'}
@@ -18,14 +19,26 @@ export function INPUT(matcher, text) {
 
 
 export function DemoSection({label, horiz=false, children}) {
+    const s = DemoSectionStyle;
     return <View style={{marginBottom: 32}}>
-        <DemoHeader label={label} />
+        <Heading type='small' label={label} />
         <Pad size={8} />
-        <Catcher>
-            <SpacedArray horiz={horiz}>{children}</SpacedArray>
-        </Catcher>
+        <View style={s.box}>
+            <Catcher>
+                <SpacedArray horiz={horiz}>{children}</SpacedArray>
+            </Catcher>
+        </View>
     </View>
 }
+const DemoSectionStyle = StyleSheet.create({
+    box: {
+        borderColor: colorGreyBorder,
+        borderWidth: 1,
+        borderRadius: 12,
+        padding: 20,
+        paddingBottom: 0
+    }
+});
 
 export function DemoHeader({label}) {
     const s = DemoHeaderStyle;
@@ -39,7 +52,7 @@ const DemoHeaderStyle = StyleSheet.create({
     }
 })
 
-export function SpacedArray({pad=16, horiz=false, children}) {
+export function SpacedArray({pad=20, horiz=false, children}) {
     if (children.length > 1) {
         return <View style={horiz ? {flexDirection: 'row', flexWrap: horiz ? 'wrap' : null} : null} >
             {children.map((c, i) => 
@@ -47,7 +60,10 @@ export function SpacedArray({pad=16, horiz=false, children}) {
             )}
         </View>
     } else {
-        return children;
+        return <View>
+            {children}
+            <Pad size={pad} />
+        </View>
     }
 }
 
@@ -111,14 +127,16 @@ export function DemoStorySet({storySet}) {
             structureKey={structureKey} instanceKey={instanceKey} personaKey={personaKey}
             collections={collections} globals={globals} firebaseUser={firebaseUser}
             sessionData={sessionData} serverCall={serverCall} modulePublic={modulePublic}>
+        <Heading type='small' text={storySet.label} />
+        <Pad size={5} />
         <FlowBox>
             {storySet.stories?.map(story =>
-                <PadBox right={10} key={story.label}>
-                    <IconButton compact label={story.label} 
-                    onPress={() => playStoryActionListAsync({domRef, actions: story.actions})} />
+                <PadBox right={10} vert={5} key={story.label}>
+                    <FilterButton label={story.label} 
+                        onPress={() => playStoryActionListAsync({domRef, actions: story.actions})} />
                 </PadBox>
             )}
-            {storySet.stories && <IconButton icon={Reset} compact type='secondary' label='Reset' onPress={onReset} />}
+            {storySet.stories && <PadBox vert={5}><IconButton icon={Reset} compact type='secondary' label='Reset' onPress={onReset} /></PadBox>}
         </FlowBox>
         <Pad size={10} />
         <ShadowBox>
