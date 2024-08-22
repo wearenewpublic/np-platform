@@ -10,11 +10,12 @@ export async function callServerApiAsync({datastore, component, funcname, params
     }
 
     const idToken = await getFirebaseIdTokenAsync();
-    const expandedParams = {...params, 
+    const expandedParams = { 
         siloKey: datastore?.getSiloKey() || null,
         structureKey: datastore?.getStructureKey() || null, 
         instanceKey: datastore?.getInstanceKey() || null,
-        language: datastore?.getLanguage() || 'English'
+        language: datastore?.getLanguage() || 'English',
+        ...params,
     };
     try {
         const apiUrl = makeApiUrl(component, funcname);

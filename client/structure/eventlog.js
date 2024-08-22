@@ -10,7 +10,7 @@ import { eventTypes, getLogEventsAsync, getSessionsAsync, useSession } from "../
 import { useState, useEffect } from "react";
 import { View } from 'react-native';
 import { gotoInstance } from "../util/navigate";
-import { colorTextGrey } from "../component/color";
+import { colorBlueBackground, colorTextGrey } from "../component/color";
 import { useLanguage } from "../component/translation";
 import { Banner } from "../component/banner";
 
@@ -123,7 +123,7 @@ export function EventLogScreen({eventType, sessionKey, siloKey}) {
     }, []);
 
     if (!events) {
-        return <Banner label='Loading Events...' />
+        return <PadBox horiz={20} vert={20}><Banner color={colorBlueBackground}><UtilityText label='Loading Events...' /></Banner></PadBox>
     }
 
     const sortedEvents = events.sort((a, b) => b.time - a.time);

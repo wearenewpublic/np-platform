@@ -1,14 +1,17 @@
 import { HorizBox, Pad } from "../component/basics";
-import { Heading, TextField, UtilityText } from "../component/text";
-import { View } from "react-native";
+import { Heading, Paragraph, TextField, UtilityText } from "../component/text";
+import { StyleSheet, View } from "react-native";
 import { useDatastore, useGlobalProperty, useInstanceKey, usePersonaKey, usePersonaObject, usePersonaPreview } from "../util/datastore";
 import { FaceButton, FaceImage, FaceSelect, LetterFace, ProfilePhoto } from "../component/people";
-import { useEditableField, useEditErrors, useProfileField, FieldEditContext } from "../structure/profile";
+import { useEditableField, useEditErrors, useProfileField, FieldEditContext, WithEditableFields } from "../structure/profile";
 import { RadioGroup, RadioOption } from "../component/form";
 import { colorPinkBackground, colorRedBackground, colorTextGrey } from "../component/color";
 import { Banner } from "../component/banner";
 import { Catcher } from "../component/catcher";
-import React from "react";
+import React, { useState } from "react";
+import { CTAButton } from "../component/button";
+import { getFirebaseUser, useFirebaseUser } from "../util/firebase";
+import { callServerApiAsync } from "../util/servercall";
 
 export const ProfilePhotoAndNameFeature = {
     key: 'profileeditname',
@@ -73,7 +76,7 @@ function EditPhotoAndName() {
         {nameMode == 'custom' && <Catcher><PseudonymEditor /></Catcher>}
         <Pad size={24}/>
         <Heading label='Your profile photo'/>
-        <Pad size={12} />
+        <Pad size={20} />
         <Catcher><ProfilePhotoEditor /></Catcher>
     </View>
 }
@@ -164,4 +167,70 @@ function previewPhotoAndName({updates}) {
     return {name: updates.name, photoUrl: updates.photoUrl, hue: updates.hue};
 }
 
+export function FirstLoginSetup({onFieldsChosen}) {
+    const s = FirstLoginSetupStyle;
+    const datastore = useDatastore();
+    const fbUser = datastore.getFirebaseUser();
 
+    const defaultState = {name: fbUser.displayName, photoUrl: fbUser.photoURL, hue: makeHueForString(fbUser.uid)};
+    const [updates, setUpdates] = useState(defaultState);
+    const [errors, setErrors] = useState({});
+    const [inProgress, setInProgress] = useState(false);
+ 
+    async function onContinue() {
+        setInProgress(true);
+        const errors = await checkPhotoAndNameAsync({datastore, updates});
+        if (errors) {
+            setErrors(errors);
+            setInProgress(false);
+            return;
+        } else {
+            setErrors({});
+        }
+
+        const preview = previewPhotoAndName({updates});
+
+        onFieldsChosen({updates, preview});
+    }
+
+    return <View style={s.outer}>
+        <Heading level={1} label="Let's get your profile set up" />
+        <Pad size={8} />
+        <Paragraph label='How do you want to appear to others?' />
+        <Pad size={40} />
+        <WithEditableFields updates={updates} setUpdates={setUpdates} errors={errors}>
+            <EditPhotoAndName />
+        </WithEditableFields>
+        <Pad size={32} />
+        <CTAButton wide disabled={inProgress} label={inProgress ? 'Please Wait...' : 'Continue'} onPress={onContinue} />
+    </View>
+}
+const FirstLoginSetupStyle = StyleSheet.create({
+    outer: {
+        backgroundColor: colorPinkBackground,
+        padding: 20,
+        borderRadius: 12
+    }
+});
+
+export function FirstLoginSetupTester() {
+    const [updates, setUpdates] = useState(null);
+    const [preview, setPreview] = useState(null);
+
+    function onFieldsChosen({updates, preview}) {
+        setUpdates(updates);
+        setPreview(preview);
+    }
+
+    if (updates) {
+        return <View>
+            <Heading label='Fields chosen' />
+            <Pad size={10} />
+            <UtilityText text={JSON.stringify(updates)} />
+            <Pad size={10} />
+            <UtilityText label={JSON.stringify(preview)} />
+        </View>
+    } else {
+        return <FirstLoginSetup onFieldsChosen={onFieldsChosen} />
+    }
+}

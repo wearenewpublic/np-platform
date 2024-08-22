@@ -1,14 +1,19 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import { LoginScreen } from "../Login";
 import { signInWithGoogle, signInWithPopup } from "../../util/firebase";
 import { WithEnv } from "../../util/testutil";
+import { Datastore } from "../../util/datastore";
+import { default_fbUser } from "../../component/demo";
 
 jest.mock("../../util/navigate");
 
-test('Login', () => {
-    render(<WithEnv><LoginScreen /></WithEnv>);
+test('Login', async () => {
+    signInWithGoogle.mockResolvedValue({user: {uid: 'testuser'}});
+    render(<Datastore firebaseUser={default_fbUser}><LoginScreen /></Datastore>);
     const googleButton = screen.getByRole('button', {name: 'Continue with Google'});
-    fireEvent.click(googleButton);
+    await act(async () => {
+        await fireEvent.click(googleButton);
+    });
     expect(signInWithGoogle).toHaveBeenCalled(); 
 });
 

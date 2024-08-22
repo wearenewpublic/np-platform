@@ -4,6 +4,10 @@ function faceUrl(face) {
     return 'https://psi.newpublic.org/faces/' + face;
 }
 
+export function demoPersonaToFbUser(persona) {
+    return {uid: persona.key, displayName: persona.name, photoURL: persona.photoUrl};
+}
+
 export const personaA = {
     key: 'a',
     name: 'Alice Adams',

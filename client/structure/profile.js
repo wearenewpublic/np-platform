@@ -11,6 +11,7 @@ import { CTAButton, TextButton } from "../component/button";
 import { useTranslation } from "../component/translation";
 import { callServerApiAsync } from "../util/servercall";
 import { removeUndefinedFields } from "../util/util";
+import { logEventAsync } from "../util/eventlog";
 
 export const ProfileStructure = {
     key: 'profile',
@@ -81,6 +82,7 @@ export function ProfileModuleHolder({module}) {
         setInProgress(false);
         setEditing(false);
         setErrors({});
+        logEventAsync(datastore, 'profile-edit', preview);
     }
 
     function onCancel() {
@@ -89,16 +91,9 @@ export function ProfileModuleHolder({module}) {
         setUpdates(oldState ?? {});
     }
 
-    // HACK
-    var pendingUpdates = {};
-    function updateField(key, value) {
-        pendingUpdates = {...pendingUpdates, [key]: value} 
-        setUpdates({...updates, ...pendingUpdates});
-    }
-
     if (editing) {
         return <Container>
-            <FieldEditContext.Provider value={{updates, updateField, errors}}>
+            <WithEditableFields updates={updates} setUpdates={setUpdates} errors={errors}>
                 <PadBox horiz={20} vert={20}>
                     {React.createElement(module.edit, {updates, setUpdates, errors})}
                     <Pad size={24} />
@@ -112,11 +107,11 @@ export function ProfileModuleHolder({module}) {
                         <TextButton label='Cancel' onPress={onCancel} />
                     </HorizBox>
                 </PadBox>
-            </FieldEditContext.Provider>
+            </WithEditableFields>
         </Container>
     } else {
         return <View>
-            <FieldEditContext.Provider value={{updates, updateField, errors}}>            
+            <WithEditableFields updates={updates} setUpdates={setUpdates} errors={errors}>
                 {React.createElement(module.view)}
                 <Pad size={24} />
                 {isMyProfile && module.edit && <CTAButton
@@ -124,10 +119,23 @@ export function ProfileModuleHolder({module}) {
                     label='Edit {tLabel}' formatParams={{tLabel}} 
                     onPress={() => setEditing(true)} />
                 }
-            </FieldEditContext.Provider>
+            </WithEditableFields>
         </View>
     }
 }
+
+export function WithEditableFields({children, updates, setUpdates, errors}) {
+    // HACK
+    var pendingUpdates = {};
+    function updateField(key, value) {
+        pendingUpdates = {...pendingUpdates, [key]: value} 
+        setUpdates({...updates, ...pendingUpdates});
+    }
+
+    return <FieldEditContext.Provider value={{updates, updateField, errors}}>
+        {children}
+    </FieldEditContext.Provider>
+ }
 
 export function useProfileFields() {
     const {updates} = React.useContext(FieldEditContext);

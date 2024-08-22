@@ -4,7 +4,7 @@ import { CLICK, DemoSection, INPUT } from "../component/demo"
 import { Datastore } from "../util/datastore"
 import { StructureDemo } from "../util/instance"
 import { ProfileModuleHolder } from "../structure/profile"
-import { ProfilePhotoAndNameFeature } from "../feature/ProfilePhotoAndName"
+import { FirstLoginSetup, FirstLoginSetupTester, ProfilePhotoAndNameFeature } from "../feature/ProfilePhotoAndName"
 
 export const ProfileEditDemo = {
     key: 'profileeditdemo',
@@ -83,6 +83,22 @@ function profileStorySets() {return [
         label: 'Other User Profile', 
         instanceKey: 'b', personaKey: 'a',
         content: <ProfileModuleHolder module={ProfilePhotoAndNameFeature.config.profileModules[0]} />,
+    },
+    {
+        label: 'First Login Setup',
+        content: <FirstLoginSetupTester />,
+        stories: [
+            {label: 'Just Continue', actions: [
+                CLICK('Continue')
+            ]},
+            {label: 'Letter Photo', actions: [
+                CLICK('letter'), CLICK('Continue')
+            ]},
+            {label: 'Good Pseudonym', actions: [
+                CLICK('A pseudonym'), 
+                INPUT('pseudonym', 'malice'), CLICK('Continue')
+            ]},
+        ]
     }
 ]}
 

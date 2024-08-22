@@ -19,6 +19,8 @@ export var eventTypes = {
     'edit-start-reply': 'Start editing a reply',
     'edit-cancel': 'Cancel editing a post',
     'edit-finish': 'Finish editing a post',
+    'profile-edit': 'Edit your profile',
+    'profile-setup': 'Set up your profile on first login',
     'reply-start': 'Start a reply to a post',
     'reply-finish': 'Finish a reply to a post',
     'upvote': 'Upvote a post',
@@ -113,7 +115,7 @@ export async function useLogEvent(eventKey, params, skip=false) {
 
 export async function getLogEventsAsync({datastore, siloKey, eventType, sessionKey} = {}) {
     const eventObjs = await callServerApiAsync({datastore, component: 'eventlog', funcname: 'getEvents', params: {siloKey, eventType, sessionKey}});
-    const eventKeys = Object.keys(eventObjs).sort((a, b) => eventObjs[b].time - eventObjs[a].time);
+    const eventKeys = Object.keys(eventObjs || {}).sort((a, b) => eventObjs[b].time - eventObjs[a].time);
     return eventKeys.map(key => ({key, ...eventObjs[key]}));
 }
 

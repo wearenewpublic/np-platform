@@ -4,6 +4,7 @@ import { features } from '../../feature';
 import { flattenFeatureBlocks } from '../../util/features';
 import { Datastore } from '../../util/datastore';
 import { testStoryActionListAsync } from '../../util/testutil';
+import { default_fbUser } from '../../component/demo';
 
 jest.mock("../../util/navigate");
 
@@ -48,7 +49,7 @@ describe.each(componentPages)('Components: $label', page => {
                 siloKey={storySet.siloKey ?? 'demo'}
                 modulePublic={storySet.modulePublic}
                 personaKey={storySet.personaKey}
-                firebaseUser={storySet.firebaseUser}
+                firebaseUser={storySet.firebaseUser ?? default_fbUser} 
                 structureKey={storySet.structureKey ?? 'testStruct'} 
                 globals={storySet.globals} filebaseUser={storySet.firebaseUser}
                 sessionData={storySet.sessionData} serverCall={storySet.serverCall}>

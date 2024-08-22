@@ -8,6 +8,7 @@ import React, { useState } from "react";
 import { pauseAsync } from "../util/util";
 import { Reset } from "@carbon/icons-react";
 import { colorGreyBorder } from "./color";
+import { demoPersonaToFbUser, personaA } from "../data/personas";
 
 export function CLICK(matcher) {
     return {matcher, action: 'click'}
@@ -109,10 +110,12 @@ async function playStoryActionListAsync({domRef, actions}) {
     await pauseAsync(500);
 }
 
+export const default_fbUser = demoPersonaToFbUser(personaA);
+
 export function DemoStorySet({storySet}) {
     const { collections, content, structureKey='testStruct', instanceKey='testInstance', 
         personaKey, config, modulePublic,
-        globals, sessionData, serverCall, pad=true, firebaseUser, siloKey='demo'
+        globals, sessionData, serverCall, pad=true, firebaseUser=default_fbUser, siloKey='demo'
     } = storySet;
     const domRef = React.createRef();
     const dataRef = React.createRef();

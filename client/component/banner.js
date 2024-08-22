@@ -1,6 +1,6 @@
 import { StyleSheet, View } from "react-native";
 import { Heading, UtilityText } from "./text";
-import { colorBlackHover, colorPink, colorPinkBackground, colorPinkHover, colorPinkPress } from "./color";
+import { colorBlackHover, colorLightBlueBackground, colorPink, colorPinkBackground, colorPinkHover, colorPinkPress, colorRedBackground } from "./color";
 import { HorizBox, HoverView, Pad, PadBox } from "./basics";
 import { BannerIconButton } from "./button";
 import { Information, Close } from '@carbon/icons-react'
@@ -43,6 +43,12 @@ const BannerStyle = StyleSheet.create({
         borderRadius: 8
     }
 })
+
+export function BannerMessage({label, text, formatParams, error=false}) {
+    return <Banner color={error ? colorRedBackground : colorLightBlueBackground}>
+        <UtilityText strong label={label} text={text} formatParams={formatParams} />
+    </Banner>
+}
 
 export function ClickableBanner({iconType='info', onPress, color=colorPink, hoverColor=colorPinkHover, pressColor=colorPinkPress, children}) {
     const s = ClickableBannerStyle;
