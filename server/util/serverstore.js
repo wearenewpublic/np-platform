@@ -1,4 +1,4 @@
-const { firebaseReadAsync, firebaseWriteAsync, firebaseUpdateAsync, expandPath, checkPathsNotOverlapping, firebaseGetUserAsync } = require("./firebaseutil");
+const { firebaseReadAsync, firebaseWriteAsync, firebaseUpdateAsync, expandPath, checkPathsNotOverlapping, firebaseGetUserAsync, checkNoUndefinedKeysOrValues } = require("./firebaseutil");
 
 // TODO: Batch writes and send them all to firebase together
 
@@ -32,6 +32,7 @@ class ServerStore {
     }
 
     doDelayedWrite(path, value) {
+        checkNoUndefinedKeysOrValues(value);
         this.delayedWrites[expandPath(path)] = value;
     }
 
@@ -184,10 +185,10 @@ class ServerStore {
             structureKey: 'profile', instanceKey: userId, key: 'preview'
         });
         if (personaPreview) {
-            return personaPreview;
+            return {key: userId, ...personaPreview};
         } else {
             const userInfo = await firebaseGetUserAsync(userId);
-            return {key: userId, name: userInfo.displayName, photoUrl: userInfo.photoURL};    
+            return {key: userId, name: userInfo.displayName, photoUrl: userInfo.photoURL ?? null};
         }
     }
 
@@ -197,13 +198,7 @@ class ServerStore {
 
     createInstance({structureKey, instanceKey, globals, persona}) {
         const collection = {
-            persona: {
-                [persona.key]: {                
-                    name: persona.name, 
-                    photoUrl: persona.photoUrl,
-                    key: persona.key
-                }
-            }
+            persona: {[persona.key]: persona}
         }
         this.doDelayedWrite([
             'silo', this.siloKey, 'structure', structureKey, 'instance', instanceKey

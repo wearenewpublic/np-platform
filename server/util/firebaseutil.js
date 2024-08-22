@@ -25,6 +25,19 @@ function expandPath(path) {
     }
 }
 
+function checkNoUndefinedValues(obj) {
+    if (typeof obj !== 'object') {
+        return;
+    }
+    for (let key in obj) {
+        if (obj[key] === undefined) {
+            throw new Error('Undefined value for key "' + key + '" in object: ' + JSON.stringify(obj));
+        } else {
+            checkNoUndefinedValues(obj[key]);
+        }
+    }
+}
+
 async function firebaseWriteAsync(path, data) {
     const ref = admin.database().ref(expandPath(path));
     return await ref.set(data);
@@ -130,7 +143,8 @@ module.exports = {
     setObjectAsync, readObjectAsync, firebaseReadWithFilterAsync,
     keyToUrl, urlToKey,
 
-    verifyIdTokenAsync, createNewKey, firebaseGetUserAsync, expandPath, checkPathsNotOverlapping,
+    verifyIdTokenAsync, createNewKey, firebaseGetUserAsync, expandPath, 
+    checkPathsNotOverlapping, checkNoUndefinedKeysOrValues: checkNoUndefinedValues,
 
     setFirebaseAdmin, getFirebaseAdmin
 };

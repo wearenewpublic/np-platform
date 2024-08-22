@@ -28,6 +28,7 @@ test('sendNotifsForReplyApi', async () => {
         templateId: 'reply-notif', language: 'English',
         siloKey: 'testSilo', structureKey: 'testStruct', instanceKey: 'testInstance',
         toUserId: 'testuser', replyText: 'My reply',
+        toPersona: {key: 'testuser', name: 'Test User', photoUrl: 'photo-url'},
         siloName: 'Radio Canada', replyAuthorName: 'Test User', conversationName: 'My Conversation'
     });
 });

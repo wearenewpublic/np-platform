@@ -1,5 +1,5 @@
 const { read } = require("fs");
-const { setFirebaseAdmin, firebaseWriteAsync, firebaseReadAsync, firebaseReadWithFilterAsync, firebaseUpdateAsync, firebaseGetUserAsync, createNewKey, writeGlobalAsync, readGlobalAsync, stringToFbKey, fbKeyToString, urlToKey, keyToUrl, checkPathsNotOverlapping } = require("../firebaseutil");
+const { setFirebaseAdmin, firebaseWriteAsync, firebaseReadAsync, firebaseReadWithFilterAsync, firebaseUpdateAsync, firebaseGetUserAsync, createNewKey, writeGlobalAsync, readGlobalAsync, stringToFbKey, fbKeyToString, urlToKey, keyToUrl, checkPathsNotOverlapping, checkNoUndefinedKeysOrValues } = require("../firebaseutil");
 const { fakeFirebaseAdmin, clearTestData } = require("../testutil");
 
 
@@ -94,3 +94,14 @@ test('checkPathsNotOverlapping', () => {
         checkPathsNotOverlapping(['foo/bar', 'foo/bar/wib'])
     ).toThrow();
 });
+
+test('checkNoUndefinedKeysOrValues', () => {
+    checkNoUndefinedKeysOrValues({foo: 'bar', baz: 'qux'});
+    checkNoUndefinedKeysOrValues('hello');
+    expect(() => 
+        checkNoUndefinedKeysOrValues({foo: 'bar', baz: undefined})
+    ).toThrow();
+    expect(() =>
+        checkNoUndefinedKeysOrValues({foo: 'bar', baz: {qux: 'quux', wibble: undefined}})
+    ).toThrow();
+}); 

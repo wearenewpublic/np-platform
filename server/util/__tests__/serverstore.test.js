@@ -68,5 +68,5 @@ test('getPersonaAsync', async () => {
     await serverstore.commitDataAsync();
 
     const result2 = await serverstore.getPersonaAsync('testuser');
-    expect(result2).toEqual({name: 'newname', hue: 25});
+    expect(result2).toEqual({key: 'testuser', name: 'newname', hue: 25});
 })
