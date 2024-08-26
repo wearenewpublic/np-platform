@@ -123,7 +123,7 @@ const AccordionFieldStyle = StyleSheet.create({
 
 export function Toggle({emoji, text, label, value, spread, onChange}) {
     const s = ToggleStyle;
-    return <HoverView hoverStyle={s.hover}
+    return <HoverView hoverStyle={s.hover} testID={label ?? text}
             onPress={() => onChange(!value)} role='checkbox'>
         <PadBox vert={8}>
             <HorizBox center spread={spread}>        

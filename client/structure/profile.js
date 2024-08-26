@@ -140,8 +140,9 @@ export function WithEditableFields({children, updates, setUpdates, errors}) {
 
 export function useEditableField(key, defaultValue) {
     const {updates, updateField} = React.useContext(FieldEditContext);
-    const value = updates[key];
-    return [updates[key] === undefined ? defaultValue : value, value => updateField(key, value)];
+    if (!updates) throw new Error('useEditableField must be used within a WithEditableFields');
+    const value = updates?.[key];
+    return [value === undefined ? defaultValue : value, value => updateField(key, value)];
 }
 
 export function useProfileField(key, defaultValue) {
