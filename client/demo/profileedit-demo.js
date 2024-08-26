@@ -1,20 +1,17 @@
-import { useState } from "react"
-import { ConversationScreen } from "../component/basics"
-import { CLICK, DemoSection, INPUT } from "../component/demo"
-import { Datastore } from "../util/datastore"
+import { CLICK, INPUT } from "../component/demo"
 import { StructureDemo } from "../util/instance"
 import { ProfileModuleHolder } from "../structure/profile"
-import { FirstLoginSetup, FirstLoginSetupTester, ProfilePhotoAndNameFeature } from "../feature/ProfilePhotoAndName"
+import { FirstLoginSetupTester, ProfilePhotoAndNameFeature } from "../feature/ProfilePhotoAndName"
 
 export const ProfileEditDemo = {
-    key: 'profileeditdemo',
-    name: 'Profile Demo',
+    key: 'demo_profileedit',
+    name: 'Phote & Name Demo',
     config: {
         componentSections: [
-            {label: 'Core Design System', key: 'core', pages: [
+            {label: 'Profile Feature Modules', key: 'profile', pages: [
                 {
                     designUrl: 'https://www.figma.com/design/iP7DEaY8SVqQcEGN6Feipj/Basic-Profile-%2B-Privacy-Settings?node-id=188-1054&m=dev', 
-                    label: 'Profile', key: 'profileedit', storySets: profileStorySets
+                    label: 'Photo & Name', key: 'profileedit', storySets: profileStorySets
                 }
             ]}
         ],

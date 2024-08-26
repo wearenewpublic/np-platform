@@ -1,4 +1,4 @@
-import { ComponentDemoStructure } from "../demo/demostructure";
+import { ComponentDemoStructure } from "./componentdemo";
 import { EventLogStructure } from "./eventlog";
 import { ProfileStructure } from "./profile";
 import { SimpleCommentsStructure } from "./simplecomments";

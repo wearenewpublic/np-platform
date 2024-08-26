@@ -40,6 +40,7 @@ function ProfileScreen() {
             {profileModules.map((module, i) => 
                 <Catcher key={i}>
                     <ProfileModuleHolder module={module} />
+                    <Pad size={20} />
                 </Catcher>
             )}
             {profileWidgets.map((Widget, i) => <Catcher key={i}><Widget /></Catcher>)}
@@ -137,27 +138,16 @@ export function WithEditableFields({children, updates, setUpdates, errors}) {
     </FieldEditContext.Provider>
  }
 
-export function useProfileFields() {
-    const {updates} = React.useContext(FieldEditContext);
-    return updates;
-}
-
 export function useEditableField(key, defaultValue) {
     const {updates, updateField} = React.useContext(FieldEditContext);
     const value = updates[key];
     return [updates[key] === undefined ? defaultValue : value, value => updateField(key, value)];
 }
 
-export function useProfileField(key, defaultValue=null) {
-    const {updates} = React.useContext(FieldEditContext);
-    const value = updates[key];
-    return value === undefined ? defaultValue : value;
+export function useProfileField(key, defaultValue) {
+    const fields = useGlobalProperty('fields');
+    return fields?.[key] ?? defaultValue;
 }
-
-export function useProfileFieldsSetter() {
-
-}
-
 
 export function useEditErrors() {
     const {errors} = React.useContext(FieldEditContext);

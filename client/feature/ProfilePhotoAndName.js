@@ -1,17 +1,15 @@
 import { HorizBox, Pad } from "../component/basics";
 import { Heading, Paragraph, TextField, UtilityText } from "../component/text";
 import { StyleSheet, View } from "react-native";
-import { useDatastore, useGlobalProperty, useInstanceKey, usePersonaKey, usePersonaObject, usePersonaPreview } from "../util/datastore";
-import { FaceButton, FaceImage, FaceSelect, LetterFace, ProfilePhoto } from "../component/people";
-import { useEditableField, useEditErrors, useProfileField, FieldEditContext, WithEditableFields } from "../structure/profile";
+import { useDatastore, useInstanceKey, usePersonaKey, usePersonaObject } from "../util/datastore";
+import { FaceImage, FaceSelect, LetterFace, ProfilePhoto } from "../component/people";
+import { useEditableField, useEditErrors, WithEditableFields } from "../structure/profile";
 import { RadioGroup, RadioOption } from "../component/form";
 import { colorPinkBackground, colorRedBackground, colorTextGrey } from "../component/color";
 import { Banner } from "../component/banner";
 import { Catcher } from "../component/catcher";
 import React, { useState } from "react";
 import { CTAButton } from "../component/button";
-import { getFirebaseUser, useFirebaseUser } from "../util/firebase";
-import { callServerApiAsync } from "../util/servercall";
 
 export const ProfilePhotoAndNameFeature = {
     key: 'profileeditname',
