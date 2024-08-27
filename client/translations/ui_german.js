@@ -60,4 +60,21 @@ export var ui_translations_german = {
     'Demo Moderation': 'Demo-Moderation',
     'Basic Teaser': 'Grundlegender Teaser',
     'Demo Filter': 'Demo-Filter',
+
+    // Profile
+    'Profile name': 'Profilname',
+    'Your profile photo': 'Dein Profilfoto',
+    'A pseudonym': 'Ein Pseudonym',
+    'Enter a pseudonym': 'Gib ein Pseudonym ein',
+    'This pseudonym is already in use. Please choose a different one.': 'Dieses Pseudonym wird bereits verwendet. Bitte wähle ein anderes.',
+    'Pseudonyms can contain only lower case letters and numbers.': 'Pseudonyme können nur Kleinbuchstaben und Zahlen enthalten.',
+    'You can change your pseudonym at most once a week': 'Du kannst dein Pseudonym höchstens einmal pro Woche ändern',
+    "Let's get your profile set up": 'Lass uns dein Profil einrichten',
+    'How do you want to appear to others?': 'Wie möchtest du anderen erscheinen?',
+    'Save': 'Speichern',
+    'Edit {tLabel}': '{tLabel} bearbeiten',
+    'photo and name': 'Foto und Name',
+    'Please Wait...': 'Bitte warten...',
+    'Continue': 'Fortsetzen',
+
 }

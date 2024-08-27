@@ -69,7 +69,7 @@ function EditPhotoAndName() {
         <Pad size={12} />
         <RadioGroup value={nameMode} onChange={onChangeNameMode}>
             <RadioOption radioKey='full' text={fbUser.displayName} />
-            <RadioOption radioKey='custom' text='A pseudonym' />
+            <RadioOption radioKey='custom' label='A pseudonym' />
         </RadioGroup>
         {nameMode == 'custom' && <Catcher><PseudonymEditor /></Catcher>}
         <Pad size={24}/>
