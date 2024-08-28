@@ -8,7 +8,7 @@ import { Popup } from "../platform-specific/popup";
 import { Information, Close, ChevronDown, ChevronUp } from '@carbon/icons-react';
 
 
-export function CTAButton({label, formatParams, icon, type='primary', disabled, compact=false, wide=false, onPress}) {
+export function CTAButton({label, text, formatParams, icon, type='primary', disabled, compact=false, wide=false, onPress}) {
     const s = CTAButtonStyle;
 
     const styleMap = {
@@ -24,7 +24,7 @@ export function CTAButton({label, formatParams, icon, type='primary', disabled, 
             style={[compact ? s.compactButton : s.button, wide && s.wide, normal]} hoverStyle={[s.hover, hover]} 
             pressedStyle={pressed} onPress={onPress} >
         {icon && <PadBox right={8}>{icon}</PadBox>}
-        <UtilityText type='large' label={label} formatParams={formatParams} color={textColor} />
+        <UtilityText type='large' label={label} text={text} formatParams={formatParams} color={textColor} />
     </HoverView>
 }
 
@@ -111,7 +111,7 @@ const CTAButtonStyle = StyleSheet.create({
 export function IconButton({label, icon=null, iconProps={}, wide=false, onPress}) {
     const s = IconReplyStyle;
     return <HoverView style={[s.button, wide ? s.wide : null]} hoverStyle={s.hover} 
-            pressedStyle={s.pressed} onPress={onPress} role='button'>
+            pressedStyle={s.pressed} onPress={onPress} testID={label} role='button'>
         {icon && React.createElement(icon, iconProps)} 
         {icon && label && <Pad size={8} />}
         <UtilityText label={label} />
@@ -195,7 +195,7 @@ const TextButtonStyle = StyleSheet.create({
 
 export function TextLinkButton({label, text, type='large', paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, rightIcon, color=colorBlack, alignStart=false, onPress}) {
     const [hover, setHover] = useState(false);
-    return <HoverView shrink style={[alignStart ? {alignSelf: 'flex-start'} : null]} setHover={setHover} onPress={onPress} role='button'>
+    return <HoverView shrink style={[alignStart ? {alignSelf: 'flex-start'} : null]} setHover={setHover} onPress={onPress} role='button' testID={label}>
         {leftIcon && React.createElement(leftIcon, {color})}
         {leftIcon && <Pad size={8} />}        
         {paragraph ? 
@@ -224,7 +224,7 @@ export function ExpandButton({
     const [hover, setHover] = useState(false);
 
     return <HoverView style={s.button} setHover={setHover} role='button'
-            onPress={() => setExpanded(!expanded)} testID={testID}>        
+            onPress={() => setExpanded(!expanded)} testID={testID ?? label}>        
         {userList && <FacePile type={type} userIdList={userList} />}
         {photoUrlList && <PhotoPile photoUrlList={photoUrlList} />}
         {(userList || photoUrlList) && <Pad size={4} />}
@@ -286,7 +286,7 @@ export function ReactionButton({emoji, viewOnly=false, label, text, count, selec
     const s = ReactionButtonStyle;
     const [pressed, setPressed] = useState(false);
     return <HoverView style={[s.horiz, !viewOnly && s.button, selected && s.pressed]} 
-            hoverStyle={s.hover} disabled={viewOnly}
+            hoverStyle={s.hover} disabled={viewOnly} testID={label}
             pressedStyle={s.pressed} setPressed={setPressed} role='button' onPress={onPress}>
         {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
         <UtilityText label={label} text={text} type='tiny' 
@@ -327,7 +327,7 @@ export function FilterButton({emoji, label, text, count, selected, onPress}) {
     const [pressed, setPressed] = useState(false);
 
     return <HoverView style={[s.button, selected && s.pressed]} pressedStyle={s.pressed} hoverStyle={s.hover} 
-            onPress={onPress} setPressed={setPressed}>
+            onPress={onPress} setPressed={setPressed} testID={label}>
         {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
         <UtilityText label={label} text={text} type='tiny' 
             color={(pressed || selected) ? colorTextBlue : colorBlack} />
@@ -400,11 +400,11 @@ const PopupPanelStyle = StyleSheet.create({
 
 
 
-export function BannerIconButton({type, onPress}) {
+export function BannerIconButton({type, testID, onPress}) {
     const s = BannerIconButtonStyle;
     const icon = type == 'close' ? Close : Information;
     return <HoverView style={s.regular} hoverStyle={s.hover} 
-        pressedStyle={s.pressed} onPress={onPress}>
+        pressedStyle={s.pressed} onPress={onPress} testID={testID}>
         {React.createElement(icon, {size: 24})}
     </HoverView>
 }
@@ -426,10 +426,10 @@ const BannerIconButtonStyle = StyleSheet.create({
 })
 
 
-export function BreadCrumb({icon, iconProps={}, onPress}) {
+export function BreadCrumb({icon, testID, iconProps={}, onPress}) {
     const s = BreadCrumbStyle;
     return <HoverView style={s.regular} hoverStyle={s.hover} 
-        pressedStyle={s.pressed} onPress={onPress}>
+        pressedStyle={s.pressed} onPress={onPress} testID={testID}>
         {React.createElement(icon, iconProps)}
     </HoverView>
 }
