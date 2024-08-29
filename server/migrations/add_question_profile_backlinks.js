@@ -7,10 +7,7 @@ const AddQuestionProfileBacklinks = {
 };
 
 async function addQuestionProfileBacklinks({serverstore}) {
-    console.log('addQuestionProfileBacklinks', serverstore.getSiloKey(), serverstore.getStructureKey());
     const questionKeys = await serverstore.getStructureInstanceKeysAsync('question');   
-    console.log('questionKeys:', questionKeys);
-
     for (const questionKey of questionKeys) {
         const questionStore = serverstore.getRemoteStore({
             structureKey: 'question', instanceKey: questionKey
@@ -20,17 +17,10 @@ async function addQuestionProfileBacklinks({serverstore}) {
 }
 
 async function connectAllPersonasForInstance({serverstore}) {
-    console.log('connectAllPersonasForInstance', serverstore.getInstanceKey());
     const personas = await serverstore.getCollectionAsync('persona');
-    console.log('personas:', personas);
     personas.forEach(persona => {
-        console.log('persona:', persona);
         serverstore.addPersonaToInstance({personaKey: persona.key, persona});
     });
-    // for (const persona in personas) {
-    //     console.log('persona:', persona);
-    //     serverstore.addPersonaToInstance({personaKey: persona.key, persona});
-    // }
 }
 
 

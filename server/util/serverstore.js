@@ -167,7 +167,7 @@ class ServerStore {
         ]);
     }
 
-    async getSiloKeysAsync() {
+    async getAllSiloKeysAsync() {
         return await firebaseReadShallowKeys(['silo']);
     }
 
@@ -249,6 +249,7 @@ class ServerStore {
     }
 
     getDetachedServerStore() {
+        console.log('getDetachedServerStore', this, this?.siloKey)
         return new ServerStore({
             siloKey: this.siloKey, structureKey: this.structureKey, 
             instanceKey: this.instanceKey, userId: this.userId, 

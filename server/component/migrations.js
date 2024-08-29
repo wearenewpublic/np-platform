@@ -33,8 +33,14 @@ async function runMigrationAsync({serverstore, migrationKey, preview=true}) {
     checkIsGlobalAdmin(serverstore);
     const migrationList = getMigrationList();
     const migration = migrationList.find(migration => migration.key === migrationKey);
+
     const detachedServerStore = serverstore.getDetachedServerStore();
-    await migration.runner({serverstore: detachedServerStore});
+    const allSiloKeys = await serverstore.getAllSiloKeysAsync()
+    for (const siloKey of allSiloKeys) {
+        const siloServerStore = detachedServerStore.getRemoteStore({siloKey});
+        await migration.runner({serverstore: siloServerStore});    
+    }
+
     const delayedWrites = detachedServerStore.getDelayedWrites();
     const {undoWrites, prunedWrites} = await getUndoLog({delayedWrites});
 
