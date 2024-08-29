@@ -19,7 +19,7 @@ async function updateProfileAsync({serverstore, updates, preview}) {
         serverstore.updateObject('persona', serverstore.getUserId(), preview);
     }
 
-    if (preview.name && updates.nameMode == 'custom') {
+    if (preview.name && updates.nameMode == 'custom' && preview.name != oldPreview.name) {
         serverstore.setModulePublic('profile', ['pseudonym', preview.name], serverstore.getUserId());
         if (oldPreview.name) {
             serverstore.setModulePublic('profile', ['pseudonym', oldPreview.name], null);

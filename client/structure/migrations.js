@@ -48,6 +48,7 @@ function MigrationScreen({migrationKey}) {
     const migration = useServerCallResult('migrations', 'getSingleMigration', {migrationKey});
     const [forwardWrites, setForwardWrites] = useState(null);
     const [undoWrites, setUndoWrites] = useState(null);
+    const [migrationLog, setMigrationLog] = useState(null);
     const [done, setDone] = useState(false);
     const [inProgress, setInProgress] = useState(false);
     const datastore = useDatastore();
@@ -61,6 +62,7 @@ function MigrationScreen({migrationKey}) {
         console.log('result', result);
         setForwardWrites(result.forwardWrites);
         setUndoWrites(result.undoWrites);
+        setMigrationLog(result.migrationLog);
     }
 
     async function onRunMigration() {
@@ -69,8 +71,11 @@ function MigrationScreen({migrationKey}) {
         setInProgress(false);
         setForwardWrites(result.forwardWrites);
         setUndoWrites(result.undoWrites);
+        setMigrationLog(result.migrationLog);
         setDone(true);
     }
+
+    console.log('migrationLog', migrationLog);
 
     return <PadBox horiz={20} vert={20}>
         <Pad />
@@ -89,9 +94,11 @@ function MigrationScreen({migrationKey}) {
         {inProgress && <UtilityText strong label='Migration in progress...' />}
         {done && <UtilityText strong label='Migration complete' />}
         <Pad />
+        {migrationLog && <MigrationLog migrationLog={migrationLog} />}
         {forwardWrites && <MigrationChanges newMap={forwardWrites} oldMap={undoWrites} />}
     </PadBox>
 }
+
 
 function PastExecutions({migrationKey}) {
     const pastExecutions = useServerCallResult('migrations', 'getPastExecutions', {migrationKey});
@@ -127,6 +134,19 @@ function stringifySorted(obj) {
     if (!obj) return 'null';
     return JSON.stringify(obj, Object.keys(obj).sort());
 }
+
+function MigrationLog({migrationLog}) {
+    return <View>
+        <Heading label='Migration Log' />
+        <Container>
+            <PadBox horiz={8} vert={4}>
+                {migrationLog.map((log, i) => <UtilityText key={i} text={log} />)}
+            </PadBox>
+        </Container>
+        <Pad />
+    </View>
+}
+
 
 function MigrationChanges({newMap, oldMap}) {
     const keys = Object.keys(newMap ?? {});

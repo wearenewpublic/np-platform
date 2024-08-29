@@ -144,3 +144,6 @@ keys.js
 # Don't store snapshots in github, since they clutter up the repo
 # Devs should make sure they run unit tests before making any changes 
 __snapshots__/
+
+# Don't store data for migrations, since these will sometimes be sensitive
+migrations/data/

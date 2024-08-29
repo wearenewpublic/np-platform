@@ -67,11 +67,14 @@ async function firebaseGetUserAsync(userId) {
 async function firebaseGetUserListAsync() {
     var nextPageToken = null;
     var users = [];
-    do {
+    const result = await admin.auth().listUsers(1000);
+    users = users.concat(result.users);
+    nextPageToken = result.pageToken;
+    while (nextPageToken) {
         const result = await admin.auth().listUsers(1000, nextPageToken);
         users = users.concat(result.users);
         nextPageToken = result.pageToken;
-    } while (nextPageToken);
+    };
     return users;
 }
 
