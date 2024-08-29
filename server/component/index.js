@@ -6,6 +6,7 @@ var coreComponents = {
     notifs: require('./notifs'),
     global: require('./global'),
     profile: require('./profile'),
+    migrations: require('./migrations'),
 }
 
 exports.coreComponents = coreComponents;

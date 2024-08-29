@@ -64,6 +64,27 @@ async function firebaseGetUserAsync(userId) {
     return await admin.auth().getUser(userId);
 }
 
+async function firebaseGetUserListAsync() {
+    var nextPageToken = null;
+    var users = [];
+    do {
+        const result = await admin.auth().listUsers(1000, nextPageToken);
+        users = users.concat(result.users);
+        nextPageToken = result.pageToken;
+    } while (nextPageToken);
+    return users;
+}
+
+async function firebaseReadShallowKeys(path) {
+    const ref = admin.database().ref(expandPath(path));
+    var topLevelKeys = [];
+    const snapshot = await ref.orderByKey().once('value');
+    snapshot.forEach(childSnapshot => {
+        topLevelKeys.push(childSnapshot.key);
+    });
+    return topLevelKeys;
+}
+
 function createNewKey() {
     return admin.database().ref().push().key;
 }
@@ -139,6 +160,7 @@ function checkPathsNotOverlapping(pathList) {
 
 module.exports = {
     firebaseWriteAsync, firebaseReadAsync, firebaseUpdateAsync, stringToFbKey, fbKeyToString,
+    firebaseReadShallowKeys, firebaseGetUserListAsync,
     readGlobalAsync, writeGlobalAsync, writeCollectionAsync,
     setObjectAsync, readObjectAsync, firebaseReadWithFilterAsync,
     keyToUrl, urlToKey,
@@ -148,5 +170,3 @@ module.exports = {
 
     setFirebaseAdmin, getFirebaseAdmin
 };
-
-

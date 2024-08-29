@@ -15,3 +15,13 @@ async function getIsUserAdminAsync({serverstore}) {
 }
 
 exports.getIsUserAdminAsync = getIsUserAdminAsync;
+
+function checkIsGlobalAdmin(serverstore) {
+    const userEmail = serverstore.getUserEmail();
+    const emailDomain = userEmail.split('@')[1];
+    if (emailDomain == 'newpublic.org' || emailDomain == 'admin.org') {
+        return true;
+    }
+    throw new Error('Not authorized');
+}
+exports.checkIsGlobalAdmin = checkIsGlobalAdmin;

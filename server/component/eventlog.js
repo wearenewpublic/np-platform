@@ -1,3 +1,4 @@
+const { checkIsGlobalAdmin } = require("../util/admin");
 const { firebaseWriteAsync, firebaseUpdateAsync, createNewKey, firebaseGetUserAsync, firebaseReadAsync, firebaseReadWithFilterAsync } = require("../util/firebaseutil");
 
 async function logEventApi({
@@ -48,19 +49,11 @@ async function setSessionUserApi({sessionKey, userId, eventKey}) {
 }
 exports.setSessionUserApi = setSessionUserApi;
 
-function checkIsGlobalAdmin(userEmail) {
-    const emailDomain = userEmail.split('@')[1];
-    if (emailDomain == 'newpublic.org' || emailDomain == 'admin.org') {
-        return true;
-    }
-    throw new Error('Not authorized');
-}
-
 // TODO: Proper way of having global admin access
 // TODO: Support silo-limited version where you only see events from that silo
 // TODO: Index-based event filtering
-async function getEventsApi({userEmail, siloKey, eventType, sessionKey}) {
-    checkIsGlobalAdmin(userEmail);
+async function getEventsApi({serverstore, siloKey, eventType, sessionKey}) {
+    checkIsGlobalAdmin(serverstore);
     var events = null;
     if (sessionKey) {
         events = await firebaseReadWithFilterAsync(['log', 'event'], 'sessionKey', sessionKey);
@@ -76,8 +69,8 @@ async function getEventsApi({userEmail, siloKey, eventType, sessionKey}) {
 }
 exports.getEventsApi = getEventsApi;
 
-async function getSessionsApi({userEmail, siloKey}) {
-    checkIsGlobalAdmin(userEmail);
+async function getSessionsApi({serverstore, siloKey}) {
+    checkIsGlobalAdmin(serverstore);
     var sessions = null;
     if (siloKey) {
         sessions = await firebaseReadWithFilterAsync(['log', 'session'], 'siloKey', siloKey);
@@ -88,8 +81,8 @@ async function getSessionsApi({userEmail, siloKey}) {
 }
 exports.getSessionsApi = getSessionsApi;
 
-async function getSingleSessionApi({userEmail, sessionKey}) {
-    checkIsGlobalAdmin(userEmail);
+async function getSingleSessionApi({serverstore, sessionKey}) {
+    checkIsGlobalAdmin(serverstore);
     return await firebaseReadAsync(['log', 'session', sessionKey]);
 }
 exports.getSingleSessionApi = getSingleSessionApi;

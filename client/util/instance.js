@@ -42,6 +42,9 @@ export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKe
     const s = ScreenStackStyle;
     
     const structure = getStructureForKey(structureKey);
+    if (!structure) {
+        throw new Error('Structure not found: ' + structureKey);
+    }
     const language = useFirebaseData(['silo', siloKey, 'module-public', 'language'])
     const activeFeatures = useFirebaseData(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global', 'features']) || [];
     const config = assembleConfig({structure, activeFeatures});

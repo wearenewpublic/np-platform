@@ -1,4 +1,5 @@
 const { readObjectAsync, firebaseReadAsync, firebaseWriteAsync } = require("../../util/firebaseutil");
+const { mockServerStore } = require("../../util/serverstore");
 const { getTestData, clearTestData } = require("../../util/testutil");
 const { logEventApi, setSessionUserApi, getEventsApi, getSessionsApi, getSingleSessionApi } = require("../eventlog");
 
@@ -69,8 +70,9 @@ test('setSessionUserApi', async () => {
 
 describe('getEventsApi', () => {
     test('Not authorized', async () => {
+        const serverstore = mockServerStore({userEmail: 'bad@bad.com'});
         expect(async () => {
-            await getEventsApi({userEmail: 'bad@bad.com'});
+            await getEventsApi({serverstore});
         }).rejects.toThrow('Not authorized');
     });
 
@@ -86,16 +88,17 @@ describe('getEventsApi', () => {
             siloKey: 'rc', eventType: 'test', sessionKey: 'b'
         });
 
-        const result = await getEventsApi({userEmail: 'rob@newpublic.org'});
+        const serverstore = mockServerStore({userEmail: 'rob@newpublic.org'});
+        const result = await getEventsApi({serverstore});
         expect(Object.keys(result)).toEqual(['1','2', '3']);
 
-        const result2 = await getEventsApi({userEmail: 'rob@newpublic.org', siloKey: 'cbc'});
+        const result2 = await getEventsApi({serverstore, siloKey: 'cbc'});
         expect(Object.keys(result2)).toEqual(['1','2']);
 
-        const result3 = await getEventsApi({userEmail: 'rob@newpublic.org', eventType: 'test'});
+        const result3 = await getEventsApi({serverstore, eventType: 'test'});
         expect(Object.keys(result3)).toEqual(['1','3']);
 
-        const result4 = await getEventsApi({userEmail: 'rob@newpublic.org', sessionKey: 'b'});
+        const result4 = await getEventsApi({serverstore, sessionKey: 'b'});
         expect(Object.keys(result4)).toEqual(['2','3']);
     });
 })
@@ -112,10 +115,11 @@ test('getSessionsApi', async () => {
         siloKey: 'rc', startTime: 5, endTime: 6
     });
 
-    const result = await getSessionsApi({userEmail: 'rob@newpublic.org'});
+    const serverstore = mockServerStore({userEmail: 'rob@newpublic.org'});
+    const result = await getSessionsApi({serverstore});
     expect(Object.keys(result)).toEqual(['1','2','3']);
 
-    const result2 = await getSessionsApi({userEmail: 'rob@newpublic.org', siloKey: 'cbc'});
+    const result2 = await getSessionsApi({serverstore, siloKey: 'cbc'});
     expect(Object.keys(result2)).toEqual(['1','2']);
 });
 
@@ -125,7 +129,8 @@ test('getSingleSessionApi', async () => {
         siloKey: 'cbc', startTime: 1, endTime: 2
     });
 
-    const result = await getSingleSessionApi({userEmail: 'rob@newpublic.org', sessionKey: '1'});
+    const serverstore = mockServerStore({userEmail: 'rob@newpublic.org'});
+    const result = await getSingleSessionApi({serverstore, sessionKey: '1'});
     expect(result.startTime).toBe(1);
 })
 

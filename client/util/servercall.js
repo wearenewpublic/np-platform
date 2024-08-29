@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import { getIsLocalhost } from "../platform-specific/url";
 import { appApiDomain, localHostApiDomain } from "./config";
+import { useDatastore } from "./datastore";
 import { getFirebaseIdTokenAsync } from "./firebase";
 
 
@@ -89,6 +91,15 @@ export async function callServerMultipartApiAsync({datastore, component, funcnam
     }
 }
 
+
+export function useServerCallResult(component, funcname, params={}) {
+    const datastore = useDatastore();
+    const [result, setResult] = useState(null);
+    useEffect(() => {
+        callServerApiAsync({datastore, component, funcname, params}).then(setResult);
+    }, [component, funcname, JSON.stringify(params)]);
+    return result;
+}
 
 
 function makeApiUrl(component, funcname) {

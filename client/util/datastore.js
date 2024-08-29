@@ -187,7 +187,7 @@ export class Datastore extends React.Component {
             const myPersona = this.getObject('persona', personaKey);
             if (!myPersona || !myPersona.linked || myPersona.photoUrl != personaPreview.photoURL || myPersona.name != personaPreview.displayName) {
                 callServerApiAsync({datastore: this, component: 'profile', funcname: 'linkInstance', params: {}})
-                this.setObject('persona', personaKey, personaPreview);
+                this.setObject('persona', personaKey, {...personaPreview, key: personaKey});
             }
         }    
     }

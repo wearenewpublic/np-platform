@@ -1,4 +1,4 @@
-const { firebaseReadAsync, firebaseWriteAsync, firebaseUpdateAsync, expandPath, checkPathsNotOverlapping, firebaseGetUserAsync, checkNoUndefinedKeysOrValues } = require("./firebaseutil");
+const { firebaseReadAsync, firebaseWriteAsync, firebaseUpdateAsync, expandPath, checkPathsNotOverlapping, firebaseGetUserAsync, checkNoUndefinedKeysOrValues, firebaseReadShallowKeys } = require("./firebaseutil");
 
 // TODO: Batch writes and send them all to firebase together
 
@@ -11,6 +11,7 @@ class ServerStore {
         this.userEmail = userEmail;
         this.language = language;
         this.delayedWrites = {};
+        this.parent = null;
     }
 
     getProps() {
@@ -32,8 +33,12 @@ class ServerStore {
     }
 
     doDelayedWrite(path, value) {
-        checkNoUndefinedKeysOrValues(value);
-        this.delayedWrites[expandPath(path)] = value;
+        if (this.parent) {
+            this.parent.doDelayedWrite(path, value);
+        } else {
+            checkNoUndefinedKeysOrValues(value);
+            this.delayedWrites[expandPath(path)] = value;
+        }
     }
 
     doDelayedUpdate(path, updateMap) {
@@ -41,6 +46,10 @@ class ServerStore {
         updateKeys.forEach(k => {
             this.doDelayedWrite([...path, k], updateMap[k]); 
         });
+    }
+
+    getDelayedWrites() {
+        return this.delayedWrites;
     }
 
     // TODO: Maybe allow overlapping paths provided the data written is the same
@@ -77,9 +86,10 @@ class ServerStore {
     async getCollectionAsync(collection) {
         const itemMap = await firebaseReadAsync([... this.getInstancePrefix(), 'collection', collection]);
         var itemList = [];
-        if (itemMap) {
-            itemList = Object.values(itemMap);
-        }
+        const keys = Object.keys(itemMap ?? {});
+        keys.forEach(key => {
+            itemList.push({...itemMap[key], key});
+        });
         return itemList;
     }
 
@@ -151,6 +161,16 @@ class ServerStore {
         return await firebaseReadAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global', key]);
     }
 
+    async getStructureInstanceKeysAsync(structureKey) {
+        return await firebaseReadShallowKeys([
+            'silo', this.siloKey, 'structure', structureKey, 'instance'
+        ]);
+    }
+
+    async getSiloKeysAsync() {
+        return await firebaseReadShallowKeys(['silo']);
+    }
+
     setRemoteGlobal({
         siloKey=this.siloKey, structureKey=this.structureKey, 
         instanceKey=this.instanceKey, key, value
@@ -205,7 +225,7 @@ class ServerStore {
         ], {global: globals, collection});
     }
     
-    addPersonaToInstance({structureKey, instanceKey, personaKey, persona}) {
+    addPersonaToInstance({structureKey=this.structureKey, instanceKey=this.instanceKey, personaKey, persona}) {
         this.setRemoteObject({
             structureKey, instanceKey, type: 'persona', key: personaKey, 
             value: {...persona, linked: true}
@@ -216,6 +236,26 @@ class ServerStore {
             value: {key: backlinkKey, structureKey, instanceKey}
         });
     }
+
+    getRemoteStore({
+        siloKey=this.siloKey, structureKey=this.structureKey, instanceKey=this.instancekey, 
+        userId=this.userId, userEmail=this.userEmail, language=this.language
+    }) {
+        const remoteStore = new ServerStore({
+            siloKey, structureKey, instanceKey, userId, userEmail, language
+        });
+        remoteStore.parent = this;
+        return remoteStore;
+    }
+
+    getDetachedServerStore() {
+        return new ServerStore({
+            siloKey: this.siloKey, structureKey: this.structureKey, 
+            instanceKey: this.instanceKey, userId: this.userId, 
+            userEmail: this.userEmail, language: this.language
+        });
+    }
+
 }
 
 exports.ServerStore = ServerStore;
