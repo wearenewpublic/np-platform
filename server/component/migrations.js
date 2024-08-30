@@ -3,7 +3,9 @@ const { checkIsGlobalAdmin } = require("../util/admin");
 const { firebaseReadAsync, createNewKey, firebaseWriteAsync, firebaseUpdateAsync } = require("../util/firebaseutil");
 
 async function getMigrationPreviewsAsync({ serverstore }) {
+    console.log('getMigrationPreviewsAsync', serverstore.getUserId(), serverstore.getUserEmail());
     checkIsGlobalAdmin(serverstore);
+    console.log('passed checkIsGlobalAdmin');
     const migrationList = getMigrationList();
     const migrationPreviews = migrationList.map(migration => {
         return {

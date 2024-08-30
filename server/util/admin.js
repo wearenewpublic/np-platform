@@ -22,6 +22,6 @@ function checkIsGlobalAdmin(serverstore) {
     if (emailDomain == 'newpublic.org' || emailDomain == 'admin.org') {
         return true;
     }
-    throw new Error('Not authorized');
+    throw new Error('Not authorized as global admin: ' + emailDomain);
 }
 exports.checkIsGlobalAdmin = checkIsGlobalAdmin;

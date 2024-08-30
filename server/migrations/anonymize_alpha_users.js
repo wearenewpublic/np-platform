@@ -14,6 +14,11 @@ const AnonymizeAlphaUsersMigration = {
     runner: anonymizeAlphaUsers
 };
 
+function removeAccents(str) {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+  
+
 function getUsersToRename({userList, profileKeys, domainsToNotRename, emailsToNotRename}) {
     var usersToRename = [];
     userList.forEach(user => {
@@ -47,7 +52,7 @@ async function anonymizeAlphaUsers({serverstore, migrationLog}) {
         console.log('No names file found for silo:', siloKey);
         return;
     }
-    var newnames = readFileSync(__dirname + '/data/names_'+ siloKey + '.txt', 'utf8').toString().split('\n').filter(x=>x);
+    var newnames = readFileSync(__dirname + '/data/names_'+ siloKey + '.txt', 'utf8').toString().split('\n').filter(x=>x).map(x => removeAccents(x));
 
     const usersToRename = getUsersToRename({
         siloKey, userList, profileKeys, domainsToNotRename, emailsToNotRename

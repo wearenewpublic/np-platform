@@ -149,7 +149,7 @@ function MigrationLog({migrationLog}) {
 
 
 function MigrationChanges({newMap, oldMap}) {
-    const keys = Object.keys(newMap ?? {});
+    const keys = Object.keys({...newMap, ...oldMap});
     return <View>
         <Heading label='Migration Changes' />
         <Container>
