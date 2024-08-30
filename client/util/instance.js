@@ -33,7 +33,6 @@ function usePersonaPreviewForSilo({siloKey}) {
         ['silo', siloKey, 'structure', 'profile', 'instance', fbUser?.uid, 'global', 'preview'], 
         defaultPersonaPreview
     );
-    console.log('personaPreview', personaPreview);
     if (!fbUser) return null;
     return personaPreview;
 }
@@ -55,8 +54,6 @@ export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKe
     if (!structureKey || !instanceKey || !siloKey) {
         console.error('ScreenStack missing keys', {structureKey, instanceKey, siloKey});
     }
-
-    console.log('Person preview', personaPreview);
 
     return <View style={s.stackHolder}>
         <Datastore key={url} siloKey={siloKey} instanceKey={instanceKey} structureKey={structureKey} 

@@ -92,7 +92,7 @@ describe('getEventsApi', () => {
         const result = await getEventsApi({serverstore});
         expect(Object.keys(result)).toEqual(['1','2', '3']);
 
-        const result2 = await getEventsApi({serverstore, siloKey: 'cbc'});
+        const result2 = await getEventsApi({serverstore, filterSiloKey: 'cbc'});
         expect(Object.keys(result2)).toEqual(['1','2']);
 
         const result3 = await getEventsApi({serverstore, eventType: 'test'});
@@ -119,7 +119,7 @@ test('getSessionsApi', async () => {
     const result = await getSessionsApi({serverstore});
     expect(Object.keys(result)).toEqual(['1','2','3']);
 
-    const result2 = await getSessionsApi({serverstore, siloKey: 'cbc'});
+    const result2 = await getSessionsApi({serverstore, filterSiloKey: 'cbc'});
     expect(Object.keys(result2)).toEqual(['1','2']);
 });
 

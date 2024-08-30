@@ -52,15 +52,15 @@ exports.setSessionUserApi = setSessionUserApi;
 // TODO: Proper way of having global admin access
 // TODO: Support silo-limited version where you only see events from that silo
 // TODO: Index-based event filtering
-async function getEventsApi({serverstore, siloKey, eventType, sessionKey}) {
+async function getEventsApi({serverstore, filterSiloKey, eventType, sessionKey}) {
     checkIsGlobalAdmin(serverstore);
     var events = null;
     if (sessionKey) {
         events = await firebaseReadWithFilterAsync(['log', 'event'], 'sessionKey', sessionKey);
     } else if (eventType) {
         events = await firebaseReadWithFilterAsync(['log', 'event'], 'eventType', eventType);
-    } else if (siloKey) {
-        events = await firebaseReadWithFilterAsync(['log', 'event'], 'siloKey', siloKey);
+    } else if (filterSiloKey) {
+        events = await firebaseReadWithFilterAsync(['log', 'event'], 'siloKey', filterSiloKey);
     } else {
         events = await firebaseReadAsync(['log', 'event']);
     }
@@ -69,11 +69,11 @@ async function getEventsApi({serverstore, siloKey, eventType, sessionKey}) {
 }
 exports.getEventsApi = getEventsApi;
 
-async function getSessionsApi({serverstore, siloKey}) {
+async function getSessionsApi({serverstore, filterSiloKey}) {
     checkIsGlobalAdmin(serverstore);
     var sessions = null;
-    if (siloKey) {
-        sessions = await firebaseReadWithFilterAsync(['log', 'session'], 'siloKey', siloKey);
+    if (filterSiloKey) {
+        sessions = await firebaseReadWithFilterAsync(['log', 'session'], 'siloKey', filterSiloKey);
     } else {
         sessions = await firebaseReadAsync(['log', 'session']);
     }
