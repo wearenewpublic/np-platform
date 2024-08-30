@@ -145,5 +145,3 @@ keys.js
 # Devs should make sure they run unit tests before making any changes 
 __snapshots__/
 
-# Don't store data for migrations, since these will sometimes be sensitive
-migrations/data/

@@ -14,10 +14,14 @@ const AnonymizeAlphaUsersMigration = {
     runner: anonymizeAlphaUsers
 };
 
-function getUsersToRename({siloKey, userList, profileKeys, emailsToRename}) {
+function getUsersToRename({userList, profileKeys, domainsToNotRename, emailsToNotRename}) {
     var usersToRename = [];
     userList.forEach(user => {
-        if (emailsToRename.includes(user.email) && profileKeys.includes(user.uid)) {
+        const emailDomain = user.email.split('@')[1];
+        if (!emailsToNotRename.includes(user.email) && 
+            !domainsToNotRename.includes(emailDomain) &&
+            profileKeys.includes(user.uid)
+        ) {
             usersToRename.push(user)
         }
     })
@@ -37,14 +41,17 @@ async function anonymizeAlphaUsers({serverstore, migrationLog}) {
     const siloKey = serverstore.getSiloKey();
     const userList = await firebaseGetUserListAsync();
     const profileKeys = await serverstore.getStructureInstanceKeysAsync('profile');
-    const emailsToRename = readFileSync(__dirname + '/data/users_to_rename.txt', 'utf8').toString().split('\n');
+    const emailsToNotRename = readFileSync(__dirname + '/data/users_to_not_rename.txt', 'utf8').toString().split('\n');
+    const domainsToNotRename = readFileSync(__dirname + '/data/domains_to_not_rename.txt', 'utf8').toString().split('\n');
     if (!existsSync(__dirname + '/data/names_'+ siloKey + '.txt')) {
         console.log('No names file found for silo:', siloKey);
         return;
     }
     var newnames = readFileSync(__dirname + '/data/names_'+ siloKey + '.txt', 'utf8').toString().split('\n').filter(x=>x);
 
-    const usersToRename = getUsersToRename({siloKey, userList, profileKeys, emailsToRename});
+    const usersToRename = getUsersToRename({
+        siloKey, userList, profileKeys, domainsToNotRename, emailsToNotRename
+    });
 
     for (const user of usersToRename) {
         const newname = newnames.pop();
