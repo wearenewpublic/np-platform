@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, connectAuthEmulator } from 'firebase/auth';
 import { connectDatabaseEmulator, getDatabase, onValue, push, get, ref, set } from "firebase/database";
 import { useEffect, useState } from 'react';
+import { getIsLocalhost } from "../platform-specific/url";
 
 var app = null;
 var auth = null;
@@ -14,10 +15,11 @@ export function setFirebaseConfig(firebaseConfig) {
     auth = getAuth(app);
     database = getDatabase(app);
 
-    if (window.location.hostname === "localhost") {
+    if (getIsLocalhost()) {
+        const host = window.location.hostname;
         console.log('Using local database and auth emulator');
-        connectDatabaseEmulator(database, "localhost", 9000);
-        connectAuthEmulator(auth, "http://localhost:9099");
+        connectDatabaseEmulator(database, host, 9000);
+        connectAuthEmulator(auth, `http://${host}:9099`);
     }
 
     onAuthStateChanged(auth, (user) => {
