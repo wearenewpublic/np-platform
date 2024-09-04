@@ -20,12 +20,12 @@ import { ChevronDown, ChevronUp, Close, ArrowLeft } from '@carbon/icons-react';
 
 const global_toolbarAction = new ObservableValue(null);
 
-export function TopBar() {
+export function TopBar({makeSticky}) {
     const s = TopBarStyle;
     const instanceKey = useInstanceKey();
     const toolbarAction = useObservable(global_toolbarAction);
     const datastore = useDatastore();
-    return <View style={s.topBox}>        
+    return <View style={[s.topBox, makeSticky && s.sticky]}>        
         <View style={s.leftRow}>    
             {historyGetState() ? 
                 <BreadCrumb icon={ArrowLeft} iconProps={{size:32}} onPress={() => datastore.goBack()} />
@@ -55,6 +55,13 @@ const TopBarStyle = StyleSheet.create({
         borderBottomWidth: StyleSheet.hairlineWidth,
         backgroundColor: 'white',
         height: 56
+    },
+    sticky: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
     },
     leftRow: {
         flexDirection: 'row',

@@ -13,6 +13,7 @@ import { useFirebaseData, useFirebaseUser } from './firebase';
 import { useIsAdminForSilo } from '../component/admin';
 import { goBack } from './navigate';
 import { requireParams } from './util';
+import { getDeviceInfo } from '../platform-specific/deviceinfo';
 
 export function useStandardFonts() {
     let [fontsLoaded] = useFonts({
@@ -143,9 +144,11 @@ export function StackedScreen({screenSet, screenInstance, index, features}) {
         }
         return null;
     }
+    
+    const {isMobile} = getDeviceInfo();
 
     return <FullScreen zIndex={index}>
-        {showTopBar && <TopBar title={title} index={index} params={params} subtitle={structure.name} />}
+        {showTopBar && <TopBar makeSticky={(screenKey === 'composer') && isMobile} />}
         <WaitForData>
             <Catcher>
                 {React.createElement(screen, params)}
