@@ -17,7 +17,8 @@ export function watchPopState(callback) {
 }
 
 export function getIsLocalhost() {
-    return location.hostname == 'localhost';
+    const commonLocalHosts = `localhost|192\\.168\\.\\d{1,3}\\.\\d{1,3}|${process.env.REACT_APP_PSI_LOCAL_IP}`;
+    return new RegExp(commonLocalHosts).test(location.hostname);
 }
 
 export function setTitle(title) {
