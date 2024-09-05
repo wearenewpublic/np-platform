@@ -221,7 +221,7 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
     return <View>
         {topLevel && <TopBarActionProvider label={action} disabled={!canPost || inProgress} onPress={onPost} />}
         <EditWidgets widgets={commentEditTopWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
-        {big && <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />}        
+        {big && <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />}
         <TextField value={comment.text} onChange={text => setComment({...comment, text})} 
             placeholder={placeholder} big={big} testID='comment-edit'
             placeholderParams={{authorName: getFirstName(author?.name)}} />
