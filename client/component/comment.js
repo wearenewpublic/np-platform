@@ -17,7 +17,7 @@ import { Banner } from "./banner";
 import { logEventAsync, useLogEvent } from "../util/eventlog";
 import { NoCommentsHelp } from "./help";
 import { useIsAdmin } from "./admin";
-import { getIsMobile } from '../platform-specific/deviceinfo'
+import { getIsMobileWeb } from '../platform-specific/deviceinfo'
 
 
 export function Comment({commentKey}) {
@@ -214,11 +214,8 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
             onEditingDone(comment);
         }
     }
-    const isMobile = getIsMobile();
+    const isMobile = getIsMobileWeb();
     const [isFocused, setIsFocused] = useState(false);
-    function handleFocusChange(focused) {
-        setIsFocused(focused);
-    }
 
     return <View>
         {topLevel && <TopBarActionProvider label={action} disabled={!canPost || inProgress} onPress={onPost} />}
@@ -227,7 +224,7 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
         <TextField value={comment.text} onChange={text => setComment({...comment, text})} 
             placeholder={placeholder} autoFocus={!isMobile} big={big} testID='comment-edit'
             placeholderParams={{authorName: getFirstName(author?.name)}} 
-            onFocusChange={handleFocusChange}/>
+            onFocusChange={setIsFocused}/>
             {(isFocused || comment.text?.length > 0) && isMobile && (
                 <PadBox top={24} >
                     <View>
