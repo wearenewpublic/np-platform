@@ -38,6 +38,7 @@ export function ActionUpvote({commentKey}) {
         color={upvoted ? colorBlack : colorTextGrey}
         disabled={disabled}
         text={count.toString()}
+        padRight
         onPress={needsLogin(onUpvote, 'upvote')} />
 }
 
