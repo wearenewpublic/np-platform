@@ -17,6 +17,7 @@ import { Banner } from "./banner";
 import { logEventAsync, useLogEvent } from "../util/eventlog";
 import { NoCommentsHelp } from "./help";
 import { useIsAdmin } from "./admin";
+import { getIsMobile } from '../platform-specific/deviceinfo'
 
 
 export function Comment({commentKey}) {
@@ -213,14 +214,27 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
             onEditingDone(comment);
         }
     }
+    const isMobile = getIsMobile();
+    const [isFocused, setIsFocused] = useState(false);
+    function handleFocusChange(focused) {
+        setIsFocused(focused);
+    }
 
     return <View>
         {topLevel && <TopBarActionProvider label={action} disabled={!canPost || inProgress} onPress={onPost} />}
         <EditWidgets widgets={commentEditTopWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
         {big && <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />}
         <TextField value={comment.text} onChange={text => setComment({...comment, text})} 
-            placeholder={placeholder} autoFocus big={big} testID='comment-edit'
-            placeholderParams={{authorName: getFirstName(author?.name)}} />
+            placeholder={placeholder} autoFocus={!isMobile} big={big} testID='comment-edit'
+            placeholderParams={{authorName: getFirstName(author?.name)}} 
+            onFocusChange={handleFocusChange}/>
+            {(isFocused || comment.text?.length > 0) && isMobile && (
+                <PadBox top={24} >
+                    <View>
+                        <CTAButton wide label={action} disabled={!canPost || inProgress} onPress={onPost} />
+                    </View>
+                </PadBox>
+            )}
         <Pad size={12} />
         {!big && <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />}
         {personaKey &&

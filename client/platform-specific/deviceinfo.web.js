@@ -1,9 +1,11 @@
+const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
+
+export function getIsMobile() {
+    return isMobile;
+}
+
 export function getDeviceInfo() {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-    // Check if the device is mobile
-    const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase());
-
     // Determine the OS
     let os = "Unknown OS";
     if (/windows phone/i.test(userAgent)) {

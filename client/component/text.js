@@ -238,13 +238,14 @@ export function AutoSizeTextInput({value, onChange, placeholder, style, hoverSty
     </View>
 }
 
-export function TextField({value, error=false, big=false, autoFocus=false, placeholder, testID, placeholderParams, onChange}) {
+export function TextField({value, error=false, big=false, autoFocus=false, placeholder, testID, placeholderParams, onChange, onFocusChange}) {
     const s = TextFieldStyle;
     const tPlaceholder = useTranslation(placeholder, placeholderParams);
     return <AutoSizeTextInput value={value ?? ''} onChange={onChange} 
         emptyHeight={big ? 300 : 54} autoFocus={autoFocus} testID={testID}
         style={[s.textField, error ? {borderColor: colorRed} : null]} hoverStyle={s.hover}
-        placeholder={tPlaceholder} placeholderTextColor={colorDisabledText} />
+        placeholder={tPlaceholder} placeholderTextColor={colorDisabledText} 
+        onFocus={() => onFocusChange?.(true)} onBlur={() => onFocusChange?.(false)}/>
 }
 
 const TextFieldStyle = StyleSheet.create({
