@@ -17,6 +17,8 @@ import { Banner } from "./banner";
 import { logEventAsync, useLogEvent } from "../util/eventlog";
 import { NoCommentsHelp } from "./help";
 import { useIsAdmin } from "./admin";
+import { getDeviceInfo } from '../platform-specific/deviceinfo'
+import { FocusProvider, useFocus } from "./text";
 
 
 export function Comment({commentKey}) {
@@ -213,14 +215,23 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
             onEditingDone(comment);
         }
     }
+    const {isMobile} = getDeviceInfo();
+    const {isTextFieldFocused} = useFocus();
 
     return <View>
         {topLevel && <TopBarActionProvider label={action} disabled={!canPost || inProgress} onPress={onPost} />}
         <EditWidgets widgets={commentEditTopWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
-        {big && <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />}
+        {big && <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />}        
         <TextField value={comment.text} onChange={text => setComment({...comment, text})} 
-            placeholder={placeholder} autoFocus big={big} testID='comment-edit'
+            placeholder={placeholder} big={big} testID='comment-edit'
             placeholderParams={{authorName: getFirstName(author?.name)}} />
+            {(isTextFieldFocused || comment.text.length > 0) && isMobile && (
+                <PadBox top={24} >
+                    <View>
+                        <CTAButton wide label={action} disabled={!canPost || inProgress} onPress={onPost} />
+                    </View>
+                </PadBox>
+            )}
         <Pad size={12} />
         {!big && <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />}
         {personaKey &&
@@ -401,9 +412,11 @@ export function Composer({about=null, commentKey, goBackAfterPost=false, topLeve
             onCancel={goBackAfterPost && onCancel} />
         <Byline type='large' userId={personaKey} subtitleLabel={subtitle} />
         <Pad size={24} />
-        <EditComment big comment={editedComment ?? comment ?? {text: ''}} topLevel={topLevel}
-            onCancel={goBackAfterPost && onCancel}
-            setComment={setEditedComment} onEditingDone={onEditingDone} />
+        <FocusProvider>
+            <EditComment big comment={editedComment ?? comment ?? {text: ''}} topLevel={topLevel}
+                onCancel={goBackAfterPost && onCancel}
+                setComment={setEditedComment} onEditingDone={onEditingDone} />
+        </FocusProvider>
     </View>
  }
 

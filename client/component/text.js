@@ -2,7 +2,7 @@ import { Linking, StyleSheet, Text, TextInput, View } from "react-native";
 import { TranslatableText, useTranslation } from "./translation"
 import { colorBannerGreen, colorBlack, colorDisabledText, colorGreyBorder, colorGreyHover, colorGreyHoverBorder, colorRed, colorTextBlue, colorTextGrey, colorWhite } from "./color";
 import { HorizBox, HoverView, Pad, PadBox } from "./basics";
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext, useContext } from "react";
 import { Edit, Checkmark } from "@carbon/icons-react";
 import { usePersonaKey } from "../util/datastore";
 import { ProfilePhoto } from "./people";
@@ -238,13 +238,25 @@ export function AutoSizeTextInput({value, onChange, placeholder, style, hoverSty
     </View>
 }
 
+const FocusContext = createContext();
+export const useFocus = () => useContext(FocusContext);
+
+export const FocusProvider = ({ children }) => {
+    const [isTextFieldFocused, setIsTextFieldFocused] = useState(false);
+    return <FocusContext.Provider value={{ isTextFieldFocused, setIsTextFieldFocused }}>
+        {children}
+    </FocusContext.Provider>
+};
+
 export function TextField({value, error=false, big=false, autoFocus=false, placeholder, testID, placeholderParams, onChange}) {
     const s = TextFieldStyle;
     const tPlaceholder = useTranslation(placeholder, placeholderParams);
+    const { setIsTextFieldFocused } = useFocus() || {};
     return <AutoSizeTextInput value={value ?? ''} onChange={onChange} 
         emptyHeight={big ? 300 : 54} autoFocus={autoFocus} testID={testID}
         style={[s.textField, error ? {borderColor: colorRed} : null]} hoverStyle={s.hover}
-        placeholder={tPlaceholder} placeholderTextColor={colorDisabledText} />
+        placeholder={tPlaceholder} placeholderTextColor={colorDisabledText} 
+        onFocus={() => setIsTextFieldFocused?.(true)} onBlur={() => setIsTextFieldFocused?.(false)}/>
 }
 
 const TextFieldStyle = StyleSheet.create({
