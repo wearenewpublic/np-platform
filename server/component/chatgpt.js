@@ -2,6 +2,7 @@ const { readFileSync, existsSync } = require('fs');
 const Mustache = require('mustache');
 const { extractAndParseJSON } = require('../util/messyjson');
 const axios = require('axios');
+const path = require('path');
 
 
 var openai_key = null;
@@ -23,13 +24,20 @@ async function callOpenAIAsync({ action, data }) {
 }
 exports.callOpenAIAsync = callOpenAIAsync;
 
-function createGptPrompt({promptKey, params, language='English', model=null}) {
+function getPromptFilename({promptKey, model}) {
     const modelPrefix = (model == 'gpt4') ? 'gpt4/' : ''
-    const filename = 'prompts/' + modelPrefix + promptKey + '.txt';
-    if (!existsSync(filename)) {
-        console.log('file does not exist', filename);
-        return null;
+    if (existsSync('prompts/' + modelPrefix + promptKey + '.txt')) {
+        return 'prompts/' + modelPrefix + promptKey + '.txt';
     }
+    const packageDir = path.resolve(__dirname, '..');
+    if (existsSync(packageDir + '/prompts/' + modelPrefix + promptKey + '.txt')) {
+        return packageDir + '/prompts/' + modelPrefix + promptKey + '.txt';
+    }
+    throw new Error('Prompt not found: ' + promptKey);
+}
+
+function createGptPrompt({promptKey, params, language='English', model=null}) {
+    const filename = getPromptFilename({promptKey, model});
     const promptTemplate = readFileSync(filename).toString();  
     const prompt = Mustache.render(promptTemplate, {...params, language});
     return prompt;
@@ -38,7 +46,7 @@ exports.createGptPrompt = createGptPrompt;
 
 function selectModel(model) {
     switch (model) {
-        case 'gpt4': return 'gpt-4-turbo';
+        case 'gpt4': return 'gpt-4o';
         default: return 'gpt-4o-mini';
     }
 }

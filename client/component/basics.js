@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
-import { colorBlueBackground, colorGreyBorder, colorGreyPopupBackground, colorPinkBackground, colorWhite } from "./color";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { colorBlueBackground, colorGreyBorder, colorPinkBackground, colorWhite } from "./color";
 import { UtilityText } from "./text";
-import { closeActivePopup } from "../platform-specific/popup";
-import { Catcher } from "./catcher";
 import { setTitle } from "../platform-specific/url";
 import { Banner } from "./banner";
 

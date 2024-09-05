@@ -112,6 +112,12 @@ async function playStoryActionListAsync({domRef, actions}) {
 
 export const default_fbUser = demoPersonaToFbUser(personaA);
 
+export const defaultServerCall = {
+    eventlog: {
+        logEvent: () => {}
+    }
+}
+
 export function DemoStorySet({storySet}) {
     const { collections, content, structureKey='testStruct', instanceKey='testInstance', 
         personaKey, config, modulePublic,
@@ -129,7 +135,8 @@ export function DemoStorySet({storySet}) {
     return <Datastore ref={dataRef} config={config} siloKey={siloKey}
             structureKey={structureKey} instanceKey={instanceKey} personaKey={personaKey}
             collections={collections} globals={globals} firebaseUser={firebaseUser}
-            sessionData={sessionData} serverCall={serverCall} modulePublic={modulePublic}>
+            sessionData={sessionData} modulePublic={modulePublic}
+            serverCall={{...defaultServerCall, ...serverCall}} >
         <Heading type='small' text={storySet.label} />
         <Pad size={5} />
         <FlowBox>

@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { flattenFeatureBlocks } from './features';
 import { Datastore } from './datastore';
 import { testStoryActionListAsync } from './testutil';
-import { default_fbUser } from '../component/demo';
+import { default_fbUser, defaultServerCall } from '../component/demo';
 
 // jest.mock("../../util/navigate");
 
@@ -74,7 +74,8 @@ function runComponentTests(componentDemoFeatures) {
                     firebaseUser={storySet.firebaseUser ?? default_fbUser} 
                     structureKey={storySet.structureKey ?? 'testStruct'} 
                     globals={storySet.globals} filebaseUser={storySet.firebaseUser}
-                    sessionData={storySet.sessionData} serverCall={storySet.serverCall}>
+                    sessionData={storySet.sessionData} 
+                    serverCall={{...defaultServerCall, ...storySet.serverCall}}> 
                     {storySet.content}
                 </Datastore>);
                 await testStoryActionListAsync(story.actions);

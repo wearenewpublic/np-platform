@@ -34,7 +34,8 @@ function profileStorySets() {return [
             update: ({datastore, updates, preview}) => {
                 datastore.updateGlobalProperty('fields', updates);
                 datastore.updateObject('persona', 'a', preview);
-            }
+            },
+            checkName: ({name}) => ({violates: name == 'meanword'})
         }},
         stories: [
             {label: 'Good Pseudonym', actions: [
@@ -44,6 +45,10 @@ function profileStorySets() {return [
             {label: 'Invalid', actions: [
                 CLICK('Edit {tLabel}'), CLICK('A pseudonym'), 
                 INPUT('pseudonym', 'XXX'), CLICK('Save')
+            ]},
+            {label: 'Violating', actions: [
+                CLICK('Edit {tLabel}'), CLICK('A pseudonym'), 
+                INPUT('pseudonym', 'meanword'), CLICK('Save')
             ]},
             {label: 'Taken', actions: [
                 CLICK('Edit {tLabel}'), CLICK('A pseudonym'), 
@@ -84,6 +89,9 @@ function profileStorySets() {return [
     {
         label: 'First Login Setup',
         content: <FirstLoginSetupTester />,
+        serverCall: {profile: {
+            checkName: ({name}) => ({violates: name == 'meanword'})
+        }},
         stories: [
             {label: 'Just Continue', actions: [
                 CLICK('Continue')
@@ -95,6 +103,11 @@ function profileStorySets() {return [
                 CLICK('A pseudonym'), 
                 INPUT('pseudonym', 'malice'), CLICK('Continue')
             ]},
+            {label: 'Bad Pseudonym', actions: [
+                CLICK('A pseudonym'), 
+                INPUT('pseudonym', 'meanword'), CLICK('Continue')
+            ]},
+
         ]
     }
 ]}

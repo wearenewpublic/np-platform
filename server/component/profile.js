@@ -1,3 +1,4 @@
+const {getGptJsonAsync} = require('./chatgpt');
 
 async function updateProfileAsync({serverstore, updates, preview}) {
     if (serverstore.getUserId() != serverstore.getInstanceKey()) {
@@ -61,7 +62,28 @@ async function linkInstanceAsync({serverstore}) {
 }
 exports.linkInstanceAsync = linkInstanceAsync;
 
+async function checkNameAsync({serverstore, name}) {
+    if (name.length < 3) {
+        return {violates: true, message: 'Name must be at least 3 characters'};
+    } else if (name.length > 50) {
+        return {violates: true, message: 'Name must be 50 characters or less'};
+    } else if (name.match(/[^a-z0-9]/)) {
+        return {violates: true, message: 'Name can only contain letters and numbers'};
+    }
+    const gptResult = await getGptJsonAsync({
+        promptKey: 'name_check', 
+        language: serverstore.getLanguage(),
+        params: {name}
+    });
+    if (gptResult.violates) {
+        return {violates: true, message: 'Name violates guidelines'};
+    }
+    return {violates: false};
+}
+exports.checkNameAsync = checkNameAsync;
+
 exports.publicFunctions = {
     update: updateProfileAsync,
     linkInstance: linkInstanceAsync,
+    checkName: checkNameAsync
 }

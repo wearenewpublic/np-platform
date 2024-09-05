@@ -1,6 +1,9 @@
 const { mockServerStore } = require("../../util/serverstore");
 const { logData, getTestData, clearTestData } = require("../../util/testutil");
-const { updateProfileAsync, linkInstanceAsync } = require("../profile");
+const { getGptJsonAsync } = require("../chatgpt");
+const { updateProfileAsync, linkInstanceAsync, checkNameAsync } = require("../profile");
+
+jest.mock('../chatgpt');
 
 test('updateProfileAsync', async () => {
     const serverstore = mockServerStore({structureKey: 'profile', instanceKey: 'testuser', userId: 'testuser'});
@@ -47,3 +50,17 @@ describe('linkInstanceAsync', () => {
     });
 });
 
+describe('checkNameAsync', () => {
+    test('violates', async () => {
+        getGptJsonAsync.mockResolvedValue({violates: true});
+        const serverstore = mockServerStore();
+        const result = await checkNameAsync({serverstore, name: 'badname'});
+        expect(result.violates).toBe(true);
+    })
+    test('does not violate', async () => {
+        getGptJsonAsync.mockResolvedValue({violates: false});
+        const serverstore = mockServerStore();
+        const result = await checkNameAsync({serverstore, name: 'badname'});
+        expect(result.violates).toBe(false);
+    })
+});

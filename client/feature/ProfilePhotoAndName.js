@@ -10,6 +10,7 @@ import { Banner } from "../component/banner";
 import { Catcher } from "../component/catcher";
 import React, { useState } from "react";
 import { CTAButton } from "../component/button";
+import { callServerApiAsync } from "../util/servercall";
 
 export const ProfilePhotoAndNameFeature = {
     key: 'profileeditname',
@@ -134,6 +135,10 @@ function PseudonymEditor() {
             <Banner color={colorRedBackground}>
                 <UtilityText label='Pseudonyms can contain only lower case letters and numbers.' />
             </Banner>
+        : errors.nameViolates ?
+            <Banner color={colorRedBackground}>
+                <UtilityText label='This pseudonym may violate our commuinity guidelines.' />
+            </Banner>            
         :
             <UtilityText type='small' color={colorTextGrey} 
                 label='You can change your pseudonym at most once a week'
@@ -156,6 +161,12 @@ async function checkPhotoAndNameAsync({datastore, updates}) {
         const existingNameOwner = await datastore.getModulePublicAsync('profile', ['pseudonym', name]);
         if (existingNameOwner && existingNameOwner != datastore.getPersonaKey()) {
             return {nameTaken: true};
+        }
+        const violateResult = await callServerApiAsync({
+            datastore, component: 'profile', funcname: 'checkName', params: {name}
+        })
+        if (violateResult?.violates) {
+            return {nameViolates: true};
         }
     }
     return null;

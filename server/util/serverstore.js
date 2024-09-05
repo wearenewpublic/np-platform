@@ -27,6 +27,7 @@ class ServerStore {
     getInstanceKey() {return this.instanceKey;}
     getUserId() {return this.userId;}
     getUserEmail() {return this.userEmail;}
+    getLanguage() {return this.language;}
 
     getInstancePrefix() {
         return ['silo', this.siloKey, 'structure', this.structureKey, 'instance', this.instanceKey];
