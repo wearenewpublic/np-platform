@@ -8,7 +8,7 @@ import { Heading } from '../component/text';
 import { RichText } from '../component/richtext';
 import { colorTextGrey } from '../component/color';
 import { CTAButton } from '../component/button';
-import { expandUrl } from '../util/util';
+import { makeAssetUrl } from '../util/util';
 import { logEventAsync, useLogEvent } from '../util/eventlog';
 import { FirstLoginSetup } from '../feature/ProfilePhotoAndName';
 
@@ -67,7 +67,7 @@ export function LoginScreen({ action }) {
                 <Pad size={40} />
                 <CTAButton
                     icon={
-                        <Image source={{ uri: expandUrl({ url: 'google.png', type: 'images' }) }}
+                        <Image source={{ uri: makeAssetUrl('images/google.png') }}
                             style={{ width: 20, height: 20 }} />
                     }
                     type='secondary' label='Continue with Google' onPress={handleGoogleSignIn} />

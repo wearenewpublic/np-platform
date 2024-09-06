@@ -5,13 +5,14 @@ import { RichText } from "./richtext";
 import { colorGreyPopupBackground } from "./color";
 import { LinearGradient } from 'expo-linear-gradient';
 import { useConfig } from "../util/features";
+import { makeAssetUrl } from "../util/util";
 
 export function NoCommentsHelp() {
     const s = NoCommentsHelpStyle;
     const {noCommentsMessage, noCommentsTitle} = useConfig();
     return <PadBox horiz={20} top={32}>
         <View style={s.helpBox}>
-            <Image source={{uri: 'https://psi.newpublic.org/images/bubbles.png'}} 
+            <Image source={{uri: makeAssetUrl('images/bubbles.png') }}
                 style={{width: 58, height: 58}} />    
             <View style={s.right}>
                 <Heading level={2} label={noCommentsTitle} />

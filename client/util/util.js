@@ -1,4 +1,5 @@
-import { fileHostDomain } from "./config";
+import { getIsLocalhost } from "../platform-specific/url";
+import { fileHostDomain, localHostApiDomain } from "./config";
 import { ensureNextLocalKeyGreater, newLocalKey } from "./datastore";
 
 export function expandDataList(list) {
@@ -129,11 +130,13 @@ export function setObjectPropertyPath(object, path, value) {
 }
 
 
-export function expandUrl({ url, type }) {
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-        return url;
+export function makeAssetUrl(urlSuffix) {
+    if (urlSuffix.startsWith('http://') || urlSuffix.startsWith('https://')) {
+        return urlSuffix;
+    } else if (getIsLocalhost()) {
+        return localHostApiDomain + '/' + urlSuffix;
     } else {
-        return fileHostDomain + '/' + type + '/' + url;
+        return fileHostDomain + '/' + urlSuffix;
     }
 }
 
