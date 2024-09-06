@@ -1,4 +1,3 @@
-import { callServerApiAsync } from "../util/servercall";
 
 export const ReplyNotificationsFeature = {
     name: 'Reply Notifications',
@@ -12,7 +11,7 @@ async function postTriggerAsync({datastore, comment, commentKey}) {
     console.log('postTriggerAsync', comment, commentKey);
     const {replyTo} = comment;
     if (!replyTo) return;
-    callServerApiAsync({datastore, component: 'notifs', funcname: 'sendNotifsForReply', params: {
-        replyKey: commentKey, parentKey: replyTo}
+    datastore.callServerAsync('notifs', 'sendNotifsForReply', {
+        replyKey: commentKey, parentKey: replyTo
     });
 }        

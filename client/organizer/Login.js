@@ -1,19 +1,16 @@
 import React from 'react';
-import { GoogleAuthProvider, signInWithPopup, auth, getFirebaseUser, signInWithGoogle, getFirebaseDataAsync } from '../util/firebase';
+import { getFirebaseUser, signInWithGoogle, getFirebaseDataAsync } from '../util/firebase';
 import { goBack, pushSubscreen } from '../util/navigate';
 import { LoadingScreen, Narrow, Pad, PadBox } from '../component/basics';
-import { Image, View } from 'react-native';
-import { useDatastore, usePersonaKey } from '../util/datastore';
-import { Heading, UtilityText } from '../component/text';
+import { Image } from 'react-native';
+import { useDatastore } from '../util/datastore';
+import { Heading } from '../component/text';
 import { RichText } from '../component/richtext';
-import { colorLightGreen, colorTextGrey } from '../component/color';
+import { colorTextGrey } from '../component/color';
 import { CTAButton } from '../component/button';
 import { expandUrl } from '../util/util';
 import { logEventAsync, useLogEvent } from '../util/eventlog';
-import { set } from 'firebase/database';
-import { Banner } from '../component/banner';
 import { FirstLoginSetup } from '../feature/ProfilePhotoAndName';
-import { callServerApiAsync } from '../util/servercall';
 
 
 export function LoginScreen({ action }) {
@@ -47,13 +44,10 @@ export function LoginScreen({ action }) {
 
     async function onFieldsChosen({updates, preview}) {
         setInProgress(true);
-        await callServerApiAsync({datastore, 
-            component: 'profile', funcname: 'update', 
-            params: {
-                updates, preview,
-                structureKey: 'profile', 
-                instanceKey: datastore.getPersonaKey(),
-            }
+        await datastore.callServerAsync('profile', 'update', {
+            updates, preview,
+            structureKey: 'profile',
+            instanceKey: datastore.getPersonaKey(),
         });
         setInProgress(false);
         logEventAsync(datastore, 'profile-setup', preview);

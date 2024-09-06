@@ -1,15 +1,12 @@
 import { useState } from 'react';
-import {callServerApiAsync, useServerCallResult} from '../util/servercall';
+import { useServerCallResult } from '../util/servercall';
 import { useDatastore } from '../util/datastore';
 import { Container, ConversationScreen, HorizBox, LoadingScreen, Pad, PadBox } from '../component/basics';
 import { Catcher } from '../component/catcher';
 import { Heading, UtilityText } from '../component/text';
 import { CTAButton } from '../component/button';
-import { ScrollView, Text, View } from 'react-native';
-import { set } from 'firebase/database';
+import { View } from 'react-native';
 import { AccordionField } from '../component/form';
-import { Xls } from '@carbon/icons-react';
-import { goBack } from '../util/navigate';
 
 export const MigrationsStructure = {
     key: 'migrations',
@@ -57,7 +54,9 @@ function MigrationScreen({migrationKey}) {
 
     async function onPreviewMigration() {
         setInProgress(true);
-        const result = await callServerApiAsync({datastore, component: 'migrations', funcname: 'runMigration', params: {migrationKey, preview: true}});
+        const result = await datastore.callServerAsync('migrations', 'runMigration', {
+            migrationKey, preview: true
+        });
         setInProgress(false);
         console.log('result', result);
         setForwardWrites(result.forwardWrites);
@@ -67,7 +66,9 @@ function MigrationScreen({migrationKey}) {
 
     async function onRunMigration() {
         setInProgress(true);
-        const result = await callServerApiAsync({datastore, component: 'migrations', funcname: 'runMigration', params: {migrationKey, preview: false}});
+        const result = await datastore.callServerAsync('migrations', 'runMigration', {
+            migrationKey, preview: false
+        });
         setInProgress(false);
         setForwardWrites(result.forwardWrites);
         setUndoWrites(result.undoWrites);
@@ -109,7 +110,7 @@ function PastExecutions({migrationKey}) {
 
     async function onRollBack(executionKey) {
         console.log('Rolling back', executionKey);
-        await callServerApiAsync({datastore, component: 'migrations', funcname: 'rollBackMigration', params: {migrationKey, executionKey}});
+        await datastore.callServerAsync('migrations', 'rollBackMigration', {migrationKey, executionKey});
         datastore.goBack();
     }
 

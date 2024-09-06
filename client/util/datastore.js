@@ -1,8 +1,8 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { adminPersonaList, defaultPersona, defaultPersonaList, memberPersonaList, personaListToMap } from '../data/personas';
-import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseApp, getFirebaseDataAsync, getFirebaseUser, onFbUserChanged, useFirebaseData } from './firebase';
-import { deepClone, expandDataList, expandDataListMap, getObjectPropertyPath } from './util';
+import { defaultPersonaList, personaListToMap } from '../data/personas';
+import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseDataAsync, getFirebaseUser, onFbUserChanged, useFirebaseData } from './firebase';
+import { deepClone, expandDataListMap, getObjectPropertyPath } from './util';
 import { LoadingScreen } from '../component/basics';
 import { SharedData, SharedDataContext } from './shareddata';
 import { callServerApiAsync } from './servercall';
@@ -119,7 +119,7 @@ export class Datastore extends React.Component {
                 this.addCurrentUser(); // don't call on persona or you get a loop
             }
             await firebaseWriteAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', typeName, key], value);
-            await callServerApiAsync({datastore: this, component: 'derivedviews', funcname: 'runTriggers', params: {type: typeName, key}});
+            await this.callServerAsync('derivedviews', 'runTriggers', {type: typeName, key});
         }
     }
     addObject(typeName, value) {
@@ -186,7 +186,7 @@ export class Datastore extends React.Component {
             const personaPreview = this.getPersonaPreview();
             const myPersona = this.getObject('persona', personaKey);
             if (!myPersona || !myPersona.linked || myPersona.photoUrl != personaPreview.photoURL || myPersona.name != personaPreview.displayName) {
-                callServerApiAsync({datastore: this, component: 'profile', funcname: 'linkInstance', params: {}})
+                this.callServerAsync('profile', 'linkInstance');
                 this.setObject('persona', personaKey, {...personaPreview, key: personaKey});
             }
         }    
@@ -199,7 +199,7 @@ export class Datastore extends React.Component {
         this.setData({...this.getData(), [key]: value});
         
         if (this.props.isLive) {
-            callServerApiAsync({datastore: this, component: 'global', funcname: 'setGlobalProperty', params: {key, value}});
+            this.callServerAsync('global', 'setGlobalProperty', {key, value});
         }
     }
     updateGlobalProperty(key, value) {
@@ -213,6 +213,9 @@ export class Datastore extends React.Component {
         } else {
             return getObjectPropertyPath(this.props.modulePublic, [moduleKey, ...path]);
         }
+    }
+    callServerAsync(component, funcname, params={}) {
+        return callServerApiAsync({datastore: this, component, funcname, params});
     }
 
     getSiloKey() {return this.props.siloKey ?? (this.props.isLive ? null : 'demo')}

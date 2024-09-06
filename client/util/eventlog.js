@@ -88,10 +88,8 @@ export async function logEventAsync(datastore, eventType, params) {
         deviceInfo = getDeviceInfo();
         console.log('New session', sessionKey, deviceInfo);
     }
-    const result = await callServerApiAsync({
-        datastore, component: 'eventlog', funcname: 'logEvent', params: {
-            eventType, sessionKey, isNewSession, params, deviceInfo
-        }
+    const result = await datastore.callServerAsync('eventlog', 'logEvent', {
+        eventType, sessionKey, isNewSession, params, deviceInfo
     });
     global_last_event = result?.eventKey ?? null;
 
@@ -114,7 +112,9 @@ export async function useLogEvent(eventKey, params, skip=false) {
 }
 
 export async function getLogEventsAsync({datastore, siloKey, eventType, sessionKey} = {}) {
-    const eventObjs = await callServerApiAsync({datastore, component: 'eventlog', funcname: 'getEvents', params: {filterSiloKey:siloKey, eventType, sessionKey}});
+    const eventObjs = await datastore.callServerAsync('eventlog', 'getEvents', {
+        filterSiloKey:siloKey, eventType, sessionKey
+    });
     const eventKeys = Object.keys(eventObjs || {}).sort((a, b) => eventObjs[b].time - eventObjs[a].time);
     return eventKeys.map(key => ({key, ...eventObjs[key]}));
 }
@@ -124,7 +124,7 @@ function getSessionTime(session) {
 }
 
 export async function getSessionsAsync({datastore, siloKey = null} = {}) {
-    const sessionObjs = await callServerApiAsync({datastore, component: 'eventlog', funcname: 'getSessions', params: {filterSiloKey: siloKey}});
+    const sessionObjs = await datastore.callServerAsync('eventlog', 'getSessions', {filterSiloKey: siloKey});
     const sessionKeys = Object.keys(sessionObjs).sort((a, b) => getSessionTime(sessionObjs[b]) - getSessionTime(sessionObjs[a]));
     return sessionKeys.map(key => ({key, ...sessionObjs[key]}));
 }
@@ -134,9 +134,7 @@ export function useSession({sessionKey}) {
     const datastore = useDatastore();
 
     useEffect(() => {
-        callServerApiAsync({datastore,
-            component: 'eventlog', funcname: 'getSingleSession', 
-            params: {sessionKey}
+        datastore.callServerAsync('eventlog', 'getSingleSession', {sessionKey            
         }).then(session => setSession(session));
     }, [sessionKey]);
     return session;

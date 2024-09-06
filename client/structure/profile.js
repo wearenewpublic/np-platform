@@ -2,14 +2,11 @@ import React, { useState } from "react";
 import { Container, ConversationScreen, HorizBox, LoadingScreen, Pad, PadBox } from "../component/basics";
 import { Catcher } from "../component/catcher";
 import { useServersideConstructor } from "../component/constructor";
-import { FaceImage } from "../component/people";
-import { Heading, UtilityText } from "../component/text";
 import { useDatastore, useGlobalProperty, useInstanceKey, usePersonaKey, usePersonaObject } from "../util/datastore";
 import { useConfig } from "../util/features";
 import { View } from "react-native";
 import { CTAButton, TextButton } from "../component/button";
 import { useTranslation } from "../component/translation";
-import { callServerApiAsync } from "../util/servercall";
 import { removeUndefinedFields } from "../util/util";
 import { logEventAsync } from "../util/eventlog";
 
@@ -78,8 +75,10 @@ export function ProfileModuleHolder({module}) {
         if (makePreview) {
             preview = removeUndefinedFields(makePreview({updates}));
         }
-        await callServerApiAsync({datastore, component: 'profile', funcname: 'update', 
-            params: {moduleKey: module.key, updates, preview}});
+        await datastore.callServerAsync('profile', 'update', {
+            updates, preview,
+            moduleKey: module.key,
+        });
         setInProgress(false);
         setEditing(false);
         setErrors({});

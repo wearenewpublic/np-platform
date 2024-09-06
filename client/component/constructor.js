@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useDatastore, useGlobalProperty, useInstanceKey, useStructureKey } from "../util/datastore";
-import { callServerApiAsync } from "../util/servercall";
 
 export function useServersideConstructor() {    
     const initialized = useGlobalProperty('initialized');
@@ -10,9 +9,9 @@ export function useServersideConstructor() {
 
     useEffect(() => {
         if (!initialized) {
-            callServerApiAsync({datastore, 
-                component: 'constructor', funcname: 'runConstructor',
-                params: {structureKey, instanceKey}});    
+            datastore.callServerAsync('constructor', 'runConstructor', {
+                structureKey, instanceKey
+            });
         }
     }, [instanceKey, structureKey]);
     return initialized;

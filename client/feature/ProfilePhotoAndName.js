@@ -10,7 +10,6 @@ import { Banner } from "../component/banner";
 import { Catcher } from "../component/catcher";
 import React, { useState } from "react";
 import { CTAButton } from "../component/button";
-import { callServerApiAsync } from "../util/servercall";
 
 export const ProfilePhotoAndNameFeature = {
     key: 'profileeditname',
@@ -162,9 +161,7 @@ async function checkPhotoAndNameAsync({datastore, updates}) {
         if (existingNameOwner && existingNameOwner != datastore.getPersonaKey()) {
             return {nameTaken: true};
         }
-        const violateResult = await callServerApiAsync({
-            datastore, component: 'profile', funcname: 'checkName', params: {name}
-        })
+        const violateResult = await datastore.callServerAsync('profile', 'checkName', {name});
         if (violateResult?.violates) {
             return {nameViolates: true};
         }

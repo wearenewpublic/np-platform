@@ -96,7 +96,7 @@ export function useServerCallResult(component, funcname, params={}) {
     const datastore = useDatastore();
     const [result, setResult] = useState(null);
     useEffect(() => {
-        callServerApiAsync({datastore, component, funcname, params}).then(setResult);
+        datastore.callServerAsync(component, funcname, params).then(setResult);
     }, [component, funcname, JSON.stringify(params)]);
     return result;
 }
