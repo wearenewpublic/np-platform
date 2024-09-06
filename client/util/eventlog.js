@@ -49,14 +49,14 @@ window.addEventListener('error', event => {
     global_in_error_handler = true;
 })
 
-window.addEventListener('unhandledrejection', event => {
+window.addEventListener('unhandledrejection', async event => {
     if (global_in_error_handler) {
         return; // avoid infinite error loop if this fails
     }
     global_in_error_handler = true;
     const error = event.reason;
     console.log('Caught an unhandled promise rejection', {error});
-    logEventAsync(null, 'error', {message: error.message, stack: error.stack});
+    await logEventAsync(null, 'error', {message: error.message, stack: error.stack});
     global_in_error_handler = false;
 })
 
@@ -88,9 +88,12 @@ export async function logEventAsync(datastore, eventType, params) {
         deviceInfo = getDeviceInfo();
         console.log('New session', sessionKey, deviceInfo);
     }
-    const result = await datastore.callServerAsync('eventlog', 'logEvent', {
+
+    // IMPORTANT: We can't use datastore.callServerAsync here because datastore will
+    // be null if we are called from an unhandled promise rejection
+    await callServerApiAsync({component: 'eventlog', funcname: 'logEvent', params: {
         eventType, sessionKey, isNewSession, params, deviceInfo
-    });
+    }});
     global_last_event = result?.eventKey ?? null;
 
     const postFirebaseUser = getFirebaseUser();
