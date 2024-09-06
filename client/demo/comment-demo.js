@@ -87,6 +87,9 @@ function commentStorySets() {return [
             },
             {label: 'Read More', actions:
                 [CLICK('Read more')]
+            },
+            {label: 'Go to Profile', actions: 
+                [CLICK('Bob Bauer')]
             }
         ]
     },

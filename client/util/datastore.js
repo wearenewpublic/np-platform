@@ -6,7 +6,7 @@ import { deepClone, expandDataListMap, getObjectPropertyPath } from './util';
 import { LoadingScreen } from '../component/basics';
 import { SharedData, SharedDataContext } from './shareddata';
 import { callServerApiAsync } from './servercall';
-import { goBack, pushSubscreen } from './navigate';
+import { goBack, gotoInstance, pushSubscreen } from './navigate';
 
 const DatastoreContext = React.createContext({});
 export const ConfigContext = React.createContext();
@@ -233,6 +233,13 @@ export class Datastore extends React.Component {
         } else {
             pushSubscreen(screenKey, params);
         }   
+    }
+    gotoInstance({structureKey, instanceKey}) {
+        if (this.props.gotoInstance) {
+            this.props.gotoInstance({structureKey, instanceKey});
+        } else {
+            gotoInstance({structureKey, instanceKey});
+        }
     }     
     goBack() {
         if (this.props.goBack) {

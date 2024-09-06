@@ -20,7 +20,7 @@ export function CTAButton({label, text, formatParams, icon, type='primary', disa
     }
     const {normal, hover, pressed, textColor} = styleMap[disabled ? 'disabled' : type] ?? styleMap.primary;
         
-    return <HoverView disabled={disabled} role='button' testID={label}
+    return <HoverView disabled={disabled} role='button' testID={label ?? text}
             style={[compact ? s.compactButton : s.button, wide && s.wide, normal]} hoverStyle={[s.hover, hover]} 
             pressedStyle={pressed} onPress={onPress} >
         {icon && <PadBox right={8}>{icon}</PadBox>}
@@ -144,7 +144,7 @@ export function SubtleButton({label, text, ariaLabel, disabled, formatParams, co
     const [hover, setHover] = useState(false);
     return <HoverView style={[s.button, padLeft && {marginLeft: 20}, padRight && {marginRight: 20}]} 
             disabled={disabled} role={!disabled ? 'button' : null}
-            ariaLabel={ariaLabel} testID={label}
+            ariaLabel={ariaLabel} testID={label ?? text}
             onPress={onPress} setHover={setHover}>
         {React.createElement(icon, {...iconProps, color})}
         {(label || text) && <Pad size={4} />}
@@ -163,7 +163,7 @@ const SubtleButtonStyle = StyleSheet.create({
 export function TextButton({label, text, level=1, type='large', heading=false, paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, leftIconProps={}, rightIcon, rightIconProps={}, color=colorBlack, alignStart=false, onPress}) {
     const s = TextButtonStyle;
     const [hover, setHover] = useState(false);
-    return <HoverView shrink testID={label}
+    return <HoverView shrink testID={label ?? text}
             style={[s.button, alignStart ? {alignSelf: 'flex-start'} : null]} 
             setHover={setHover} onPress={onPress} role='button'>
         {leftIcon && React.createElement(leftIcon, {...leftIconProps, color})}
@@ -195,7 +195,7 @@ const TextButtonStyle = StyleSheet.create({
 
 export function TextLinkButton({label, text, type='large', paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, rightIcon, color=colorBlack, alignStart=false, onPress}) {
     const [hover, setHover] = useState(false);
-    return <HoverView shrink style={[alignStart ? {alignSelf: 'flex-start'} : null]} setHover={setHover} onPress={onPress} role='button' testID={label}>
+    return <HoverView shrink style={[alignStart ? {alignSelf: 'flex-start'} : null]} setHover={setHover} onPress={onPress} role='button' testID={label ?? text}>
         {leftIcon && React.createElement(leftIcon, {color})}
         {leftIcon && <Pad size={8} />}        
         {paragraph ? 
@@ -224,7 +224,7 @@ export function ExpandButton({
     const [hover, setHover] = useState(false);
 
     return <HoverView style={s.button} setHover={setHover} role='button'
-            onPress={() => setExpanded(!expanded)} testID={testID ?? label}>        
+            onPress={() => setExpanded(!expanded)} testID={testID ?? label ?? text}>        
         {userList && <FacePile type={type} userIdList={userList} />}
         {photoUrlList && <PhotoPile photoUrlList={photoUrlList} />}
         {(userList || photoUrlList) && <Pad size={4} />}
@@ -286,7 +286,7 @@ export function ReactionButton({emoji, viewOnly=false, label, text, count, selec
     const s = ReactionButtonStyle;
     const [pressed, setPressed] = useState(false);
     return <HoverView style={[s.horiz, !viewOnly && s.button, selected && s.pressed]} 
-            hoverStyle={s.hover} disabled={viewOnly} testID={label}
+            hoverStyle={s.hover} disabled={viewOnly} testID={label ?? text}
             pressedStyle={s.pressed} setPressed={setPressed} role='button' onPress={onPress}>
         {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
         <UtilityText label={label} text={text} type='tiny' 
@@ -327,7 +327,7 @@ export function FilterButton({emoji, label, text, count, selected, onPress}) {
     const [pressed, setPressed] = useState(false);
 
     return <HoverView style={[s.button, selected && s.pressed]} pressedStyle={s.pressed} hoverStyle={s.hover} 
-            onPress={onPress} setPressed={setPressed} testID={label}>
+            onPress={onPress} setPressed={setPressed} testID={label ?? text}>
         {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
         <UtilityText label={label} text={text} type='tiny' 
             color={(pressed || selected) ? colorTextBlue : colorBlack} />

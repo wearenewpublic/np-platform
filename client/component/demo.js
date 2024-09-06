@@ -3,12 +3,13 @@ import { Center, FlowBox, Pad, PadBox, ShadowBox } from "./basics";
 import { Catcher } from "./catcher";
 import { FilterButton, IconButton, Tag } from "./button";
 import { Datastore } from "../util/datastore";
-import { global_textinput_test_handlers, Heading } from "./text";
+import { global_textinput_test_handlers, Heading, UtilityText } from "./text";
 import React, { useState } from "react";
 import { pauseAsync } from "../util/util";
 import { Reset } from "@carbon/icons-react";
 import { colorGreyBorder } from "./color";
 import { demoPersonaToFbUser, personaA } from "../data/personas";
+import { Banner } from "./banner";
 
 export function CLICK(matcher) {
     return {matcher, action: 'click'}
@@ -126,9 +127,11 @@ export function DemoStorySet({storySet}) {
     const domRef = React.createRef();
     const dataRef = React.createRef();
     const [key, setKey] = useState(0);
+    const [navInstance, setNavInstance] = useState(null);
 
     function onReset() {
         dataRef.current.resetData();
+        setNavInstance(null);
         setKey(key+1);
     }
 
@@ -136,6 +139,8 @@ export function DemoStorySet({storySet}) {
             structureKey={structureKey} instanceKey={instanceKey} personaKey={personaKey}
             collections={collections} globals={globals} firebaseUser={firebaseUser}
             sessionData={sessionData} modulePublic={modulePublic}
+            gotoInstance={setNavInstance}
+            pushSubscreen={(screenKey,params) => setNavInstance({screenKey, params})}
             serverCall={{...defaultServerCall, ...serverCall}} >
         <Heading type='small' text={storySet.label} />
         <Pad size={5} />
@@ -151,6 +156,7 @@ export function DemoStorySet({storySet}) {
         <Pad size={10} />
         <ShadowBox>
             <PadBox horiz={pad ? 20 : 0} vert={pad ? 20 : 0}>
+                {navInstance && <NavResult navInstance={navInstance} /> }
                 <View key={key}>
                     <div ref={domRef}>
                         {content}
@@ -162,3 +168,12 @@ export function DemoStorySet({storySet}) {
     </Datastore>    
 }
 
+export function NavResult({navInstance}) {
+    return <PadBox horiz={8} vert={8}>
+        <Banner>
+            <UtilityText text='Navigated to:' />
+            {navInstance.structureKey && <UtilityText strong text={navInstance.structureKey + '/' + navInstance.instanceKey} />}
+            {navInstance.screenKey && <UtilityText strong text={'Subscreen: ' + navInstance.screenKey + '(' + JSON.stringify(navInstance.params)} />}
+        </Banner>
+    </PadBox>
+}

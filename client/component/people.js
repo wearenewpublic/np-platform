@@ -1,4 +1,4 @@
-import { useIsLive, useObject, usePersonaKey, usePersonaObject, usePersonaPreview as usePersonaPreview } from "../util/datastore";
+import { useDatastore, useIsLive, useObject, usePersonaKey, usePersonaObject, usePersonaPreview as usePersonaPreview } from "../util/datastore";
 import { getFirebaseUser } from "../util/firebase";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { IconCircleCheck } from "./icon";
@@ -142,8 +142,9 @@ export function Byline({type='small', photoType=null, clickable=true, userId, na
     const s = BylineStyle
     const persona = usePersonaObject(userId);
     const language = useLanguage();
+    const datastore = useDatastore();
     function onProfile() {
-        gotoInstance({structureKey: 'profile', instanceKey: userId});
+        datastore.gotoInstance({structureKey: 'profile', instanceKey: userId});
     }
     if (type == 'large') {
         return <View style={s.outer}>
