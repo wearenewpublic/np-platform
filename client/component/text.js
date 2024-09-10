@@ -23,7 +23,7 @@ export function Heading({text, color={color}, center, label, level=2, underline=
         style={[
             styleMap[level], 
             underline && {textDecorationLine: 'underline'},
-            center ? {textAlign: 'center'} : null
+            center ? {textAlign: 'center'} : null, {color}
         ]} />
 }
 
