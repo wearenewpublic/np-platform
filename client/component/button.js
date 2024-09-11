@@ -160,7 +160,7 @@ const SubtleButtonStyle = StyleSheet.create({
 });
 
 
-export function TextButton({label, text, level=1, type='large', heading=false, paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, leftIconProps={}, rightIcon, rightIconProps={}, color=colorBlack, alignStart=false, onPress}) {
+export function TextButton({label, text, level=1, type='large', heading=false, paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, leftIconProps={}, rightIcon, rightIconProps={}, color=colorBlack, alignStart=false, onPress, overrideHoverUnderline=false}) {
     const s = TextButtonStyle;
     const [hover, setHover] = useState(false);
     return <HoverView shrink testID={label ?? text}
@@ -170,16 +170,16 @@ export function TextButton({label, text, level=1, type='large', heading=false, p
         {leftIcon && <Pad size={8} />}        
         {paragraph ? 
             <Paragraph label={label} text={text} formatParams={formatParams} type={type}
-                color={color} underline={hover ^ underline} strong={strong} />
+                color={color} underline={(hover && !overrideHoverUnderline) ^ underline} strong={strong} />
         : editorial ?
             <EditorialHeading type={type} label={label} text={text} formatParams={formatParams}
-                color={color} underline={hover ^ underline} italic={italic} strong={strong} />
+                color={color} underline={(hover && !overrideHoverUnderline) ^ underline} italic={italic} strong={strong} />
         : heading ?
             <Heading label={label} text={text} formatParams={formatParams} level={level}
-                color={color} underline={hover ^ underline} strong={strong} />
+                color={color} underline={(hover && !overrideHoverUnderline) ^ underline} strong={strong} />
         :
             <UtilityText label={label} text={text} formatParams={formatParams} type={type} 
-                color={color} underline={hover ^ underline} strong={strong} />
+                color={color} underline={(hover && !overrideHoverUnderline) ^ underline} strong={strong} />
         }
         {rightIcon && <Pad size={8} />}
         {rightIcon && React.createElement(rightIcon, {...rightIconProps, color})}
