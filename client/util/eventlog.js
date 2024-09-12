@@ -91,7 +91,7 @@ export async function logEventAsync(datastore, eventType, params) {
 
     // IMPORTANT: We can't use datastore.callServerAsync here because datastore will
     // be null if we are called from an unhandled promise rejection
-    await callServerApiAsync({component: 'eventlog', funcname: 'logEvent', params: {
+    const result = await callServerApiAsync({component: 'eventlog', funcname: 'logEvent', params: {
         eventType, sessionKey, isNewSession, params, deviceInfo
     }});
     global_last_event = result?.eventKey ?? null;

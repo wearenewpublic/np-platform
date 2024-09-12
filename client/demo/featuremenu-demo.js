@@ -5,7 +5,7 @@ import { ConversationScreen, Narrow } from "../component/basics"
 import { DemoSection } from "../component/demo"
 import { FormField } from "../component/form"
 import { CHOOSEONE, COMPOSITE, SECTION, SUBSECTION } from "../feature"
-import { FeatureTreeNode } from "../organizer/TopBar"
+import { FeatureTreeNode } from "../component/topbar"
 import { Datastore } from "../util/datastore"
 
 export const DogFeature = { key: 'dog', name: 'Dog' }

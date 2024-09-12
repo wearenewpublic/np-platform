@@ -13,6 +13,26 @@ function verifyIdTokenAsync(token) {
     return admin.auth().verifyIdToken(token);
 }
 
+async function getOrCreateUserAsync({email, name, photoUrl}) {
+    try {
+        const userRecord = await admin.auth().getUserByEmail(email);
+        console.log('Successfully fetched user data:', userRecord);
+        return userRecord;
+    } catch (e) {
+        console.log('User not found, creating new user:', e);
+        const userRecord = await admin.auth().createUser({
+            email: email,
+            displayName: name,
+            photoURL: photoUrl
+        });
+        return userRecord;
+    }
+}
+
+async function createLoginToken(uid) {
+    return admin.auth().createCustomToken(uid);
+}
+
 function expandPath(path) {
     if (typeof path == 'string') {
         return path;
@@ -167,6 +187,8 @@ module.exports = {
     readGlobalAsync, writeGlobalAsync, writeCollectionAsync,
     setObjectAsync, readObjectAsync, firebaseReadWithFilterAsync,
     keyToUrl, urlToKey,
+
+    getOrCreateUserAsync, createLoginToken,
 
     verifyIdTokenAsync, createNewKey, firebaseGetUserAsync, expandPath, 
     checkPathsNotOverlapping, checkNoUndefinedKeysOrValues: checkNoUndefinedValues,

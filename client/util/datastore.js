@@ -234,13 +234,23 @@ export class Datastore extends React.Component {
             pushSubscreen(screenKey, params);
         }   
     }
-    gotoInstance({structureKey, instanceKey}) {
+    gotoInstance({structureKey, instanceKey, params={}}) {
         if (this.props.gotoInstance) {
-            this.props.gotoInstance({structureKey, instanceKey});
+            this.props.gotoInstance({structureKey, instanceKey, params});
         } else {
-            gotoInstance({structureKey, instanceKey});
+            gotoInstance({structureKey, instanceKey, params});
         }
-    }     
+    }
+    needsLogin(callback, action) {
+        return () => {
+            const personaKey = this.getPersonaKey();
+            if (personaKey) {
+                callback();
+            } else {
+                this.gotoInstance({structureKey: 'login', instanceKey: 'one', params: {action}});
+            }
+        }
+    }
     goBack() {
         if (this.props.goBack) {
             this.props.goBack();

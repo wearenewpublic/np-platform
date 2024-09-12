@@ -1,10 +1,9 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { TopBar } from '../organizer/TopBar';
+import { TopBar } from '../component/topbar';
 import { IBMPlexSans_400Regular, IBMPlexSans_500Medium, IBMPlexSans_600SemiBold } from '@expo-google-fonts/ibm-plex-sans';
 import { IBMPlexMono_400Regular, IBMPlexMono_500Medium, IBMPlexMono_600SemiBold } from '@expo-google-fonts/ibm-plex-mono';
-import { LoginScreen } from '../organizer/Login';
-import { ConfigContext, Datastore, WaitForData, useGlobalProperty, useLoaded, usePersonaKey } from '../util/datastore';
+import { ConfigContext, Datastore, WaitForData, useGlobalProperty, useLoaded } from '../util/datastore';
 import { useFonts } from 'expo-font';
 import { Catcher } from '../component/catcher';
 import { structures } from '../structure';
@@ -124,13 +123,6 @@ export function StructureDemoConfiguredScreenStack({structureKey, screenStack}) 
 export function StackedScreen({screenSet, screenInstance, index, features}) {
     const {structureKey, instanceKey, screenKey, params} = screenInstance;
     const loaded = useLoaded();
-
-    if (structureKey == 'login' || instanceKey == 'login' || screenKey == 'login') {
-        return <FullScreen zIndex={index}>
-            <TopBar title='Log In' />
-            <LoginScreen {...params} />
-        </FullScreen>
-    }  
 
     const structure = getStructureForKey(structureKey);
     var screen = getScreen({screenSet, structure, screenKey, instanceKey});

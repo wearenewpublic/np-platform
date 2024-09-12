@@ -10,14 +10,14 @@ import { getFirstName } from "../util/util";
 import { colorLightBlueBackground, colorTextGrey } from "./color";
 import { RichText } from "./richtext";
 import { CatchList, Catcher } from "./catcher";
-import { TopBarActionProvider } from "../organizer/TopBar";
-import { needsLogin } from "../organizer/Login";
+import { TopBarActionProvider } from "./topbar";
 import { useConfig } from "../util/features";
 import { Banner } from "./banner";
 import { logEventAsync, useLogEvent } from "../util/eventlog";
 import { NoCommentsHelp } from "./help";
 import { useIsAdmin } from "./admin";
 import { getIsMobileWeb } from '../platform-specific/deviceinfo'
+import { needsLogin } from "../structure/login";
 
 
 export function Comment({commentKey}) {
@@ -350,7 +350,7 @@ export function ActionReply({commentKey, depth}) {
     if (depth == 1 && parent.from != personaKey) return null;
     if (depth > 1) return null;
 
-    return <SubtleButton icon={Reply} label='Reply' onPress={needsLogin(onReply, 'reply')} padRight />
+    return <SubtleButton icon={Reply} label='Reply' onPress={datastore.needsLogin(onReply, 'reply')} padRight />
 }
 
 export function ActionEdit({commentKey}) {
@@ -440,7 +440,7 @@ export function CommentsInput({about=null}) {
     const {commentInputPlaceholder, commentInputLoginAction} = useConfig();
     const datastore = useDatastore();
     return <TextFieldButton placeholder={commentInputPlaceholder} 
-                onPress={needsLogin(
+                onPress={datastore.needsLogin(
                     () => datastore.pushSubscreen('composer', {about}), 
                     commentInputLoginAction)} 
     />

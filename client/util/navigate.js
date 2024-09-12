@@ -1,4 +1,4 @@
-import { gotoUrl, replaceUrl } from "../organizer/url";
+import { gotoUrl, replaceUrl } from "./url";
 import { stripSuffix } from "./util";
 
 
@@ -18,41 +18,35 @@ export function goBack() {
     history.back();
 }
 
-export function pushSubscreen(key, params = {}) {
-    const parts = window.location.pathname.split('/').filter(x => x).slice(1);
-    const query = new URLSearchParams(window.location.search);
-    parts.push(key);
-    const index = parts.length - 3;
-
-    for (const [key, value] of Object.entries(params)) {
+function makeQueryForParams(index, params, query=new URLSearchParams()) {
+    console.log('makeQueryForParams', index, params, query);
+    for (const [key, value] of Object.entries(params ?? {})) {
         if (value) {
             query.set(key + getParamSuffixForIndex(index), value);
         }
     }
+    return query;
+}
+
+export function pushSubscreen(screenKey, params = {}) {
+    const parts = window.location.pathname.split('/').filter(x => x).slice(1);
+    parts.push(screenKey);
+    const parentQuery = new URLSearchParams(window.location.search);
+
+    const query = makeQueryForParams(parts.length - 2, params, parentQuery);
 
     gotoUrl(makeUrl(parts, query));
 }
 
-export function gotoStructure(structureKey) {
-    gotoUrl(makeUrl([structureKey]));
-}
-
-export function makeStructureUrl(structureKey) {
-    return makeUrl([structureKey]);
-}
-
-export function gotoInstance({structureKey, instanceKey}) {
-    gotoUrl(makeUrl([structureKey, instanceKey]));
+export function gotoInstance({structureKey, instanceKey, params}) {
+    console.log('gotoInstance', structureKey, instanceKey, params);
+    const query = makeQueryForParams(0, params);
+    gotoUrl(makeUrl([structureKey, instanceKey], query));
 }
 
 export function gotoInstanceScreen({structureKey, instanceKey, screenKey, params}) {
     const parts = [structureKey, instanceKey, screenKey];
-    const query = new URLSearchParams();
-    for (const [key, value] of Object.entries(params)) {
-        if (value) {
-            query.set(key, value);
-        }
-    }
+    const query = makeQueryForParams(1, params);
     gotoUrl(makeUrl(parts, query));
 }
 
@@ -87,7 +81,7 @@ export function makeUrl(parts, query = new URLSearchParams()) {
 }
 
 function getParamSuffixForIndex(index) {
-    return index ? ('_' + index) : '';
+    return index ? ('' + index) : '';
 }
 
 
@@ -106,12 +100,14 @@ export function getScreenStackForUrl(url) {
     const parsedUrl = new URL(url);
     const parts = parsedUrl.pathname.split('/').filter(x => x);
     const query = new URLSearchParams(parsedUrl.search);
-    var [siloKey, structureKey, instanceKey, ...screenParts] = parts;
+    var [siloKey, structureKey, instanceKey, ...subScreenParts] = parts;
+    const screenParts = [null, ...subScreenParts];
 
     if (!structureKey) return {}
     if (!instanceKey) return {structureKey};
 
-    var screenStack = [{siloKey, structureKey, instanceKey, screenKey: null, params: {}}];
+    // var screenStack = [{siloKey, structureKey, instanceKey, screenKey: null, params: {}}];
+    var screenStack = [];
 
     for (var i = 0; i < screenParts.length; i++) {
         const screenKey = screenParts[i];

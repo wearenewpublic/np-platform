@@ -2,7 +2,7 @@ import { SubtleButton } from "../component/button";
 import { colorBlack, colorDisabledText, colorTextBlue, colorTextGrey } from "../component/color";
 import { IconUpvote, IconUpvoted } from "../component/icon";
 import { UtilityText } from "../component/text";
-import { needsLogin } from "../organizer/Login";
+import { needsLogin } from "../structure/login";
 import { useCollection, useDatastore, useObject, usePersonaKey } from "../util/datastore";
 
 export const UpvoteFeature = {
@@ -39,7 +39,7 @@ export function ActionUpvote({commentKey}) {
         disabled={disabled}
         text={count.toString()}
         padRight
-        onPress={needsLogin(onUpvote, 'upvote')} />
+        onPress={datastore.needsLogin(onUpvote, 'upvote')} />
 }
 
 

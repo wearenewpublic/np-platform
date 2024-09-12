@@ -7,7 +7,7 @@ import { fireEvent, screen } from '@testing-library/react';
 import { global_textinput_test_handlers } from '../component/text';
 
 export function WithFeatures({dataRef, siloKey='test', structureKey='componentdemo', instanceKey='test', 
-        isAdmin=false, features={}, globals, collections, sessionData, children}) {
+        isAdmin=false, features={}, globals, collections, sessionData, personaKey='a', children}) {
     const structure = getStructureForKey(structureKey);
     const config = assembleConfig({structure, activeFeatures:features});
     return <Datastore 
@@ -19,6 +19,7 @@ export function WithFeatures({dataRef, siloKey='test', structureKey='componentde
             globals={{...globals, features}}
             collections={collections}
             sessionData={sessionData}
+            personaKey={personaKey}
             config={config}
             isLive={false}>
         {children}

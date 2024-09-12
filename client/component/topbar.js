@@ -4,23 +4,23 @@ import { firebaseSignOut, useFirebaseUser } from "../util/firebase";
 import { Popup } from "../platform-specific/popup";
 import { useDatastore, useGlobalProperty, useInstanceKey, usePersona, usePersonaKey, usePersonaObject, useStructureKey } from "../util/datastore";
 import { useState } from "react";
-import { Byline } from "../component/people";
-import { BreadCrumb, CTAButton, TextButton } from "../component/button";
-import { HorizBox, Pad, PadBox, Separator } from "../component/basics";
+import { Byline } from "./people";
+import { BreadCrumb, CTAButton, TextButton } from "./button";
+import { HorizBox, Pad, PadBox, Separator } from "./basics";
 import { ObservableProvider, ObservableValue, useObservable } from "../util/observable";
 import { getFeatureBlocks, useEnabledFeatures } from "../util/features";
 import { defaultFeatureConfig } from "../feature";
-import { Catcher } from "../component/catcher";
+import { Catcher } from "./catcher";
 import { historyGetState } from "../platform-specific/url";
-import { useIsAdmin } from "../component/admin";
-import { CircleCount, UtilityText } from "../component/text";
-import { AccordionField, RadioGroup, RadioOption, Toggle } from "../component/form";
-import { colorGreyPopupBackground } from "../component/color";
+import { useIsAdmin } from "./admin";
+import { CircleCount, UtilityText } from "./text";
+import { AccordionField, RadioGroup, RadioOption, Toggle } from "./form";
+import { colorGreyPopupBackground } from "./color";
 import { ChevronDown, ChevronUp, Close, ArrowLeft } from '@carbon/icons-react';
 
 const global_toolbarAction = new ObservableValue(null);
 
-export function TopBar() {
+export function TopBar({isLogin = false}) {
     const s = TopBarStyle;
     const instanceKey = useInstanceKey();
     const toolbarAction = useObservable(global_toolbarAction);
@@ -38,7 +38,7 @@ export function TopBar() {
                 {toolbarAction ? 
                     <PadBox right={12}><CTAButton compact label={toolbarAction.label} disabled={toolbarAction.disabled} onPress={toolbarAction.onPress} /></PadBox>
                 : 
-                    instanceKey && <UserInfo />
+                    instanceKey && !isLogin && <UserInfo />
                 }
             </HorizBox>
         </Catcher>
@@ -222,6 +222,10 @@ function UserInfo() {
         </View>
     }
 
+    function onLogin() {
+        datastore.gotoInstance({structureKey: 'login', instanceKey: 'one'});
+    }
+
     if (personaKey) {
         return <Popup popupContent={popup} setHover={setHover} setShown={setShown} popupStyle={s.popup}>
             <PadBox vert={6} right={20}>
@@ -233,7 +237,9 @@ function UserInfo() {
             </PadBox>
         </Popup>
     } else {        
-        return <PadBox horiz={20}><CTAButton type='secondary' onPress={() => datastore.pushSubscreen('login')} compact label='Log in' /></PadBox>
+        return <PadBox horiz={20}>
+            <CTAButton type='secondary' onPress={onLogin} compact label='Log in' />
+        </PadBox>
     }
 }
 

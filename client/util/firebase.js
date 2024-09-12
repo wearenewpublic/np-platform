@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, connectAuthEmulator } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithCustomToken, onAuthStateChanged, connectAuthEmulator } from 'firebase/auth';
 import { connectDatabaseEmulator, getDatabase, onValue, push, get, ref, set } from "firebase/database";
 import { useEffect, useState } from 'react';
 import { getIsLocalhost } from "../platform-specific/url";
@@ -157,6 +157,10 @@ export function stringToFbKey(input) {
 export function signInWithGoogle() {
     const provider = new GoogleAuthProvider();
     return signInWithPopup(auth, provider);
+}
+
+export async function signInWithTokenAsync(token) {
+    return await signInWithCustomToken(auth, token);
 }
 
 

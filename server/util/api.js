@@ -17,16 +17,18 @@ function handleApiRequest(req, res, components) {
             res.status(200);
         });
         return;
+    } else if (req.method === 'GET') {
+        handleGetRequest(req, res, components);
     } else if (req.method === 'POST') {  
         if (contentType.includes('multipart/form-data')) {
             handleMultipartRequest(req, res, components);
         } else if (contentType.includes('application/json')) {
             handleJsonRequest(req, res, components);
         } else {
-            res.status(415).send({error: 'Unsupported Content-Type'});
+            res.status(415).send({error: 'Unsupported Content-Type: ' + contentType});
         }
     } else {
-        res.status(415).send({error: 'Unsupported HTTP Method'});
+        res.status(415).send({error: 'Unsupported HTTP Method: ' + req.method});
     }   
 }
 
@@ -61,12 +63,16 @@ function handleMultipartRequest(req, res, components) {
     busboy.on('finish', async () => {
         await Promise.all(fileWrites);
 
-        const {statusCode, result} = await callApiFunctionAsync(req, fields, components);
+        const {statusCode, result, redirect} = await callApiFunctionAsync(req, fields, components);
 
-        cors(req, res, () => {
-            res.status(statusCode);
-            res.send(result);
-        });
+        if (redirect) {
+            res.redirect(302, redirect);
+        } else {
+            cors(req, res, () => {
+                res.status(statusCode);
+                res.send(result);
+            });
+        }
     });
 
     busboy.end(req.rawBody);
@@ -79,6 +85,21 @@ async function handleJsonRequest(request, response, components) {
         response.status(statusCode);
         response.send(result);
     })
+}
+
+async function handleGetRequest(request, response, components) {
+    const fields = request.query;
+    const {statusCode, result, redirect} = await callApiFunctionAsync(request, fields, components);
+    console.log('handleGetRequest', {statusCode, result, redirect});
+    if (redirect) {
+        console.log('Redirecting to', redirect);
+        response.redirect(302, redirect);
+    } else {
+        cors(request, response, () => {
+            response.status(statusCode);
+            response.send(result);
+        })
+    }
 }
 
 
@@ -136,6 +157,8 @@ async function callApiFunctionAsync(request, fields, components) {
             return ({statusCode: 200, result: JSON.stringify({success: true, data: apiResult.data})});
         } else if (apiResult?.success) {
             return ({statusCode: 200, result: JSON.stringify({success: true})})
+        } else if (apiResult?.redirect) {
+            return ({statusCode: 302, redirect: apiResult.redirect});
         } else {
             return ({statusCode: 200, result: JSON.stringify({success: true, data: apiResult ?? null})})
         }
