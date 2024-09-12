@@ -29,6 +29,9 @@ async function authCallbackAsync({code, state}) {
         }
     });
     console.log('response.data', response.data);  
+    if (response.data.error) {
+        throw new Error('Error getting access token: ' + response.data.error);
+    }
     const accessToken = response.data.access_token;
     console.log('Access Token:', accessToken); 
     const userInfo = await getUserInfoAsync(accessToken);
@@ -93,7 +96,7 @@ async function getUserPrimaryEmailAsync(accessToken) {
     if (!primaryEmail) {
         throw new Error('No verified primary verified email found in user emails');
     }
-    return primaryEmail;
+    return primaryEmail.email;
 }
 
 
