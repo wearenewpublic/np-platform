@@ -1,4 +1,3 @@
-const { GITHUB_CLIENT_SECRET } = require("../../../psi-product/server/keys")
 const axios = require('axios');
 const { getOrCreateUserAsync, createLoginToken } = require("../util/firebaseutil");
 
@@ -7,6 +6,12 @@ const oauth_callback_url = 'https://psi.newpublic.org/api/auth/callback'
 const github_auth_url = `https://github.com/login/oauth/authorize?client_id=${github_client_id}&redirect_uri=${oauth_callback_url}&scope=read:user%20user:email&response_type=code`
 const github_access_url = 'https://github.com/login/oauth/access_token'
 const github_user_url = 'https://api.github.com/user'
+
+var global_github_client_secret = null;
+function setGithubClientSecret(secret) {
+    global_github_client_secret = secret;
+}
+exports.setGithubClientSecret = setGithubClientSecret;
 
 async function authCallbackAsync({code, state}) {
     console.log('authCallback', code, state);
