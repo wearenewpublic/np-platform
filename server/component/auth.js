@@ -6,6 +6,7 @@ const oauth_callback_url = 'https://psi.newpublic.org/api/auth/callback'
 const github_auth_url = `https://github.com/login/oauth/authorize?client_id=${github_client_id}&redirect_uri=${oauth_callback_url}&scope=read:user%20user:email&response_type=code`
 const github_access_url = 'https://github.com/login/oauth/access_token'
 const github_user_url = 'https://api.github.com/user'
+const github_user_emails = 'https://api.github.com/user/emails'
 
 var global_github_client_secret = null;
 function setGithubClientSecret(secret) {
@@ -37,12 +38,15 @@ async function authCallbackAsync({code, state}) {
         location: userInfo.location ?? null, bio: userInfo.bio ?? null,
         photoUrl: userInfo.picture ?? userInfo.avatar_url ?? null
     });
+    const email = await getUserPrimaryEmailAsync(accessToken);
     const name = getNameFromUserInfo(userInfo);
     const userRecord = await getOrCreateUserAsync({
-        email: userInfo.email, name, 
+        email, name, 
         photoUrl: userInfo.picture ?? userInfo.avatar_url ?? null
     });
+    console.log('got user', userRecord.uid);
     const loginToken = await createLoginToken(userRecord.uid);
+    console.log('created login token:', loginToken);
     const siloKey = parsedState.siloKey;
     const encodedEmail = encodeURIComponent(userInfo.email);
     const redirect = `https://psi.newpublic.org/${siloKey}/login/one/tokenRedirect?token1=${loginToken}&email=${encodedEmail}&provider=github`;
@@ -73,6 +77,25 @@ async function getUserInfoAsync(accessToken) {
     console.log('User Info:', userInfo);
     return userInfo;
 }
+
+async function getUserPrimaryEmailAsync(accessToken) {
+    const response = await axios.get(github_user_emails, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Accept: 'application/json'
+        }
+    });
+    const emails = response.data;
+    console.log('emails:', emails);
+
+    const primaryEmail = emails.find(email => email.primary && email.verified);
+    console.log('primaryEmail:', primaryEmail);
+    if (!primaryEmail) {
+        throw new Error('No verified primary verified email found in user emails');
+    }
+    return primaryEmail;
+}
+
 
 exports.publicFunctions = {
     callback: authCallbackAsync

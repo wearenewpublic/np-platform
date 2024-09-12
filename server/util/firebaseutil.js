@@ -20,12 +20,17 @@ async function getOrCreateUserAsync({email, name, photoUrl}) {
         return userRecord;
     } catch (e) {
         console.log('User not found, creating new user:', e);
-        const userRecord = await admin.auth().createUser({
-            email: email,
-            displayName: name,
-            photoURL: photoUrl
-        });
-        return userRecord;
+        try {
+            const userRecord = await admin.auth().createUser({
+                email: email,
+                displayName: name,
+                photoURL: photoUrl
+            });
+            console.log('created user:', userRecord.uid);
+            return userRecord;
+        } catch (e) {
+            console.error('Error creating user: ' + JSON.stringify({email, name, photoUrl}), e);
+        } 
     }
 }
 
