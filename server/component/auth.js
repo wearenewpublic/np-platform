@@ -19,7 +19,7 @@ async function authCallbackAsync({code, state}) {
     console.log('parsedState', parsedState);
     const response = await axios.post(github_access_url, {
         client_id: github_client_id,
-        client_secret: GITHUB_CLIENT_SECRET,
+        client_secret: global_github_client_secret,
         code: code,
         redirect_uri: oauth_callback_url
     },{
