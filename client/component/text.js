@@ -140,7 +140,7 @@ export function UtilityText({type='small', center=false, right=false, text, labe
     const styleMap = {
         large: s.utilityLarge,
         small: s.utilitySmall,
-        tiny: s.utilityTiny,
+        tiny: caps ? s.utilityTinyCaps : s.utilityTiny,
     }
     const strongMap = {
         large: fontFamilySansMedium,
@@ -174,6 +174,11 @@ const UtilityTextStyle = StyleSheet.create({
     },
     utilityTiny: {
         fontFamily: fontFamilySansMedium,
+        fontSize: 12,
+        lineHeight: 12 * 1.25,
+    },
+    utilityTinyCaps: {
+        fontFamily: fontFamilySansRegular,
         fontSize: 12,
         lineHeight: 12 * 1.25,
     }
