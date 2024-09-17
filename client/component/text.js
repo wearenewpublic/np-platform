@@ -38,6 +38,11 @@ const HeadingStyle = StyleSheet.create({
         fontSize: 16,
         lineHeight: 16 * 1.25
     },
+    heading3: {
+        fontFamily: fontFamilySansMedium,
+        fontSize: 14,
+        lineHeight: 14 * 1.25
+    }
 })
 
 export function DataVizText({type, text, label, formatParams}) {
