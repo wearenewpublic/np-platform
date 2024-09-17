@@ -47,7 +47,8 @@ export function MyProfilePhoto({type='large', photo=null, faint=false, check=fal
 export function FaceImage({face, photoUrl=null, type='small', faint=false, check=false, border=false}) {
     const sizeMap = {
         huge: 80,
-        large: 48,
+        extraLarge: 48,
+        large: 40,
         small: 32,
         tiny: 24,
     }
@@ -85,7 +86,8 @@ export function LetterFace({name, hue, type='large'}) {
     const s = LetterFaceStyle;
     const sizeMap = {
         huge: 80,
-        large: 48,
+        extraLarge: 48,
+        large: 40,
         small: 32,
         tiny: 24,
     }

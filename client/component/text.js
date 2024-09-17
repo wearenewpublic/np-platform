@@ -18,6 +18,7 @@ export function Heading({text, color={color}, center, label, level=2, underline=
     const styleMap = {
         1: HeadingStyle.heading1,
         2: HeadingStyle.heading2,
+        3: HeadingStyle.heading3,
     }
     return <TranslatableText text={text} label={label} formatParams={formatParams} 
         style={[

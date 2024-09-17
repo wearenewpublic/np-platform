@@ -108,11 +108,11 @@ function ProfilePhotoEditor() {
 
     return <HorizBox>
         <FaceSelect testID='photo' selected={isPhoto} onSelect={onSelectPhoto}>
-            <FaceImage type='large' photoUrl={photoUrl ?? fbUser.photoURL} />
+            <FaceImage type='extraLarge' photoUrl={photoUrl ?? fbUser.photoURL} />
         </FaceSelect>
         <Pad size={16} />
         <FaceSelect testID='letter' selected={!isPhoto} onSelect={onSelectLetter}>
-            <LetterFace type='large' hue={defaultHue} name={name} />
+            <LetterFace type='extraLarge' hue={defaultHue} name={name} />
         </FaceSelect>
     </HorizBox>
 }
