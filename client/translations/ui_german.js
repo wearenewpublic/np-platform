@@ -70,11 +70,12 @@ export var ui_translations_german = {
     'Pseudonyms can contain only lower case letters and numbers.': 'Pseudonyme können nur Kleinbuchstaben und Zahlen enthalten.',
     'You can change your pseudonym at most once a week': 'Du kannst dein Pseudonym höchstens einmal pro Woche ändern',
     "Let's get your profile set up": 'Lass uns dein Profil einrichten',
-    'How do you want to appear to others?': 'Wie möchtest du anderen erscheinen?',
+    'How do you want to appear to others in your posts and replies?': 'Wie möchten Sie in Ihren Beiträgen und Antworten auf andere wirken?',
     'Save': 'Speichern',
     'Edit {tLabel}': '{tLabel} bearbeiten',
     'photo and name': 'Foto und Name',
     'Please Wait...': 'Bitte warten...',
     'Continue': 'Fortsetzen',
+    'Finish' : 'Fertig', 
 
 }

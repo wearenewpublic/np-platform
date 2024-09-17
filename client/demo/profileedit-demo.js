@@ -94,18 +94,18 @@ function profileStorySets() {return [
         }},
         stories: [
             {label: 'Just Continue', actions: [
-                CLICK('Continue')
+                CLICK('Finish')
             ]},
             {label: 'Letter Photo', actions: [
-                CLICK('letter'), CLICK('Continue')
+                CLICK('letter'), CLICK('Finish')
             ]},
             {label: 'Good Pseudonym', actions: [
                 CLICK('A pseudonym'), 
-                INPUT('pseudonym', 'malice'), CLICK('Continue')
+                INPUT('pseudonym', 'malice'), CLICK('Finish')
             ]},
             {label: 'Bad Pseudonym', actions: [
                 CLICK('A pseudonym'), 
-                INPUT('pseudonym', 'meanword'), CLICK('Continue')
+                INPUT('pseudonym', 'meanword'), CLICK('Finish')
             ]},
 
         ]

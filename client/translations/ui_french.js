@@ -72,12 +72,13 @@ export var ui_translations_french = {
     'Pseudonyms can contain only lower case letters and numbers.': 'Les pseudonymes ne peuvent contenir que des lettres minuscules et des chiffres.',
     'You can change your pseudonym at most once a week': 'Vous ne pouvez changer votre pseudonyme qu\'une fois par semaine au maximum',
     "Let's get your profile set up": 'Créons votre profil',
-    'How do you want to appear to others?': 'Comment souhaitez-vous apparaître aux autres ?',
+    'How do you want to appear to others in your posts and replies?': 'Comment souhaitez-vous apparaître aux autres dans vos publications et réponses?',
     'Save': 'Enregistrer',
     'Edit {tLabel}': 'Modifier {tLabel}',
     'photo and name': 'photo et nom',
     'Please Wait...': 'Veuillez patienter...',
     'Continue': 'Continuer',
     'Saving...' : 'Enregistrement en cours...',
+    'Finish' : 'Terminer',
 
 }

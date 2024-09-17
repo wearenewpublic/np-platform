@@ -1,4 +1,4 @@
-import { HorizBox, Pad } from "../component/basics";
+import { HorizBox, Pad, PadBox } from "../component/basics";
 import { Heading, Paragraph, TextField, UtilityText } from "../component/text";
 import { StyleSheet, View } from "react-native";
 import { useDatastore, useInstanceKey, usePersonaKey, usePersonaObject } from "../util/datastore";
@@ -65,16 +65,16 @@ function EditPhotoAndName() {
     }
 
     return <View>
-        <Heading label='Profile name'/>
-        <Pad size={12} />
+        <Heading level={3} label='Profile name'/>
+        <Pad size={8} />
         <RadioGroup value={nameMode} onChange={onChangeNameMode}>
             <RadioOption radioKey='full' text={fbUser.displayName} />
             <RadioOption radioKey='custom' label='A pseudonym' />
         </RadioGroup>
         {nameMode == 'custom' && <Catcher><PseudonymEditor /></Catcher>}
-        <Pad size={24}/>
-        <Heading label='Your profile photo'/>
-        <Pad size={20} />
+        <Pad size={32}/>
+        <Heading level={3} label='Your profile photo'/>
+        <Pad size={12} />
         <Catcher><ProfilePhotoEditor /></Catcher>
     </View>
 }
@@ -108,11 +108,11 @@ function ProfilePhotoEditor() {
 
     return <HorizBox>
         <FaceSelect testID='photo' selected={isPhoto} onSelect={onSelectPhoto}>
-            <FaceImage type='huge' photoUrl={photoUrl ?? fbUser.photoURL} />
+            <FaceImage type='extraLarge' photoUrl={photoUrl ?? fbUser.photoURL} />
         </FaceSelect>
-        <Pad size={24} />
+        <Pad size={16} />
         <FaceSelect testID='letter' selected={!isPhoto} onSelect={onSelectLetter}>
-            <LetterFace type='huge' hue={defaultHue} name={name} />
+            <LetterFace type='extraLarge' hue={defaultHue} name={name} />
         </FaceSelect>
     </HorizBox>
 }
@@ -174,7 +174,6 @@ function previewPhotoAndName({updates}) {
 }
 
 export function FirstLoginSetup({onFieldsChosen}) {
-    const s = FirstLoginSetupStyle;
     const datastore = useDatastore();
     const fbUser = datastore.getFirebaseUser();
 
@@ -183,7 +182,7 @@ export function FirstLoginSetup({onFieldsChosen}) {
     const [errors, setErrors] = useState({});
     const [inProgress, setInProgress] = useState(false);
  
-    async function onContinue() {
+    async function onFinish() {
         setInProgress(true);
         const errors = await checkPhotoAndNameAsync({datastore, updates});
         if (errors) {
@@ -199,25 +198,20 @@ export function FirstLoginSetup({onFieldsChosen}) {
         onFieldsChosen({updates, preview});
     }
 
-    return <View style={s.outer}>
-        <Heading level={1} label="Let's get your profile set up" />
-        <Pad size={8} />
-        <Paragraph label='How do you want to appear to others?' />
-        <Pad size={40} />
-        <WithEditableFields updates={updates} setUpdates={setUpdates} errors={errors}>
-            <EditPhotoAndName />
-        </WithEditableFields>
-        <Pad size={32} />
-        <CTAButton wide disabled={inProgress} label={inProgress ? 'Please Wait...' : 'Continue'} onPress={onContinue} />
+    return <View>
+        <PadBox horiz={20} vert={20}>
+            <Heading level={1} label="Let's get your profile set up" />
+            <Pad size={8} />
+            <Paragraph type='large' label='How do you want to appear to others in your posts and replies?' />
+            <Pad size={40} />
+            <WithEditableFields updates={updates} setUpdates={setUpdates} errors={errors}>
+                <EditPhotoAndName />
+            </WithEditableFields>
+            <Pad size={32} />
+            <CTAButton disabled={inProgress} label={inProgress ? 'Please Wait...' : 'Finish'} onPress={onFinish} />
+        </PadBox>
     </View>
 }
-const FirstLoginSetupStyle = StyleSheet.create({
-    outer: {
-        backgroundColor: colorPinkBackground,
-        padding: 20,
-        borderRadius: 12
-    }
-});
 
 export function FirstLoginSetupTester() {
     const [updates, setUpdates] = useState(null);
