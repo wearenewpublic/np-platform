@@ -13,6 +13,7 @@ import { ProfileDemoFeature } from "../demo/profile-demo";
 import { EventlogDemoFeature } from "../demo/eventlog-demo";
 import { ProfileEditDemo } from "../demo/profileedit-demo";
 import { ProfileOldPhotoNameFeature, ProfileOldStuff, ProfilePhotoAndNameFeature } from "./ProfilePhotoAndName";
+import { AdminUsersFeature } from "./AdminUsersFeature";
 
 // const { DemoFeature, DemoSecondaryFeature } = require("./DemoFeature");
 
@@ -55,6 +56,11 @@ export var features = {
             EventlogDemoFeature,
             ProfileEditDemo
         ])
+    ],
+    admin: [
+        SECTION('Admin Modules', [
+            AdminUsersFeature
+        ])
     ]
 }
 
@@ -69,6 +75,9 @@ export var defaultFeatureConfig = {
     simplecomments: {},
     profile: {
         profileeditname: true,
+    },
+    admin: {
+        adminusers: true
     }
 }
 

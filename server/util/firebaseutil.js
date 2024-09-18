@@ -15,21 +15,17 @@ function verifyIdTokenAsync(token) {
 
 async function getOrCreateUserAsync({email, name, photoUrl}) {
     try {
-        const userRecord = await admin.auth().getUserByEmail(email);
-        console.log('Successfully fetched user data:', userRecord);
-        return userRecord;
+        return await admin.auth().getUserByEmail(email);
     } catch (e) {
-        console.log('User not found, creating new user:', e);
         try {
-            const userRecord = await admin.auth().createUser({
+            return await admin.auth().createUser({
                 email: email,
                 displayName: name,
                 photoURL: photoUrl
             });
-            console.log('created user:', userRecord.uid);
-            return userRecord;
         } catch (e) {
             console.error('Error creating user: ' + JSON.stringify({email, name, photoUrl}), e);
+            throw e;
         } 
     }
 }
@@ -43,7 +39,6 @@ function expandPath(path) {
         return path;
     } else {
         if (path.some(p => !p)) {
-            console.error('Bad firebase path', path);
             throw new Error('Firebase path cannot contain null or undefined elements: ' + JSON.stringify(path));
         }
         return path.join('/');

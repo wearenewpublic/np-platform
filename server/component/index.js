@@ -8,6 +8,7 @@ var coreComponents = {
     profile: require('./profile'),
     migrations: require('./migrations'),
     auth: require('./auth'),
+    admin: require('./admin'),
 }
 
 exports.coreComponents = coreComponents;

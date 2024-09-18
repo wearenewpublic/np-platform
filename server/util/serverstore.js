@@ -64,7 +64,7 @@ class ServerStore {
         return await firebaseReadAsync([... this.getInstancePrefix(), 'global', key]);
     }
 
-    async setGlobalProperty(key, value) {
+    setGlobalProperty(key, value) {
         this.doDelayedWrite([... this.getInstancePrefix(), 'global', key], value);
     }
 
@@ -98,11 +98,11 @@ class ServerStore {
         return await firebaseReadAsync(['silo', this.siloKey, 'module-public', module, expandPath(path)]);
     }
 
-    async updateModulePublic(module, path, updateMap) {
+    updateModulePublic(module, path, updateMap) {
         this.doDelayedUpdate(['silo', this.siloKey, 'module-public', module, expandPath(path)], updateMap);
     }
 
-    async setModulePublic(module, path, value) { 
+    setModulePublic(module, path, value) { 
         this.doDelayedWrite(['silo', this.siloKey, 'module-public', module, expandPath(path)], value);
     } 
 
@@ -110,18 +110,21 @@ class ServerStore {
         return await firebaseReadAsync(['silo', this.siloKey, 'module', module, expandPath(path)]);
     }
 
-    async setModulePrivate(module, path, value) {
+    setModulePrivate(module, path, value) {
         this.doDelayedWrite(['silo', this.siloKey, 'module', module, expandPath(path)], value);
     }
 
-    async setDerivedObject({structureKey, instanceKey, type, key, value}) {
+    setDerivedObject({structureKey, instanceKey, type, key, value}) {
         if (!type.startsWith('derived_')) {
             throw new Error('derived type ' + type + ' does not start with derived_');
         }
-        return await firebaseWriteAsync(['silo', this.siloKey, 'structure', structureKey, 'instance', instanceKey, 'collection', type, key], value);
+        this.doDelayedWrite([
+            'silo', this.siloKey, 'structure', structureKey, 
+            'instance', instanceKey, 'collection', type, key
+        ], value);
     }
 
-    async setBacklink(structureKey, instanceKey, value={}) {
+    setBacklink(structureKey, instanceKey, value={}) {
         this.doDelayedWrite([
             'silo', this.siloKey, 'structure', structureKey, 
             'instance', instanceKey, 'collection',
@@ -129,7 +132,7 @@ class ServerStore {
         ], {...value, key: this.instanceKey});
     }
 
-    async setGenericBacklink(structureKey, instanceKey, value={}) {
+    setGenericBacklink(structureKey, instanceKey, value={}) {
         const key = this.structureKey + '_' + this.instanceKey;
         this.doDelayedWrite([
             'silo', this.siloKey, 'structure', structureKey, 
@@ -138,8 +141,7 @@ class ServerStore {
         ], {...value, key, structureKey: this.structureKey, instanceKey: this.instanceKey});
     }
 
-
-    async updateDerivedObjectAsync({structureKey, instanceKey, type, key, updateMap}) {
+    updateDerivedObjectAsync({structureKey, instanceKey, type, key, updateMap}) {
         if (!type.startsWith('derived_')) {
             throw new Error('derived type ' + type + ' does not start with derived_');
         }
