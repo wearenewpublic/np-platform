@@ -1,4 +1,4 @@
-import { deepClone } from "../util/util";
+import { deepClone } from "./util";
 
 function faceUrl(face) {
     return 'https://psi.newpublic.org/faces/' + face;

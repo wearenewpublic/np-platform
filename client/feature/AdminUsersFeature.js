@@ -3,13 +3,15 @@ import { ConversationScreen, HorizBox, Pad, PadBox } from "../component/basics"
 import { CTAButton } from "../component/button"
 import { Checkbox, FormField } from "../component/form"
 import { Heading, TextField, UtilityText } from "../component/text"
-import { getRoles } from "../data/roles"
+import { getRoles, roles } from "../data/roles"
 import { useDatastore } from "../util/datastore"
 import { View } from "react-native"
 import { toBool } from "../util/util"
 import { Popup } from "../platform-specific/popup"
 import { useServerCallResult } from "../util/servercall"
 import { colorTextGrey } from "../component/color"
+import { useHasCapability } from "../component/admin"
+import { Banner } from "../component/banner"
 
 export const AdminUsersFeature = {
     name: 'Admin Users',
@@ -24,12 +26,15 @@ export const AdminUsersFeature = {
     }
 }
 
-function AdminUsersScreen() {
+export function AdminUsersScreen() {
     const [usersSince, setUsersSince] = useState(Date.now());
-    const datastore = useDatastore();
-
+    const hasAccess = useHasCapability('adminusers/modify-admins');
     const adminUsers = useServerCallResult('admin', 'getAdminUsers', {usersSince});
-    console.log('adminUsers', adminUsers); 
+
+    if (hasAccess === false) {
+        return <Banner><UtilityText label='You do not have access to this feature'/></Banner>
+    }
+
     return <ConversationScreen pad>
         <Pad />
         <Heading level={1} label='Admin Users' />
@@ -62,14 +67,13 @@ function AdminUser({adminUser}) {
         setInProgress(false);
     }
 
-    console.log('roles', roles);
     return <PadBox vert={4}>
         <HorizBox spread center>
             <View>
                 <UtilityText label={adminUser.email} />
                 {toBool(inProgress) && <UtilityText type='tiny' color={colorTextGrey} label='Updating roles...' />}
             </View>
-            <RoleSelectorPopup selectedRoles={roles ?? adminUser.roles} setSelectedRoles={setSelectedRoles} />
+            <RoleSelectorPopup alignRight selectedRoles={roles ?? adminUser.roles} setSelectedRoles={setSelectedRoles} />
         </HorizBox>
     </PadBox>
 }
@@ -83,14 +87,14 @@ function AddAdminUsers({onUsersAdded}) {
     async function onAdd() {
         setInProgress(true);
         await datastore.callServerAsync('admin', 'addAdminUsers', {emails, roles: selectedRoles})
-        onUsersAdded();
+        await onUsersAdded();
         setInProgress(false);
         setEmails('');
         setSelectedRoles([]);
     }
 
     return <FormField label='Add new admin users'>
-        <TextField value={emails} onChange={setEmails} placeholder='Emails of users to add' />
+        <TextField testID='new-emails' value={emails} onChange={setEmails} placeholder='Emails of users to add' />
         <Pad />
         {toBool(emails) &&  <HorizBox>
             <RoleSelectorPopup selectedRoles={selectedRoles} setSelectedRoles={setSelectedRoles} />
@@ -101,13 +105,13 @@ function AddAdminUsers({onUsersAdded}) {
     </FormField>
 }
 
-function RoleSelectorPopup({selectedRoles, setSelectedRoles}) {
+function RoleSelectorPopup({selectedRoles, setSelectedRoles, alignRight=false}) {
     function popupContent() {
         return <RoleSelector selectedRoles={selectedRoles} setSelectedRoles={setSelectedRoles}/>
     }
 
     const roleString = selectedRoles.length ? selectedRoles.join(', ') : 'Select roles';
-    return <Popup popupContent={popupContent} alignRight>
+    return <Popup testID={roleString} popupContent={popupContent} alignRight={alignRight}>
         <CTAButton type='secondary' text={roleString}/>
     </Popup>
 }

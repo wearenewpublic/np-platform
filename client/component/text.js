@@ -244,6 +244,7 @@ export function AutoSizeTextInput({value, onChange, placeholder, style, hoverSty
             placeholderTextColor={colorDisabledText}
             onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
             multiline={true} 
+            testID={testID}
             style={[style, {height: styleHeight}, hover ? hoverStyle : null]} 
             onContentSizeChange={onContentSizeChange} {...props} />
     </View>

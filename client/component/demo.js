@@ -8,8 +8,9 @@ import React, { useState } from "react";
 import { pauseAsync } from "../util/util";
 import { Reset } from "@carbon/icons-react";
 import { colorGreyBorder } from "./color";
-import { demoPersonaToFbUser, personaA } from "../data/personas";
+import { demoPersonaToFbUser, personaA } from "../util/testpersonas";
 import { Banner } from "./banner";
+import { closeActivePopup, getPopupRef } from "../platform-specific/popup.web";
 
 export function CLICK(matcher) {
     return {matcher, action: 'click'}
@@ -17,6 +18,14 @@ export function CLICK(matcher) {
 
 export function INPUT(matcher, text) {
     return {matcher, action: 'input', text}
+}
+
+export function POPUP(popupAction) {
+    return {action: 'popup', popupAction}
+}
+
+export function POPUP_CLOSE() {
+    return {action: 'popup-close'}
 }
 
 
@@ -91,13 +100,24 @@ function findStoryActionNode({domRef, matcher}) {
 }
 
 async function playStoryAction({domRef, action}) {
+    console.log('playStoryAction', action, domRef);
+
+    if (action.action === 'popup') {
+        return await playStoryAction({domRef: getPopupRef(), action: action.popupAction});
+    } else if (action.action === 'popup-close') {
+        return closeActivePopup();
+    }
+    
     const node = findStoryActionNode({domRef, matcher: action.matcher});
-    console.log('playStoryAction', action, node);
-    if (action.action === 'click') {
+    if (!node) {
+        throw new Error('Node not found: ' + action.matcher);
+    } else if (action.action === 'click') {
         node.click();
     } else if (action.action === 'input') {
         const onChangeText = global_textinput_test_handlers[action.matcher];
         onChangeText(action.text);
+    } else if (action.action == 'popup') {
+        await playStoryAction({domRef: getPopupRef(), action: action.popupAction});
     } else {
         throw new Error('Unsupported action: ' + action.action);
     }
@@ -121,7 +141,7 @@ export const defaultServerCall = {
 
 export function DemoStorySet({storySet}) {
     const { collections, content, structureKey='testStruct', instanceKey='testInstance', 
-        personaKey, config, modulePublic,
+        personaKey, config, modulePublic, roles,
         globals, sessionData, serverCall, pad=true, firebaseUser=default_fbUser, siloKey='demo'
     } = storySet;
     const domRef = React.createRef();
@@ -139,6 +159,7 @@ export function DemoStorySet({storySet}) {
             structureKey={structureKey} instanceKey={instanceKey} personaKey={personaKey}
             collections={collections} globals={globals} firebaseUser={firebaseUser}
             sessionData={sessionData} modulePublic={modulePublic}
+            roles={roles}
             gotoInstance={setNavInstance}
             pushSubscreen={(screenKey,params) => setNavInstance({screenKey, params})}
             serverCall={{...defaultServerCall, ...serverCall}} >

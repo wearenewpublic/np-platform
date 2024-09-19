@@ -68,7 +68,7 @@ const RadioItemStyle = StyleSheet.create({
 
 export function Checkbox({emoji, text, label, value, onChange}) {
     const s = CheckboxStyle;
-    return <HoverView hoverStyle={s.hover} pressedStyle={s.pressed}
+    return <HoverView hoverStyle={s.hover} pressedStyle={s.pressed} testID={label ?? text}
             onPress={() => onChange(!value)} role='checkbox'>
         <PadBox vert={8}>
             <HorizBox center>

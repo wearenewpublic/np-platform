@@ -1,13 +1,28 @@
-import {Text} from 'react-native';
+import { Text, View } from 'react-native';
+import { HoverView } from '../component/basics';
+import { useState } from 'react';
+import { CTAButton } from '../component/button';
 
 export function PopupSelector({value, items, onSelect}) {
     return <Text>Not yet implemented!</Text>
 }
 
-export function Popup({popup, children}) {
-    return <Text>Not yet implemented!</Text>
+// TODO: This current version is just for running tests.
+// We'll need to re-write this for mobile later
+export function Popup({popupContent, testID, children}) {
+    const [expanded, setExpanded] = useState(false);
+    return <View>
+        <HoverView testID={testID} onPress={() => setExpanded(!expanded)}>
+            {children}
+        </HoverView>
+        {expanded && <View testID='popup-content'>
+            {popupContent()}
+            <CTAButton testID='popup-close' onPress={() => setExpanded(false)} label='Close Popup' />
+        </View>}
+    </View>
 }
 
 export function DocumentLevelComponent({children}) {
     return <Text>Not yet implemented!</Text>
 }   
+

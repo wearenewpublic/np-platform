@@ -44,7 +44,6 @@ function AdminScreen() {
 
 function QuickLink({quickLink}) {
     const {label, structureKey, screenKey} = quickLink;
-    console.log('quickLink', quickLink);
     const datastore = useDatastore();
     function onPress() {
         if (structureKey) {
