@@ -8,13 +8,13 @@ function extractEmailsFromString(input) {
 async function addAdminUsersAsync({serverstore, emails, roles}) {
     const emailList = extractEmailsFromString(emails);
     emailList.forEach(email => {
-        serverstore.setModulePrivate('admin', ['userRoles', stringToFbKey(email)], JSON.stringify(roles));
+        serverstore.setModulePrivate('admin', ['userRoles', stringToFbKey(email.toLowerCase())], JSON.stringify(roles));
     });
 }
 exports.addAdminUsersAsync = addAdminUsersAsync;
 
 async function setAdminRolesAsync({serverstore, email, roles}) {
-    serverstore.setModulePrivate('admin', ['userRoles', stringToFbKey(email)], JSON.stringify(roles));
+    serverstore.setModulePrivate('admin', ['userRoles', stringToFbKey(email.toLowerCase())], JSON.stringify(roles));
 }
 exports.setAdminRolesAsync = setAdminRolesAsync;
 
@@ -30,7 +30,7 @@ async function getAdminUsersAsync({serverstore}) {
 exports.getAdminUsersAsync = getAdminUsersAsync;
 
 async function getMyRolesAsync({serverstore, email}) {
-    const userRoles = await serverstore.getModulePrivateAsync('admin', ['userRoles', stringToFbKey(email)]);
+    const userRoles = await serverstore.getModulePrivateAsync('admin', ['userRoles', stringToFbKey(email.toLowerCase())]);
     return JSON.parse(userRoles ?? '[]');
 }
 

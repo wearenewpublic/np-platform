@@ -11,17 +11,19 @@ test('addAdminUsersAsync', async () => {
     getUserByEmail.mockResolvedValueOnce({uid: 'userBob'});
 
     await addAdminUsersAsync({serverstore, 
-        emails: "rob@rob.org, bob@bob.org", 
+        emails: "roB@rob.org, Bob@bob.org", 
         roles: ['Moderator', 'Analyst']});
     serverstore.commitDataAsync();
     expect(getTestData()).toMatchSnapshot();
 });
 
-const alice_email = stringToFbKey('alice@admin.org');
+const alice_email_key = stringToFbKey('alice@admin.org');
+const caps_alice_email = stringToFbKey('AlicE@admin.org');
+
 
 test('getAdminUsersAsync', async () => {
     const serverstore = mockServerStore();
-    serverstore.setModulePrivate('admin', ['userRoles', alice_email], JSON.stringify(['Moderator', 'Analyst']));
+    serverstore.setModulePrivate('admin', ['userRoles', alice_email_key], JSON.stringify(['Moderator', 'Analyst']));
 
     serverstore.commitDataAsync();
 
@@ -31,10 +33,10 @@ test('getAdminUsersAsync', async () => {
 
 test('setAdminRolesAsync', async () => {
     const serverstore = mockServerStore();
-    serverstore.setModulePrivate('admin', ['userRoles', alice_email], JSON.stringify(['Moderator', 'Analyst']));
+    serverstore.setModulePrivate('admin', ['userRoles', alice_email_key], JSON.stringify(['Moderator', 'Analyst']));
     serverstore.commitDataAsync();
 
-    await setAdminRolesAsync({serverstore, email: 'alice@admin.org', roles: ['Owner', 'Moderator']});
+    await setAdminRolesAsync({serverstore, email: 'AlicE@admin.org', roles: ['Owner', 'Moderator']});
     serverstore.commitDataAsync();
     expect(getTestData()).toMatchSnapshot();
 });

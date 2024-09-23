@@ -70,7 +70,7 @@ function AdminUser({adminUser}) {
     return <PadBox vert={4}>
         <HorizBox spread center>
             <View>
-                <UtilityText label={adminUser.email} />
+                <UtilityText text={adminUser.email} />
                 {toBool(inProgress) && <UtilityText type='tiny' color={colorTextGrey} label='Updating roles...' />}
             </View>
             <RoleSelectorPopup alignRight selectedRoles={roles ?? adminUser.roles} setSelectedRoles={setSelectedRoles} />
