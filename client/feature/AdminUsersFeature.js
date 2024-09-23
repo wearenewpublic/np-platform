@@ -3,7 +3,7 @@ import { ConversationScreen, HorizBox, Pad, PadBox } from "../component/basics"
 import { CTAButton } from "../component/button"
 import { Checkbox, FormField } from "../component/form"
 import { Heading, TextField, UtilityText } from "../component/text"
-import { getRoles, roles } from "../data/roles"
+import { getRoles } from "../component/admin"
 import { useDatastore } from "../util/datastore"
 import { View } from "react-native"
 import { toBool } from "../util/util"
@@ -21,7 +21,7 @@ export const AdminUsersFeature = {
     },
     config: {
         quickLinks: [
-            {label: 'Admin Users', screenKey: 'adminUsers'},
+            {label: 'Manage Admin Users', screenKey: 'adminUsers'},
         ]
     }
 }

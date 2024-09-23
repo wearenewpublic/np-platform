@@ -1,4 +1,4 @@
-import { useIsAdmin } from "../component/admin";
+import { RestrictedScreen, useHasCapability, useIsAdmin } from "../component/admin";
 import { ConversationScreen, HorizBox, HoverSelectBox, HoverView, Pad, PadBox, Separator, WindowTitle } from "../component/basics";
 import { CTAButton, TextButton } from "../component/button";
 import { formatDate } from "../component/date";
@@ -25,12 +25,13 @@ export const EventLogStructure = {
         eventlog: EventLogScreen,
         sessions: SessionListScreen,
         events: EventTypesScreen,
-    }
+    },
+    capabilities: ['view']
 }
 
 function HomeScreen() {
     const datastore = useDatastore();
-    return <ConversationScreen>
+    return <RestrictedScreen capability='eventlog/view'>
         <WindowTitle title='Log Dashboard' />
         <Pad />
         <Heading level={1} label='Logs Dashboard' />
@@ -38,17 +39,17 @@ function HomeScreen() {
         <CTAButton label='Sessions' onPress={() => datastore.pushSubscreen('sessions')}/>
         <Pad />
         <CTAButton label='Event Types' onPress={() => datastore.pushSubscreen('events')} />
-    </ConversationScreen>
+    </RestrictedScreen>
 }
 
 export function EventTypesScreen() {
-    return <ConversationScreen>
+    return <RestrictedScreen capability='eventlog/view'>
         <WindowTitle title='Event Types' />
         <Pad />
         <Heading level={1} label='Event Types' />
         <Pad />
         {Object.keys(eventTypes).map((eventType, i) => <PadBox vert={4} key={i}><EventType eventType={eventType} /></PadBox>)}
-    </ConversationScreen>
+    </RestrictedScreen>
 }
 
 function EventType({eventType}) {
@@ -77,7 +78,7 @@ export function SessionListScreen() {
 
     const shownSessions = sessions.slice(0, limit);
 
-    return <ConversationScreen>
+    return <RestrictedScreen capability='eventlog/view'>
         <WindowTitle title='Sessions' />
         <Pad />
         <HorizBox spread center>
@@ -87,7 +88,7 @@ export function SessionListScreen() {
         <Pad />
         {shownSessions.map((session, i) => <PadBox vert={4} key={i}><SessionPreview session={session} /></PadBox>)}
         {sessions.length > limit && <PadBox top={20}><CTAButton label='Load more' onPress={() => setLimit(limit * 2)} /></PadBox>}
-    </ConversationScreen>
+    </RestrictedScreen>
 }
 
 export function SessionPreview({session}) {
@@ -110,6 +111,7 @@ export function EventLogScreen({eventType, sessionKey, siloKey}) {
     const isAdmin = useIsAdmin();
     const [events, setEvents] = useState(null); 
     const [limit, setLimit] = useState(20);
+    const hasCapability = useHasCapability('eventlog/view');
     const datastore = useDatastore();
 
     async function onRefresh() {
@@ -119,14 +121,14 @@ export function EventLogScreen({eventType, sessionKey, siloKey}) {
 
     useEffect(() => {
         if (process.env.NODE_ENV === 'test') return; // Auto-load doesn't work in tests
-        onRefresh();
-    }, []);
+        hasCapability && onRefresh();
+    }, [hasCapability]);
 
     if (!events) {
         return <PadBox horiz={20} vert={20}><Banner color={colorBlueBackground}><UtilityText label='Loading Events...' /></Banner></PadBox>
     }
 
-    const sortedEvents = events.sort((a, b) => b.time - a.time);
+    const sortedEvents = (events ?? []).sort((a, b) => b.time - a.time);
     const filteredEvents = sortedEvents.filter(event => 
         (!eventType || event.eventType == eventType) &&
         (!sessionKey || event.sessionKey == sessionKey) &&
@@ -134,12 +136,7 @@ export function EventLogScreen({eventType, sessionKey, siloKey}) {
     );
     const shownEvents = filteredEvents.slice(0, limit);
 
-    if (!isAdmin) {
-        return <ConversationScreen>
-            <UtilityText label='Not authorized' />
-        </ConversationScreen>
-    }
-    return <ConversationScreen>
+    return <RestrictedScreen capability='eventlog/view'>
         <Pad />
         {sessionKey && <PadBox bottom={20}><SessionSummary sessionKey={sessionKey} /></PadBox>}
         <HorizBox spread center>
@@ -147,9 +144,10 @@ export function EventLogScreen({eventType, sessionKey, siloKey}) {
             <CTAButton label='Refresh' onPress={onRefresh} />
         </HorizBox>
         <Pad />
+        {!events && <UtilityText label='Loading Events...' />}
         {shownEvents.map((event, i) => <PadBox vert={4} key={i}><LogEvent event={event} /></PadBox>)}
         {filteredEvents.length > limit && <PadBox top={20}><CTAButton label='Load more' onPress={() => setLimit(limit * 2)} /></PadBox>}
-    </ConversationScreen>
+    </RestrictedScreen>
 }
 
 function SessionSummary({sessionKey}) {

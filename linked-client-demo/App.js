@@ -4,6 +4,7 @@ import { useLiveUrl } from './util/url';
 import { getScreenStackForUrl, gotoInstance } from './util/navigate';
 import { ScreenStack, useStandardFonts } from './util/instance';
 import { setFirebaseConfig } from './util/firebase';
+import { extendRoles } from './component/admin';
 
 const firebaseConfig = {
     apiKey: "AIzaSyDIg3OR3i51VYrUyUd_L5iIownjdSnExlc",
@@ -17,6 +18,7 @@ const firebaseConfig = {
 
 // const app = initializeApp(firebaseConfig);
 setFirebaseConfig(firebaseConfig);
+extendRoles({});
 
 export default function App() {
     useStandardFonts();

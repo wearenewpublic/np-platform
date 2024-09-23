@@ -2,6 +2,7 @@ const { addAdminUsersAsync, getAdminUsersAsync, setAdminRolesAsync } = require('
 const { logData, getTestData, getUserByEmail } = require('../../util/testutil');
 const { mockServerStore } = require('../../util/serverstore');
 const e = require('cors');
+const { stringToFbKey } = require('../../util/firebaseutil');
 
 test('addAdminUsersAsync', async () => {
     const serverstore = mockServerStore();
@@ -16,9 +17,11 @@ test('addAdminUsersAsync', async () => {
     expect(getTestData()).toMatchSnapshot();
 });
 
+const alice_email = stringToFbKey('alice@admin.org');
+
 test('getAdminUsersAsync', async () => {
     const serverstore = mockServerStore();
-    serverstore.setModulePrivate('admin', ['userRoles', 'testuser'], JSON.stringify(['Moderator', 'Analyst']));
+    serverstore.setModulePrivate('admin', ['userRoles', alice_email], JSON.stringify(['Moderator', 'Analyst']));
 
     serverstore.commitDataAsync();
 
@@ -28,10 +31,10 @@ test('getAdminUsersAsync', async () => {
 
 test('setAdminRolesAsync', async () => {
     const serverstore = mockServerStore();
-    serverstore.setModulePrivate('admin', ['userRoles', 'testuser'], JSON.stringify(['Moderator', 'Analyst']));
+    serverstore.setModulePrivate('admin', ['userRoles', alice_email], JSON.stringify(['Moderator', 'Analyst']));
     serverstore.commitDataAsync();
 
-    await setAdminRolesAsync({serverstore, adminKey: 'testuser', roles: ['Owner', 'Moderator']});
+    await setAdminRolesAsync({serverstore, email: 'alice@admin.org', roles: ['Owner', 'Moderator']});
     serverstore.commitDataAsync();
     expect(getTestData()).toMatchSnapshot();
 });

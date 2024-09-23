@@ -1,14 +1,14 @@
 
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { TestInstance, getMatchingObject } from "../../util/testutil";
-import { goBack } from "../../util/navigate";
 import React from "react";
-
-jest.mock("../../util/navigate");
 
 test('Compose with Cat', async () => {
     const dataRef = React.createRef();
-    render(<TestInstance dataRef={dataRef} features={{demofilter: true}} structureKey='simplecomments' screenKey='composer' />);
+    const goBack = jest.fn();
+    render(<TestInstance dataRef={dataRef} features={{demofilter: true}} 
+        structureKey='simplecomments' screenKey='composer' goBack={goBack}
+    />);
     const toggle = screen.getByText('Is Cat');
     fireEvent.click(toggle);
     const text = screen.getByRole('textbox');

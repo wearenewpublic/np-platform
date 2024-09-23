@@ -14,7 +14,7 @@ export const AdminStructure = {
     defaultConfig: {
         quickLinks: [  // TODO: Specify capability required to see each link
             {label: 'Component Demo', structureKey: 'componentdemo'},
-            {label: 'Session Log', structureKey: 'eventlog'},
+            {label: 'Event Log', structureKey: 'eventlog'},
         ],
         panels: [],
     }

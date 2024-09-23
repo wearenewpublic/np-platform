@@ -1,11 +1,8 @@
-import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
-import { WithConfig, WithFeatures, WithMiniFeatures, addObject, getMatchingObject } from "../../util/testutil"
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import { getMatchingObject } from "../../util/testutil";
 import { ActionEdit, Comment } from "../comment";
-import { pushSubscreen } from "../../util/navigate";
 import { Datastore } from "../../util/datastore";
 import React from "react";
-
-jest.mock("../../util/navigate");
 
 test('View comment', () => {
     const collections = {comment: [
@@ -21,8 +18,11 @@ test('Edit top level comment', async () => {
         {key: 'test', from: 'a', text: 'This is a comment'},
     ]}
     const config = {commentRightActions: [ActionEdit]}
+    const pushSubscreen = jest.fn();
 
-    render(<Datastore collections={collections} config={config}><Comment commentKey='test' /></Datastore>);
+    render(<Datastore collections={collections} config={config} pushSubscreen={pushSubscreen}>
+        <Comment commentKey='test' />
+    </Datastore>);
 
     const comment = screen.getByTestId('test');
     const editButton = within(comment).getByRole('button', {name: 'Edit'});

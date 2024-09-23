@@ -17,7 +17,7 @@ export function Popup({popupContent, testID, children}) {
         </HoverView>
         {expanded && <View testID='popup-content'>
             {popupContent()}
-            <CTAButton testID='popup-close' onPress={() => setExpanded(false)} label='Close Popup' />
+            <CTAButton onPress={() => setExpanded(false)} label='Close Popup' />
         </View>}
     </View>
 }

@@ -12,7 +12,7 @@ import { DemoFeature, DemoSecondaryFeature } from "../demo/comment-config";
 import { ProfileDemoFeature } from "../demo/profile-demo";
 import { EventlogDemoFeature } from "../demo/eventlog-demo";
 import { ProfileEditDemo } from "../demo/profileedit-demo";
-import { ProfileOldPhotoNameFeature, ProfileOldStuff, ProfilePhotoAndNameFeature } from "./ProfilePhotoAndName";
+import { ProfilePhotoAndNameFeature } from "./ProfilePhotoAndName";
 import { AdminUsersFeature } from "./AdminUsersFeature";
 import { AdminDemo } from "../demo/admin-demo";
 
@@ -81,6 +81,30 @@ export var defaultFeatureConfig = {
     },
     admin: {
         adminusers: true
+    }
+}
+
+export var roles = {
+    Owner: {
+        allCapabilities: true,
+        can: [
+            'adminusers/modify-admins'
+        ]
+    },
+    Developer: {
+        inherits: ['Editorial', 'Super-Moderator', 'Analyst']
+    },
+    'Super-Moderator': {
+        inherits: ['Moderator']
+    },
+    Moderator: {
+    },
+    Editorial: {
+    },
+    Analyst: {
+        can: [
+            'eventlog/view'
+        ]
     }
 }
 

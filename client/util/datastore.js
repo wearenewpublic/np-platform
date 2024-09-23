@@ -62,12 +62,13 @@ export class Datastore extends React.Component {
         });
         this.fbWatchReleaser = onFbUserChanged(async user => {
             this.setSessionData('personaKey', user?.uid);
-            this.refreshRolesAsync(user);
+            this.refreshUserDataAsync(user);
         })
     }
 
-    async refreshRolesAsync(user) {
+    async refreshUserDataAsync(user) {
         if (user) {
+            this.setSessionData('roles', null);
             const roles = await this.callServerAsync('admin', 'getMyRoles', {
                 email: user?.email
             });
@@ -82,7 +83,7 @@ export class Datastore extends React.Component {
         if (isLive) {
             const personaKey = getFirebaseUser()?.uid || null;
             this.sessionData = {personaKey}
-            this.refreshRolesAsync(getFirebaseUser());
+            this.refreshUserDataAsync(getFirebaseUser());
         } else {
             this.sessionData = {personaKey, roles, ...sessionData}
             this.setData({
@@ -236,7 +237,6 @@ export class Datastore extends React.Component {
     getInstanceKey() {return this.props.instanceKey}
     getConfig() {return this.props.config ?? {}}
     getIsAdmin() {return this.props.isAdmin}
-    getRoles() {return this.props.roles}
     getIsLive() {return this.props.isLive}
     getLanguage() {return this.props.language}
     getLoaded() {return this.state.loaded}
@@ -248,7 +248,7 @@ export class Datastore extends React.Component {
             pushSubscreen(screenKey, params);
         }   
     }
-    gotoInstance({structureKey, instanceKey, params={}}) {
+    gotoInstance({structureKey, instanceKey='one', params={}}) {
         if (this.props.gotoInstance) {
             this.props.gotoInstance({structureKey, instanceKey, params});
         } else {

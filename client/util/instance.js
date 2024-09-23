@@ -9,10 +9,9 @@ import { Catcher } from '../component/catcher';
 import { structures } from '../structure';
 import { assembleConfig, assembleScreenSet } from './features';
 import { useFirebaseData, useFirebaseUser } from './firebase';
-import { useIsAdminForSilo, useMyRoles } from '../component/admin';
+import { useIsAdminForSilo } from '../component/admin';
 import { goBack } from './navigate';
 import { requireParams } from './util';
-import { useServerCallResult } from './servercall';
 
 export function useStandardFonts() {
     let [fontsLoaded] = useFonts({
@@ -49,7 +48,7 @@ export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKe
     const config = assembleConfig({structure, activeFeatures});
     const screenSet = assembleScreenSet({structure, activeFeatures});
     const personaPreview = usePersonaPreviewForSilo({siloKey});
-    const isAdmin = useIsAdminForSilo({siloKey});
+    // const isAdmin = useIsAdminForSilo({siloKey});
 
     if (!structureKey || !instanceKey || !siloKey) {
         console.error('ScreenStack missing keys', {structureKey, instanceKey, siloKey});
@@ -57,7 +56,7 @@ export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKe
 
     return <View style={s.stackHolder}>
         <Datastore key={url} siloKey={siloKey} instanceKey={instanceKey} structureKey={structureKey} 
-                language={language} isAdmin={isAdmin} isLive={true} config={config} 
+                language={language} isLive={true} config={config} 
                 personaPreview={personaPreview}>
             {screenStack.map((screenInstance, index) => 
                 <StackedScreen screenSet={screenSet} screenInstance={screenInstance} index={index} key={index} />
@@ -78,6 +77,7 @@ const ScreenStackStyle = StyleSheet.create({
 export function StructureDemo({
         siloKey='demo', structureKey, instanceKey='demo', screenKey, 
         features, isAdmin=true, globals, collections, sessionData, serverCall,
+        roles=[],
         language='english', personaKey='a'
     }) {
     requireParams('StructureDemo', {structureKey});
@@ -97,6 +97,7 @@ export function StructureDemo({
     return <Datastore globals={{...globals, features}} collections={collections} sessionData={sessionData}
                 language={language} isAdmin={isAdmin} isLive={false} serverCall={serverCall}
                 siloKey={siloKey} structureKey={structureKey} instanceKey={instanceKey} personaKey={personaKey}
+                roles={roles}
                 pushSubscreen={pushSubscreen} goBack={onGoBack} >
             <StructureDemoConfiguredScreenStack structureKey={structureKey} screenStack={screenStack}/>
         </Datastore>

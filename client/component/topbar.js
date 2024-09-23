@@ -1,8 +1,8 @@
 import { StyleSheet, View } from "react-native";
-import { closeSidebar, goBack, gotoInstance } from "../util/navigate";
-import { firebaseSignOut, useFirebaseUser } from "../util/firebase";
+import { closeSidebar, gotoInstance } from "../util/navigate";
+import { firebaseSignOut } from "../util/firebase";
 import { Popup } from "../platform-specific/popup";
-import { useDatastore, useGlobalProperty, useInstanceKey, usePersona, usePersonaKey, usePersonaObject, useStructureKey } from "../util/datastore";
+import { useDatastore, useGlobalProperty, useInstanceKey, usePersonaKey, usePersonaObject, useStructureKey } from "../util/datastore";
 import { useState } from "react";
 import { Byline } from "./people";
 import { BreadCrumb, CTAButton, TextButton } from "./button";
@@ -85,6 +85,7 @@ const TopBarStyle = StyleSheet.create({
 export function FeatureToggles() {
     const structureKey = useStructureKey();
     const featureBlocks = getFeatureBlocks(structureKey);
+    const datastore = useDatastore();
     if (!featureBlocks) return null;
     return <View>
         <Pad />
@@ -216,6 +217,11 @@ function UserInfo() {
     function popup() {
         return <View>
             <TextButton type='small' onPress={() => gotoInstance({structureKey:'profile', instanceKey: personaKey})} label='Profile' />
+            {isAdmin && <PadBox top={20}>
+                <TextButton type='small' label='Admin'
+                    onPress={() => datastore.gotoInstance({structureKey: 'admin', instanceKey: 'one'})} 
+                />
+            </PadBox>}  
             <Pad />
             <TextButton type='small' onPress={firebaseSignOut} label='Log out' />
             {isAdmin && <Catcher><FeatureToggles /></Catcher>}

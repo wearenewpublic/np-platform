@@ -7,7 +7,8 @@ import { fireEvent, screen, within } from '@testing-library/react';
 import { global_textinput_test_handlers } from '../component/text';
 
 export function WithFeatures({dataRef, siloKey='test', structureKey='componentdemo', instanceKey='test', 
-        isAdmin=false, features={}, globals, collections, sessionData, personaKey='a', children}) {
+        isAdmin=false, features={}, globals, collections, sessionData, personaKey='a', 
+        goBack, pushSubscreen, children}) {
     const structure = getStructureForKey(structureKey);
     const config = assembleConfig({structure, activeFeatures:features});
     return <Datastore 
@@ -21,17 +22,20 @@ export function WithFeatures({dataRef, siloKey='test', structureKey='componentde
             sessionData={sessionData}
             personaKey={personaKey}
             config={config}
+            goBack={goBack}
+            pushSubscreen={pushSubscreen}
             isLive={false}>
         {children}
     </Datastore>
 }
 
 export function TestInstance({dataRef, structureKey, siloKey='test', instanceKey='test', screenKey=null, 
-        params={}, features={}, globals, collections, sessionData}) {
+        params={}, features={}, globals, collections, sessionData, goBack, pushSubscreen}) {
     const structure = getStructureForKey(structureKey);
     const screenSet = assembleScreenSet({structure, activeFeatures:features});
     return <WithEnv dataRef={dataRef} siloKey={siloKey} structureKey={structureKey} instanceKey={instanceKey}
-            features={features} globals={globals} collections={collections} sessionData={sessionData}
+            features={features} globals={globals} collections={collections} sessionData={sessionData} goBack={goBack}
+            pushSubscreen={pushSubscreen}
         >
         <StackedScreen screenSet={screenSet} screenInstance={{structureKey, instanceKey, screenKey, params}} features={features} />
     </WithEnv>

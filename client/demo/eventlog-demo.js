@@ -56,7 +56,7 @@ const serverCall = {eventlog: {
 }}
 
 function EventLogDemoScreen() {    
-    return <StructureDemo structureKey='eventlog' serverCall={serverCall} />
+    return <StructureDemo roles={['Analyst']} structureKey='eventlog' serverCall={serverCall} />
 }
 
 
@@ -69,21 +69,33 @@ function EventLogComponentsScreen() {
 
         <DemoSection label='Log Event'>
             <LogEvent event={events[0]} />
-            <Datastore sessionData={{'event-selected-key': 'b'}}>
+            <Datastore roles={['Owner']} sessionData={{'event-selected-key': 'b'}}>
                 <LogEvent event={events[1]} />
             </Datastore>
         </DemoSection>
 
+        <DemoSection label='Access Denied'>
+            <Datastore roles={[]}>
+                <SessionListScreen />
+            </Datastore>
+        </DemoSection>
+
         <DemoSection label='Session List Screen'>
-            <SessionListScreen />
+            <Datastore roles={['Analyst']}>
+                <SessionListScreen />
+            </Datastore>
         </DemoSection>
 
         <DemoSection label='Event Log Screen'>
-            <EventLogScreen sessionKey='1' />
+           <Datastore roles={['Analyst']}>
+                <EventLogScreen sessionKey='1' />
+            </Datastore>
         </DemoSection>
 
         <DemoSection label='Event Types Screen'>
-            <EventTypesScreen />
+            <Datastore roles={['Analyst']}>
+                <EventTypesScreen />
+            </Datastore>
         </DemoSection>
     </Datastore>
 }

@@ -1,9 +1,7 @@
 import { act, findByRole, fireEvent, render, screen, within } from "@testing-library/react";
 import { TestInstance, getMatchingObject } from "../../util/testutil";
-import { goBack, pushSubscreen } from "../../util/navigate";
+import { goBack } from "../../util/navigate";
 import React from "react";
-
-jest.mock("../../util/navigate");
 
 test('Empty', () => {
     render(<TestInstance structureKey='simplecomments' />);
@@ -20,14 +18,17 @@ test('Comment and Reply', () => {
 
 
 test('Composer opens', () => {
-    render(<TestInstance structureKey='simplecomments' />);
+    const pushSubscreen = jest.fn();
+    render(<TestInstance structureKey='simplecomments' pushSubscreen={pushSubscreen} />);
     screen.getByText('Share your thoughts...').click();
     expect(pushSubscreen).toHaveBeenCalledWith('composer', {about: null});
 });
 
 test('Composer saves comment', async () => {
     const dataRef = React.createRef();
-    render(<TestInstance dataRef={dataRef} structureKey='simplecomments' screenKey='composer' />);
+    const goBack = jest.fn();
+    render(<TestInstance dataRef={dataRef} goBack={goBack}
+        structureKey='simplecomments' screenKey='composer' />);
     const input = screen.getByPlaceholderText('Share your thoughts...');
     fireEvent.change(input, {target: {value: 'This is a test comment'}});
     

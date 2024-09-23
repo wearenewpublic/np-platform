@@ -1,5 +1,4 @@
-import { useDatastore, useIsLive, useObject, usePersonaKey, usePersonaObject, usePersonaPreview as usePersonaPreview } from "../util/datastore";
-import { getFirebaseUser } from "../util/firebase";
+import { useDatastore, useIsLive, useObject, usePersonaKey, usePersonaObject, usePersonaPreview } from "../util/datastore";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { IconCircleCheck } from "./icon";
 import { UtilityText } from "./text";
@@ -7,7 +6,6 @@ import { HoverView, Pad } from "./basics";
 import { formatDate, formatMiniDate } from "./date";
 import { colorBlack, colorDisabledBackground, colorTextGrey, colorWhite } from "./color";
 import { TextButton } from "./button";
-import { gotoInstance } from "../util/navigate";
 import { useLanguage } from "./translation";
 
 
