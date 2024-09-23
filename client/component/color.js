@@ -36,6 +36,7 @@ export const colorRed = '#F53C19';
 export const colorGreen = '#00af87';
 export const colorLightGreen = '#B9EBDC';
 export const colorPurpleBackground = '#ECECFF';
+export const colorPurplishBlue = '#525DCF';
 
 export const colorBlueBackground = '#CDE1FF';
 export const colorLightBlueBackground = '#F5F9FF';
