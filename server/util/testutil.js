@@ -9,6 +9,21 @@ var global_user = {
 const verifyIdToken = jest.fn();
 exports.verifyIdToken = verifyIdToken;
 
+const getUserByEmail = jest.fn();
+exports.getUserByEmail = getUserByEmail;
+
+const createUser = jest.fn();
+exports.createUser = createUser;
+
+const getUser = jest.fn();
+exports.getUser = getUser;
+
+const createCustomToken = jest.fn();
+exports.createCustomToken = createCustomToken;
+
+const listUsers = jest.fn();
+exports.listUsers = listUsers;
+
 var global_data = {};
 var global_next_key = 1;
 
@@ -77,7 +92,8 @@ async function readFilteredTestData(path, key, value) {
 const fakeFirebaseAdmin = {
     auth: () => ({
         getUser: async uid => global_user, 
-        verifyIdToken
+        verifyIdToken, getUserByEmail, createUser,
+        createCustomToken, listUsers
     }), 
     database: () => ({
         ref: path => ({

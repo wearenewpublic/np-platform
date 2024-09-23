@@ -1,6 +1,8 @@
-import { useDatastore } from "../util/datastore";
+import { useDatastore, useMyRoles } from "../util/datastore";
 import { useFirebaseData, useFirebaseUser } from "../util/firebase";
 import { getIsLocalhost } from "../platform-specific/url";
+import { callServerApiAsync, useServerCallResult } from "../util/servercall";
+import { useEffect, useState } from "react";
 
 export function useIsAdmin() {
     const datastore = useDatastore();
@@ -16,3 +18,23 @@ export function useIsAdminForSilo({siloKey}) {
     const isAdmin = (email && adminEmails?.includes(email)) || (getIsLocalhost() && emailDomain == 'admin.org');
     return isAdmin;
 }
+
+
+export function useHasCapability(capability) {
+    const roles = useMyRoles();
+
+    if (!roles) {
+        return null;
+    }
+
+    for (let role of roles) {
+        if (role === 'Owner') {
+            return true;
+        }
+        if (global_capability_map[role].includes(capability)) {
+            return true;
+        }
+    }
+    return false;
+}
+

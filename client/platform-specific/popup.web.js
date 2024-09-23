@@ -62,6 +62,10 @@ var global_clickTargetRef = null;
 var global_popupRef = null;
 var global_popup_align_right = false;
 
+export function getPopupRef() {
+    return global_popupRef;
+}
+
 function global_layoutPopup() {
     if (!global_clickTargetRef || !global_popupRef) return;
     if (!global_popupRef.current) {
@@ -96,7 +100,7 @@ function global_layoutPopup() {
 }
 
 
-export function Popup({popupContent, popupStyle=null, alignRight=false, setHover=()=>{}, setShown=()=>{}, children}) {
+export function Popup({popupContent, testID, popupStyle=null, alignRight=false, setHover=()=>{}, setShown=()=>{}, children}) {
     const s = PopupButtonStyle;
     const [shown, setLocalShown] = useState(false);
     const popupRef = React.useRef(null);
@@ -155,7 +159,7 @@ export function Popup({popupContent, popupStyle=null, alignRight=false, setHover
 
     return <View style={s.frame}>
         <View ref={clickTargetRef}>
-            <HoverView onPress={onClickShow} setHover={setHover}>
+            <HoverView onPress={onClickShow} setHover={setHover} testID={testID}>
                 {children}
             </HoverView>
         </View> 

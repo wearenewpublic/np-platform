@@ -3,7 +3,7 @@ import { Datastore, useDatastore } from './datastore';
 import { assembleConfig, assembleScreenSet } from './features';
 import { mock_setFirebaseData } from './firebase';
 import { act } from 'react-dom/test-utils';
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import { global_textinput_test_handlers } from '../component/text';
 
 export function WithFeatures({dataRef, siloKey='test', structureKey='componentdemo', instanceKey='test', 
@@ -70,12 +70,20 @@ export function setModulePublicData({siloKey='test', moduleKey, data}) {
 }
 
 
-async function testStoryActionAsync(action) {
+async function testStoryActionAsync(parent, action) {
     if (action.action === 'click') {
-        fireEvent.click(await screen.findByTestId(action.matcher));
+        await act(async () => {
+            await fireEvent.click(await parent.findByTestId(action.matcher))
+        });
     } else if (action.action === 'input') {
         const onChangeText = global_textinput_test_handlers[action.matcher];
         await onChangeText(action.text);
+    } else if (action.action === 'popup') {
+        const popupContent = await parent.findByTestId('popup-content');
+        await testStoryActionAsync(within(popupContent), action.popupAction);
+    } else if (action.action === 'popup-close') {
+        const popupContent = await parent.findByTestId('Close Popup');
+        await fireEvent.click(popupContent);
     } else {
         throw new Error('Unsupported action: ' + action.action);
     }
@@ -84,7 +92,7 @@ async function testStoryActionAsync(action) {
 export async function testStoryActionListAsync(actions) {
     for (let action of actions) {
         await act(async () => {
-            await testStoryActionAsync(action);
+            await testStoryActionAsync(screen, action);
         });
     }
 }

@@ -1,6 +1,6 @@
 const { read } = require("fs");
-const { setFirebaseAdmin, firebaseWriteAsync, firebaseReadAsync, firebaseReadWithFilterAsync, firebaseUpdateAsync, firebaseGetUserAsync, createNewKey, writeGlobalAsync, readGlobalAsync, stringToFbKey, fbKeyToString, urlToKey, keyToUrl, checkPathsNotOverlapping, checkNoUndefinedKeysOrValues } = require("../firebaseutil");
-const { fakeFirebaseAdmin, clearTestData } = require("../testutil");
+const { setFirebaseAdmin, firebaseWriteAsync, firebaseReadAsync, firebaseReadWithFilterAsync, firebaseUpdateAsync, firebaseGetUserAsync, createNewKey, writeGlobalAsync, readGlobalAsync, stringToFbKey, fbKeyToString, urlToKey, keyToUrl, checkPathsNotOverlapping, checkNoUndefinedKeysOrValues, setObjectAsync, readObjectAsync, writeCollectionAsync, expandPath, getOrCreateUserAsync, firebaseGetUserListAsync } = require("../firebaseutil");
+const { fakeFirebaseAdmin, clearTestData, createUser, getUserByEmail, listUsers } = require("../testutil");
 
 
 test('firebaseWriteAsync', async () => {
@@ -61,6 +61,18 @@ test('writeGlobalAsync', async () => {
     expect(result2).toBe('Test');
 })
 
+test('setObjectAsync', async () => {
+    await setObjectAsync({siloKey: 'cbc', structureKey: 'struct', instanceKey: 'inst', collection: 'coll', key: 'key', value: 'value'});
+    const result = await readObjectAsync({siloKey: 'cbc', structureKey: 'struct', instanceKey: 'inst', collection: 'coll', key: 'key'});
+    expect(result).toBe('value');
+});    
+
+test('writeCollectionAsync', async () => {
+    await writeCollectionAsync({siloKey: 'cbc', structureKey: 'struct', instanceKey: 'inst', collection: 'coll', items: {key1: 'value1', key2: 'value2'}});
+    const result = await readObjectAsync({siloKey: 'cbc', structureKey: 'struct', instanceKey: 'inst', collection: 'coll', key: 'key1'});
+    expect(result).toBe('value1');
+});
+
 test('stringToFbKey', async () => {
     const result = stringToFbKey('foo.bar#baz');
     expect(result).toBe('foo%dbar%hbaz');
@@ -105,3 +117,31 @@ test('checkNoUndefinedKeysOrValues', () => {
         checkNoUndefinedKeysOrValues({foo: 'bar', baz: {qux: 'quux', wibble: undefined}})
     ).toThrow();
 }); 
+
+test('expandPath', () => {
+    const result = expandPath(['foo', 'bar', 'baz']);
+    expect(result).toEqual('foo/bar/baz');
+
+    expect(() => 
+        expandPath(['foo', null, 'baz', 'qux'])
+    ).toThrow();
+});
+
+test('getOrCreateUser', async () => {
+    createUser.mockResolvedValueOnce({uid: 'userRob'});
+    getUserByEmail.mockRejectedValue(new Error('User not found'));
+
+    await getOrCreateUserAsync({email: 'rob@rob.org', name: 'Rob Zilla', photoUrl: 'https://rob.com/rob.jpg'});
+    expect(createUser).toBeCalledWith({
+        email: 'rob@rob.org', displayName: 'Rob Zilla', 
+        photoURL: 'https://rob.com/rob.jpg'
+    });
+});
+
+test('firebaseGetUserListAsync', async () => {
+    listUsers.mockResolvedValueOnce({users: [{uid: 'user1'}, {uid: 'user2'}], pageToken: 'token'});
+    listUsers.mockResolvedValueOnce({users: [{uid: 'user3'}, {uid: 'user4'}]});
+
+    const userList = await firebaseGetUserListAsync();
+    expect(userList.length).toEqual(4);
+ });

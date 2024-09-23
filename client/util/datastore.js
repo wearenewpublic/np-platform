@@ -1,6 +1,6 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { defaultPersonaList, personaListToMap } from '../data/personas';
+import { defaultPersonaList, personaListToMap } from './testpersonas';
 import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseDataAsync, getFirebaseUser, onFbUserChanged, useFirebaseData } from './firebase';
 import { deepClone, expandDataListMap, getObjectPropertyPath } from './util';
 import { LoadingScreen } from '../component/basics';
@@ -60,18 +60,31 @@ export class Datastore extends React.Component {
             this.setData({...data?.collection, ...data?.global});
             this.setState({loaded: true})
         });
-        this.fbWatchReleaser = onFbUserChanged(user => {
+        this.fbWatchReleaser = onFbUserChanged(async user => {
             this.setSessionData('personaKey', user?.uid);
+            this.refreshRolesAsync(user);
         })
     }
 
+    async refreshRolesAsync(user) {
+        if (user) {
+            const roles = await this.callServerAsync('admin', 'getMyRoles', {
+                email: user?.email
+            });
+            this.setSessionData('roles', roles);
+        } else {
+            this.setSessionData('roles', []);
+        }
+    }
+
     resetData() {
-        const {isLive, globals, collections, sessionData, personaKey='a'} = this.props;
+        const {isLive, globals, collections, sessionData, personaKey='a', roles=[]} = this.props;
         if (isLive) {
             const personaKey = getFirebaseUser()?.uid || null;
             this.sessionData = {personaKey}
+            this.refreshRolesAsync(getFirebaseUser());
         } else {
-            this.sessionData = {personaKey, ...sessionData}
+            this.sessionData = {personaKey, roles, ...sessionData}
             this.setData({
                 persona: personaListToMap(defaultPersonaList),
                 ...deepClone(globals || {}), 
@@ -162,7 +175,7 @@ export class Datastore extends React.Component {
             return newIndex;
         }
     }
-    getCollection(typeName, props) {
+    getCollection(typeName, props = {}) {
         var items = this.getData()[typeName];
         if (props.filter) {
             const indexFields = Object.keys(props.filter);
@@ -223,6 +236,7 @@ export class Datastore extends React.Component {
     getInstanceKey() {return this.props.instanceKey}
     getConfig() {return this.props.config ?? {}}
     getIsAdmin() {return this.props.isAdmin}
+    getRoles() {return this.props.roles}
     getIsLive() {return this.props.isLive}
     getLanguage() {return this.props.language}
     getLoaded() {return this.state.loaded}
@@ -320,6 +334,10 @@ export function useSessionData(path) {
 
 export function usePersonaKey() {
     return useSessionData('personaKey');
+}
+
+export function useMyRoles() {
+    return useSessionData('roles');
 }
 
 export function usePersonaObject(key) {

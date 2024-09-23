@@ -9,9 +9,10 @@ import { Catcher } from '../component/catcher';
 import { structures } from '../structure';
 import { assembleConfig, assembleScreenSet } from './features';
 import { useFirebaseData, useFirebaseUser } from './firebase';
-import { useIsAdminForSilo } from '../component/admin';
+import { useIsAdminForSilo, useMyRoles } from '../component/admin';
 import { goBack } from './navigate';
 import { requireParams } from './util';
+import { useServerCallResult } from './servercall';
 
 export function useStandardFonts() {
     let [fontsLoaded] = useFonts({
@@ -56,7 +57,8 @@ export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKe
 
     return <View style={s.stackHolder}>
         <Datastore key={url} siloKey={siloKey} instanceKey={instanceKey} structureKey={structureKey} 
-                language={language} isAdmin={isAdmin} isLive={true} config={config} personaPreview={personaPreview}>
+                language={language} isAdmin={isAdmin} isLive={true} config={config} 
+                personaPreview={personaPreview}>
             {screenStack.map((screenInstance, index) => 
                 <StackedScreen screenSet={screenSet} screenInstance={screenInstance} index={index} key={index} />
             )}

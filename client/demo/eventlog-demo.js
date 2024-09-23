@@ -1,7 +1,7 @@
 import { get } from "firebase/database"
 import { StructureDemo } from "../util/instance"
 import { expandDataList } from "../util/util"
-import { personaA } from "../data/personas"
+import { personaA } from "../util/testpersonas"
 import { UtilityText } from "../component/text"
 import { DemoSection } from "../component/demo"
 import { Datastore } from "../util/datastore"

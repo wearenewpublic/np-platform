@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { flattenFeatureBlocks } from './features';
 import { Datastore } from './datastore';
 import { testStoryActionListAsync } from './testutil';
@@ -65,7 +65,9 @@ function runComponentTests(componentDemoFeatures) {
         describe.each(page.storySets())('Story: $label', storySet => {
             if (!storySet.stories || storySet.stories.length == 0) return;
             test.each(storySet.stories || [])('Action: $label', async story => {
-                const rendered = render(<StorySetContent storySet={storySet} />);
+                const rendered = await act(async () => 
+                    render(<StorySetContent storySet={storySet} />)
+                );
                 await testStoryActionListAsync(story.actions);
                 expect(rendered).toMatchSnapshot();            
             });
@@ -80,6 +82,7 @@ function StorySetContent({storySet}) {
         siloKey={storySet.siloKey ?? 'demo'}
         modulePublic={storySet.modulePublic}
         personaKey={storySet.personaKey}
+        roles={storySet.roles}
         firebaseUser={storySet.firebaseUser ?? default_fbUser} 
         structureKey={storySet.structureKey ?? 'testStruct'} 
         globals={storySet.globals} filebaseUser={storySet.firebaseUser}
