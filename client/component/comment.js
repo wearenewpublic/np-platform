@@ -250,11 +250,11 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
     </View>
 }
 
-function EditWidgets({widgets, comment, setComment, preselectedPerspectiveText, onCancel,}) {
+function EditWidgets({widgets, comment, setComment, screenParams={}, onCancel,}) {
     return <View>
         {widgets?.map((Widget, idx) => <View key={idx}>
             <Catcher>
-                <Widget comment={comment} setComment={setComment} onCancel={onCancel} preselectedPerspectiveText={preselectedPerspectiveText} />
+                <Widget comment={comment} setComment={setComment} onCancel={onCancel} screenParams={screenParams} />
             </Catcher>
         </View>)} 
     </View>
@@ -386,7 +386,7 @@ export function ActionReport({commentKey}) {
     return <SubtleButton icon={Flag} onPress={onReport}/>
 }
 
-export function Composer({about=null, commentKey, goBackAfterPost=false, topLevel=false, preselectedPerspectiveText=null}) {
+export function Composer({about=null, commentKey, goBackAfterPost=false, topLevel=false, screenParams={}}) {
     const comment = useObject('comment', commentKey);
     const [editedComment, setEditedComment] = useState(null);
     const personaKey = usePersonaKey();
@@ -409,7 +409,7 @@ export function Composer({about=null, commentKey, goBackAfterPost=false, topLeve
         <EditWidgets widgets={composerTopWidgets} 
             comment={editedComment ?? comment ?? {text: ''}} 
             setComment={setEditedComment} 
-            preselectedPerspectiveText={preselectedPerspectiveText}
+            screenParams={screenParams}
             onCancel={goBackAfterPost && onCancel} />
         <Byline type='large' userId={personaKey} subtitleLabel={subtitle} />
         <Pad size={24} />
@@ -494,7 +494,7 @@ export function BasicComments({about=null, showInput=true, canPost=true}) {
 
 
 
-export function ComposerScreen({about, commentKey=null, intro=null, preselectedPerspectiveText=null}) {
+export function ComposerScreen({about, commentKey=null, intro=null, screenParams={}}) {
     const {composerTopBanners} = useConfig();
     useLogEvent('post-start', {commentKey});
     return <ConversationScreen>
@@ -502,7 +502,7 @@ export function ComposerScreen({about, commentKey=null, intro=null, preselectedP
         {intro}
         {/* <Pad size={20} /> */}
         <PadBox horiz={20} top={20}>
-            <Composer about={about} commentKey={commentKey} goBackAfterPost topLevel preselectedPerspectiveText={preselectedPerspectiveText} />
+            <Composer about={about} commentKey={commentKey} goBackAfterPost topLevel screenParams={screenParams} />
         </PadBox>  
     </ConversationScreen>
 }
