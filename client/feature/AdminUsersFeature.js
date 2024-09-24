@@ -23,7 +23,8 @@ export const AdminUsersFeature = {
         quickLinks: [
             {label: 'Manage Admin Users', screenKey: 'adminUsers'},
         ]
-    }
+    },
+    capabilities: ['modify-admins']
 }
 
 export function AdminUsersScreen() {
@@ -63,7 +64,7 @@ function AdminUser({adminUser}) {
     async function setSelectedRoles(selectedRoles) {
         setRoles(selectedRoles);
         setInProgress(true);
-        await datastore.callServerAsync('admin', 'setAdminRoles', {adminKey: adminUser.key, roles: selectedRoles});
+        await datastore.callServerAsync('admin', 'setAdminRoles', {email: adminUser.email, roles: selectedRoles});
         setInProgress(false);
     }
 

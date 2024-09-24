@@ -1,5 +1,6 @@
 import { CLICK, INPUT, POPUP, POPUP_CLOSE } from "../component/demo";
 import { AdminUsersScreen } from "../feature/AdminUsersFeature";
+import { stringToFbKey } from "../util/firebase";
 
 export const AdminDemo = {
     key: 'demo_admin',
@@ -30,13 +31,13 @@ function adminUsersStorySets() { return [
         content: <AdminUsersScreen />,
         roles: ['Owner'],
         collections: {fakeAdmin: [
-            {key: 'a', roles: ['Owner'], email: 'admin@admin.org'},
-            {key: 'b', roles: ['Moderator'], email: 'bob@bob.com'}
+            {key: 'admin@admin%dorg', roles: ['Owner'], email: 'admin@admin.org'},
+            {key: 'bob@bob%dcom', roles: ['Moderator'], email: 'bob@bob.com'}
         ]},
         serverCall: {admin: {
             getAdminUsers: ({datastore}) => datastore.getCollection('fakeAdmin'),
-            setAdminRoles: ({datastore, adminKey, roles}) => {
-                datastore.updateObject('fakeAdmin', adminKey, {roles});
+            setAdminRoles: ({datastore, email, roles}) => {
+                datastore.updateObject('fakeAdmin', stringToFbKey(email), {roles});
             },
             addAdminUsers: ({datastore, emails, roles}) => {
                 datastore.addObject('fakeAdmin', {roles, email: 'fake@fake.com'});
