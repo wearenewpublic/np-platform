@@ -228,8 +228,17 @@ export class Datastore extends React.Component {
             return getObjectPropertyPath(this.props.modulePublic, [moduleKey, ...path]);
         }
     }
-    callServerAsync(component, funcname, params={}) {
-        return callServerApiAsync({datastore: this, component, funcname, params});
+    async callServerAsync(component, funcname, params={}) {
+        if (this.props.serverCall) {
+            const mockServerCall = this.props.serverCall;
+            if (mockServerCall?.[component]?.[funcname]) {
+                return await mockServerCall[component][funcname]({datastore: this, ...params});
+            } else {
+                throw new Error('No mock server call for ' + component + '/' + funcname);
+            }
+        } else {
+            return await callServerApiAsync({datastore: this, component, funcname, params});
+        }
     }
 
     getSiloKey() {return this.props.siloKey ?? (this.props.isLive ? null : 'demo')}
