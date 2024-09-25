@@ -57,7 +57,9 @@ function runComponentTests(componentDemoFeatures) {
     describe.each(componentPages)('Component: $label', page => {
         if (page.screen) {
             test('Render', async () => {
-                const rendered = render(<Datastore>{React.createElement(page.screen)}</Datastore>);
+                const rendered = await act(async () => 
+                    render(<Datastore>{React.createElement(page.screen)}</Datastore>)
+                );
                 expect(rendered).toMatchSnapshot();
             });
         } 
@@ -100,8 +102,10 @@ function StorySetContent({storySet}) {
 function runStructureTests(componentDemoFeatures) {
     const structurePages = findStructurePages(componentDemoFeatures);
     if (structurePages.length > 0) {
-        test.each(structurePages)('Structure: $label', page => {
-            const rendered = render(<Datastore>{React.createElement(page.screen)}</Datastore>);
+        test.each(structurePages)('Structure: $label', async page => {
+            const rendered = await act(async () =>
+                render(<Datastore>{React.createElement(page.screen)}</Datastore>)
+            );
             expect(rendered).toMatchSnapshot();
         });
     }
@@ -110,8 +114,10 @@ function runStructureTests(componentDemoFeatures) {
 function runFeatureTests(componentDemoFeatures) {
     const featurePages = findFeaturePages(componentDemoFeatures);
     if (featurePages.length > 0) {
-        test.each(featurePages)('Feature: $label', page => {
-            const rendered = render(<Datastore>{React.createElement(page.screen)}</Datastore>);
+        test.each(featurePages)('Feature: $label', async page => {
+            const rendered = await act(async () => 
+                render(<Datastore>{React.createElement(page.screen)}</Datastore>)
+            );
             expect(rendered).toMatchSnapshot();
         });
     }
