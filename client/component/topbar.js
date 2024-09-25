@@ -91,7 +91,7 @@ export function FeatureToggles() {
         <Separator />
         <View style={{width: 300}} />
         <Pad size={20} />
-        <UtilityText type='tiny' label='Admin' caps />
+        <UtilityText type='tiny' label='Features Enabled Here' caps />
         <Pad size={12} />
         {featureBlocks.map((featureBlock,i) => 
             <Catcher key={i}>
