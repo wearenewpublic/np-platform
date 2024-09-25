@@ -229,6 +229,9 @@ export class Datastore extends React.Component {
         }
     }
     async callServerAsync(component, funcname, params={}) {
+        if (this.props.onServerCall) {
+            this.props.onServerCall({component, funcname, params});
+        }
         if (this.props.serverCall) {
             const mockServerCall = this.props.serverCall;
             if (mockServerCall?.[component]?.[funcname]) {
