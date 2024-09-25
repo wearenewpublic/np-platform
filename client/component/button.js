@@ -242,13 +242,14 @@ const ExpanderButtonStyle = StyleSheet.create({
     }
 })
 
-export function Tag({label, emoji, text, type='emphasized', strong=false, formatParams, color=null, onPress}) {
+export function Tag({label, emoji, text, type='emphasized', strong=false, formatParams, color=null, onPress, compact=false}) {
     const s = TagStyle;
     return <View style={[
                 s.button, 
                 type == 'emphasized' && s.emphasized, 
                 type == 'tiny' && s.tiny,      
-                color && {borderColor: color, backgroundColor: color}
+                color && {borderColor: color, backgroundColor: color},
+                compact && {height: 28}
             ]} 
             hoverStyle={s.hover} onPress={onPress}>
         {emoji && <PadBox right={6}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
@@ -352,7 +353,6 @@ const FilterButtonStyle = StyleSheet.create({
     pressed: {
         borderColor: colorTextBlue,        
         backgroundColor: colorWhite,
-        borderColor: colorTextBlue,
     }
 });
 
