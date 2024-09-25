@@ -8,13 +8,16 @@ async function updateProfileAsync({serverstore, updates, preview}) {
     const pOldPreview = serverstore.getGlobalPropertyAsync('preview');
     const pOldModuleData = serverstore.getGlobalPropertyAsync('fields');
     const pBacklinks = serverstore.getCollectionAsync('backlink');
+    const pFirstLogin = serverstore.getGlobalPropertyAsync('firstLogin');
 
     const oldPreview = await pOldPreview || {};
     const oldModuleData = await pOldModuleData || {};
     const backlinks = await pBacklinks || [];
+    const firstLogin = await pFirstLogin || Date.now();
 
     serverstore.setGlobalProperty('preview', {...oldPreview, ...preview});
     serverstore.setGlobalProperty('fields', {...oldModuleData, ...updates});
+    serverstore.setGlobalProperty('firstLogin', firstLogin);
 
     if (!isSelfInBacklinks({serverstore, backlinks})) {
         serverstore.updateObject('persona', serverstore.getUserId(), preview);
