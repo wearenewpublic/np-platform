@@ -1,11 +1,10 @@
 import { StyleSheet, View } from "react-native";
 import { closeSidebar, gotoInstance } from "../util/navigate";
 import { firebaseSignOut } from "../util/firebase";
-import { Popup } from "../platform-specific/popup";
 import { useDatastore, useGlobalProperty, useInstanceKey, usePersonaKey, usePersonaObject, useStructureKey } from "../util/datastore";
 import { useState } from "react";
 import { Byline } from "./people";
-import { BreadCrumb, CTAButton, TextButton } from "./button";
+import { BreadCrumb, CTAButton, Popup, TextButton } from "./button";
 import { HorizBox, Pad, PadBox, Separator } from "./basics";
 import { ObservableProvider, ObservableValue, useObservable } from "../util/observable";
 import { getFeatureBlocks, useEnabledFeatures } from "../util/features";

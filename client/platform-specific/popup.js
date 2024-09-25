@@ -9,7 +9,7 @@ export function PopupSelector({value, items, onSelect}) {
 
 // TODO: This current version is just for running tests.
 // We'll need to re-write this for mobile later
-export function Popup({popupContent, testID, children}) {
+export function PopupBase({popupContent, testID, children}) {
     const [expanded, setExpanded] = useState(false);
     return <View>
         <HoverView testID={testID} onPress={() => setExpanded(!expanded)}>

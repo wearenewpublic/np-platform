@@ -4,7 +4,7 @@ import { colorAccent, colorAccentHover, colorAccentPress, colorBlack, colorBlack
 import { EditorialHeading, Heading, Paragraph, UtilityText } from "./text";
 import { HorizBox, HoverView, Pad, PadBox } from "./basics";
 import { FacePile } from "./people";
-import { Popup } from "../platform-specific/popup";
+import { PopupBase } from "../platform-specific/popup";
 import { Information, Close, ChevronDown, ChevronUp } from '@carbon/icons-react';
 
 
@@ -380,13 +380,13 @@ export function PopupPanel({children, popupContent, alignRight=false, setHover})
     const s = PopupPanelStyle;
     const [shown, setShown] = useState(false);
     return <View style={{alignSelf: 'flex-start'}}> 
-        <Popup popupContent={popupContent} alignRight={alignRight} setHover={setHover} setShown={setShown}>
+        <PopupBase popupContent={popupContent} alignRight={alignRight} setHover={setHover} setShown={setShown}>
             <View style={s.button}>
                 {children}
                 <Pad size={8} />
                 {shown ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
             </View>        
-        </Popup>
+        </PopupBase>
     </View>
 }
 
@@ -398,6 +398,11 @@ const PopupPanelStyle = StyleSheet.create({
     }
 })
 
+// Need to have this here rather than in platform-specific, because it's hard for 
+// other components to import from platform-specific
+export function Popup(params) {
+    return <PopupBase {...params}/>
+}
 
 
 export function BannerIconButton({type, testID, onPress}) {

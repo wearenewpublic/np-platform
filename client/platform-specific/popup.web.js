@@ -100,7 +100,7 @@ function global_layoutPopup() {
 }
 
 
-export function Popup({popupContent, testID, popupStyle=null, alignRight=false, setHover=()=>{}, setShown=()=>{}, children}) {
+export function PopupBase({popupContent, testID, popupStyle=null, alignRight=false, setHover=()=>{}, setShown=()=>{}, children}) {
     const s = PopupButtonStyle;
     const [shown, setLocalShown] = useState(false);
     const popupRef = React.useRef(null);
