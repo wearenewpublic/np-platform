@@ -84,7 +84,7 @@ const CTAButtonStyle = StyleSheet.create({
     button: {
         paddingHorizontal: 16,
         paddingVertical: 12,
-        borderRadius: 8,
+        borderRadius: 32,
         alignSelf: 'flex-start',
         borderWidth: 1,
         flexDirection: 'row',
