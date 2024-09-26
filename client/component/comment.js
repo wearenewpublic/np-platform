@@ -20,10 +20,19 @@ import { getIsMobileWeb } from '../platform-specific/deviceinfo'
 import { needsLogin } from "../structure/login";
 
 
+function getCommentBodyStyle({comment, commentBodyStylers}) {
+    var style = {};
+    commentBodyStylers?.forEach(styler => {
+        style = {...style, ...styler({comment})};
+    })
+    return style;
+}
+
 export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
-    const {commentAboveWidgets, commentBelowWidgets, commentBodyRenderer} = useConfig();
+    const {commentAboveWidgets, commentBelowWidgets, commentBodyStylers} = useConfig();
+    const bodyStyle = getCommentBodyStyle({comment, commentBodyStylers});
     return <View testID={commentKey} id={commentKey}>
         <PadBox top={20} horiz={20}>
             <Catcher>
@@ -33,11 +42,9 @@ export function Comment({commentKey}) {
             <Pad size={20} />
             <PadBox left={48}>
                 <Catcher>
-                    {commentBodyRenderer ?
-                        React.createElement(commentBodyRenderer, {comment, commentKey})
-                    : 
+                    <View style={bodyStyle}>
                         <CommentBody commentKey={commentKey} />
-                    }
+                    </View>
                 </Catcher>
                 <Catcher>
                     {commentBelowWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}

@@ -1,7 +1,7 @@
 import { Banner } from "../component/banner";
 import { Center, Pad, PadBox, ShadowBox } from "../component/basics";
 import { CTAButton, SubtleButton, Tag } from "../component/button";
-import { colorBannerGreen } from "../component/color";
+import { colorBannerGreen, colorPinkBackground } from "../component/color";
 import { CommentBody } from "../component/comment";
 import { DemoPageWidget, DemoWidget } from "../component/demo";
 import { Heading, Paragraph, UtilityText } from "../component/text"
@@ -17,7 +17,8 @@ export const DemoFeature = {
         commentTopWidgets: [() => <DemoWidget text='Comment Top Widget' />],
         commentAboveWidgets: [() => <DemoWidget text='Comment Above Widget' />],
         commentAllowEmpty: true,
-        commentBodyRenderer: CommentBodyRenderer,
+        // commentBodyRenderer: CommentBodyRenderer,
+        commentBodyStylers: [commentBodyStylerLove, commentBodyStylerHate],
         commentEditBottomWidgets: [CommentEditBottomWidget],
         commentEditTopWidgets: [CommentEditTopWidget],
         commentPostBlockers: [commentPostBlocker],
@@ -122,6 +123,18 @@ function CommentBodyRenderer({comment, commentKey}) {
         </PadBox>
     </ShadowBox>
 }
+
+function commentBodyStylerLove({comment}) {
+    if (comment.text.includes('love')) {
+        return {backgroundColor: colorBannerGreen, padding: 16, borderRadius: 8};
+    } else {return null}
+}
+function commentBodyStylerHate({comment}) {
+    if (comment.text.includes('hate')) {
+        return {backgroundColor: colorPinkBackground, padding: 16, borderRadius: 8};
+    } else {return null}
+}
+
 
 function commentFilter({comment}) {
     return !comment?.text.includes('cat');

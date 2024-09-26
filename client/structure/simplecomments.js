@@ -21,6 +21,7 @@ export const SimpleCommentsStructure = {
         commentRightActions: [ActionEdit],
         commentTopWidgets: [],
         commentBodyRenderer: null,
+        commentBodyStylers: [],
         commentAboveWidgets: [],
         commentAllowEmpty: false,
         commentEditBottomWidgets: [],
