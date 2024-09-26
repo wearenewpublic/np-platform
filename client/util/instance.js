@@ -77,7 +77,7 @@ const ScreenStackStyle = StyleSheet.create({
 export function StructureDemo({
         siloKey='demo', structureKey, instanceKey='demo', screenKey, 
         features, isAdmin=true, globals, collections, sessionData, serverCall,
-        roles=[],
+        roles=['Owner'],
         language='english', personaKey='a'
     }) {
     requireParams('StructureDemo', {structureKey});
