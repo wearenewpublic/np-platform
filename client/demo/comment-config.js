@@ -1,7 +1,7 @@
 import { Banner } from "../component/banner";
 import { Center, Pad, PadBox, ShadowBox } from "../component/basics";
 import { CTAButton, SubtleButton, Tag } from "../component/button";
-import { colorBannerGreen, colorPinkBackground } from "../component/color";
+import { colorBannerGreen, colorBlueBackground, colorPinkBackground, colorWhite } from "../component/color";
 import { CommentBody } from "../component/comment";
 import { DemoPageWidget, DemoWidget } from "../component/demo";
 import { Heading, Paragraph, UtilityText } from "../component/text"
@@ -18,7 +18,7 @@ export const DemoFeature = {
         commentAboveWidgets: [() => <DemoWidget text='Comment Above Widget' />],
         commentAllowEmpty: true,
         // commentBodyRenderer: CommentBodyRenderer,
-        commentBodyStylers: [commentBodyStylerLove, commentBodyStylerHate],
+        commentBodyStylers: [commentBodyStylerLove, commentBodyStylerHate, commentBodyStylerReply],
         commentEditBottomWidgets: [CommentEditBottomWidget],
         commentEditTopWidgets: [CommentEditTopWidget],
         commentPostBlockers: [commentPostBlocker],
@@ -114,19 +114,9 @@ function ComposerTopWidget({comment, setComment}) {
     </ShadowBox></PadBox>
 }
 
-function CommentBodyRenderer({comment, commentKey}) {
-    return <ShadowBox>
-        <PadBox horiz={16} vert={16}>
-            <UtilityText label='Comment Body Renderer' />
-            <Pad />
-            <CommentBody comment={comment} commentKey={commentKey} />
-        </PadBox>
-    </ShadowBox>
-}
-
 function commentBodyStylerLove({comment}) {
     if (comment.text.includes('love')) {
-        return {backgroundColor: colorBannerGreen, padding: 16, borderRadius: 8};
+        return {backgroundColor: colorBannerGreen, color: colorWhite, padding: 16, borderRadius: 8};
     } else {return null}
 }
 function commentBodyStylerHate({comment}) {
@@ -134,6 +124,12 @@ function commentBodyStylerHate({comment}) {
         return {backgroundColor: colorPinkBackground, padding: 16, borderRadius: 8};
     } else {return null}
 }
+function commentBodyStylerReply({comment}) {
+    if (comment.replyTo) {
+        return {backgroundColor: colorBlueBackground, padding: 16, borderRadius: 8};
+    } else {return null}
+}
+
 
 
 function commentFilter({comment}) {

@@ -16,23 +16,12 @@ import { Banner } from "./banner";
 import { logEventAsync, useLogEvent } from "../util/eventlog";
 import { NoCommentsHelp } from "./help";
 import { useIsAdmin } from "./admin";
-import { getIsMobileWeb } from '../platform-specific/deviceinfo'
-import { needsLogin } from "../structure/login";
-
-
-function getCommentBodyStyle({comment, commentBodyStylers}) {
-    var style = {};
-    commentBodyStylers?.forEach(styler => {
-        style = {...style, ...styler({comment})};
-    })
-    return style;
-}
+import { getIsMobileWeb } from '../platform-specific/deviceinfo';
 
 export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
-    const {commentAboveWidgets, commentBelowWidgets, commentBodyStylers} = useConfig();
-    const bodyStyle = getCommentBodyStyle({comment, commentBodyStylers});
+    const {commentAboveWidgets, commentBelowWidgets} = useConfig();
     return <View testID={commentKey} id={commentKey}>
         <PadBox top={20} horiz={20}>
             <Catcher>
@@ -42,9 +31,7 @@ export function Comment({commentKey}) {
             <Pad size={20} />
             <PadBox left={48}>
                 <Catcher>
-                    <View style={bodyStyle}>
-                        <CommentBody commentKey={commentKey} />
-                    </View>
+                    <CommentBody commentKey={commentKey} />
                 </Catcher>
                 <Catcher>
                     {commentBelowWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
@@ -94,9 +81,11 @@ export function CommentBody({commentKey}) {
     const [editedComment, setEditedComment] = useState(null);
     const [expanded, setExpanded] = useState(false);
     const datastore = useDatastore();
-    const {commentTopWidgets} = useConfig();
+    const {commentTopWidgets, commentBodyStylers} = useConfig();
+    const commentBodyStyle = getCommentBodyStyle({comment, commentBodyStylers});
     const text = comment.text || '';
     const isLong = guessNumberOfLines(text) > 8;
+
     
     function onEditingDone(finalComment) {
         setEditedComment(null);
@@ -114,14 +103,23 @@ export function CommentBody({commentKey}) {
                 setComment={setEditedComment} 
                 onCancel={onCancel} onEditingDone={onEditingDone} />
     } else {
-        return <View>
+        return <View style={commentBodyStyle}>
             {commentTopWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
             <RichText numberOfLines={(isLong && !expanded) ? 8 : null} 
-                text={text.trim()} 
+                text={text.trim()} color={commentBodyStyle.color}
             />
             {isLong && !expanded && <PadBox top={14}><TextButton underline type='small' label='Read more' onPress={() => setExpanded(true)} /></PadBox>}
         </View>
     }
+}
+
+function getCommentBodyStyle({comment, commentBodyStylers}) {
+    var style = {};
+    var textColor = null;
+    commentBodyStylers?.forEach(styler => {
+        style = {...style, ...styler({comment})};
+    })
+    return style;
 }
 
 function guessNumberOfLines(text) {
