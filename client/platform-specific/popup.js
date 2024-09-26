@@ -11,12 +11,13 @@ export function PopupSelector({value, items, onSelect}) {
 // We'll need to re-write this for mobile later
 export function PopupBase({popupContent, testID, children}) {
     const [expanded, setExpanded] = useState(false);
+    function onClose() {setExpanded(false)}
     return <View>
         <HoverView testID={testID} onPress={() => setExpanded(!expanded)}>
             {children}
         </HoverView>
         {expanded && <View testID='popup-content'>
-            {popupContent()}
+            {popupContent({onClose})}
             <CTAButton onPress={() => setExpanded(false)} label='Close Popup' />
         </View>}
     </View>
