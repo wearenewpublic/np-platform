@@ -134,12 +134,12 @@ const FacePileStyle = StyleSheet.create({
 
 export function Byline({ type = 'small', photoType = null, clickable = true, userId, name = null, photo = null, time, subtitleLabel, subtitleParams = {}, underline = false, edited = false }) {
 
-    const { tagByline } = useConfig();
+    const { bylineTag } = useConfig();
     const s = BylineStyle;
     const persona = usePersonaObject(userId);
     const language = useLanguage();
     const datastore = useDatastore();
-    const tag = (tagByline && tagByline(persona)) || null;
+    const tag = (bylineTag && bylineTag(persona)) || null;
 
     function onProfile() {
         datastore.gotoInstance({ structureKey: 'profile', instanceKey: userId });
