@@ -2,9 +2,8 @@
 
  const personaA = {
     key: 'a',
-    name: 'Emeka Eze',
-    hue: 250,
-    face: 'face9.jpeg',
+    name: 'Alice Adams',
+    face: 'face9.jpeg'
   };
 
 const personaB = {
@@ -34,9 +33,7 @@ const personaC = {
   const personaF = {
     key: 'f',
     name: 'Finn Fischer',
-    face: 'face3.jpeg',
-    
-
+    face: 'face3.jpeg'
   };
 
   const personaG = {
