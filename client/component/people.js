@@ -164,7 +164,7 @@ export function Byline({ type = 'small', photoType = null, clickable = true, use
                                 :
                                 <><UtilityText strong text={name ?? persona?.name} underline={underline} /></>
                         }
-                        {time && <><Pad size={spacings.xs} /><UtilityText color={colorTextGrey}
+                        {time && <><UtilityText color={colorTextGrey}
                             label={'{time}' + (edited ? ' • Edited' : '')}
                             formatParams={(type == 'small') ? { time: formatMiniDate(time, language) } : { time: formatDate(time, language) } } underline={underline} /></>
                         }
