@@ -35,7 +35,7 @@ export function ProfilePhoto({ userId, type = 'large', photo = null, faint = fal
 
 function renderLayers(type, persona) { 
 
-    const { layersByline } = useConfig();
+    const { profilePhotoLayers } = useConfig();
     const size = sizeMap[type] ?? 32;
     
     return <view style={{
@@ -46,7 +46,7 @@ function renderLayers(type, persona) {
                 height: size,
                 backgroundColor: 'transparent'
     }}>
-        {layersByline && layersByline.map((item,i) => item(persona))}
+        {profilePhotoLayers && profilePhotoLayers.map((item,i) => item(persona))}
     </view>
 }
 
