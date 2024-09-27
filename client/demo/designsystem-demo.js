@@ -2,7 +2,7 @@ import { Byline, FaceButton, FacePile, LetterFace, ProfilePhoto } from "../compo
 import { Datastore, usePersonaKey } from "../util/datastore";
 import { IconUpvote, IconUpvoted } from "../component/icon";
 import { CharacterCounter, CircleCount, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
-import { colorBlack, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
+import { colorBlack, colorLightGreen, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
 import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, FilterButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, TextButton } from "../component/button";
 import { Checkbox, Toggle, RadioOption, RadioGroup, FormField, AccordionField } from "../component/form";
 import { useState } from "react";
@@ -154,11 +154,21 @@ function ProfileScreen() {
                 <Byline userId={'y'} type='large' time={Date.now() - 1000 * 60 * 60 * 10} edited={Date.now()} />
                 <Byline userId={'c'} type='small' time={Date.now()} />
                 <Byline userId={'d'} type='small' />
-                <Byline userId={'e'} type='small' time={Date.now()} />
+                <Byline userId={'e'} type='small' time={Date.now()} edited={Date.now()} />
                 <Byline userId={'f'} type='small' photoType='large' />
                 <Byline userId={'g'} type='small' photoType='large' time={Date.now()} />
                 <Byline userId='x' type='small' photoType='large' time={Date.now()} />
                 <Byline userId='z' type='small' photoType='large' time={Date.now()} />
+                <Datastore config={{bylineTags:[
+                        () => <Tag type='tiny' label='Awesome Person'/>,
+                        (persona) => persona.key == 'b' && <Tag type='tiny' label='Superhero'/>,
+                    ]}}>
+                    <Byline userId='a' type='large' time={Date.now()} />
+                    <Pad />
+                    <Byline userId='b' type='large' time={Date.now()} edited={Date.now()} />
+                    <Pad />
+                    <Byline userId='a' type='small' time={Date.now()} />
+                </Datastore>
 
             </DemoSection>
             <DemoSection label='Anonymous'>

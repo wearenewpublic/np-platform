@@ -14,16 +14,21 @@ export function ProfilePhoto({ userId, type = 'large', photo = null, faint = fal
     const persona = useObject('persona', userId);
     const isLive = useIsLive();
     const meKey = usePersonaKey();
+    const { profilePhotoLayers } = useConfig();
 
     if (meKey == userId && isLive) {
         return <MyProfilePhoto type={type} photo={photo} faint={faint} check={check} border={border} />
     } else {
         const face = persona?.face;
         if (face || photo || persona?.photoUrl) {
-            return <> 
-                <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} border={border} faint={faint} check={check} />
-                {renderLayers(type, persona)}
-            </>
+            if (profilePhotoLayers?.length > 0) {                
+                return <> 
+                    <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} border={border} faint={faint} check={check} />
+                    {renderLayers(type, persona)}
+                </>
+            } else {
+                return <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} border={border} faint={faint} check={check} />
+            }
         } else if (persona?.hue && persona?.name) {
             return <LetterFace name={persona.name} hue={persona.hue} type={type} />
         } else {
@@ -33,9 +38,8 @@ export function ProfilePhoto({ userId, type = 'large', photo = null, faint = fal
 
 }
 
-function renderLayers(type, persona) { 
+function renderLayers(type, persona, profilePhotoLayers) { 
 
-    const { profilePhotoLayers } = useConfig();
     const size = sizeMap[type] ?? 32;
     
     return <View style={{
