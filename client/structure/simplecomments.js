@@ -52,18 +52,7 @@ export const SimpleCommentsStructure = {
         noCommentsTitle: 'Start the conversation',
         noCommentsMessage: 'Be the first to share your thoughts',
         noMoreCommentsMessage: 'No more responses',
-    },
-    instance: [
-        {
-            key: 'test', name: 'Test', comment: expandDataList([
-                {from: 'b', text: 'This is another comment'},
-                {key: 'a', from: 'a', text: 'This is a comment'},
-                {key: 'c', from: 'c', replyTo: 'a', text: 'This is a reply'},
-                {from: 'd', replyTo: 'c', text: 'This is a reply to a reply'},
-            ]),
-        }
-    ],
-    newInstanceParams: []
+    }
 }
 
 function SimpleCommentsScreen() {
