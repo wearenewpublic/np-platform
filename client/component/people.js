@@ -218,8 +218,8 @@ const sizeMap = {
     tiny: 24,
 }
 
- const checkPadMap = {
-        large: 2,
-        small: 4,
-        tiny: 8,
+const checkPadMap = {
+    large: 2,
+    small: 4,
+    tiny: 8,
 }
