@@ -4,10 +4,7 @@
     key: 'a',
     name: 'Emeka Eze',
     hue: 250,
-    tag: "journalist",
     face: 'face9.jpeg',
-    badge: "https://images.radio-canada.ca/q_auto,w_1200/v1/ici-info/perso/logo-papillon-radio-canada.jpg",
-    organization: "CBC/RADIO-CANADA"
   };
 
 const personaB = {
