@@ -63,10 +63,8 @@ export function MyProfilePhoto({type='large', photo=null, faint=false, check=fal
 }
 
 export function FaceImage({ face, photoUrl = null, type = 'small', faint = false, check = false, border = false}) {
+    
     const size = sizeMap[type] ?? 32;
-
-   
-
     const checkPad = check ? checkPadMap[type ?? 'small'] : 0;
 
     return <View style={{ position: 'relative', alignSelf: 'flex-start' }}>
@@ -87,13 +85,8 @@ export function FaceImage({ face, photoUrl = null, type = 'small', faint = false
 const fontFamilySansMedium = 'IBMPlexSans_500Medium, Arial, Helvetica, sans-serif';
 
 export function LetterFace({ name, hue, type = 'large' }) {
+
     const s = LetterFaceStyle;
-    const sizeMap = {
-        huge: 80,
-        large: 40,
-        small: 32,
-        tiny: 24,
-    }
     const size = sizeMap[type] ?? 32;
     const color = 'hsl(' + hue + ', 96%, 27%)';
     const letter = name.substring(0, 1).toUpperCase();
@@ -121,11 +114,8 @@ const AnonymousFaceStyle = StyleSheet.create({
 })
 
 export function FacePile({ type = 'small', userIdList }) {
+
     const s = FacePileStyle;
-    const sizeMap = {
-        small: 32,
-        tiny: 24,
-    }
     const size = sizeMap[type] ?? 32;
 
     return <View style={s.outer}>
@@ -186,13 +176,16 @@ const BylineStyle = StyleSheet.create({
 })
 
 export function FaceSelect({ selected, onSelect, testID, children }) {
+    
     return <FaceButton testID={testID} selected={selected} onPress={!selected && onSelect}>
         {children}
     </FaceButton>
 }
 
 export function FaceButton({ selected, onPress, testID, children }) {
+    
     const s = FaceButtonStyle;
+    
     return <HoverView style={s.ring} onPress={onPress} testID={testID}>
         <View style={selected ? s.blackRing : s.whiteRing}>
             <View style={s.whiteRing}>
