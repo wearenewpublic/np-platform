@@ -46,7 +46,7 @@ function renderLayers(type, persona) {
                 height: size,
                 backgroundColor: 'transparent'
     }}>
-        {layersByline.map((item,i) => item(persona))}
+        {layersByline && layersByline.map((item,i) => item(persona))}
     </view>
 }
 
@@ -61,7 +61,6 @@ export function MyProfilePhoto({type='large', photo=null, faint=false, check=fal
         return <AnonymousFace faint={faint} type={type} border={border} />
     }
 }
-
 
 export function FaceImage({ face, photoUrl = null, type = 'small', faint = false, check = false, border = false}) {
     const size = sizeMap[type] ?? 32;

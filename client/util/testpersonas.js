@@ -41,7 +41,10 @@ export const personaE = {
 export const personaF = {
     key: 'f',
     name: 'Finn Fischer',
-    photoUrl: faceUrl('face3.jpeg')
+    photoUrl: faceUrl('face3.jpeg'),
+    tag: 'journalist',
+    badge: "https://images.radio-canada.ca/q_auto,w_1200/v1/ici-info/perso/logo-papillon-radio-canada.jpg",
+   
 };
 
 export const personaG = {

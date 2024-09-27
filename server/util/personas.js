@@ -2,8 +2,12 @@
 
  const personaA = {
     key: 'a',
-    name: 'Alice Adams',
-    face: 'face9.jpeg'
+    name: 'Emeka Eze',
+    hue: 250,
+    tag: "journalist",
+    face: 'face9.jpeg',
+    badge: "https://images.radio-canada.ca/q_auto,w_1200/v1/ici-info/perso/logo-papillon-radio-canada.jpg",
+    organization: "CBC/RADIO-CANADA"
   };
 
 const personaB = {
@@ -33,7 +37,9 @@ const personaC = {
   const personaF = {
     key: 'f',
     name: 'Finn Fischer',
-    face: 'face3.jpeg'
+    face: 'face3.jpeg',
+    
+
   };
 
   const personaG = {
