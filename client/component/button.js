@@ -278,6 +278,7 @@ const TagStyle = StyleSheet.create({
         paddingHorizontal: 4,
         paddingVertical: 2,
         borderRadius: 100,
+        height: 20,
         backgroundColor: colorLightBlueBackground,
         borderColor: colorLightBlueBackground
     }

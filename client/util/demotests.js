@@ -5,8 +5,6 @@ import { Datastore } from './datastore';
 import { testStoryActionListAsync } from './testutil';
 import { default_fbUser, defaultServerCall, NavResult, ServerCallLog } from '../component/demo';
 
-// jest.mock("../../util/navigate");
-
 export function runComponentDemoTestsForDemoFeatures(features) {
     const componentDemoFeatures = flattenFeatureBlocks(features['componentdemo']);
 

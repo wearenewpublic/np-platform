@@ -8,7 +8,7 @@ import { Close } from '@carbon/icons-react';
 export function Modal({children, buttonRow, onClose}) {
     const s = ModalStyle;
     return <DocumentLevelComponent>
-        <View style={s.outer}>
+        <View style={s.outer} testID="popup-content">
             <View style={s.inner}>
                 <HorizBox spread center>
                     <Pad size={56} />

@@ -50,9 +50,9 @@ export function BannerMessage({label, text, formatParams, error=false}) {
     </Banner>
 }
 
-export function ClickableBanner({iconType='info', onPress, color=colorPink, hoverColor=colorPinkHover, pressColor=colorPinkPress, children}) {
+export function ClickableBanner({testID, iconType='info', onPress, color=colorPink, hoverColor=colorPinkHover, pressColor=colorPinkPress, children}) {
     const s = ClickableBannerStyle;
-    return <HoverView onPress={onPress}
+    return <HoverView onPress={onPress} testID={testID}
                 style={[s.banner, {backgroundColor: color}]} 
                 hoverStyle={{backgroundColor: hoverColor}}
                 pressedStyle={{backgroundColor: pressColor}}

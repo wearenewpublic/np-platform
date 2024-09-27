@@ -24,6 +24,6 @@ export function PopupBase({popupContent, testID, children}) {
 }
 
 export function DocumentLevelComponent({children}) {
-    return <Text>Not yet implemented!</Text>
+    return <View>{children}</View>
 }   
 

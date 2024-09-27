@@ -103,7 +103,8 @@ async function playStoryAction({domRef, action}) {
     console.log('playStoryAction', action, domRef);
 
     if (action.action === 'popup') {
-        return await playStoryAction({domRef: getPopupRef(), action: action.popupAction});
+        const popup = document.body.querySelector(['[data-testid="popup-content"]']);
+        return await playStoryAction({domRef: {current: popup}, action: action.popupAction});
     } else if (action.action === 'popup-close') {
         return closeActivePopup();
     }

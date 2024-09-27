@@ -113,9 +113,8 @@ export function CommentBody({commentKey}) {
     }
 }
 
-function getCommentBodyStyle({comment, commentBodyStylers}) {
+export function getCommentBodyStyle({comment, commentBodyStylers}) {
     var style = {};
-    var textColor = null;
     commentBodyStylers?.forEach(styler => {
         style = {...style, ...styler({comment})};
     })
@@ -225,7 +224,6 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
     return <View>
         {topLevel && <TopBarActionProvider label={action} disabled={!canPost || inProgress} onPress={onPost} />}
         <EditWidgets widgets={commentEditTopWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
-        {big && <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />}
         <TextField value={comment.text} onChange={text => setComment({...comment, text})} 
             placeholder={placeholder} autoFocus={!isMobile} big={big} testID='comment-edit'
             placeholderParams={{authorName: getFirstName(author?.name)}} 
@@ -238,7 +236,7 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
                 </PadBox>
             )}
         <Pad size={12} />
-        {!big && <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />}
+        <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
         {personaKey &&
             <PadBox top={20} >
                 <HorizBox center spread>
