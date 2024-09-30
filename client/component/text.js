@@ -148,7 +148,7 @@ const ParagraphStyle = StyleSheet.create({
 
 
 
-export function UtilityText({type='small', center=false, right=false, text, label, formatParams, color='black', strong=false, caps=false, underline=false}) {
+export function UtilityText({type='small', center=false, right=false, text, label, formatParams, color='black', strong=false, caps=false, underline=false, numberOfLines=null, ellipsizeMode='tail'}) {
     const s = UtilityTextStyle;
     const styleMap = {
         large: s.utilityLarge,
@@ -162,6 +162,7 @@ export function UtilityText({type='small', center=false, right=false, text, labe
     }
     if (!text && !label) return null;
     return <TranslatableText text={text} label={label} formatParams={formatParams}
+        numberOfLines={numberOfLines} ellipsizeMode={ellipsizeMode}
         style={[
             styleMap[type], {color}, 
             underline && {textDecorationLine: 'underline'},

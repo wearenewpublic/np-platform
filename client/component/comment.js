@@ -21,7 +21,7 @@ import { getIsMobileWeb } from '../platform-specific/deviceinfo';
 export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
-    const {commentAboveWidgets, commentBelowWidgets} = useConfig();
+    const {commentAboveWidgets, commentBelowWidgets, commentMiddleWidgets} = useConfig();
     return <View testID={commentKey} id={commentKey}>
         <PadBox top={20} horiz={20}>
             <Catcher>
@@ -33,6 +33,9 @@ export function Comment({commentKey}) {
                 <Catcher>
                     <CommentBody commentKey={commentKey} />
                 </Catcher>
+                <Catcher>
+                    {commentMiddleWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
+                </Catcher>                
                 <Catcher>
                     {commentBelowWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
                 </Catcher>
