@@ -6,7 +6,7 @@ test('getIsUserAdminAsync', async () => {
     const isAdmin = await getIsUserAdminAsync({serverstore});
     expect(isAdmin).toBe(false);
 
-    serverstore.setModulePublic('admin', ['adminEmails'], 'rob@newpublic.org');
+    serverstore.setModulePrivate('admin', ['userRoles', 'rob@newpublic%dorg'], JSON.stringify(['Developer']));
     serverstore.commitDataAsync();
 
     const isAdmin2 = await getIsUserAdminAsync({serverstore});

@@ -1,17 +1,16 @@
+const { stringToFbKey } = require("./firebaseutil");
 
 async function getIsUserAdminAsync({serverstore}) {
     const userEmail = serverstore.getUserEmail();
-    const adminEmails = await serverstore.getModulePublicAsync('admin', 'adminEmails');
+    const emailKey = stringToFbKey(userEmail.toLowerCase());
+    const myRoles = await serverstore.getModulePrivateAsync('admin', ['userRoles', emailKey]);
 
     const emailDomain = userEmail?.split('@')[1];
     const isTest = process.env.NODE_ENV == 'test';
     const isEmulator = process.env.FUNCTIONS_EMULATOR === 'true';
+    const isTestAdmin = (isTest || isEmulator) && emailDomain == 'admin.org';
 
-    if (adminEmails?.includes(userEmail) || ((isTest || isEmulator) && emailDomain == 'admin.org')) {
-        return true;
-    } else {
-        return false;
-    }
+    return (myRoles?.length > 0 || isTestAdmin);
 }
 
 exports.getIsUserAdminAsync = getIsUserAdminAsync;

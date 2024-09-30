@@ -2,8 +2,7 @@ import { StackedScreen, getStructureForKey } from './instance';
 import { Datastore, useDatastore } from './datastore';
 import { assembleConfig, assembleScreenSet } from './features';
 import { mock_setFirebaseData } from './firebase';
-import { act } from 'react-dom/test-utils';
-import { fireEvent, screen, within } from '@testing-library/react';
+import { fireEvent, screen, within, act } from '@testing-library/react';
 import { global_textinput_test_handlers } from '../component/text';
 
 export function WithFeatures({dataRef, siloKey='test', structureKey='componentdemo', instanceKey='test', 

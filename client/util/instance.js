@@ -9,9 +9,9 @@ import { Catcher } from '../component/catcher';
 import { structures } from '../structure';
 import { assembleConfig, assembleScreenSet } from './features';
 import { useFirebaseData, useFirebaseUser } from './firebase';
-import { useIsAdminForSilo } from '../component/admin';
 import { goBack } from './navigate';
 import { requireParams } from './util';
+import { WithScreenStack } from './params';
 
 export function useStandardFonts() {
     let [fontsLoaded] = useFonts({
@@ -48,7 +48,6 @@ export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKe
     const config = assembleConfig({structure, activeFeatures});
     const screenSet = assembleScreenSet({structure, activeFeatures});
     const personaPreview = usePersonaPreviewForSilo({siloKey});
-    // const isAdmin = useIsAdminForSilo({siloKey});
 
     if (!structureKey || !instanceKey || !siloKey) {
         console.error('ScreenStack missing keys', {structureKey, instanceKey, siloKey});
@@ -59,7 +58,9 @@ export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKe
                 language={language} isLive={true} config={config} 
                 personaPreview={personaPreview}>
             {screenStack.map((screenInstance, index) => 
-                <StackedScreen screenSet={screenSet} screenInstance={screenInstance} index={index} key={index} />
+                <WithScreenStack screenStack={screenStack} index={index} key={index}>
+                    <StackedScreen screenSet={screenSet} screenInstance={screenInstance} index={index} />
+                </WithScreenStack>
             )}
         </Datastore>
     </View>
@@ -75,16 +76,16 @@ const ScreenStackStyle = StyleSheet.create({
 
 
 export function StructureDemo({
-        siloKey='demo', structureKey, instanceKey='demo', screenKey, 
+        siloKey='demo', structureKey, instanceKey='demo', screenKey, params={},
         features, isAdmin=true, globals, collections, sessionData, serverCall,
-        roles=[],
+        roles=['Owner'],
         language='english', personaKey='a'
     }) {
     requireParams('StructureDemo', {structureKey});
-    const [screenStack, setScreenStack] = React.useState([{siloKey: 'demo', structureKey, instanceKey: null, screenKey}]);
+    const [screenStack, setScreenStack] = React.useState([{siloKey: 'demo', structureKey, instanceKey, screenKey, params}]);
 
     function pushSubscreen(screenKey, params) {
-        setScreenStack([...screenStack, {siloKey: 'demo', structureKey, instanceKey: null, screenKey, params}]);
+        setScreenStack([...screenStack, {siloKey: 'demo', structureKey, instanceKey, screenKey, params}]);
     }
     function onGoBack() {
         if (screenStack.length == 1) {
@@ -116,7 +117,9 @@ export function StructureDemoConfiguredScreenStack({structureKey, screenStack}) 
     return <View style={s.stackHolder}>
         <ConfigContext.Provider value={config}>
             {screenStack.map((screenInstance, index) =>
-                <StackedScreen screenSet={screenSet} screenInstance={screenInstance} index={index} key={index} />
+                <WithScreenStack screenStack={screenStack} index={index} key={index}>
+                    <StackedScreen screenSet={screenSet} screenInstance={screenInstance} index={index} key={index} />
+                </WithScreenStack>
             )}  
         </ConfigContext.Provider>
     </View>

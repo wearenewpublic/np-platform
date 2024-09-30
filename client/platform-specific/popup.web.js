@@ -165,7 +165,7 @@ export function PopupBase({popupContent, testID, popupStyle=null, alignRight=fal
         </View> 
         {shown ? 
             <DocumentLevelComponent>
-                <View ref={popupRef} style={[s.basicPopup, popupStyle]} >
+                <View ref={popupRef} testID='popup-content' style={[s.basicPopup, popupStyle]} >
                     {shown ? popupContent({onClose: closePopup}) : null}
                 </View>
             </DocumentLevelComponent>

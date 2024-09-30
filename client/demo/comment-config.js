@@ -1,12 +1,13 @@
 import { Banner } from "../component/banner";
 import { Center, Pad, PadBox, ShadowBox } from "../component/basics";
 import { CTAButton, SubtleButton, Tag } from "../component/button";
-import { colorBannerGreen } from "../component/color";
+import { colorBannerGreen, colorBlueBackground, colorPinkBackground, colorWhite } from "../component/color";
 import { CommentBody } from "../component/comment";
 import { DemoPageWidget, DemoWidget } from "../component/demo";
 import { Heading, Paragraph, UtilityText } from "../component/text"
 import { useConfig } from "../util/features"
 import { Star } from '@carbon/icons-react';
+import { useInstanceParams, useScreenParams } from "../util/params";
 
 export const DemoFeature = {
     name: 'Show Config Slots',
@@ -17,7 +18,8 @@ export const DemoFeature = {
         commentTopWidgets: [() => <DemoWidget text='Comment Top Widget' />],
         commentAboveWidgets: [() => <DemoWidget text='Comment Above Widget' />],
         commentAllowEmpty: true,
-        commentBodyRenderer: CommentBodyRenderer,
+        // commentBodyRenderer: CommentBodyRenderer,
+        commentBodyStylers: [commentBodyStylerLove, commentBodyStylerHate, commentBodyStylerReply],
         commentEditBottomWidgets: [CommentEditBottomWidget],
         commentEditTopWidgets: [CommentEditTopWidget],
         commentPostBlockers: [commentPostBlocker],
@@ -113,15 +115,23 @@ function ComposerTopWidget({comment, setComment}) {
     </ShadowBox></PadBox>
 }
 
-function CommentBodyRenderer({comment, commentKey}) {
-    return <ShadowBox>
-        <PadBox horiz={16} vert={16}>
-            <UtilityText label='Comment Body Renderer' />
-            <Pad />
-            <CommentBody comment={comment} commentKey={commentKey} />
-        </PadBox>
-    </ShadowBox>
+function commentBodyStylerLove({comment}) {
+    if (comment.text.includes('love')) {
+        return {backgroundColor: colorBannerGreen, color: colorWhite, padding: 16, borderRadius: 8};
+    } else {return null}
 }
+function commentBodyStylerHate({comment}) {
+    if (comment.text.includes('hate')) {
+        return {backgroundColor: colorPinkBackground, padding: 16, borderRadius: 8};
+    } else {return null}
+}
+function commentBodyStylerReply({comment}) {
+    if (comment.replyTo) {
+        return {backgroundColor: colorBlueBackground, padding: 16, borderRadius: 8};
+    } else {return null}
+}
+
+
 
 function commentFilter({comment}) {
     return !comment?.text.includes('cat');
@@ -143,12 +153,16 @@ function commentRanker({datastore, comments}) {
 }
 
 function ComposerTopBanner() {
+    const {bestCat} = useInstanceParams();
+
     return <Banner color={colorBannerGreen}>
         <UtilityText label='Composer Top Banner' />
+        <UtilityText text={`bestCat instance param is : ${bestCat}`} />
     </Banner>
 }
 
 function TopBanner() {
+    const {bestCat} = useScreenParams();
     return <PadBox bottom={20}>
         <Banner color={colorBannerGreen}>
             <Heading label='Top Banner' />
@@ -157,6 +171,10 @@ function TopBanner() {
             <UtilityText text='Comments containing "cat" will be filtered' />
             <UtilityText text='Replies containing "dog" will be filtered' />
         </Banner>
+        <Pad size={8} />
+        <Banner>
+            <UtilityText text={`bestCat screen param is : ${bestCat}`} />
+        </Banner>        
     </PadBox>
 }
 

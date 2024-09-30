@@ -84,7 +84,7 @@ const CTAButtonStyle = StyleSheet.create({
     button: {
         paddingHorizontal: 16,
         paddingVertical: 12,
-        borderRadius: 8,
+        borderRadius: 32,
         alignSelf: 'flex-start',
         borderWidth: 1,
         flexDirection: 'row',
@@ -278,6 +278,7 @@ const TagStyle = StyleSheet.create({
         paddingHorizontal: 4,
         paddingVertical: 2,
         borderRadius: 100,
+        height: 20,
         backgroundColor: colorLightBlueBackground,
         borderColor: colorLightBlueBackground
     }

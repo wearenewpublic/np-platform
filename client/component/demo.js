@@ -7,7 +7,7 @@ import { global_textinput_test_handlers, Heading, UtilityText } from "./text";
 import React, { useState } from "react";
 import { pauseAsync } from "../util/util";
 import { Reset } from "@carbon/icons-react";
-import { colorBlueBackground, colorGreyBorder, colorGreyPopupBackground, colorTextGrey } from "./color";
+import { colorBlueBackground, colorGreyBorder, colorGreyPopupBackground, colorTextGrey, colorWhite } from "./color";
 import { demoPersonaToFbUser, personaA } from "../util/testpersonas";
 import { Banner } from "./banner";
 import { closeActivePopup, getPopupRef } from "../platform-specific/popup.web";
@@ -78,8 +78,8 @@ export function SpacedArray({pad=20, horiz=false, children}) {
     }
 }
 
-export function DemoWidget({text}) {
-    return <PadBox bottom={10}><Tag text={text} /></PadBox>
+export function DemoWidget({color, text}) {
+    return <PadBox bottom={10}><Tag color={color} text={text} /></PadBox>
 }
 
 export function DemoPageWidget({text}) {
@@ -103,7 +103,8 @@ async function playStoryAction({domRef, action}) {
     console.log('playStoryAction', action, domRef);
 
     if (action.action === 'popup') {
-        return await playStoryAction({domRef: getPopupRef(), action: action.popupAction});
+        const popup = document.body.querySelector(['[data-testid="popup-content"]']);
+        return await playStoryAction({domRef: {current: popup}, action: action.popupAction});
     } else if (action.action === 'popup-close') {
         return closeActivePopup();
     }

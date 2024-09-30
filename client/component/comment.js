@@ -16,14 +16,12 @@ import { Banner } from "./banner";
 import { logEventAsync, useLogEvent } from "../util/eventlog";
 import { NoCommentsHelp } from "./help";
 import { useIsAdmin } from "./admin";
-import { getIsMobileWeb } from '../platform-specific/deviceinfo'
-import { needsLogin } from "../structure/login";
-
+import { getIsMobileWeb } from '../platform-specific/deviceinfo';
 
 export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
-    const {commentAboveWidgets, commentBelowWidgets, commentBodyRenderer, commentMiddleWidgets} = useConfig();
+    const {commentAboveWidgets, commentBelowWidgets, commentMiddleWidgets} = useConfig();
     return <View testID={commentKey} id={commentKey}>
         <PadBox top={20} horiz={20}>
             <Catcher>
@@ -33,11 +31,7 @@ export function Comment({commentKey}) {
             <Pad size={20} />
             <PadBox left={48}>
                 <Catcher>
-                    {commentBodyRenderer ?
-                        React.createElement(commentBodyRenderer, {comment, commentKey})
-                    : 
-                        <CommentBody commentKey={commentKey} />
-                    }
+                    <CommentBody commentKey={commentKey} />
                 </Catcher>
                 <Catcher>
                     {commentMiddleWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
@@ -90,9 +84,11 @@ export function CommentBody({commentKey}) {
     const [editedComment, setEditedComment] = useState(null);
     const [expanded, setExpanded] = useState(false);
     const datastore = useDatastore();
-    const {commentTopWidgets} = useConfig();
+    const {commentTopWidgets, commentBodyStylers} = useConfig();
+    const commentBodyStyle = getCommentBodyStyle({comment, commentBodyStylers});
     const text = comment.text || '';
     const isLong = guessNumberOfLines(text) > 8;
+
     
     function onEditingDone(finalComment) {
         setEditedComment(null);
@@ -110,14 +106,22 @@ export function CommentBody({commentKey}) {
                 setComment={setEditedComment} 
                 onCancel={onCancel} onEditingDone={onEditingDone} />
     } else {
-        return <View>
+        return <View style={commentBodyStyle}>
             {commentTopWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
             <RichText numberOfLines={(isLong && !expanded) ? 8 : null} 
-                text={text.trim()} 
+                text={text.trim()} color={commentBodyStyle.color}
             />
             {isLong && !expanded && <PadBox top={14}><TextButton underline type='small' label='Read more' onPress={() => setExpanded(true)} /></PadBox>}
         </View>
     }
+}
+
+export function getCommentBodyStyle({comment, commentBodyStylers}) {
+    var style = {};
+    commentBodyStylers?.forEach(styler => {
+        style = {...style, ...styler({comment})};
+    })
+    return style;
 }
 
 function guessNumberOfLines(text) {
@@ -223,7 +227,6 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
     return <View>
         {topLevel && <TopBarActionProvider label={action} disabled={!canPost || inProgress} onPress={onPost} />}
         <EditWidgets widgets={commentEditTopWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
-        {big && <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />}
         <TextField value={comment.text} onChange={text => setComment({...comment, text})} 
             placeholder={placeholder} autoFocus={!isMobile} big={big} testID='comment-edit'
             placeholderParams={{authorName: getFirstName(author?.name)}} 
@@ -236,7 +239,7 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
                 </PadBox>
             )}
         <Pad size={12} />
-        {!big && <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />}
+        <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
         {personaKey &&
             <PadBox top={20} >
                 <HorizBox center spread>

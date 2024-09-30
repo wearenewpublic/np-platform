@@ -27,9 +27,9 @@ export const AdminUsersFeature = {
 }
 
 export function AdminUsersScreen() {
-    const [usersSince, setUsersSince] = useState(Date.now());
+    const [refreshKey, setRefreshKey] = useState(0);
     const hasAccess = useHasCapability('adminusers/modify-admins');
-    const adminUsers = useServerCallResult('admin', 'getAdminUsers', {usersSince});
+    const adminUsers = useServerCallResult('admin', 'getAdminUsers', {refreshKey});
 
     if (hasAccess === false) {
         return <Banner><UtilityText label='You do not have access to this feature'/></Banner>
@@ -41,7 +41,7 @@ export function AdminUsersScreen() {
         <Pad />
         <AdminUserList adminUsers={adminUsers} />
         <Pad />   
-        <AddAdminUsers onUsersAdded={() => setUsersSince(Date.now())}/>
+        <AddAdminUsers onUsersAdded={() => setRefreshKey(refreshKey + 1)}/>
     </ConversationScreen>
 }
 
