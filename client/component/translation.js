@@ -59,13 +59,13 @@ export function useTranslation(label, formatParams) {
     return translateLabel({label, language, formatParams});
 }
 
-export function TranslatableText({numberOfLines=null, text, label, formatParams, style, ...props}) {
+export function TranslatableText({numberOfLines=null, ellipsizeMode, text, label, formatParams, style, ...props}) {
     try {
         const translatedLabel = useTranslation(label, formatParams);
-        return <Text numberOfLines={numberOfLines} style={style} {...props}>{translatedLabel || label || text}</Text>
+        return <Text numberOfLines={numberOfLines} ellipsizeMode={ellipsizeMode} style={style} {...props}>{translatedLabel || label || text}</Text>
     } catch (e) {
         console.error('Error translating ' + label, e);
-        return <Text numberOfLines={numberOfLines} style={style} {...props}>{label || text}</Text>
+        return <Text numberOfLines={numberOfLines} ellipsizeMode={ellipsizeMode} style={style} {...props}>{label || text}</Text>
     }
 }
 

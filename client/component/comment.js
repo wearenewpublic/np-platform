@@ -23,7 +23,7 @@ import { needsLogin } from "../structure/login";
 export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
-    const {commentAboveWidgets, commentBelowWidgets, commentBodyRenderer} = useConfig();
+    const {commentAboveWidgets, commentBelowWidgets, commentBodyRenderer, commentMiddleWidgets} = useConfig();
     return <View testID={commentKey} id={commentKey}>
         <PadBox top={20} horiz={20}>
             <Catcher>
@@ -39,6 +39,9 @@ export function Comment({commentKey}) {
                         <CommentBody commentKey={commentKey} />
                     }
                 </Catcher>
+                <Catcher>
+                    {commentMiddleWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
+                </Catcher>                
                 <Catcher>
                     {commentBelowWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
                 </Catcher>
