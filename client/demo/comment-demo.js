@@ -118,5 +118,6 @@ function CommentConfigSlotsScreen() {
     }
     return <StructureDemo collections={{comment}} sessionData={sessionData}
         structureKey='simplecomments' features={{config_comment:true}}
+        params={{bestCat: 'Mog'}}
     />
 }

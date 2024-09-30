@@ -7,6 +7,7 @@ import { DemoPageWidget, DemoWidget } from "../component/demo";
 import { Heading, Paragraph, UtilityText } from "../component/text"
 import { useConfig } from "../util/features"
 import { Star } from '@carbon/icons-react';
+import { useInstanceParams, useScreenParams } from "../util/params";
 
 export const DemoFeature = {
     name: 'Show Config Slots',
@@ -152,12 +153,16 @@ function commentRanker({datastore, comments}) {
 }
 
 function ComposerTopBanner() {
+    const {bestCat} = useInstanceParams();
+
     return <Banner color={colorBannerGreen}>
         <UtilityText label='Composer Top Banner' />
+        <UtilityText text={`bestCat instance param is : ${bestCat}`} />
     </Banner>
 }
 
 function TopBanner() {
+    const {bestCat} = useScreenParams();
     return <PadBox bottom={20}>
         <Banner color={colorBannerGreen}>
             <Heading label='Top Banner' />
@@ -166,6 +171,10 @@ function TopBanner() {
             <UtilityText text='Comments containing "cat" will be filtered' />
             <UtilityText text='Replies containing "dog" will be filtered' />
         </Banner>
+        <Pad size={8} />
+        <Banner>
+            <UtilityText text={`bestCat screen param is : ${bestCat}`} />
+        </Banner>        
     </PadBox>
 }
 
