@@ -94,7 +94,7 @@ const CTAButtonStyle = StyleSheet.create({
     compactButton: {
         paddingHorizontal: 12,
         height: 40,
-        borderRadius: 8,
+        borderRadius: 32,
         alignSelf: 'flex-start',
         flexDirection: 'row',
         alignItems: 'center',
