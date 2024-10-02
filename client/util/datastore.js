@@ -483,7 +483,11 @@ export function lookupFromIndex(fields, index, filter) {
 
 export function useModulePublicData(moduleKey, path = []) {
     const datastore = useDatastore();
-    return useFirebaseData(['silo', datastore.getSiloKey(), 'module-public', moduleKey, ...path]);
+    if (datastore.getIsLive()) {
+        return useFirebaseData(['silo', datastore.getSiloKey(), 'module-public', moduleKey, ...path])
+    } else {
+        return getObjectPropertyPath(datastore.props.modulePublic, [moduleKey, ...path]);
+    };
 }
 
 export function useInstanceContext() {

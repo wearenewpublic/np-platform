@@ -50,7 +50,7 @@ function renderLayers(type, persona, profilePhotoLayers) {
                 height: size,
                 backgroundColor: 'transparent'
     }}>
-        {profilePhotoLayers && profilePhotoLayers.map((item,i) => item(persona))}
+        {profilePhotoLayers && profilePhotoLayers.map((item,i) => item({persona,size,type}))}
     </View>
 }
 

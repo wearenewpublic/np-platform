@@ -125,6 +125,19 @@ function TextFieldScreen() {
     </View>
 }
 
+function profilePhotoLayer({persona}) {
+    return <View key='first-letter' style={{position: 'absolute', left: 0, top: 0}}>
+        <Tag key='letter' type='tiny' label={persona.name[0]} />
+    </View>
+}
+
+function profilePhotoLayerTwo({persona}) {    
+    return <View key='second-letter' style={{position: 'absolute', right: 0, bottom: 0}}>
+        <Tag key='letter' color={colorLightGreen} type='tiny' label={persona.name[1]} />
+    </View>
+}
+
+
 function ProfileScreen() {
     const [selected, setSelected] = useState(false)
     function onPress() {console.log('press')}
@@ -143,6 +156,20 @@ function ProfileScreen() {
                     <ProfilePhoto userId='y' type="small"/>
                     <ProfilePhoto userId='z' type="tiny"/>
                 </SpacedArray>
+                <Datastore config={{profilePhotoLayers:[profilePhotoLayer]}}>
+                    <SpacedArray horiz pad={8}>
+                        <ProfilePhoto userId='a' />
+                        <ProfilePhoto userId='b' type='small' />
+                        <ProfilePhoto userId='c' type='tiny' />
+                    </SpacedArray>
+                </Datastore>
+                <Datastore config={{profilePhotoLayers:[profilePhotoLayer, profilePhotoLayerTwo]}}>
+                    <SpacedArray horiz pad={8}>
+                        <ProfilePhoto userId='a' />
+                        <ProfilePhoto userId='b' type='small' />
+                        <ProfilePhoto userId='c' type='tiny' />
+                    </SpacedArray>
+                </Datastore>
             </DemoSection>
             <DemoSection label='Facepile'>
                 <FacePile userIdList={['a','b','c','z']} type='small' />
