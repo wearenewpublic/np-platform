@@ -208,6 +208,7 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
             const modalComponent = React.createElement(modals[0], {onClose});
             setShownModalComponent(modalComponent);
         } else {
+            setShownModalComponent(null);
             onEditingDone(comment);
         }
     }
