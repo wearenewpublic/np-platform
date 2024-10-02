@@ -12,6 +12,10 @@ export function REPLACE(array) {
     return {REPLACE: array};
 }
 
+export function FIRST(array) {
+    return {FIRST: array};
+}
+
 export function useEnabledFeatures() {
     const structureKey = useStructureKey();
     const tunnedOnFeatures = useGlobalProperty('features');
@@ -36,6 +40,8 @@ export function assembleConfig({structure, activeFeatures}) {
                         const featureParam = feature.config[key];
                         if (Array.isArray(featureParam)) {
                             config[key] = [...config[key], ...featureParam];
+                        } else if (featureParam && featureParam.FIRST) {
+                            config[key] = [...featureParam.FIRST, ...config[key]];
                         } else if (featureParam && featureParam.REPLACE) {
                             config[key] = featureParam.REPLACE;
                         } else if (featureParam !== undefined) {

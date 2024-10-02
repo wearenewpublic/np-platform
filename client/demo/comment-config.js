@@ -5,9 +5,10 @@ import { colorBannerGreen, colorBlueBackground, colorPinkBackground, colorWhite 
 import { CommentBody } from "../component/comment";
 import { DemoPageWidget, DemoWidget } from "../component/demo";
 import { Heading, Paragraph, UtilityText } from "../component/text"
-import { useConfig } from "../util/features"
+import { FIRST, useConfig } from "../util/features"
 import { Star } from '@carbon/icons-react';
 import { useInstanceParams, useScreenParams } from "../util/params";
+import { Modal } from "../component/modal";
 
 export const DemoFeature = {
     name: 'Show Config Slots',
@@ -54,7 +55,8 @@ export const DemoSecondaryFeature = {
     name: 'Demo Secondary Feature',
     key: 'demo_secondary',
     config: {
-        demoAboveMessage: 'Modified Message'
+        demoAboveMessage: 'Modified Message',
+        commentTopWidgets: [FIRST(() => <DemoWidget text='FIRST Widget' />)]
     },
 }
 
@@ -72,10 +74,22 @@ function commentPostBlocker({datastore, comment}) {
 
 async function commentPostCheckerAsync({datastore, comment}) {
     if (comment.text.includes('dog')) {
-        return {allow: false, commentProps: {blockHappened: 'dog'}}
+        return {allow: false, commentProps: {
+            blockHappened: 'dog'
+        }}
     } else {
-        return {allow: true, commentProps: {blockHappened: null}}
+        return {
+            allow: true, 
+            commentProps: {blockHappened: null}, 
+            modal: ({onClose}) => <CommentPostModal onClose={onClose} label='You did not mention a dog. Thank you.' />
+        }
     }
+}
+
+function CommentPostModal({label, onClose}) {
+    return <Modal onClose={onClose} buttonRow={<CTAButton wide label='I understand' onPress={onClose}/>}>
+        <PadBox horiz={20} vert={20}><UtilityText label={label} /></PadBox>
+    </Modal>
 }
 
 async function commentPostTriggerAsync({datastore, comment, commentKey}) {

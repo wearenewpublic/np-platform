@@ -93,6 +93,7 @@ function StorySetContent({storySet}) {
         globals={storySet.globals} filebaseUser={storySet.firebaseUser}
         sessionData={storySet.sessionData} 
         gotoInstance={setNavInstance}
+        goBack={() => setNavInstance({parent: true})}
         onServerCall={onServerCall}
         pushSubscreen={(screenKey,params) => setNavInstance({screenKey, params})}
         serverCall={{...defaultServerCall, ...storySet.serverCall}}

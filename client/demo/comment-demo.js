@@ -1,9 +1,10 @@
-import { ActionEdit, ActionReply, ActionReport, Comment, CommentsInput, ComposerScreen } from "../component/comment";
-import { ConversationScreen, Narrow } from "../component/basics";
+import { ActionEdit, ActionReply, ActionReport, BasicComments, Comment, CommentsInput, Composer, ComposerScreen } from "../component/comment";
+import { ConversationScreen, Narrow, Pad, Separator } from "../component/basics";
 import { CLICK, DemoSection, INPUT } from "../component/demo";
 import { Datastore } from "../util/datastore";
 import { ActionUpvote } from "../feature/UpvoteFeature";
 import { StructureDemo } from "../util/instance";
+import { View } from "react-native-web";
 
 
 export const CommentDemoFeature = {
@@ -93,6 +94,23 @@ function commentStorySets() {return [
             }
         ]
     },
+    {
+        label: 'Composer and Comments',
+        config: {
+            noMoreCommentsMessage: 'No more comments',
+            commentInputPlaceholder: 'Gimme a comment'
+        },
+        content: <View>
+                <BasicComments />
+                <Composer goBackAfterPost />
+            </View>,
+        stories: [
+            {label: 'Write comment', actions: [
+                INPUT('comment-edit', 'This is my comment'),
+                CLICK('Post')
+            ]}
+        ]
+    }
 ]}
 
 const comment = [

@@ -167,6 +167,7 @@ export function DemoStorySet({storySet}) {
             sessionData={sessionData} modulePublic={modulePublic}
             roles={roles} onServerCall={onServerCall}
             gotoInstance={setNavInstance}
+            goBack={() => setNavInstance({parent: true})}
             pushSubscreen={(screenKey,params) => setNavInstance({screenKey, params})}
             serverCall={{...defaultServerCall, ...serverCall}} >
         <Heading type='small' text={storySet.label} />
@@ -200,8 +201,9 @@ export function NavResult({navInstance}) {
     return <PadBox horiz={8} vert={8}>
         <Banner>
             <UtilityText text='Navigated to:' />
+            {navInstance.parent && <UtilityText strong text='Parent screen' />}
             {navInstance.structureKey && <UtilityText strong text={navInstance.structureKey + '/' + navInstance.instanceKey} />}
-            {navInstance.screenKey && <UtilityText strong text={'Subscreen: ' + navInstance.screenKey + '(' + JSON.stringify(navInstance.params)} />}
+            {navInstance.screenKey && <UtilityText strong text={'Subscreen: ' + navInstance.screenKey + '(' + JSON.stringify(navInstance.params) + ')'} />}
         </Banner>
     </PadBox>
 }

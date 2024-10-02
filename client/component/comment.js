@@ -160,12 +160,13 @@ function MaybeCommentReply({commentKey}) {
     </View>
 }
 
-function EditComment({comment, big=false, setComment, topLevel, onEditingDone, onCancel, min=100, max=1000}) {
+export function EditComment({comment, big=false, setComment, topLevel, onEditingDone, onCancel, min=100, max=1000}) {
     const personaKey = usePersonaKey();
     const datastore = useDatastore();
     const replyToComment = useObject('comment', comment.replyTo);
     const author = useObject('persona', replyToComment?.from);
     const [inProgress, setInProgress] = useState(false);
+    const [shownModalComponent, setShownModalComponent] = useState(null);
     const {commentReplyPlaceholder, commentInputPlaceholder, 
         commentPostBlockers, commentPostCheckers,
         commentPostTriggers,
@@ -199,6 +200,18 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
         }
     }
 
+    async function showModalsAndFinish(modals) {
+        if (modals?.length) {
+            function onClose() {
+                showModalsAndFinish(modals.slice(1));
+            }
+            const modalComponent = React.createElement(modals[0], {onClose});
+            setShownModalComponent(modalComponent);
+        } else {
+            onEditingDone(comment);
+        }
+    }
+
     async function onPost() {
         if (commentPostCheckers?.length) {
             setInProgress(true);
@@ -209,9 +222,19 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
             checkResults.forEach(judgement => {
                 finalComment = {...finalComment, ...judgement.commentProps}
             })
+            var modals = [];
+            checkResults.forEach(judgement => {
+                if (judgement.modal) {
+                    modals = [...modals, judgement.modal]
+                }
+            })
             if (checkResults.every(x => x.allow)) {
                 await storeCommentAndRunTriggers(finalComment);
-                onEditingDone(finalComment);
+                if (modals?.length) {
+                    showModalsAndFinish(modals);
+                } else {
+                    onEditingDone(finalComment);
+                }
             } else {
                 setComment(finalComment);
             }
@@ -225,6 +248,7 @@ function EditComment({comment, big=false, setComment, topLevel, onEditingDone, o
     const [isFocused, setIsFocused] = useState(false);
 
     return <View>
+        {shownModalComponent}
         {topLevel && <TopBarActionProvider label={action} disabled={!canPost || inProgress} onPress={onPost} />}
         <EditWidgets widgets={commentEditTopWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
         <TextField value={comment.text} onChange={text => setComment({...comment, text})} 
