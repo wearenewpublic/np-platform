@@ -30,7 +30,7 @@ function usePersonaPreviewForSilo({siloKey}) {
     const defaultPersonaPreview = {name: fbUser?.displayName, photoUrl: fbUser?.photoURL};
     const personaPreview = useFirebaseData(
         ['silo', siloKey, 'structure', 'profile', 'instance', fbUser?.uid, 'global', 'preview'], 
-        defaultPersonaPreview
+        {defaultValue: defaultPersonaPreview}
     );
     if (!fbUser) return null;
     return personaPreview;

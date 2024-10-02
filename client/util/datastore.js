@@ -481,10 +481,10 @@ export function lookupFromIndex(fields, index, filter) {
     return index[key] || [];
 }
 
-export function useModulePublicData(moduleKey, path = []) {
+export function useModulePublicData(moduleKey, path = [], options) {
     const datastore = useDatastore();
     if (datastore.getIsLive()) {
-        return useFirebaseData(['silo', datastore.getSiloKey(), 'module-public', moduleKey, ...path])
+        return useFirebaseData(['silo', datastore.getSiloKey(), 'module-public', moduleKey, ...path], options)
     } else {
         return getObjectPropertyPath(datastore.props.modulePublic, [moduleKey, ...path]);
     };
