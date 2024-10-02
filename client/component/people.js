@@ -9,7 +9,7 @@ import { TextButton } from "./button";
 import { useLanguage } from "./translation";
 import { useConfig } from "../util/features";
 
-({ userId, type = 'large', photo = null, faint = false, check = false, border = false }) {
+export function ProfilePhoto({ userId, type = 'large', photo = null, faint = false, check = false, border = false }) {
 
     const persona = useObject('persona', userId);
     const isLive = useIsLive();
