@@ -24,7 +24,7 @@ export function ProfilePhoto({ userId, type = 'large', photo = null, faint = fal
             if (profilePhotoLayers?.length > 0) {                
                 return <> 
                     <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} border={border} faint={faint} check={check} />
-                    {renderLayers(type, persona)}
+                    {renderLayers(type, persona, profilePhotoLayers)}
                 </>
             } else {
                 return <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} border={border} faint={faint} check={check} />
