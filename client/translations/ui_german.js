@@ -49,6 +49,8 @@ export var ui_translations_german = {
     'Profile': 'Profil',
     'Log out': 'Abmelden',
     'Read more': 'Mehr lesen',
+    'Once you log in, you can use a different display name if you prefer to not reveal your real name': 'Wenn du dich angemeldet hast, kannst du einen anderen Anzeigename verwenden, wenn du deinen echten Namen nicht angezeigt willst',
+    'Set your visibility after log in': 'Setze deine Sichtbarkeit nach dem Anmelden',
 
     // Help
     'Start the conversation': 'Beginne die Unterhaltung',

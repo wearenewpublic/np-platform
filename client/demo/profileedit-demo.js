@@ -2,6 +2,7 @@ import { CLICK, INPUT } from "../component/demo"
 import { StructureDemo } from "../util/instance"
 import { ProfileModuleHolder } from "../structure/profile"
 import { FirstLoginSetupTester, ProfilePhotoAndNameFeature } from "../feature/ProfilePhotoAndName"
+import { UnauthenticatedLoginScreen } from "../structure/login";
 
 export const ProfileEditDemo = {
     key: 'demo_profileedit',
@@ -109,7 +110,11 @@ function profileStorySets() {return [
             ]},
 
         ]
-    }
+    },
+    {
+        label: 'Unauthenticated Login Screen',
+        content: <UnauthenticatedLoginScreen showGithub={false} />,
+    },    
 ]}
 
 function ProfileEditFeatureDemo() {
