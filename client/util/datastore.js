@@ -135,7 +135,7 @@ export class Datastore extends React.Component {
         return this.getData()[typeName]?.[key];
     }
     async setObject(typeName, key, value) {
-        const {siloKey, structureKey, instanceKey, isLive} = this.props;
+        const {siloKey, structureKey, instanceKey, isLive, readOnly} = this.props;
         if (!key || !typeName) {
             throw new Error('Missing key or typeName', key, typeName);
         }
@@ -145,7 +145,9 @@ export class Datastore extends React.Component {
         }
         this.setData({...this.getData(), [typeName]: typeData});
 
-        if (isLive) {
+        if (readOnly) {
+            console.error('Attempt to write to read-only datastore', typeName, key, value);
+        } else if (isLive) {
             if (typeName != 'persona') {
                 this.addCurrentUser(); // don't call on persona or you get a loop
             }
