@@ -8,6 +8,11 @@ export function useConfig() {
     return config;
 }
 
+export function useIsReadOnly() {
+    const {readOnly} = useConfig();
+    return readOnly;
+}
+
 export function REPLACE(array) {
     return {REPLACE: array};
 }

@@ -43,7 +43,10 @@ export class Datastore extends React.Component {
         this.fbDataWatchReleaser && this.fbDataWatchReleaser();
     }
     componentDidUpdate(prevProps) {
-        if (prevProps.instanceKey != this.props.instanceKey || prevProps.structureKey != this.props.structureKey) {
+        if (prevProps.instanceKey != this.props.instanceKey || 
+            prevProps.structureKey != this.props.structureKey ||
+            prevProps.readOnly != this.props.readOnly
+        ) {
             this.resetData();
             if (this.props.isLive) {
                 this.setupFirebaseWatchers();
@@ -51,16 +54,30 @@ export class Datastore extends React.Component {
         }
     }
 
-    setupFirebaseWatchers() {
+    async loadFirebaseDataOnceAsync() {
         const {siloKey, structureKey, instanceKey} = this.props;
+
+        const data = await getFirebaseDataAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey]);
+        this.setData({...data?.collection, ...data?.global});
+        this.setState({loaded: true})
+    }
+
+    setupFirebaseWatchers() {
+        const {siloKey, structureKey, instanceKey, readOnly, config} = this.props;
         this.fbUserWatchReleaser && this.fbUserWatchReleaser();
         this.fbDataWatchReleaser && this.fbDataWatchReleaser();
 
-        this.fbDataWatchReleaser = firebaseWatchValue(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey], data => {
-            this.setData({...data?.collection, ...data?.global});
-            this.setState({loaded: true})
-        });
-        this.fbWatchReleaser = onFbUserChanged(async user => {
+        if (readOnly) {
+            this.loadFirebaseDataOnceAsync();
+            this.fbDataWatchReleaser = null;
+        } else {
+            this.fbDataWatchReleaser = firebaseWatchValue(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey], data => {
+                this.setData({...data?.collection, ...data?.global});
+                this.setState({loaded: true})
+            });
+        }
+
+        this.fbUserWatchReleaser = onFbUserChanged(async user => {
             this.setSessionData('personaKey', user?.uid);
             this.refreshUserDataAsync(user);
         })

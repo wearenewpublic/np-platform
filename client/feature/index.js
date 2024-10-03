@@ -15,6 +15,7 @@ import { ProfileEditDemo } from "../demo/profileedit-demo";
 import { ProfilePhotoAndNameFeature } from "./ProfilePhotoAndName";
 import { AdminUsersFeature } from "./AdminUsersFeature";
 import { AdminDemo } from "../demo/admin-demo";
+import { CloseConversationFeature } from "./CloseConversationFeature";
 
 // const { DemoFeature, DemoSecondaryFeature } = require("./DemoFeature");
 
@@ -37,6 +38,7 @@ export var features = {
             LengthLimitFeature,
             BasicTeaserFeature,
             ReplyNotificationsFeature,
+            CloseConversationFeature
         ])
     ],
     profile: [

@@ -23,16 +23,6 @@ export function useIsLocalhostAdmin() {
     return getIsLocalhost() && emailDomain === 'admin.org';
 }
 
-export function useIsAdminForSilo({siloKey}) {
-    const localHostAdmin = useIsLocalhostAdmin();
-    const fbUser = useFirebaseUser();
-    const adminEmails = useFirebaseData(['silo', siloKey, 'module-public', 'admin', 'adminEmails'])?.toLowerCase(); 
-    const email = fbUser?.email?.toLowerCase();
-
-    return localHostAdmin || (email && adminEmails?.includes(email));
-}
-
-
 export function useHasCapability(capability) {
     const roles = useMyRoles();
     const localHostAdmin = useIsLocalhostAdmin();

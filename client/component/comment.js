@@ -11,7 +11,7 @@ import { colorLightBlueBackground, colorTextGrey } from "./color";
 import { RichText } from "./richtext";
 import { CatchList, Catcher } from "./catcher";
 import { TopBarActionProvider } from "./topbar";
-import { useConfig } from "../util/features";
+import { useConfig, useIsReadOnly } from "../util/features";
 import { Banner } from "./banner";
 import { logEventAsync, useLogEvent } from "../util/eventlog";
 import { NoCommentsHelp } from "./help";
@@ -370,6 +370,7 @@ export function ActionReply({commentKey, depth}) {
     const comment = useObject('comment', commentKey);
     const parent = useObject('comment', comment.replyTo);
     const personaKey = usePersonaKey();
+    const readOnly = useIsReadOnly();
     
     function onReply() {
         const oldReply = datastore.getSessionData(['replyToComment', commentKey]);
@@ -377,7 +378,7 @@ export function ActionReply({commentKey, depth}) {
         logEventAsync(datastore, 'reply-start', {commentKey});
     }
 
-    if (comment.from == personaKey) return null;
+    if (comment.from == personaKey || readOnly) return null;
     if (depth == 1 && parent.from != personaKey) return null;
     if (depth > 1) return null;
 
@@ -388,6 +389,7 @@ export function ActionEdit({commentKey}) {
     const datastore = useDatastore();
     const personaKey = usePersonaKey();
     const comment = useObject('comment', commentKey)
+    const readOnly = useIsReadOnly();
     function onEdit() {
         if (!comment.replyTo) {
             logEventAsync(datastore, 'edit-start-top', {commentKey});
@@ -399,7 +401,7 @@ export function ActionEdit({commentKey}) {
         }
     }
 
-    if (comment.from != personaKey) return null;
+    if (comment.from != personaKey || readOnly) return null;
     return <SubtleButton icon={Edit} label='Edit' onPress={onEdit} />
 }
 
