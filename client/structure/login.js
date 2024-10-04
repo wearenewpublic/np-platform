@@ -1,12 +1,13 @@
 import React from 'react';
+import { useState } from 'react';
 import { getFirebaseUser, signInWithGoogle, getFirebaseDataAsync, signInWithToken, signInWithTokenAsync } from '../util/firebase';
 import { goBack, gotoInstance, pushSubscreen } from '../util/navigate';
 import { LoadingScreen, Narrow, Pad, PadBox } from '../component/basics';
-import { Image } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import { useDatastore, usePersonaKey } from '../util/datastore';
 import { Heading, UtilityText } from '../component/text';
 import { RichText } from '../component/richtext';
-import { colorTextGrey } from '../component/color';
+import { colorTextGrey, colorPinkBackground, colorTealBackground, colorWhite, colorBlack, colorBlackHover } from '../component/color';
 import { CTAButton } from '../component/button';
 import { makeAssetUrl } from '../util/util';
 import { logEventAsync, useLogEvent } from '../util/eventlog';
@@ -80,20 +81,78 @@ export function LoginScreen({ action }) {
     } else if (needsSetup) {
         return <Narrow><Pad size={20}/><FirstLoginSetup onFieldsChosen={onFieldsChosen} /></Narrow>
     } else {
-        return (
-            <PadBox horiz={20} vert={20}>
-                <Heading level='1' label={'Log in' + (action ? ' to ' + action : '')} />
-                <Pad />
-                <RichText color={colorTextGrey} label='By continuing, you agree to our [community guidelines](https://example.com) and [Privacy Policy](https://example.com).' />
-                <Pad size={40} />
-                <CTAButton
-                    icon={<LoginProviderIcon providerName='google' />}
-                    type='secondary' label='Continue with Google' onPress={handleGoogleSignIn} />
-                <GitHubLogin />
-            </PadBox>
-        );
+        return <UnauthenticatedLoginScreen action={action} onPress={handleGoogleSignIn} />;
     }
 };
+
+export function UnauthenticatedLoginScreen({action, onPress, showGithub=true}) {
+    const s = UnauthenticatedLoginScreenStyle;
+    const [bubbleHeight, setBubbleHeight] = useState(0);
+    return <View style={s.outer}>
+        <Pad size={40} />        
+        <Heading level='1' center label={'Join the conversation' + (action ? ' to ' + action : '')} />
+        <Pad size={4}/>
+        <View style={s.subHeadWrapper}>
+            <Heading level='5' center label={"Once you log in, you can use a different display name if you prefer to not reveal your real name"} />
+        </View>
+        <Pad size={52} />
+        <View style={s.imageWrapper}>
+            <View style={[s.bubble, { top: -(bubbleHeight / 2) }]}
+            onLayout={(event) => setBubbleHeight(event.nativeEvent.layout.height)}>
+                <PadBox>
+                <Heading level='3' center color={colorWhite} label={'Set your visibility after log in'} />
+                </PadBox>
+            </View> 
+            <Image source={{ uri: makeAssetUrl("images/set_visibility_image.png") }} style={{ width: 250, height: 160 }} />
+        </View>
+        <Pad size={32} />
+        <View style={s.loginButtonsWrapper}>
+            <CTAButton
+                icon={<LoginProviderIcon providerName='google' />}
+                label='Continue with Google' color={colorBlack} onPress={onPress} />
+            {showGithub && <GitHubLogin />}
+        </View>
+        <Pad size={32} />
+        <View style={s.footer}>
+            <RichText color={colorBlackHover} style={{textAlign: 'center'}} label='By continuing, you agree to our [community guidelines](https://example.com) and [Privacy Policy](https://example.com).' />
+        </View>
+        <Pad />
+    </View>
+}
+
+const UnauthenticatedLoginScreenStyle = StyleSheet.create({
+    outer: {
+        backgroundColor: colorPinkBackground,
+        flex: 1,
+        alignItems: 'center',
+    },
+    subHeadWrapper: {
+        maxWidth: 400,
+        minWidth: 330,  
+    },
+    imageWrapper: {
+        position: 'relative',
+        alignItems: 'center',
+    },
+    bubble: {
+        position: 'absolute',
+        maxWidth: 210,
+        minHeight: 30,
+        borderRadius: 32,
+        backgroundColor: colorTealBackground,
+        top: -20,
+        zIndex: 1,
+        borderColor: colorPinkBackground,
+        borderWidth: 1.5,
+        paddingHorizontal: 12,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    footer: {
+        maxWidth: 400,
+        minWidth: 375,
+    }
+});
 
 function GitHubLogin() {
     const datastore = useDatastore();

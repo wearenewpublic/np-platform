@@ -20,6 +20,7 @@ export function Heading({text, color={color}, center, label, level=2, underline=
         2: HeadingStyle.heading2,
         3: HeadingStyle.heading3,
         4: HeadingStyle.heading4,
+        5: HeadingStyle.heading5,
     }
     return <TranslatableText text={text} label={label} formatParams={formatParams} 
         style={[
@@ -50,7 +51,13 @@ const HeadingStyle = StyleSheet.create({
         fontSize: 12,
         lineHeight: 12 * 1.25,
         fontStyle: 'italic',
-    }    
+    },
+    heading5: {
+        fontFamily: fontFamilySansRegular,
+        fontSize: 14,
+        lineHeight: 14 * 1.25,
+    },
+    
 })
 
 export function DataVizText({type, text, label, formatParams}) {

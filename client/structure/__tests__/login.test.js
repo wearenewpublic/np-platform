@@ -19,5 +19,5 @@ test('Login', async () => {
 
 test('Login with Action', () => {
     render(<WithEnv personaKey={null}><LoginScreen action='ask a question' /></WithEnv>);
-    screen.getByText('Log in to ask a question');
+    screen.getByText('Join the conversation to ask a question');
 })

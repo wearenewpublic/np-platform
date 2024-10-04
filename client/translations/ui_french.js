@@ -50,6 +50,8 @@ export var ui_translations_french = {
     'Profile': 'Profil',
     'Log out': 'Se déconnecter',
     'Read more': 'Lire la suite',
+    'Once you log in, you can use a different display name if you prefer to not reveal your real name': 'Une fois que vous vous connectez, vous pouvez utiliser un autre nom d\'affichage si vous le souhaitez',
+    'Set your visibility after log in': 'Choisissez votre visibilité une fois que vous vous connectez',
 
     // Help
     'Start the conversation': 'Lancez la conversation',
