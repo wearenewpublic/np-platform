@@ -200,3 +200,17 @@ export function toBool(arg) {
     }
 }
 
+export function sortBy(array, field) {
+    return [...array].sort((a, b) => {
+        const fieldA = a[field];
+        const fieldB = b[field];
+
+        if (typeof fieldA === 'string' && typeof fieldB === 'string') {
+            return fieldA.localeCompare(fieldB); // String comparison
+        } else if (typeof fieldA === 'number' && typeof fieldB === 'number') {
+            return fieldA - fieldB; // Numeric comparison
+        } else {
+            return 0; // Fallback for other types or when fields are undefined
+        }
+    });
+}

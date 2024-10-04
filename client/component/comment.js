@@ -9,7 +9,7 @@ import { StyleSheet, View } from "react-native";
 import { getFirstName } from "../util/util";
 import { colorLightBlueBackground, colorTextGrey } from "./color";
 import { RichText } from "./richtext";
-import { CatchList, Catcher } from "./catcher";
+import { CatchList, Catcher } from "../system/catcher";
 import { TopBarActionProvider } from "./topbar";
 import { useConfig, useIsReadOnly } from "../util/features";
 import { Banner } from "./banner";

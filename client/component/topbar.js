@@ -9,7 +9,7 @@ import { HorizBox, Pad, PadBox, Separator } from "./basics";
 import { ObservableProvider, ObservableValue, useObservable } from "../util/observable";
 import { getFeatureBlocks, useEnabledFeatures } from "../util/features";
 import { defaultFeatureConfig } from "../feature";
-import { Catcher } from "./catcher";
+import { Catcher } from "../system/catcher";
 import { historyGetState } from "../platform-specific/url";
 import { useIsAdmin } from "./admin";
 import { CircleCount, UtilityText } from "./text";
@@ -19,11 +19,13 @@ import { ChevronDown, ChevronUp, Close, ArrowLeft } from '@carbon/icons-react';
 
 const global_toolbarAction = new ObservableValue(null);
 
-export function TopBar({isLogin = false}) {
+export function TopBar() {
     const s = TopBarStyle;
     const instanceKey = useInstanceKey();
+    const structureKey = useStructureKey();
     const toolbarAction = useObservable(global_toolbarAction);
     const datastore = useDatastore();
+    const isLogin = structureKey == 'login';
     return <View style={s.topBox}>        
         <View style={s.leftRow}>    
             {historyGetState() ? 
@@ -84,7 +86,6 @@ const TopBarStyle = StyleSheet.create({
 export function FeatureToggles() {
     const structureKey = useStructureKey();
     const featureBlocks = getFeatureBlocks(structureKey);
-    const datastore = useDatastore();
     if (!featureBlocks) return null;
     return <View>
         <Pad />
@@ -118,7 +119,7 @@ export function FeatureTreeNode({featureBlock}) {
             <Pad size={8} />
             {enabledCount ? <CircleCount count={enabledCount} /> : null}
         </HorizBox>
-        return <AccordionField titleContent={titleContent}>
+        return <AccordionField testID={featureBlock.label} titleContent={titleContent}>
             {featureBlock.features.map((fb,i) => 
                 <Catcher key={i}>
                     <FeatureTreeNode featureBlock={fb} />
@@ -215,7 +216,7 @@ function UserInfo() {
 
     function popup() {
         return <View>
-            <TextButton type='small' onPress={() => gotoInstance({structureKey:'profile', instanceKey: personaKey})} label='Profile' />
+            <TextButton type='small' onPress={() => datastore.gotoInstance({structureKey:'profile', instanceKey: personaKey})} label='Profile' />
             {isAdmin && <PadBox top={20}>
                 <TextButton type='small' label='Admin'
                     onPress={() => datastore.gotoInstance({structureKey: 'admin', instanceKey: 'one'})} 
@@ -232,7 +233,7 @@ function UserInfo() {
     }
 
     if (personaKey) {
-        return <Popup popupContent={popup} setHover={setHover} setShown={setShown} popupStyle={s.popup}>
+        return <Popup testID='account-menu' popupContent={popup} setHover={setHover} setShown={setShown} popupStyle={s.popup}>
             <PadBox vert={6} right={20}>
                 <HorizBox center>
                     <Byline userId={personaKey} clickable={false} name={persona.name} underline={hover} />

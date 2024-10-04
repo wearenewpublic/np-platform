@@ -3,7 +3,7 @@ import { act, render } from '@testing-library/react';
 import { flattenFeatureBlocks } from './features';
 import { Datastore } from './datastore';
 import { testStoryActionListAsync } from './testutil';
-import { default_fbUser, defaultServerCall, NavResult, ServerCallLog } from '../component/demo';
+import { default_fbUser, defaultServerCall, NavResult, ServerCallLog } from '../system/demo';
 
 export function runComponentDemoTestsForDemoFeatures(features) {
     const componentDemoFeatures = flattenFeatureBlocks(features['componentdemo']);
@@ -63,6 +63,12 @@ function runComponentTests(componentDemoFeatures) {
         } 
         if (!page.storySets) return;
         describe.each(page.storySets())('Story: $label', storySet => {
+            test('Start', async () => {
+                const rendered = await act(async () => 
+                    render(<StorySetContent storySet={storySet} />)
+                );
+                expect(rendered).toMatchSnapshot();            
+             });
             if (!storySet.stories || storySet.stories.length == 0) return;
             test.each(storySet.stories || [])('Action: $label', async story => {
                 const rendered = await act(async () => 

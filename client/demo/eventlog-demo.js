@@ -3,9 +3,11 @@ import { StructureDemo } from "../util/instance"
 import { expandDataList } from "../util/util"
 import { personaA } from "../util/testpersonas"
 import { UtilityText } from "../component/text"
-import { DemoSection } from "../component/demo"
+import { CLICK, DemoSection } from "../system/demo"
 import { Datastore } from "../util/datastore"
 import { EventLogScreen, EventTypesScreen, LogEvent, SessionListScreen, SessionPreview } from "../structure/eventlog"
+import { Pad } from "../component/basics"
+import { roles } from "../feature"
 
 export const EventlogDemoFeature = {
     key: 'demo_eventlog',
@@ -13,7 +15,10 @@ export const EventlogDemoFeature = {
     config: {
         componentSections: [
             {label: 'Internal Tools', key: 'internal', pages: [
-                {label: 'Event Log', key: 'eventlog', screen: EventLogComponentsScreen},
+                {
+                    label: 'Event Log', key: 'eventlog', 
+                    storySets: eventLogStorySets
+                },
             ]}
         ],
         structureSections: [
@@ -45,12 +50,10 @@ const serverCall = {eventlog: {
         return sessions.find(session => session.key == sessionKey);
     },
     getEvents: async ({sessionKey, eventType}) => {
-        console.log('getEvents', {sessionKey, eventType});
         const filteredEvents = events.filter(event => 
             (!sessionKey || event.sessionKey == sessionKey) &&
             (!eventType || event.eventType == eventType)
         );
-        console.log('filteredEvents', filteredEvents);
         return expandDataList(filteredEvents);
     },    
 }}
@@ -59,44 +62,31 @@ function EventLogDemoScreen() {
     return <StructureDemo roles={['Analyst']} structureKey='eventlog' serverCall={serverCall} />
 }
 
-
-function EventLogComponentsScreen() {
-    return <Datastore serverCall={serverCall} isAdmin>
-        <DemoSection label='Session Preview'>
-            <SessionPreview session={sessions[0]} />
-            <UtilityText label='Session' />
-        </DemoSection>
-
-        <DemoSection label='Log Event'>
-            <LogEvent event={events[0]} />
-            <Datastore roles={['Owner']} sessionData={{'event-selected-key': 'b'}}>
-                <LogEvent event={events[1]} />
-            </Datastore>
-        </DemoSection>
-
-        <DemoSection label='Access Denied'>
-            <Datastore roles={[]}>
-                <SessionListScreen />
-            </Datastore>
-        </DemoSection>
-
-        <DemoSection label='Session List Screen'>
-            <Datastore roles={['Analyst']}>
-                <SessionListScreen />
-            </Datastore>
-        </DemoSection>
-
-        <DemoSection label='Event Log Screen'>
-           <Datastore roles={['Analyst']}>
-                <EventLogScreen sessionKey='1' />
-            </Datastore>
-        </DemoSection>
-
-        <DemoSection label='Event Types Screen'>
-            <Datastore roles={['Analyst']}>
-                <EventTypesScreen />
-            </Datastore>
-        </DemoSection>
-    </Datastore>
-}
-
+function eventLogStorySets() {return [
+    {
+        label: 'Event Log Screen', 
+        serverCall,
+        roles: ['Analyst'],
+        content: <EventLogScreen sessionKey='1' />,
+        stories: [{
+            label: 'Select Event', actions: [
+                CLICK('b'), CLICK('a'), CLICK('b')
+            ]}
+        ]
+    },
+    {
+        label: 'Session List Screen',
+        serverCall, roles: ['Analyst'],
+        content: <SessionListScreen />,
+    },
+    {
+        label: 'Session List Screen (Access Denied)',
+        serverCall,
+        content: <SessionListScreen />,
+    },
+    {
+        label: 'Event types screen',
+        roles: ['Analyst'],
+        content: <EventTypesScreen />,
+    }
+]}

@@ -20,11 +20,6 @@ export function NoCommentsHelp() {
                 <RichText label={noCommentsMessage} />
             </View>
         </View>
-        {/* <PadBox horiz={8} top={24}>
-            <SkeletonComment />
-            <Pad size={40} />
-            <SkeletonComment />
-        </PadBox> */}
     </PadBox>
 }
 const NoCommentsHelpStyle = StyleSheet.create({
@@ -43,54 +38,3 @@ const NoCommentsHelpStyle = StyleSheet.create({
     }
 })
 
-function SkeletonComment() {
-    const s = SkeletonCommentStyle;
-    return <View style={s.horiz}>
-        <SkeletonProfilePicture />
-        <Pad size={13} />
-        <View style={s.right}>
-            <Pad size={13} />
-            <SkeletonText width={102}/>
-            <Pad size={26} />
-            <SkeletonText />
-            <Pad size={18} />
-            <SkeletonText />
-        </View>
-    </View>
-}
-const SkeletonCommentStyle = StyleSheet.create({
-    horiz: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-    },
-    right: {
-        flexGrow: 1,
-    }
-})
-
-function SkeletonProfilePicture() {
-    const s = SkeletonProfilePictureStyle;
-    return <View style={s.photo}>
-    </View>
-}
-const SkeletonProfilePictureStyle = StyleSheet.create({
-    photo: {
-        width: 32,
-        height: 32,
-        borderRadius: 16,
-        backgroundColor: '#E9E9E9',
-    }
-})
-
-
-function SkeletonText({width}) {
-    return <LinearGradient 
-        colors={['#E9E9E9', 'rgba(233, 233, 233, 0.20)']} 
-        start = {{ x: 0, y: 0 }}
-        end = {{ x: 1, y: 0 }}
-        style={{height: 6, width}} />
-}
-
-
-// const SkeletonCommentStyle = StyleSheet.create({
-// })

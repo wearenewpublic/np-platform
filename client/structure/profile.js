@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Container, ConversationScreen, HorizBox, LoadingScreen, Pad, PadBox } from "../component/basics";
-import { Catcher } from "../component/catcher";
+import { Catcher } from "../system/catcher";
 import { useServersideConstructor } from "../component/constructor";
 import { useDatastore, useGlobalProperty, useInstanceKey, usePersonaKey, usePersonaObject } from "../util/datastore";
 import { useConfig } from "../util/features";

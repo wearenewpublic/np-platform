@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from "@testing-library/react";
 import { UtilityText } from "../text";
-import { makeCapabilityMap, useIsAdmin } from "../admin";
+import { makeCapabilityMap, mergeRoles, useIsAdmin } from "../admin";
 import { Datastore } from '../../util/datastore';
 
 function IsAdmin() {
@@ -36,3 +36,29 @@ test('makeCapabilityMap', async () => {
         Peon: {'peon:grovel': true},
     });
 });
+
+test('mergeRoles', () => {
+    const oldRoles = {
+        Owner: {allCapabilities: true},
+        Developer: {inherits: ['Peon'], can: ['circus/swallow-swords']},
+        Peon: {can: ['peon:grovel']},
+    }
+    const newRoles = {
+        Wizard: {allCapabilities: true},
+        Developer: {inherits: ['Farmer'], can: ['circus/juggle']},
+        Farmer: {can: ['farm:corn', 'farm:wheat']},
+    }
+    const mergedRoles = mergeRoles(oldRoles, newRoles);
+    expect(mergedRoles).toEqual({
+        Owner: {allCapabilities: true},
+        Developer: {inherits: ['Peon', 'Farmer'], can: ['circus/swallow-swords', 'circus/juggle']},
+        Peon: {can: ['peon:grovel']},
+        Wizard: {allCapabilities: true},
+        Farmer: {can: ['farm:corn', 'farm:wheat']},
+    });
+
+});
+
+test('extendRoles', async () => {
+
+})

@@ -16,8 +16,7 @@ import { ProfilePhotoAndNameFeature } from "./ProfilePhotoAndName";
 import { AdminUsersFeature } from "./AdminUsersFeature";
 import { AdminDemo } from "../demo/admin-demo";
 import { CloseConversationFeature } from "./CloseConversationFeature";
-
-// const { DemoFeature, DemoSecondaryFeature } = require("./DemoFeature");
+import { TopBarDemoFeature } from "../demo/topbar-demo";
 
 export function SECTION(label, features) {return {section: true, label, features}}
 export function SUBSECTION(label, features) {return {section: true, level:2, label, features}}
@@ -48,7 +47,6 @@ export var features = {
         ]),
         SECTION('General', [
             ProfilePhotoAndNameFeature,
-            // ProfileOldStuff        
         ])
     ],
     componentdemo: [
@@ -58,7 +56,8 @@ export var features = {
             ProfileDemoFeature,
             EventlogDemoFeature,
             ProfileEditDemo,
-            AdminDemo
+            AdminDemo,
+            TopBarDemoFeature
         ])
     ],
     admin: [
@@ -75,7 +74,8 @@ export var defaultFeatureConfig = {
         demo_profile: true,
         demo_eventlog: true,
         demo_profileedit: true,
-        demo_admin: true
+        demo_admin: true,
+        demo_topbar: true
     },
     simplecomments: {},
     profile: {
