@@ -19,7 +19,7 @@ export const AdminStructure = {
     }
 }
 
-function AdminScreen() {
+export function AdminScreen() {
     const {quickLinks} = useConfig();
     const isAdmin = useIsAdmin();
 
@@ -33,7 +33,7 @@ function AdminScreen() {
         <Pad />
         <Heading level={2} label='Quick Links' />
         <FlowBox>
-            {quickLinks.map(quickLink => <PadBox top={8} right={8} key={quickLink.label}>
+            {quickLinks?.map(quickLink => <PadBox top={8} right={8} key={quickLink.label}>
                 <QuickLink quickLink={quickLink} />
             </PadBox>)}
         </FlowBox>

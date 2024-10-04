@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Heading, LinkText, TextField, UtilityText } from "../component/text";
 import { IconButton } from "../component/button";
-import { ConversationScreen, FlowBox, HeaderBox, Narrow, Pad, PadBox } from "../component/basics";
+import { ConversationScreen, FlowBox, HeaderBox, LoadingScreen, Narrow, Pad, PadBox } from "../component/basics";
 import { useConfig } from "../util/features";
 import { colorGreyPopupBackground, colorRed } from "../component/color";
 import { View } from "react-native";
 import { useDatastore } from "../util/datastore";
-import { DemoStorySet } from "../system/demo";
+import { DemoStorySet } from "./demo";
 import { AccordionField } from "../component/form";
-import { Catcher } from "../system/catcher";
+import { Catcher } from "./catcher";
 import { sortBy, toBool } from "../util/util";
 
 export const ComponentDemoStructure = {
@@ -64,7 +64,12 @@ function findPage({sections, pageKey}) {
 function ComponentPageScreen({pageKey}) {
     const {componentSections} = useConfig();
     const {page, section} = findPage({sections:componentSections, pageKey});
-    const designUrl = page.designUrl ?? section.designUrl;;
+
+    if (!page) {
+        return <LoadingScreen label='No such page'/>
+    }
+
+    const designUrl = page?.designUrl ?? section.designUrl;
 
     return <ConversationScreen>
         <HeaderBox backgroundColor={colorGreyPopupBackground}>

@@ -1,6 +1,7 @@
 import { CLICK, INPUT, POPUP, POPUP_CLOSE } from "../system/demo";
 import { AdminUsersScreen } from "../feature/AdminUsersFeature";
 import { stringToFbKey } from "../util/firebase";
+import { AdminScreen, AdminStructure } from "../structure/admin";
 
 export const AdminDemo = {
     key: 'demo_admin',
@@ -12,6 +13,9 @@ export const AdminDemo = {
                     {
                         label: 'Admin Users', key: 'adminusers', storySets: adminUsersStorySets
                     },
+                    {
+                        label: 'Admin Dash', key: 'admindashboard', storySets: adminDashStorySets,
+                    }
                 ]
             },
         ]
@@ -57,5 +61,26 @@ function adminUsersStorySets() { return [
                 CLICK('Add Admins')
             ]}
         ]
+    }
+]}
+
+function adminDashStorySets() {return [
+    {
+        label: 'Admin Dash',
+        content: <AdminScreen />,
+        roles: ['Owner'],
+        config: AdminStructure.defaultConfig,
+        stories: [
+            {label: 'Go to Component Demo', actions: [
+                CLICK('Component Demo')
+            ]},
+            {label: 'Go to Event Log', actions: [
+                CLICK('Event Log')
+            ]},
+        ]
+    },
+    {
+        label: 'Not an admin',
+        content: <AdminScreen />,
     }
 ]}

@@ -12,7 +12,7 @@ import { BasicTeaser } from "../component/teaser";
 import { Banner, ClickableBanner, TopBanner } from "../component/banner";
 import { TrashCan, Pin, Chat, ChevronDown, Reply, Image as CarbonImage, Hearing, Video, FaceAdd, Edit, Bookmark, Flag, Close, ArrowLeft, Demo } from "@carbon/icons-react";
 import { Modal } from "../component/modal";
-import { DemoSection, SpacedArray } from "../system/demo";
+import { CLICK, DemoSection, POPUP, SpacedArray } from "../system/demo";
 import { Image, View } from "react-native";
 import { FeatureMenuScreen } from "./featuremenu-demo";
 
@@ -55,7 +55,7 @@ export const DesignSystemDemoFeature = {
                     designUrl:'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=1278-9461&t=MC9nppcf9h2iJDKP-1',
                 },
                 {
-                    label: 'Modal', key: 'modal', screen: ModalScreen,
+                    label: 'Modal', key: 'modal', storySets: modalStorySet,
                     designUrl: 'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=6308-21252&t=MC9nppcf9h2iJDKP-1'
                 },
                 {
@@ -434,35 +434,36 @@ function DropdownScreen() {
         </View>
 }
 
-function ModalScreen() {
+function ModalHolder({label, children}) {
     const [shown, setShown] = useState(false);
-    const [shown2, setShown2] = useState(false);
 
-    const buttonRow = <HorizBox center>
-        <CTAButton wide type='secondary' label='Action 1' onPress={() => setShown2(false)} />
-        <Pad />
-        <CTAButton wide label='Action 2' onPress={() => setShown2(false)} />
-    </HorizBox>
+    const buttonRow = <CTAButton wide type='secondary' label='I understand' onPress={() => setShown(false)} />
 
     return <View>
-        <DemoSection label='Modal'>
-            <CTAButton label='Basic Modal' onPress={() => setShown(true)} />
-            {shown && <Modal onClose={() => setShown(false)}>
-                <PadBox horiz={20} vert={20}><UtilityText text='Content'/></PadBox>
-            </Modal>}
-            <CTAButton label='Modal with Buttons' onPress={() => setShown2(true)} />
-            {shown2 && <Modal onClose={() => setShown2(false)} buttonRow={buttonRow} >
-                <PadBox horiz={20} vert={20}><UtilityText text='Content'/></PadBox>
-            </Modal>}
-        </DemoSection>
+        <CTAButton label={label} onPress={() => setShown(true)} />
+        {shown && <Modal buttonRow={buttonRow} onClose={() => setShown(false)}>
+            {children}
+        </Modal>}
     </View>
 }
 
-function TeaserDemoScreen() {
-    return <View>
-            <BasicTeaser formatParams={{count: 22, singular: 'comment', plural: 'comments'}} />
-        </View>
-}
+function modalStorySet() {return [
+    {
+        label: 'Modal with Buttons',
+        content: <ModalHolder label='Open Modal' >
+            <PadBox horiz={20} vert={20}><UtilityText label='Content'/></PadBox>
+        </ModalHolder>,
+        stories: [
+            {label: 'Open', actions: [
+                CLICK('Open Modal')
+            ]},
+            {label: 'Open and Close', actions: [
+                CLICK('Open Modal'), 
+                POPUP(CLICK('I understand'))
+            ]}
+        ]
+    }
+]}
 
 function BannerDemoScreen() {
     return <ConversationScreen>

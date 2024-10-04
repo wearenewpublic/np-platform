@@ -27,7 +27,9 @@ export const CommentDemoFeature = {
                 {label: 'Simple Comments', key: 'simplecomments', screen: SimpleCommentsScreen},
             ]},
             {label: 'Config Slots', key: 'slots', pages: [
-                {label: 'Comment Config', key: 'commentconfigslots', screen: CommentConfigSlotsScreen}
+                {label: 'Comment Config', key: 'commentconfigslots', screen: CommentConfigSlotsScreen},
+                {label: 'Composer Config', key: 'composerconfigslots', screen: ComposerConfigSlotsScreen}
+
             ]}
         ],
         featureSections: [
@@ -132,10 +134,22 @@ function UpvoteCommentsScreen() {
 
 function CommentConfigSlotsScreen() {
     const sessionData = {
+        'showReplies/1': true,
+        'replyToComment/1': true
+    }
+    return <StructureDemo collections={{comment}} sessionData={sessionData}
+        structureKey='simplecomments' features={{config_comment:true, demo_secondary: true}}
+        params={{bestCat: 'Mog'}}
+    />
+}
+
+function ComposerConfigSlotsScreen() {
+    const sessionData = {
         'showReplies/1': true
     }
     return <StructureDemo collections={{comment}} sessionData={sessionData}
-        structureKey='simplecomments' features={{config_comment:true}}
+        structureKey='simplecomments' screenKey='composer' 
+        features={{config_comment:true, demo_secondary: true}}
         params={{bestCat: 'Mog'}}
     />
 }
