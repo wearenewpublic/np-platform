@@ -63,6 +63,12 @@ function runComponentTests(componentDemoFeatures) {
         } 
         if (!page.storySets) return;
         describe.each(page.storySets())('Story: $label', storySet => {
+            test('Start', async () => {
+                const rendered = await act(async () => 
+                    render(<StorySetContent storySet={storySet} />)
+                );
+                expect(rendered).toMatchSnapshot();            
+             });
             if (!storySet.stories || storySet.stories.length == 0) return;
             test.each(storySet.stories || [])('Action: $label', async story => {
                 const rendered = await act(async () => 

@@ -169,15 +169,17 @@ export function WindowTitle({title}) {
     return null;
 }
 
-// HACK: Bump the key to force a re-render, otherwise the old hover state is preserved when the component is unselected
-export function HoverSelectBox({selected, onPress, children}) {
+// HACK: Bump the key to force a re-render, otherwise the old hover state is preserved 
+// when the component is unselected, and potentially moves to longer be under the mouse
+// without getting a hover out event
+export function HoverSelectBox({selected, testID, onPress, children}) {
     const s = HoverSelectBoxStyle;
     const [key, setKey] = useState(0);
     function onLocalPress() {
         onPress();
         setKey(key+1)
     }
-    return <HoverView key={key} onPress={onLocalPress} disabled={!onPress || selected} style={s.outline} hoverStyle={s.hover}>
+    return <HoverView key={key} testID={testID} onPress={onLocalPress} disabled={!onPress || selected} style={s.outline} hoverStyle={s.hover}>
         {children}
     </HoverView>
 }

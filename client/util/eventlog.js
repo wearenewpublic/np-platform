@@ -113,32 +113,3 @@ export async function useLogEvent(eventKey, params, skip=false) {
         }
     }, [eventKey, JSON.stringify(params), skip]);
 }
-
-export async function getLogEventsAsync({datastore, siloKey, eventType, sessionKey} = {}) {
-    const eventObjs = await datastore.callServerAsync('eventlog', 'getEvents', {
-        filterSiloKey:siloKey, eventType, sessionKey
-    });
-    const eventKeys = Object.keys(eventObjs || {}).sort((a, b) => eventObjs[b].time - eventObjs[a].time);
-    return eventKeys.map(key => ({key, ...eventObjs[key]}));
-}
-
-function getSessionTime(session) {
-    return session.endTime ?? session.startTime ?? 0;
-}
-
-export async function getSessionsAsync({datastore, siloKey = null} = {}) {
-    const sessionObjs = await datastore.callServerAsync('eventlog', 'getSessions', {filterSiloKey: siloKey});
-    const sessionKeys = Object.keys(sessionObjs).sort((a, b) => getSessionTime(sessionObjs[b]) - getSessionTime(sessionObjs[a]));
-    return sessionKeys.map(key => ({key, ...sessionObjs[key]}));
-}
-
-export function useSession({sessionKey}) {
-    const [session, setSession] = useState(null);
-    const datastore = useDatastore();
-
-    useEffect(() => {
-        datastore.callServerAsync('eventlog', 'getSingleSession', {sessionKey            
-        }).then(session => setSession(session));
-    }, [sessionKey]);
-    return session;
-}

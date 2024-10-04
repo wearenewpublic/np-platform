@@ -6,7 +6,7 @@ import { Byline } from "../component/people";
 import { RichText } from "../component/richtext";
 import { Heading, Paragraph, UtilityText } from "../component/text";
 import { useDatastore, useSessionData } from "../util/datastore";
-import { eventTypes, getLogEventsAsync, getSessionsAsync, useSession } from "../util/eventlog";
+import { eventTypes } from "../util/eventlog";
 import { useState, useEffect } from "react";
 import { View } from 'react-native';
 import { gotoInstance } from "../util/navigate";
@@ -72,7 +72,6 @@ export function SessionListScreen() {
     }
 
     useEffect(() => {
-        if (process.env.NODE_ENV === 'test') return; // Auto-load doesn't work in tests
         onRefresh();
     }, []);
 
@@ -108,7 +107,6 @@ export function SessionPreview({session}) {
 
 
 export function EventLogScreen({eventType, sessionKey, siloKey}) {
-    const isAdmin = useIsAdmin();
     const [events, setEvents] = useState(null); 
     const [limit, setLimit] = useState(20);
     const hasCapability = useHasCapability('eventlog/view');
@@ -120,7 +118,6 @@ export function EventLogScreen({eventType, sessionKey, siloKey}) {
     }
 
     useEffect(() => {
-        if (process.env.NODE_ENV === 'test') return; // Auto-load doesn't work in tests
         hasCapability && onRefresh();
     }, [hasCapability]);
 
@@ -166,7 +163,7 @@ export function LogEvent({event}) {
         datastore.setSessionData(['event-selected-key'], event.key);
     }
 
-    return <HoverSelectBox selected={selected} onPress={onSelect}>    
+    return <HoverSelectBox testID={event.key} selected={selected} onPress={onSelect}>    
         {selected ? <ExpandedEvent event={event} /> : <EventPreview event={event} />}
     </HoverSelectBox>
 }
@@ -207,4 +204,33 @@ function LinkedField({label, value, onPress}) {
        </HorizBox>
        <Pad size={4} />
     </View>
+}
+
+export async function getLogEventsAsync({datastore, siloKey, eventType, sessionKey} = {}) {
+    const eventObjs = await datastore.callServerAsync('eventlog', 'getEvents', {
+        filterSiloKey:siloKey, eventType, sessionKey
+    });
+    const eventKeys = Object.keys(eventObjs || {}).sort((a, b) => eventObjs[b].time - eventObjs[a].time);
+    return eventKeys.map(key => ({key, ...eventObjs[key]}));
+}
+
+function getSessionTime(session) {
+    return session.endTime ?? session.startTime ?? 0;
+}
+
+export async function getSessionsAsync({datastore, siloKey = null} = {}) {
+    const sessionObjs = await datastore.callServerAsync('eventlog', 'getSessions', {filterSiloKey: siloKey});
+    const sessionKeys = Object.keys(sessionObjs).sort((a, b) => getSessionTime(sessionObjs[b]) - getSessionTime(sessionObjs[a]));
+    return sessionKeys.map(key => ({key, ...sessionObjs[key]}));
+}
+
+export function useSession({sessionKey}) {
+    const [session, setSession] = useState(null);
+    const datastore = useDatastore();
+
+    useEffect(() => {
+        datastore.callServerAsync('eventlog', 'getSingleSession', {sessionKey            
+        }).then(session => setSession(session));
+    }, [sessionKey]);
+    return session;
 }
