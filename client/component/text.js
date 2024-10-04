@@ -205,14 +205,14 @@ const UtilityTextStyle = StyleSheet.create({
     }
 })
 
-export function LinkText({type='small', text, url, label, formatParams}) {
+export function LinkText({type='small', testID, text, url, label, formatParams}) {
     const [hover, setHover] = useState(false);
 
     function onPress() {
         window.open(url, '_blank');
     }
 
-    return <HoverView shrink setHover={setHover} onPress={onPress}>
+    return <HoverView shrink setHover={setHover} onPress={onPress} testID={testID}>
         <UtilityText type={type} text={text} label={label} formatParams={formatParams} 
             /* color={colorTextBlue} */ underline={!hover} />
     </HoverView>
