@@ -214,3 +214,11 @@ export function sortBy(array, field) {
         }
     });
 }
+
+export function keysToTrueMap(keys) {
+    const map = {};
+    keys.forEach(key => {
+        map[key] = true;
+    });
+    return map;
+}

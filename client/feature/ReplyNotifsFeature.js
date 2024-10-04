@@ -8,7 +8,6 @@ export const ReplyNotificationsFeature = {
 }
 
 async function postTriggerAsync({datastore, comment, commentKey}) {
-    console.log('postTriggerAsync', comment, commentKey);
     const {replyTo} = comment;
     if (!replyTo) return;
     datastore.callServerAsync('notifs', 'sendNotifsForReply', {

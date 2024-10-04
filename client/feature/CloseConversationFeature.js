@@ -19,7 +19,7 @@ export const CloseConversationFeature = {
     }
 }
 
-function ClosedConversationBanner() {
+export function ClosedConversationBanner() {
     const {closedTitle, closedMessage} = useConfig();
     const isAdmin = useIsAdmin();
     return <View>

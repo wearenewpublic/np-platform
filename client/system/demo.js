@@ -5,12 +5,14 @@ import { FilterButton, IconButton, Tag } from "../component/button";
 import { Datastore } from "../util/datastore";
 import { global_textinput_test_handlers, Heading, UtilityText } from "../component/text";
 import React, { useState } from "react";
-import { pauseAsync } from "../util/util";
+import { keysToTrueMap, pauseAsync } from "../util/util";
 import { Reset } from "@carbon/icons-react";
 import { colorBlueBackground, colorGreyBorder, colorGreyPopupBackground, colorTextGrey, colorWhite } from "../component/color";
 import { demoPersonaToFbUser, personaA } from "../util/testpersonas";
 import { Banner } from "../component/banner";
 import { closeActivePopup, getPopupRef } from "../platform-specific/popup.web";
+import { assembleConfig } from "../util/features";
+import { getStructureForKey } from "../util/instance";
 
 export function CLICK(matcher) {
     return {matcher, action: 'click'}
@@ -142,7 +144,7 @@ export const defaultServerCall = {
 
 export function DemoStorySet({storySet}) {
     const { collections, content, structureKey='testStruct', instanceKey='testInstance', 
-        personaKey, config, modulePublic, roles,
+        personaKey, config, modulePublic, roles, features,
         globals, sessionData, serverCall, pad=true, firebaseUser=default_fbUser, siloKey='demo'
     } = storySet;
     const domRef = React.createRef();
@@ -153,6 +155,14 @@ export function DemoStorySet({storySet}) {
     function onServerCall(call) {
         setCallLog(oldLog => [...oldLog, call]);
     }
+    var featureConfig = null;
+    if (features) {
+        const structure = getStructureForKey(structureKey);
+        if (!structure) {
+            throw new Error('Structure not found: ' + structureKey);
+        }
+        featureConfig = assembleConfig({structure, activeFeatures: keysToTrueMap(features)});
+    }
 
     function onReset() {
         dataRef.current.resetData();
@@ -161,7 +171,7 @@ export function DemoStorySet({storySet}) {
         setCallLog([]);
     }
 
-    return <Datastore ref={dataRef} config={config} siloKey={siloKey}
+    return <Datastore ref={dataRef} config={featureConfig ?? config} siloKey={siloKey}
             structureKey={structureKey} instanceKey={instanceKey} personaKey={personaKey}
             collections={collections} globals={globals} firebaseUser={firebaseUser}
             sessionData={sessionData} modulePublic={modulePublic}

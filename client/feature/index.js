@@ -17,6 +17,7 @@ import { AdminUsersFeature } from "./AdminUsersFeature";
 import { AdminDemo } from "../demo/admin-demo";
 import { CloseConversationFeature } from "./CloseConversationFeature";
 import { TopBarDemoFeature } from "../demo/topbar-demo";
+import { BasicFeaturesDemoFeature } from "../demo/basicfeatures-demo";
 
 export function SECTION(label, features) {return {section: true, label, features}}
 export function SUBSECTION(label, features) {return {section: true, level:2, label, features}}
@@ -57,7 +58,8 @@ export var features = {
             EventlogDemoFeature,
             ProfileEditDemo,
             AdminDemo,
-            TopBarDemoFeature
+            TopBarDemoFeature,
+            BasicFeaturesDemoFeature
         ])
     ],
     admin: [
@@ -75,7 +77,8 @@ export var defaultFeatureConfig = {
         demo_eventlog: true,
         demo_profileedit: true,
         demo_admin: true,
-        demo_topbar: true
+        demo_topbar: true,
+        demo_basicfeatures: true
     },
     simplecomments: {},
     profile: {
