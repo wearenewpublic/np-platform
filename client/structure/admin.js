@@ -1,11 +1,10 @@
 import { useIsAdmin } from "../component/admin";
 import { Banner } from "../component/banner";
-import { ConversationScreen, Pad, PadBox, WrapBox } from "../component/basics"
+import { ConversationScreen, FlowBox, Pad, PadBox } from "../component/basics";
 import { IconButton } from "../component/button";
-import { Heading, UtilityText } from "../component/text"
+import { Heading, UtilityText } from "../component/text";
 import { useDatastore } from "../util/datastore";
 import { useConfig } from "../util/features";
-import { gotoInstance } from "../util/navigate";
 
 export const AdminStructure = {
     key: 'admin',
@@ -33,14 +32,13 @@ function AdminScreen() {
         <Heading level={1} label='Admin Dashboard' />
         <Pad />
         <Heading level={2} label='Quick Links' />
-        <WrapBox>
+        <FlowBox>
             {quickLinks.map(quickLink => <PadBox top={8} right={8} key={quickLink.label}>
                 <QuickLink quickLink={quickLink} />
             </PadBox>)}
-        </WrapBox>
+        </FlowBox>
     </ConversationScreen>
 }
-
 
 function QuickLink({quickLink}) {
     const {label, structureKey, screenKey} = quickLink;

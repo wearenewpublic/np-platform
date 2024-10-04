@@ -7,10 +7,10 @@ import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton
 import { Checkbox, Toggle, RadioOption, RadioGroup, FormField, AccordionField } from "../component/form";
 import { useState } from "react";
 import { RichText } from "../component/richtext";
-import { ConversationScreen, HorizBox, Narrow, Pad, PadBox } from "../component/basics";
+import { Card, ConversationScreen, FlowBox, HorizBox, Narrow, Pad, PadBox, ShadowBox } from "../component/basics";
 import { BasicTeaser } from "../component/teaser";
 import { Banner, ClickableBanner, TopBanner } from "../component/banner";
-import { TrashCan, Pin, Chat, ChevronDown, Reply, Image as CarbonImage, Hearing, Video, FaceAdd, Edit, Bookmark, Flag, Close, ArrowLeft } from "@carbon/icons-react";
+import { TrashCan, Pin, Chat, ChevronDown, Reply, Image as CarbonImage, Hearing, Video, FaceAdd, Edit, Bookmark, Flag, Close, ArrowLeft, Demo } from "@carbon/icons-react";
 import { Modal } from "../component/modal";
 import { DemoSection, SpacedArray } from "../component/demo";
 import { Image, View } from "react-native";
@@ -61,6 +61,9 @@ export const DesignSystemDemoFeature = {
                 {
                     label: 'Feature Menu', key: 'featuremenu', screen: FeatureMenuScreen,
                     designUrl:'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=6311-21920&t=MC9nppcf9h2iJDKP-1'
+                },
+                { 
+                    label: 'Misc Extras', key: 'misc', screen: MiscScreen
                 }
             ]}
         ]
@@ -499,4 +502,28 @@ function BannerDemoScreen() {
                 </Narrow>
             </DemoSection>
     </ConversationScreen>
+}
+
+function MiscScreen() {
+    return <View>
+        <DemoSection label='Shadow Box'>
+            <ShadowBox>
+                <PadBox horiz={20} vert={20}><UtilityText label='Shadow Box'/></PadBox>
+            </ShadowBox>
+        </DemoSection>
+        <DemoSection label='Flow Box'>
+            <FlowBox>
+                <Tag label='This is Item One'/>
+                <Tag label='This is Item Two'/>
+                <Tag label='This is Item Three'/>
+                <Tag label='This is Item Four'/>
+                <Tag label='This is Item Five'/>
+            </FlowBox>
+        </DemoSection>
+        <DemoSection label='Card'>
+            <Card>
+                <UtilityText label='I am in a card'/>
+            </Card>
+        </DemoSection>
+    </View>
 }

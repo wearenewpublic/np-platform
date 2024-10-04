@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Heading, LinkText, TextField, UtilityText } from "../component/text";
 import { IconButton } from "../component/button";
-import { ConversationScreen, HeaderBox, Narrow, Pad, PadBox, WrapBox } from "../component/basics";
+import { ConversationScreen, FlowBox, HeaderBox, Narrow, Pad, PadBox } from "../component/basics";
 import { useConfig } from "../util/features";
 import { colorGreyPopupBackground, colorRed } from "../component/color";
 import { View } from "react-native";
@@ -9,7 +9,7 @@ import { useDatastore } from "../util/datastore";
 import { DemoStorySet } from "../component/demo";
 import { AccordionField } from "../component/form";
 import { Catcher } from "../component/catcher";
-import { toBool } from "../util/util";
+import { sortBy, toBool } from "../util/util";
 
 export const ComponentDemoStructure = {
     key: 'componentdemo',
@@ -114,8 +114,8 @@ function DemoPageSection({search, label, screenKey, sections}) {
         {sections.map(section => 
             <AccordionField key={section.label} forceOpen={toBool(search)}
                 titleContent={<UtilityText strong label={section.label} />} >
-                <WrapBox>
-                    {section.pages.map((page, j) => 
+                <FlowBox>
+                    {sortBy(section.pages, 'label').map((page, j) => 
                         page.label.toLowerCase().includes(search.toLowerCase()) &&
                         <PadBox vert={10} horiz={10} key={page.key}>
                             <IconButton compact type='secondary' label={page.label} onPress={() => 
@@ -123,7 +123,7 @@ function DemoPageSection({search, label, screenKey, sections}) {
                             }  />
                         </PadBox>                    
                     )}
-                </WrapBox>
+                </FlowBox>
             </AccordionField>
         )}
         <Pad />
