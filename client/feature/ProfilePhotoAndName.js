@@ -7,7 +7,7 @@ import { useEditableField, useEditErrors, WithEditableFields } from "../structur
 import { RadioGroup, RadioOption } from "../component/form";
 import { colorPinkBackground, colorRedBackground, colorTextGrey } from "../component/color";
 import { Banner } from "../component/banner";
-import { Catcher } from "../component/catcher";
+import { Catcher } from "../system/catcher";
 import React, { useState } from "react";
 import { CTAButton } from "../component/button";
 

@@ -12,7 +12,7 @@ import { BasicTeaser } from "../component/teaser";
 import { Banner, ClickableBanner, TopBanner } from "../component/banner";
 import { TrashCan, Pin, Chat, ChevronDown, Reply, Image as CarbonImage, Hearing, Video, FaceAdd, Edit, Bookmark, Flag, Close, ArrowLeft, Demo } from "@carbon/icons-react";
 import { Modal } from "../component/modal";
-import { DemoSection, SpacedArray } from "../component/demo";
+import { DemoSection, SpacedArray } from "../system/demo";
 import { Image, View } from "react-native";
 import { FeatureMenuScreen } from "./featuremenu-demo";
 

@@ -3,7 +3,7 @@ import { act, render } from '@testing-library/react';
 import { flattenFeatureBlocks } from './features';
 import { Datastore } from './datastore';
 import { testStoryActionListAsync } from './testutil';
-import { default_fbUser, defaultServerCall, NavResult, ServerCallLog } from '../component/demo';
+import { default_fbUser, defaultServerCall, NavResult, ServerCallLog } from '../system/demo';
 
 export function runComponentDemoTestsForDemoFeatures(features) {
     const componentDemoFeatures = flattenFeatureBlocks(features['componentdemo']);

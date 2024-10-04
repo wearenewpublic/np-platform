@@ -2,7 +2,7 @@
 // of the admin feature selector UI.
 
 import { ConversationScreen, Narrow } from "../component/basics"
-import { DemoSection } from "../component/demo"
+import { DemoSection } from "../system/demo"
 import { FormField } from "../component/form"
 import { CHOOSEONE, COMPOSITE, SECTION, SUBSECTION } from "../feature"
 import { FeatureTreeNode } from "../component/topbar"

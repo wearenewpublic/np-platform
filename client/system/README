@@ -1,0 +1,4 @@
+We use this folder for modules that are hard to properly unit test because they 
+directly interface with the system.
+
+Take great care when modifying anything in here.

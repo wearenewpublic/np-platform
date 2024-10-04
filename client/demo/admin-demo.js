@@ -1,4 +1,4 @@
-import { CLICK, INPUT, POPUP, POPUP_CLOSE } from "../component/demo";
+import { CLICK, INPUT, POPUP, POPUP_CLOSE } from "../system/demo";
 import { AdminUsersScreen } from "../feature/AdminUsersFeature";
 import { stringToFbKey } from "../util/firebase";
 

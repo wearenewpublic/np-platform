@@ -18,6 +18,7 @@
         "./organizer/*": "./dist/organizer/*.js",
         "./structure": "./dist/structure/index.js",
         "./structure/*": "./dist/structure/*.js",
+        "./system/*": "./dist/system/*.js",
         "./translations": "./dist/translations/index.js",
         "./util/*": "./dist/util/*.js"
     },

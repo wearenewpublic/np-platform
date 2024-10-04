@@ -9,7 +9,7 @@ import { HorizBox, Pad, PadBox, Separator } from "./basics";
 import { ObservableProvider, ObservableValue, useObservable } from "../util/observable";
 import { getFeatureBlocks, useEnabledFeatures } from "../util/features";
 import { defaultFeatureConfig } from "../feature";
-import { Catcher } from "./catcher";
+import { Catcher } from "../system/catcher";
 import { historyGetState } from "../platform-specific/url";
 import { useIsAdmin } from "./admin";
 import { CircleCount, UtilityText } from "./text";

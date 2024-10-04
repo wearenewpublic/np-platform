@@ -1,4 +1,4 @@
-import { DemoPageWidget } from "../component/demo"
+import { DemoPageWidget } from "../system/demo"
 
 export const DemoProfileFeature = {
     name: 'Show Config Slots',

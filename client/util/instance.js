@@ -5,7 +5,7 @@ import { IBMPlexSans_400Regular, IBMPlexSans_500Medium, IBMPlexSans_600SemiBold 
 import { IBMPlexMono_400Regular, IBMPlexMono_500Medium, IBMPlexMono_600SemiBold } from '@expo-google-fonts/ibm-plex-mono';
 import { ConfigContext, Datastore, WaitForData, useGlobalProperty, useLoaded } from '../util/datastore';
 import { useFonts } from 'expo-font';
-import { Catcher } from '../component/catcher';
+import { Catcher } from '../system/catcher';
 import { structures } from '../structure';
 import { assembleConfig, assembleScreenSet } from './features';
 import { useFirebaseData, useFirebaseUser } from './firebase';

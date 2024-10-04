@@ -1,15 +1,15 @@
 import { StyleSheet, Text, View } from "react-native";
-import { Center, FlowBox, Pad, PadBox, ShadowBox } from "./basics";
+import { Center, FlowBox, Pad, PadBox, ShadowBox } from "../component/basics";
 import { Catcher } from "./catcher";
-import { FilterButton, IconButton, Tag } from "./button";
+import { FilterButton, IconButton, Tag } from "../component/button";
 import { Datastore } from "../util/datastore";
-import { global_textinput_test_handlers, Heading, UtilityText } from "./text";
+import { global_textinput_test_handlers, Heading, UtilityText } from "../component/text";
 import React, { useState } from "react";
 import { pauseAsync } from "../util/util";
 import { Reset } from "@carbon/icons-react";
-import { colorBlueBackground, colorGreyBorder, colorGreyPopupBackground, colorTextGrey, colorWhite } from "./color";
+import { colorBlueBackground, colorGreyBorder, colorGreyPopupBackground, colorTextGrey, colorWhite } from "../component/color";
 import { demoPersonaToFbUser, personaA } from "../util/testpersonas";
-import { Banner } from "./banner";
+import { Banner } from "../component/banner";
 import { closeActivePopup, getPopupRef } from "../platform-specific/popup.web";
 
 export function CLICK(matcher) {

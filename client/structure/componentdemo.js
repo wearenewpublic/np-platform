@@ -6,9 +6,9 @@ import { useConfig } from "../util/features";
 import { colorGreyPopupBackground, colorRed } from "../component/color";
 import { View } from "react-native";
 import { useDatastore } from "../util/datastore";
-import { DemoStorySet } from "../component/demo";
+import { DemoStorySet } from "../system/demo";
 import { AccordionField } from "../component/form";
-import { Catcher } from "../component/catcher";
+import { Catcher } from "../system/catcher";
 import { sortBy, toBool } from "../util/util";
 
 export const ComponentDemoStructure = {

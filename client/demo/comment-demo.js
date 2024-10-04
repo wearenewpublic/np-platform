@@ -1,6 +1,6 @@
 import { ActionEdit, ActionReply, ActionReport, BasicComments, Comment, CommentsInput, Composer, ComposerScreen } from "../component/comment";
 import { ConversationScreen, Narrow, Pad, Separator } from "../component/basics";
-import { CLICK, DemoSection, INPUT } from "../component/demo";
+import { CLICK, DemoSection, INPUT } from "../system/demo";
 import { Datastore } from "../util/datastore";
 import { ActionUpvote } from "../feature/UpvoteFeature";
 import { StructureDemo } from "../util/instance";

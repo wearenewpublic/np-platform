@@ -1,4 +1,4 @@
-import { CLICK, INPUT } from "../component/demo"
+import { CLICK, INPUT } from "../system/demo"
 import { StructureDemo } from "../util/instance"
 import { ProfileModuleHolder } from "../structure/profile"
 import { FirstLoginSetupTester, ProfilePhotoAndNameFeature } from "../feature/ProfilePhotoAndName"
