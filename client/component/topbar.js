@@ -19,11 +19,13 @@ import { ChevronDown, ChevronUp, Close, ArrowLeft } from '@carbon/icons-react';
 
 const global_toolbarAction = new ObservableValue(null);
 
-export function TopBar({isLogin = false}) {
+export function TopBar() {
     const s = TopBarStyle;
     const instanceKey = useInstanceKey();
+    const structureKey = useStructureKey();
     const toolbarAction = useObservable(global_toolbarAction);
     const datastore = useDatastore();
+    const isLogin = structureKey == 'login';
     return <View style={s.topBox}>        
         <View style={s.leftRow}>    
             {historyGetState() ? 
