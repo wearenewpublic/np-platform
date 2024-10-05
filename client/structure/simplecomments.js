@@ -50,7 +50,9 @@ export const SimpleCommentsStructure = {
         noCommentsTitle: 'Start the conversation',
         noCommentsMessage: 'Be the first to share your thoughts',
         noMoreCommentsMessage: 'No more responses',
-        readOnly: false
+        readOnly: false,
+
+        openLinksInNewTab: false,
     }
 }
 

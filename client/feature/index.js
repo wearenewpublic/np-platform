@@ -18,6 +18,7 @@ import { AdminDemo } from "../demo/admin-demo";
 import { CloseConversationFeature } from "./CloseConversationFeature";
 import { TopBarDemoFeature } from "../demo/topbar-demo";
 import { BasicFeaturesDemoFeature } from "../demo/basicfeatures-demo";
+import { OpenLinksInNewTabFeature } from "./OpenLinksInNewTabFeature";
 
 export function SECTION(label, features) {return {section: true, label, features}}
 export function SUBSECTION(label, features) {return {section: true, level:2, label, features}}
@@ -38,7 +39,8 @@ export var features = {
             LengthLimitFeature,
             BasicTeaserFeature,
             ReplyNotificationsFeature,
-            CloseConversationFeature
+            CloseConversationFeature,
+            OpenLinksInNewTabFeature
         ])
     ],
     profile: [
@@ -80,7 +82,9 @@ export var defaultFeatureConfig = {
         demo_topbar: true,
         demo_basicfeatures: true
     },
-    simplecomments: {},
+    simplecomments: {
+        openlinksinnewtab: true       
+    },
     profile: {
         profileeditname: true,
     },

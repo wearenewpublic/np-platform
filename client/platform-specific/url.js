@@ -1,3 +1,4 @@
+import { Linking, Pressable } from "react-native";
  
 export function historyPushState() {}
 
@@ -13,6 +14,11 @@ export function getIsLocalhost() {return false}
 
 export function setTitle() {}
 
-export function WebLink({url, children}) {
-    return children;
+export function WebLinkBase({url, children}) {
+    function onPress() {
+        Linking.openURL(url);
+    }
+    return <Pressable style={{flexShrink: 1}} onPress={onPress}>
+        {children}
+    </Pressable>
 }

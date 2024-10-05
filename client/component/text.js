@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Edit, Checkmark } from "@carbon/icons-react";
 import { usePersonaKey } from "../util/datastore";
 import { ProfilePhoto } from "./people";
+import { WebLinkBase } from "../platform-specific/url";
 
 const fontFamilySansRegular = 'IBMPlexSans_400Regular, Arial, Helvetica, sans-serif';
 const fontFamilySansMedium = 'IBMPlexSans_500Medium, Arial, Helvetica, sans-serif';
@@ -205,17 +206,14 @@ const UtilityTextStyle = StyleSheet.create({
     }
 })
 
+export function WebLink({url, children}) {
+    return <WebLinkBase url={url}>{children}</WebLinkBase>
+}
+
 export function LinkText({type='small', testID, text, url, label, formatParams}) {
-    const [hover, setHover] = useState(false);
-
-    function onPress() {
-        window.open(url, '_blank');
-    }
-
-    return <HoverView shrink setHover={setHover} onPress={onPress} testID={testID}>
-        <UtilityText type={type} text={text} label={label} formatParams={formatParams} 
-            /* color={colorTextBlue} */ underline={!hover} />
-    </HoverView>
+    return <WebLink url={url} testID={testID} >
+        <UtilityText underline type={type} text={text} label={label} formatParams={formatParams} />
+    </WebLink>
 }
 
 // HACK: This is a hack to allow the test to access the onChangeText function
