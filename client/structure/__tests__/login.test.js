@@ -2,8 +2,8 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import { signInWithGoogle } from "../../util/firebase";
 import { WithEnv } from "../../util/testutil";
 import { Datastore } from "../../util/datastore";
-import { default_fbUser } from "../../system/demo";
 import { LoginScreen } from "../login";
+import { default_fbUser } from "../../util/testpersonas";
 
 jest.mock("../../util/navigate");
 

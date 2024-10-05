@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { defaultPersonaList, personaListToMap } from './testpersonas';
 import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseDataAsync, getFirebaseUser, onFbUserChanged, useFirebaseData } from './firebase';
-import { deepClone, expandDataListMap, getObjectPropertyPath } from './util';
+import { deepClone, getObjectPropertyPath } from './util';
 import { LoadingScreen } from '../component/basics';
 import { SharedData, SharedDataContext } from './shareddata';
 import { callServerApiAsync } from './servercall';
@@ -536,4 +536,34 @@ export function useInstanceKey() {
 export function useStructureKey() {
     const datastore = useDatastore();
     return datastore.getStructureKey();
+}
+
+export function expandDataList(list) {
+    const date = new Date();
+    date.setHours(date.getHours() - 1);
+
+    var collection = {};
+
+    list.forEach(item => {
+        date.setMinutes(date.getMinutes() + 1);
+
+        const key = item.key || newLocalKey();
+        // ensureNextKeyGreater(key);
+        ensureNextLocalKeyGreater(key);
+        collection[key] = {
+            ...item,
+            key,
+            time: date.getTime()
+        };
+    });
+
+    return collection;
+}
+
+export function expandDataListMap(map) {
+    var newMap = {};
+    Object.keys(map).forEach(key => {
+        newMap[key] = expandDataList(map[key]);
+    });
+    return newMap;
 }

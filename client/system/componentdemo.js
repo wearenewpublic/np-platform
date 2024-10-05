@@ -10,6 +10,7 @@ import { DemoStorySet } from "./demo";
 import { AccordionField } from "../component/form";
 import { Catcher } from "./catcher";
 import { sortBy, toBool } from "../util/util";
+import { OpenLinksInNewTabFeature } from "../feature/OpenLinksInNewTabFeature";
 
 export const ComponentDemoStructure = {
     key: 'componentdemo',
@@ -25,6 +26,8 @@ export const ComponentDemoStructure = {
         structureSections: [],
         featureSections: [],
         structureDemos: [],  
+
+        openLinksInNewTab: false,
     }
 }
 

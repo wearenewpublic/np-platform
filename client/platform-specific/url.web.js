@@ -1,4 +1,3 @@
-import { useConfig } from "../util/features";
 
 export function historyPushState({state, url}) {
     history.pushState(state, '', url);
@@ -26,9 +25,7 @@ export function setTitle(title) {
     window.document.title = title;
 }
 
-export function WebLinkBase({url, children}) {
-    const { openLinksInNewTab } = useConfig();
-    const target = openLinksInNewTab ? '_blank' : '_parent';
-
+export function WebLinkBase({url, newTab, children}) {
+    const target = newTab ? '_blank' : '_parent';
     return <a href={url} target={target} rel='noreferrer'>{children}</a>;
 }

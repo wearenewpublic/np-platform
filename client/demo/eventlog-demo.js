@@ -1,13 +1,8 @@
-import { get } from "firebase/database"
 import { StructureDemo } from "../util/instance"
-import { expandDataList } from "../util/util"
 import { personaA } from "../util/testpersonas"
-import { UtilityText } from "../component/text"
-import { CLICK, DemoSection } from "../system/demo"
-import { Datastore } from "../util/datastore"
-import { EventLogScreen, EventTypesScreen, LogEvent, SessionListScreen, SessionPreview } from "../structure/eventlog"
-import { Pad } from "../component/basics"
-import { roles } from "../feature"
+import { CLICK } from "../system/demo"
+import { EventLogScreen, EventTypesScreen, SessionListScreen } from "../structure/eventlog"
+import { expandDataList } from "../util/datastore"
 
 export const EventlogDemoFeature = {
     key: 'demo_eventlog',

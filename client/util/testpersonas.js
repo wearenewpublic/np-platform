@@ -113,3 +113,5 @@ export function personaListToMap(personas) {
     return result;
 }
 
+export const default_fbUser = demoPersonaToFbUser(personaA);
+

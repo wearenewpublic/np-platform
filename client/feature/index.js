@@ -62,6 +62,9 @@ export var features = {
             AdminDemo,
             TopBarDemoFeature,
             BasicFeaturesDemoFeature
+        ]),
+        SECTION('Configuration', [
+            OpenLinksInNewTabFeature
         ])
     ],
     admin: [

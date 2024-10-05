@@ -1,12 +1,13 @@
-import { Linking, StyleSheet, Text, TextInput, View } from "react-native";
-import { TranslatableText, useTranslation } from "./translation"
-import { colorBannerGreen, colorBlack, colorDisabledText, colorGreyBorder, colorGreyHover, colorGreyHoverBorder, colorRed, colorTextBlue, colorTextGrey, colorWhite } from "./color";
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import { TranslatableText, useTranslation } from "./translation";
+import { colorBannerGreen, colorBlack, colorDisabledText, colorGreyBorder, colorGreyHover, colorGreyHoverBorder, colorRed, colorWhite } from "./color";
 import { HorizBox, HoverView, Pad, PadBox } from "./basics";
 import { useEffect, useState } from "react";
 import { Edit, Checkmark } from "@carbon/icons-react";
 import { usePersonaKey } from "../util/datastore";
 import { ProfilePhoto } from "./people";
 import { WebLinkBase } from "../platform-specific/url";
+import { useConfig } from "../util/features";
 
 const fontFamilySansRegular = 'IBMPlexSans_400Regular, Arial, Helvetica, sans-serif';
 const fontFamilySansMedium = 'IBMPlexSans_500Medium, Arial, Helvetica, sans-serif';
@@ -207,7 +208,12 @@ const UtilityTextStyle = StyleSheet.create({
 })
 
 export function WebLink({url, children}) {
-    return <WebLinkBase url={url}>{children}</WebLinkBase>
+    const { openLinksInNewTab } = useConfig();
+    return <WebLinkBase 
+        newTab={openLinksInNewTab} 
+        url={url}>
+            {children}
+    </WebLinkBase>
 }
 
 export function LinkText({type='small', testID, text, url, label, formatParams}) {

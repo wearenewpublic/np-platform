@@ -3,9 +3,10 @@ import { act, render } from '@testing-library/react';
 import { assembleConfig, flattenFeatureBlocks } from './features';
 import { Datastore } from './datastore';
 import { testStoryActionListAsync } from './testutil';
-import { default_fbUser, defaultServerCall, NavResult, ServerCallLog } from '../system/demo';
+import { defaultServerCall, NavResult, ServerCallLog } from '../system/demo';
 import { getStructureForKey } from './instance';
 import { keysToTrueMap } from './util';
+import { default_fbUser } from './testpersonas';
 
 export function runComponentDemoTestsForDemoFeatures(features) {
     const componentDemoFeatures = flattenFeatureBlocks(features['componentdemo']);

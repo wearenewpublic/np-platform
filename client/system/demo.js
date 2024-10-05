@@ -8,7 +8,7 @@ import React, { useState } from "react";
 import { keysToTrueMap, pauseAsync } from "../util/util";
 import { Reset } from "@carbon/icons-react";
 import { colorBlueBackground, colorGreyBorder, colorGreyPopupBackground, colorTextGrey, colorWhite } from "../component/color";
-import { demoPersonaToFbUser, personaA } from "../util/testpersonas";
+import { default_fbUser, demoPersonaToFbUser, personaA } from "../util/testpersonas";
 import { Banner } from "../component/banner";
 import { closeActivePopup, getPopupRef } from "../platform-specific/popup.web";
 import { assembleConfig } from "../util/features";
@@ -133,8 +133,6 @@ async function playStoryActionListAsync({domRef, actions}) {
     }
     await pauseAsync(500);
 }
-
-export const default_fbUser = demoPersonaToFbUser(personaA);
 
 export const defaultServerCall = {
     eventlog: {

@@ -1,36 +1,6 @@
 import { getIsLocalhost } from "../platform-specific/url";
 import { fileHostDomain, localHostApiDomain } from "./config";
-import { ensureNextLocalKeyGreater, newLocalKey } from "./datastore";
 
-export function expandDataList(list) {
-    const date = new Date();
-    date.setHours(date.getHours() - 1);
-
-    var collection = {};
-
-    list.forEach(item => {
-        date.setMinutes(date.getMinutes() + 1);
-
-        const key = item.key || newLocalKey();
-        // ensureNextKeyGreater(key);
-        ensureNextLocalKeyGreater(key);
-        collection[key] = {
-            ...item,
-            key,
-            time: date.getTime()
-        };
-    });
-
-    return collection;
-}
-
-export function expandDataListMap(map) {
-    var newMap = {};
-    Object.keys(map).forEach(key => {
-        newMap[key] = expandDataList(map[key]);
-    });
-    return newMap;
-}
 
 export function removeKey(collection, key) {
     const newCollection = { ...collection };
