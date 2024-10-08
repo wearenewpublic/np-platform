@@ -31,12 +31,12 @@ export function POPUP_CLOSE() {
 }
 
 
-export function DemoSection({label, horiz=false, children}) {
+export function DemoSection({label, horiz=false, children, color=null}) {
     const s = DemoSectionStyle;
     return <View style={{marginBottom: 32}}>
         <Heading type='small' label={label} />
         <Pad size={8} />
-        <View style={s.box}>
+        <View style={[s.box, color && {backgroundColor: color}]}>
             <Catcher>
                 <SpacedArray horiz={horiz}>{children}</SpacedArray>
             </Catcher>
