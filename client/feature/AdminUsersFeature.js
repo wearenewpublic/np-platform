@@ -99,7 +99,7 @@ function AddAdminUsers({onUsersAdded}) {
         {toBool(emails) &&  <HorizBox>
             <RoleSelectorPopup selectedRoles={selectedRoles} setSelectedRoles={setSelectedRoles} />
             <Pad />
-            <CTAButton compact disabled={inProgress || selectedRoles.length == 0} label='Add Admins' onPress={onAdd} />
+            <CTAButton size='compact' disabled={inProgress || selectedRoles.length == 0} label='Add Admins' onPress={onAdd} />
         </HorizBox>}
         {toBool(inProgress) && <UtilityText label='Adding Admins...' />}
     </FormField>

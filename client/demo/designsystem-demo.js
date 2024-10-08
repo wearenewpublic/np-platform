@@ -3,7 +3,7 @@ import { Datastore, usePersonaKey } from "../util/datastore";
 import { IconUpvote, IconUpvoted } from "../component/icon";
 import { CharacterCounter, CircleCount, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
 import { colorBlack, colorLightGreen, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
-import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, FilterButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, TextButton } from "../component/button";
+import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, FilterButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, ClickableTag, TextButton } from "../component/button";
 import { Checkbox, Toggle, RadioOption, RadioGroup, FormField, AccordionField } from "../component/form";
 import { useState } from "react";
 import { RichText } from "../component/richtext";
@@ -306,7 +306,7 @@ function ButtonsAndLinksScreen() {
                     <CTAButton label='Disabled' type='primary' disabled />
                 </SpacedArray>
                 <CTAButton wide label='Wide' onPress={onPress} />
-                <CTAButton compact label='Compact' onPress={onPress} />
+                <CTAButton size='compact' label='Compact' onPress={onPress} />
             </DemoSection>
             <DemoSection label='Action Button'>
                 <SpacedArray horiz>
@@ -404,6 +404,10 @@ function TagsScreen() {
             <Tag label='Subtle Tag' type='subtle' />
             <Tag emoji='🔥' label='Emphasized Tag' type='emphasized' color={colorPink} />
             <Tag label='Tiny Tag' type='tiny' />
+        </DemoSection>
+        <DemoSection label='Clickable Tag' color={colorPink}>
+            <ClickableTag label='Standard' onPress={() => {}} />
+            <ClickableTag label='Standard With Emoji' emoji='🔥' onPress={() => {}} />
         </DemoSection>
     </View>
 }

@@ -37,7 +37,7 @@ export function TopBar() {
         <Catcher>
             <HorizBox center>
                 {toolbarAction ? 
-                    <PadBox right={12}><CTAButton compact label={toolbarAction.label} disabled={toolbarAction.disabled} onPress={toolbarAction.onPress} /></PadBox>
+                    <PadBox right={12}><CTAButton size='compact' label={toolbarAction.label} disabled={toolbarAction.disabled} onPress={toolbarAction.onPress} /></PadBox>
                 : 
                     instanceKey && !isLogin && <UserInfo />
                 }
@@ -244,7 +244,7 @@ function UserInfo() {
         </Popup>
     } else {        
         return <PadBox horiz={20}>
-            <CTAButton type='secondary' onPress={onLogin} compact label='Log in' />
+            <CTAButton type='secondary' onPress={onLogin} size='compact' label='Log in' />
         </PadBox>
     }
 }

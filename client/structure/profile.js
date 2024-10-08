@@ -115,7 +115,7 @@ export function ProfileModuleHolder({module}) {
                 {React.createElement(module.view)}
                 <Pad size={24} />
                 {isMyProfile && module.edit && <CTAButton
-                    type='secondary' compact 
+                    type='secondary' size='compact' 
                     label='Edit {tLabel}' formatParams={{tLabel}} 
                     onPress={() => setEditing(true)} />
                 }

@@ -8,7 +8,7 @@ import { PopupBase } from "../platform-specific/popup";
 import { Information, Close, ChevronDown, ChevronUp } from '@carbon/icons-react';
 
 
-export function CTAButton({label, text, formatParams, icon, type='primary', disabled, compact=false, wide=false, onPress}) {
+export function CTAButton({label, text, formatParams, icon, type='primary', disabled, size='large', wide=false, borderless=false, onPress}) {
     const s = CTAButtonStyle;
 
     const styleMap = {
@@ -19,12 +19,18 @@ export function CTAButton({label, text, formatParams, icon, type='primary', disa
         delete: {normal: s.delete, hover: s.deleteHover, pressed: s.deletePressed, textColor: colorRed}
     }
     const {normal, hover, pressed, textColor} = styleMap[disabled ? 'disabled' : type] ?? styleMap.primary;
+
+    const sizeMap = {
+        large: s.largeButton,
+        compact: s.compactButton,
+        small: s.smallButton,
+    };    
         
     return <HoverView disabled={disabled} role='button' testID={label ?? text}
-            style={[compact ? s.compactButton : s.button, wide && s.wide, normal]} hoverStyle={[s.hover, hover]} 
+            style={[sizeMap[size], wide && s.wide, normal, borderless && s.borderless]} hoverStyle={[s.hover, hover]} 
             pressedStyle={pressed} onPress={onPress} >
-        {icon && <PadBox right={8}>{icon}</PadBox>}
-        <UtilityText type='large' label={label} text={text} formatParams={formatParams} color={textColor} />
+        {icon && <PadBox right={size === 'small' ? 6 : 8}>{icon}</PadBox>}
+        <UtilityText type={size === 'small' ? 'tiny' : 'large'} label={label} text={text} formatParams={formatParams} color={textColor} />
     </HoverView>
 }
 
@@ -81,7 +87,7 @@ const CTAButtonStyle = StyleSheet.create({
         borderColor: colorDisabledBackground,
         color: colorDisabledText
     },
-    button: {
+    largeButton: {
         paddingHorizontal: 16,
         paddingVertical: 12,
         borderRadius: 32,
@@ -100,13 +106,29 @@ const CTAButtonStyle = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 1   
     },
+    smallButton: {
+        paddingHorizontal: 12,
+        height: 28,
+        borderRadius: 32,
+        alignSelf: 'flex-start',
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 1   
+    },
     wide: {
         alignSelf: 'stretch',    
         justifyContent: 'center',
         flex: 1
+    },
+    borderless: {
+        borderWidth: 0
     }
 })
 
+export function ClickableTag({label, emoji, onPress}) {
+    return <CTAButton label={label} icon={emoji && <UtilityText text={emoji} type="tiny" />}
+    type="secondary" size="small" borderless onPress={onPress} />
+}
 
 export function IconButton({label, icon=null, iconProps={}, wide=false, onPress}) {
     const s = IconReplyStyle;
@@ -242,14 +264,15 @@ const ExpanderButtonStyle = StyleSheet.create({
     }
 })
 
-export function Tag({label, emoji, text, type='emphasized', strong=false, formatParams, color=null, onPress, compact=false}) {
+export function Tag({label, emoji, text, type='emphasized', strong=false, formatParams, color=null, onPress, compact=false, dashed=false, borderColor=null}) {
     const s = TagStyle;
     return <View style={[
                 s.button, 
                 type == 'emphasized' && s.emphasized, 
                 type == 'tiny' && s.tiny,      
-                color && {borderColor: color, backgroundColor: color},
-                compact && {height: 28}
+                color && {borderColor: borderColor || color, backgroundColor: color},
+                compact && {height: 28},
+                dashed && {borderStyle: 'dashed'}
             ]} 
             hoverStyle={s.hover} onPress={onPress}>
         {emoji && <PadBox right={6}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
