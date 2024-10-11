@@ -12,7 +12,7 @@ export function Modal({children, buttonRow, onClose}) {
             <View style={s.inner}>
                 <HorizBox spread center>
                     <Pad size={56} />
-                    <PadBox right={12}><BreadCrumb icon={Close} iconProps={{size:32}} onPress={onClose}/></PadBox>
+                    <PadBox right={12}><BreadCrumb testID='close-modal' icon={Close} iconProps={{size:32}} onPress={onClose}/></PadBox>
                 </HorizBox>
                 <Separator />
                 <ScrollView>

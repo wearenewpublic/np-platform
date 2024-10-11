@@ -461,10 +461,15 @@ function modalStorySet() {return [
             {label: 'Open', actions: [
                 CLICK('Open Modal')
             ]},
-            {label: 'Open and Close', actions: [
+            {label: 'Open and Close with button', actions: [
                 CLICK('Open Modal'), 
                 POPUP(CLICK('I understand'))
-            ]}
+            ]},
+            {label: 'Open and Close with breadcrumb', actions: [
+                CLICK('Open Modal'), 
+                POPUP(CLICK('close-modal'))
+            ]},
+            
         ]
     }
 ]}
