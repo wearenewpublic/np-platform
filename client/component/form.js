@@ -72,7 +72,9 @@ export function Checkbox({emoji, text, label, value, onChange}) {
             onPress={() => onChange(!value)} role='checkbox'>
         <PadBox vert={8}>
             <HorizBox center>
-                {value ? <CheckboxCheckedFilled size={32} /> : <CheckboxOpen size={32} style={{fill: colorGreyBorder}} />}
+                <View style={s.checkboxContainer}>
+                    {value ? <CheckboxCheckedFilled size={32} /> : <CheckboxOpen size={32} style={{fill: colorGreyBorder}} />}
+                </View>
                 <Pad size={12} />
                 {emoji && <PadBox right={6}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
                 <UtilityText text={text} label={label} />
@@ -86,7 +88,10 @@ const CheckboxStyle = StyleSheet.create({
     },
     pressed: {
         backgroundColor: colorGreyFormPress    
-    }
+    },
+    checkboxContainer: {
+        width: 35
+    },
 })
 
 
