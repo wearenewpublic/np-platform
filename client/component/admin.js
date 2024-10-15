@@ -5,6 +5,7 @@ import { Banner } from "./banner";
 import { UtilityText } from "./text";
 import { ConversationScreen } from "./basics";
 import { roles } from "../feature";
+import { deepClone } from "../util/util";
 
 export var global_capability_map = {};
 
@@ -22,16 +23,6 @@ export function useIsLocalhostAdmin() {
     const emailDomain = fbUser.email.split('@')?.[1];
     return getIsLocalhost() && emailDomain === 'admin.org';
 }
-
-export function useIsAdminForSilo({siloKey}) {
-    const localHostAdmin = useIsLocalhostAdmin();
-    const fbUser = useFirebaseUser();
-    const adminEmails = useFirebaseData(['silo', siloKey, 'module-public', 'admin', 'adminEmails'])?.toLowerCase(); 
-    const email = fbUser?.email?.toLowerCase();
-
-    return localHostAdmin || (email && adminEmails?.includes(email));
-}
-
 
 export function useHasCapability(capability) {
     const roles = useMyRoles();
@@ -96,18 +87,28 @@ export function getRoles() {
     return roles;
 }
 
-export function extendRoles(newRoles) {
-    Object.keys(newRoles).forEach(roleKey => {
-        const newRole = newRoles[roleKey];
-        if (roles[roleKey]) {
-            const oldRole = roles[roleKey];
-            roles[roleKey].can = [
-                ... oldRole.can ?? [], 
-                ... newRole.can ?? []
+export function mergeRoles(oldRoles, newRoles) {
+    const mergedRoles = {...oldRoles, ...newRoles};
+    Object.keys(mergedRoles).forEach(roleKey => {
+        if (oldRoles[roleKey] && newRoles[roleKey]) {
+            const oldRole = oldRoles[roleKey];
+            const newRole = newRoles[roleKey];
+            var mergedRole = {...oldRole, ...newRole};
+            mergedRole.can = [
+                ...oldRole.can ?? [], 
+                ...newRole.can ?? []
             ]
-        } else {
-            roles[roleKey] = newRoles
+            mergedRole.inherits = [
+                ...oldRole.inherits ?? [], 
+                ...newRole.inherits ?? []
+            ]
+            mergedRoles[roleKey] = mergedRole;
         }
     })
-    global_capability_map = makeCapabilityMap(roles);
+    return mergedRoles;
+}
+
+export function extendRoles(newRoles) {
+    const mergedRoles = mergeRoles(roles, newRoles);
+    global_capability_map = makeCapabilityMap(mergedRoles);
 }

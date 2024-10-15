@@ -1,16 +1,18 @@
 import { StyleSheet, Text, View } from "react-native";
-import { Center, FlowBox, Pad, PadBox, ShadowBox } from "./basics";
+import { Center, FlowBox, Pad, PadBox, ShadowBox } from "../component/basics";
 import { Catcher } from "./catcher";
-import { FilterButton, IconButton, Tag } from "./button";
+import { FilterButton, IconButton, Tag } from "../component/button";
 import { Datastore } from "../util/datastore";
-import { global_textinput_test_handlers, Heading, UtilityText } from "./text";
+import { global_textinput_test_handlers, Heading, UtilityText } from "../component/text";
 import React, { useState } from "react";
-import { pauseAsync } from "../util/util";
+import { keysToTrueMap, pauseAsync } from "../util/util";
 import { Reset } from "@carbon/icons-react";
-import { colorBlueBackground, colorGreyBorder, colorGreyPopupBackground, colorTextGrey, colorWhite } from "./color";
-import { demoPersonaToFbUser, personaA } from "../util/testpersonas";
-import { Banner } from "./banner";
+import { colorBlueBackground, colorGreyBorder, colorGreyPopupBackground, colorTextGrey, colorWhite } from "../component/color";
+import { default_fbUser, demoPersonaToFbUser, personaA } from "../util/testpersonas";
+import { Banner } from "../component/banner";
 import { closeActivePopup, getPopupRef } from "../platform-specific/popup.web";
+import { assembleConfig } from "../util/features";
+import { getStructureForKey } from "../util/instance";
 
 export function CLICK(matcher) {
     return {matcher, action: 'click'}
@@ -29,12 +31,12 @@ export function POPUP_CLOSE() {
 }
 
 
-export function DemoSection({label, horiz=false, children}) {
+export function DemoSection({label, horiz=false, children, color=null}) {
     const s = DemoSectionStyle;
     return <View style={{marginBottom: 32}}>
         <Heading type='small' label={label} />
         <Pad size={8} />
-        <View style={s.box}>
+        <View style={[s.box, color && {backgroundColor: color}]}>
             <Catcher>
                 <SpacedArray horiz={horiz}>{children}</SpacedArray>
             </Catcher>
@@ -132,8 +134,6 @@ async function playStoryActionListAsync({domRef, actions}) {
     await pauseAsync(500);
 }
 
-export const default_fbUser = demoPersonaToFbUser(personaA);
-
 export const defaultServerCall = {
     eventlog: {
         logEvent: () => {}
@@ -142,7 +142,7 @@ export const defaultServerCall = {
 
 export function DemoStorySet({storySet}) {
     const { collections, content, structureKey='testStruct', instanceKey='testInstance', 
-        personaKey, config, modulePublic, roles,
+        personaKey, config, modulePublic, roles, features,
         globals, sessionData, serverCall, pad=true, firebaseUser=default_fbUser, siloKey='demo'
     } = storySet;
     const domRef = React.createRef();
@@ -153,6 +153,14 @@ export function DemoStorySet({storySet}) {
     function onServerCall(call) {
         setCallLog(oldLog => [...oldLog, call]);
     }
+    var featureConfig = null;
+    if (features) {
+        const structure = getStructureForKey(structureKey);
+        if (!structure) {
+            throw new Error('Structure not found: ' + structureKey);
+        }
+        featureConfig = assembleConfig({structure, activeFeatures: keysToTrueMap(features)});
+    }
 
     function onReset() {
         dataRef.current.resetData();
@@ -161,12 +169,13 @@ export function DemoStorySet({storySet}) {
         setCallLog([]);
     }
 
-    return <Datastore ref={dataRef} config={config} siloKey={siloKey}
+    return <Datastore ref={dataRef} config={featureConfig ?? config} siloKey={siloKey}
             structureKey={structureKey} instanceKey={instanceKey} personaKey={personaKey}
             collections={collections} globals={globals} firebaseUser={firebaseUser}
             sessionData={sessionData} modulePublic={modulePublic}
             roles={roles} onServerCall={onServerCall}
             gotoInstance={setNavInstance}
+            goBack={() => setNavInstance({parent: true})}
             pushSubscreen={(screenKey,params) => setNavInstance({screenKey, params})}
             serverCall={{...defaultServerCall, ...serverCall}} >
         <Heading type='small' text={storySet.label} />
@@ -200,8 +209,9 @@ export function NavResult({navInstance}) {
     return <PadBox horiz={8} vert={8}>
         <Banner>
             <UtilityText text='Navigated to:' />
+            {navInstance.parent && <UtilityText strong text='Parent screen' />}
             {navInstance.structureKey && <UtilityText strong text={navInstance.structureKey + '/' + navInstance.instanceKey} />}
-            {navInstance.screenKey && <UtilityText strong text={'Subscreen: ' + navInstance.screenKey + '(' + JSON.stringify(navInstance.params)} />}
+            {navInstance.screenKey && <UtilityText strong text={'Subscreen: ' + navInstance.screenKey + '(' + JSON.stringify(navInstance.params) + ')'} />}
         </Banner>
     </PadBox>
 }

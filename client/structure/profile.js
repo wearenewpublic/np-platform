@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Container, ConversationScreen, HorizBox, LoadingScreen, Pad, PadBox } from "../component/basics";
-import { Catcher } from "../component/catcher";
+import { Catcher } from "../system/catcher";
 import { useServersideConstructor } from "../component/constructor";
 import { useDatastore, useGlobalProperty, useInstanceKey, usePersonaKey, usePersonaObject } from "../util/datastore";
 import { useConfig } from "../util/features";
@@ -115,7 +115,7 @@ export function ProfileModuleHolder({module}) {
                 {React.createElement(module.view)}
                 <Pad size={24} />
                 {isMyProfile && module.edit && <CTAButton
-                    type='secondary' compact 
+                    type='secondary' size='compact' 
                     label='Edit {tLabel}' formatParams={{tLabel}} 
                     onPress={() => setEditing(true)} />
                 }

@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { act, render } from '@testing-library/react';
-import { flattenFeatureBlocks } from './features';
+import { assembleConfig, flattenFeatureBlocks } from './features';
 import { Datastore } from './datastore';
 import { testStoryActionListAsync } from './testutil';
-import { default_fbUser, defaultServerCall, NavResult, ServerCallLog } from '../component/demo';
+import { defaultServerCall, NavResult, ServerCallLog } from '../system/demo';
+import { getStructureForKey } from './instance';
+import { keysToTrueMap } from './util';
+import { default_fbUser } from './testpersonas';
 
 export function runComponentDemoTestsForDemoFeatures(features) {
     const componentDemoFeatures = flattenFeatureBlocks(features['componentdemo']);
@@ -63,6 +66,12 @@ function runComponentTests(componentDemoFeatures) {
         } 
         if (!page.storySets) return;
         describe.each(page.storySets())('Story: $label', storySet => {
+            test('Start', async () => {
+                const rendered = await act(async () => 
+                    render(<StorySetContent storySet={storySet} />)
+                );
+                expect(rendered).toMatchSnapshot();            
+             });
             if (!storySet.stories || storySet.stories.length == 0) return;
             test.each(storySet.stories || [])('Action: $label', async story => {
                 const rendered = await act(async () => 
@@ -82,7 +91,13 @@ function StorySetContent({storySet}) {
         setCallLog(oldLog => [...oldLog, call]);
     }
 
-    return <Datastore config={storySet.config} collections={storySet.collections}
+    var featureConfig;
+    if (storySet.features) {
+        const structure = getStructureForKey(storySet.structureKey);
+        featureConfig = assembleConfig({structure, activeFeatures: keysToTrueMap(storySet.features)});
+    }
+
+    return <Datastore config={featureConfig ?? storySet.config} collections={storySet.collections}
         instanceKey={storySet.instanceKey ?? 'testInstance'} 
         siloKey={storySet.siloKey ?? 'demo'}
         modulePublic={storySet.modulePublic}
@@ -93,6 +108,7 @@ function StorySetContent({storySet}) {
         globals={storySet.globals} filebaseUser={storySet.firebaseUser}
         sessionData={storySet.sessionData} 
         gotoInstance={setNavInstance}
+        goBack={() => setNavInstance({parent: true})}
         onServerCall={onServerCall}
         pushSubscreen={(screenKey,params) => setNavInstance({screenKey, params})}
         serverCall={{...defaultServerCall, ...storySet.serverCall}}

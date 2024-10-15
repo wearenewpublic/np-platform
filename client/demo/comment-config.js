@@ -3,11 +3,13 @@ import { Center, Pad, PadBox, ShadowBox } from "../component/basics";
 import { CTAButton, SubtleButton, Tag } from "../component/button";
 import { colorBannerGreen, colorBlueBackground, colorPinkBackground, colorWhite } from "../component/color";
 import { CommentBody } from "../component/comment";
-import { DemoPageWidget, DemoWidget } from "../component/demo";
+import { DemoPageWidget, DemoWidget } from "../system/demo";
 import { Heading, Paragraph, UtilityText } from "../component/text"
-import { useConfig } from "../util/features"
+import { FIRST, useConfig } from "../util/features"
 import { Star } from '@carbon/icons-react';
 import { useInstanceParams, useScreenParams } from "../util/params";
+import { Modal } from "../component/modal";
+import { useGlobalProperty } from "../util/datastore";
 
 export const DemoFeature = {
     name: 'Show Config Slots',
@@ -45,7 +47,7 @@ export const DemoFeature = {
         noMoreCommentsMessage: 'No More Comments Message',
     },
     defaultConfig: {
-        demoAboveMessage: 'Comment Above Widget',
+        demoMessage: 'Placeholder Message',
     }   
 }
 
@@ -54,16 +56,21 @@ export const DemoSecondaryFeature = {
     name: 'Demo Secondary Feature',
     key: 'demo_secondary',
     config: {
-        demoAboveMessage: 'Modified Message'
+        demoMessage: 'Message from Secondary Feature',
+        commentTopWidgets: FIRST([() => <DemoWidget text='FIRST Widget' />])
     },
 }
 
+function onPress() {
+    alert('onPress');
+}
+
 function CommentAction() {
-    return <SubtleButton icon={Star} onPress={()=>alert('onPress')} padRight label='Comment Action' />
+    return <SubtleButton icon={Star} onPress={onPress} padRight label='Comment Action' />
 }
 
 function CommentRightAction() {
-    return <SubtleButton icon={Star} onPress={()=>alert('onPress')} padLeft label='Comment Right Action' />
+    return <SubtleButton icon={Star} onPress={onPress} padLeft label='Comment Right Action' />
 }
 
 function commentPostBlocker({datastore, comment}) {
@@ -72,10 +79,22 @@ function commentPostBlocker({datastore, comment}) {
 
 async function commentPostCheckerAsync({datastore, comment}) {
     if (comment.text.includes('dog')) {
-        return {allow: false, commentProps: {blockHappened: 'dog'}}
+        return {allow: false, commentProps: {
+            blockHappened: 'dog'
+        }}
     } else {
-        return {allow: true, commentProps: {blockHappened: null}}
+        return {
+            allow: true, 
+            commentProps: {blockHappened: null}, 
+            modal: ({onClose}) => <CommentPostModal onClose={onClose} label='You did not mention a dog. Thank you.' />
+        }
     }
+}
+
+function CommentPostModal({label, onClose}) {
+    return <Modal onClose={onClose} buttonRow={<CTAButton wide label='I understand' onPress={onClose}/>}>
+        <PadBox horiz={20} vert={20}><UtilityText label={label} /></PadBox>
+    </Modal>
 }
 
 async function commentPostTriggerAsync({datastore, comment, commentKey}) {
@@ -163,6 +182,7 @@ function ComposerTopBanner() {
 
 function TopBanner() {
     const {bestCat} = useScreenParams();
+    const {demoMessage} = useConfig();
     return <PadBox bottom={20}>
         <Banner color={colorBannerGreen}>
             <Heading label='Top Banner' />
@@ -174,6 +194,7 @@ function TopBanner() {
         <Pad size={8} />
         <Banner>
             <UtilityText text={`bestCat screen param is : ${bestCat}`} />
+            {demoMessage && <UtilityText text={demoMessage} />}
         </Banner>        
     </PadBox>
 }

@@ -1,36 +1,6 @@
 import { getIsLocalhost } from "../platform-specific/url";
 import { fileHostDomain, localHostApiDomain } from "./config";
-import { ensureNextLocalKeyGreater, newLocalKey } from "./datastore";
 
-export function expandDataList(list) {
-    const date = new Date();
-    date.setHours(date.getHours() - 1);
-
-    var collection = {};
-
-    list.forEach(item => {
-        date.setMinutes(date.getMinutes() + 1);
-
-        const key = item.key || newLocalKey();
-        // ensureNextKeyGreater(key);
-        ensureNextLocalKeyGreater(key);
-        collection[key] = {
-            ...item,
-            key,
-            time: date.getTime()
-        };
-    });
-
-    return collection;
-}
-
-export function expandDataListMap(map) {
-    var newMap = {};
-    Object.keys(map).forEach(key => {
-        newMap[key] = expandDataList(map[key]);
-    });
-    return newMap;
-}
 
 export function removeKey(collection, key) {
     const newCollection = { ...collection };
@@ -200,3 +170,25 @@ export function toBool(arg) {
     }
 }
 
+export function sortBy(array, field) {
+    return [...array].sort((a, b) => {
+        const fieldA = a[field];
+        const fieldB = b[field];
+
+        if (typeof fieldA === 'string' && typeof fieldB === 'string') {
+            return fieldA.localeCompare(fieldB); // String comparison
+        } else if (typeof fieldA === 'number' && typeof fieldB === 'number') {
+            return fieldA - fieldB; // Numeric comparison
+        } else {
+            return 0; // Fallback for other types or when fields are undefined
+        }
+    });
+}
+
+export function keysToTrueMap(keys) {
+    const map = {};
+    keys.forEach(key => {
+        map[key] = true;
+    });
+    return map;
+}

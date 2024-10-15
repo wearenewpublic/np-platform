@@ -81,20 +81,33 @@ export function firebaseWatchValue(pathList, callback) {
 
 // This needs to cope with temporarily null path elements, so that we can
 // use it to look up properties of a user, even when the user isn't logged in yet.
-export function useFirebaseData(pathList, defaultValue=null) {
-    const [data, setData] = useState(null);
+export function useFirebaseData(pathList, {defaultValue=null, limit=null, once=false}={}) {
+    const [data, setData] = useState(undefined);
     const pathString = makeFirebasePath(pathList, true);
     const nullPath = pathList.some(p => p == null || p == undefined);
 
     useEffect(() => {
         if (nullPath) return;
-        const unsubscribe = onValue(ref(database, pathString), snapshot => {
-            setData(snapshot.val() || defaultValue)
-        });
-        return unsubscribe;
-    }, [pathString]);
+
+        if (once) {
+            getFirebaseDataAsync(pathList).then(data => {
+                setData(data || defaultValue);
+            });
+        } else {
+            let query = ref(database, pathString);
+            if (limit) {
+                query = query.orderByKey().limitToLast(limit);
+            }
+
+            const unsubscribe = onValue(query, snapshot => {
+                setData(snapshot.val() || defaultValue)
+            });
+            return unsubscribe;
+        }
+    }, [pathString, once]);
     return data;
 }
+
 
 export async function getFirebaseDataAsync(pathList) {
     const pathString = makeFirebasePath(pathList);
@@ -107,10 +120,6 @@ export async function getFirebaseDataAsync(pathList) {
     }
 }
 
-
-// function makeFirebasePath(pathList) {
-//     return pathList.join('/');
-// }
 
 function makeFirebasePath(path, skipCheck=false) {
     if (typeof path == 'string') {

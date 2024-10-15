@@ -94,9 +94,9 @@ function RichTextPart({text, color, type='small'}) {
     return <Paragraph color={color} type={type} text={text} />
 }
 
-export function RichText({text, numberOfLines=null, onTextLayout, type, color={colorBlack}, label, formatParams}) {
+export function RichText({text, numberOfLines=null, onTextLayout, type, color={colorBlack}, label, formatParams, style={}}) {
     const tText = useTranslation(label, formatParams);
-    return <Text numberOfLines={numberOfLines} onTextLayout={onTextLayout}>
+    return <Text numberOfLines={numberOfLines} onTextLayout={onTextLayout} style={style}>
       <RichTextPart color={color} type={type} text={text ?? tText} />
     </Text>
 }

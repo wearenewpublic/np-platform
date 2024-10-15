@@ -5,7 +5,7 @@ import { IBMPlexSans_400Regular, IBMPlexSans_500Medium, IBMPlexSans_600SemiBold 
 import { IBMPlexMono_400Regular, IBMPlexMono_500Medium, IBMPlexMono_600SemiBold } from '@expo-google-fonts/ibm-plex-mono';
 import { ConfigContext, Datastore, WaitForData, useGlobalProperty, useLoaded } from '../util/datastore';
 import { useFonts } from 'expo-font';
-import { Catcher } from '../component/catcher';
+import { Catcher } from '../system/catcher';
 import { structures } from '../structure';
 import { assembleConfig, assembleScreenSet } from './features';
 import { useFirebaseData, useFirebaseUser } from './firebase';
@@ -25,12 +25,12 @@ export function useStandardFonts() {
     return fontsLoaded
 }
 
-function usePersonaPreviewForSilo({siloKey}) {
+function usePersonaPreviewForSilo({siloKey, once=true}) {
     const fbUser = useFirebaseUser();
     const defaultPersonaPreview = {name: fbUser?.displayName, photoUrl: fbUser?.photoURL};
     const personaPreview = useFirebaseData(
         ['silo', siloKey, 'structure', 'profile', 'instance', fbUser?.uid, 'global', 'preview'], 
-        defaultPersonaPreview
+        {defaultValue: defaultPersonaPreview, once}
     );
     if (!fbUser) return null;
     return personaPreview;
@@ -43,11 +43,12 @@ export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKe
     if (!structure) {
         throw new Error('Structure not found: ' + structureKey);
     }
-    const language = useFirebaseData(['silo', siloKey, 'module-public', 'language'])
-    const activeFeatures = useFirebaseData(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global', 'features']) || [];
+    const readOnly = useFirebaseData(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global', 'features', 'readonly'], {once: true, defaultValue: false}) ?? true;
+    const activeFeatures = useFirebaseData(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global', 'features'], {once: readOnly}) || [];
     const config = assembleConfig({structure, activeFeatures});
+    const language = useFirebaseData(['silo', siloKey, 'module-public', 'language'], {once: readOnly})
     const screenSet = assembleScreenSet({structure, activeFeatures});
-    const personaPreview = usePersonaPreviewForSilo({siloKey});
+    const personaPreview = usePersonaPreviewForSilo({siloKey, once: readOnly});
 
     if (!structureKey || !instanceKey || !siloKey) {
         console.error('ScreenStack missing keys', {structureKey, instanceKey, siloKey});
@@ -55,7 +56,7 @@ export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKe
 
     return <View style={s.stackHolder}>
         <Datastore key={url} siloKey={siloKey} instanceKey={instanceKey} structureKey={structureKey} 
-                language={language} isLive={true} config={config} 
+                language={language} isLive={true} config={config} readOnly={readOnly}
                 personaPreview={personaPreview}>
             {screenStack.map((screenInstance, index) => 
                 <WithScreenStack screenStack={screenStack} index={index} key={index}>

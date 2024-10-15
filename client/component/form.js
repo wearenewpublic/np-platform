@@ -90,11 +90,11 @@ const CheckboxStyle = StyleSheet.create({
 })
 
 
-export function AccordionField({titleContent, defaultOpen, forceOpen, children}) {
+export function AccordionField({titleContent, testID, defaultOpen, forceOpen, children}) {
     const s = AccordionFieldStyle;
     const [open, setOpen] = React.useState(defaultOpen);
     return <View>
-        <HoverView style={s.titleBar} hoverStyle={s.hover} pressedStyle={s.pressed} onPress={() => setOpen(!open)}>
+        <HoverView style={s.titleBar} testID={testID} hoverStyle={s.hover} pressedStyle={s.pressed} onPress={() => setOpen(!open)}>
             <HorizBox center spread>
                 {titleContent}
                 <Pad />

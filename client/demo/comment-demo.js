@@ -1,9 +1,10 @@
-import { ActionEdit, ActionReply, ActionReport, Comment, CommentsInput, ComposerScreen } from "../component/comment";
-import { ConversationScreen, Narrow } from "../component/basics";
-import { CLICK, DemoSection, INPUT } from "../component/demo";
+import { ActionEdit, ActionReply, ActionReport, BasicComments, Comment, CommentsInput, Composer, ComposerScreen } from "../component/comment";
+import { ConversationScreen, Narrow, Pad, Separator } from "../component/basics";
+import { CLICK, DemoSection, INPUT } from "../system/demo";
 import { Datastore } from "../util/datastore";
 import { ActionUpvote } from "../feature/UpvoteFeature";
 import { StructureDemo } from "../util/instance";
+import { View } from "react-native-web";
 
 
 export const CommentDemoFeature = {
@@ -26,7 +27,9 @@ export const CommentDemoFeature = {
                 {label: 'Simple Comments', key: 'simplecomments', screen: SimpleCommentsScreen},
             ]},
             {label: 'Config Slots', key: 'slots', pages: [
-                {label: 'Comment Config', key: 'commentconfigslots', screen: CommentConfigSlotsScreen}
+                {label: 'Comment Config', key: 'commentconfigslots', screen: CommentConfigSlotsScreen},
+                {label: 'Composer Config', key: 'composerconfigslots', screen: ComposerConfigSlotsScreen}
+
             ]}
         ],
         featureSections: [
@@ -93,6 +96,23 @@ function commentStorySets() {return [
             }
         ]
     },
+    {
+        label: 'Composer and Comments',
+        config: {
+            noMoreCommentsMessage: 'No more comments',
+            commentInputPlaceholder: 'Gimme a comment'
+        },
+        content: <View>
+                <BasicComments />
+                <Composer goBackAfterPost />
+            </View>,
+        stories: [
+            {label: 'Write comment', actions: [
+                INPUT('comment-edit', 'This is my comment'),
+                CLICK('Post')
+            ]}
+        ]
+    }
 ]}
 
 const comment = [
@@ -114,10 +134,22 @@ function UpvoteCommentsScreen() {
 
 function CommentConfigSlotsScreen() {
     const sessionData = {
+        'showReplies/1': true,
+        'replyToComment/1': true
+    }
+    return <StructureDemo collections={{comment}} sessionData={sessionData}
+        structureKey='simplecomments' features={{config_comment:true, demo_secondary: true}}
+        params={{bestCat: 'Mog'}}
+    />
+}
+
+function ComposerConfigSlotsScreen() {
+    const sessionData = {
         'showReplies/1': true
     }
     return <StructureDemo collections={{comment}} sessionData={sessionData}
-        structureKey='simplecomments' features={{config_comment:true}}
+        structureKey='simplecomments' screenKey='composer' 
+        features={{config_comment:true, demo_secondary: true}}
         params={{bestCat: 'Mog'}}
     />
 }

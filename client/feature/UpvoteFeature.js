@@ -4,6 +4,7 @@ import { IconUpvote, IconUpvoted } from "../component/icon";
 import { UtilityText } from "../component/text";
 import { needsLogin } from "../structure/login";
 import { useCollection, useDatastore, useObject, usePersonaKey } from "../util/datastore";
+import { useIsReadOnly } from "../util/features";
 
 export const UpvoteFeature = {
     name: 'Upvote Comments',
@@ -19,6 +20,7 @@ export function ActionUpvote({commentKey}) {
     const comment = useObject('comment', commentKey);
     const upvotes = useCollection('upvote', {filter: {comment: commentKey}});
     const datastore = useDatastore();
+    const readOnly = useIsReadOnly();
     const count = upvotes.length;
     const upvoted = upvotes.some(upvote => upvote.from == personaKey);
 
@@ -31,7 +33,7 @@ export function ActionUpvote({commentKey}) {
         }
     }
     
-    const disabled = comment?.from == personaKey;
+    const disabled = comment?.from == personaKey || readOnly;
 
     return <SubtleButton icon={upvoted ? IconUpvoted : IconUpvote} bold={upvoted}
         ariaLabel='upvote'

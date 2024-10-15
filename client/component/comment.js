@@ -9,9 +9,9 @@ import { StyleSheet, View } from "react-native";
 import { getFirstName } from "../util/util";
 import { colorLightBlueBackground, colorTextGrey } from "./color";
 import { RichText } from "./richtext";
-import { CatchList, Catcher } from "./catcher";
+import { CatchList, Catcher } from "../system/catcher";
 import { TopBarActionProvider } from "./topbar";
-import { useConfig } from "../util/features";
+import { useConfig, useIsReadOnly } from "../util/features";
 import { Banner } from "./banner";
 import { logEventAsync, useLogEvent } from "../util/eventlog";
 import { NoCommentsHelp } from "./help";
@@ -206,13 +206,14 @@ function MaybeCommentReply({ commentKey }) {
     </View>
 }
 
-function EditComment({ comment, big = false, setComment, topLevel, onEditingDone, onCancel, min = 100, max = 1000 }) {
+export function EditComment({comment, big=false, setComment, topLevel, onEditingDone, onCancel, min=100, max=1000}) {
     const personaKey = usePersonaKey();
     const datastore = useDatastore();
     const replyToComment = useObject('comment', comment.replyTo);
     const author = useObject('persona', replyToComment?.from);
     const [inProgress, setInProgress] = useState(false);
-    const { commentReplyPlaceholder, commentInputPlaceholder,
+    const [shownModalComponent, setShownModalComponent] = useState(null);
+    const {commentReplyPlaceholder, commentInputPlaceholder, 
         commentPostBlockers, commentPostCheckers,
         commentPostTriggers,
         commentEditBottomWidgets, commentEditTopWidgets,
@@ -245,6 +246,19 @@ function EditComment({ comment, big = false, setComment, topLevel, onEditingDone
         }
     }
 
+    async function showModalsAndFinish(modals) {
+        if (modals?.length) {
+            function onClose() {
+                showModalsAndFinish(modals.slice(1));
+            }
+            const modalComponent = React.createElement(modals[0], {onClose});
+            setShownModalComponent(modalComponent);
+        } else {
+            setShownModalComponent(null);
+            onEditingDone(comment);
+        }
+    }
+
     async function onPost() {
         if (commentPostCheckers?.length) {
             setInProgress(true);
@@ -255,9 +269,19 @@ function EditComment({ comment, big = false, setComment, topLevel, onEditingDone
             checkResults.forEach(judgement => {
                 finalComment = { ...finalComment, ...judgement.commentProps }
             })
+            var modals = [];
+            checkResults.forEach(judgement => {
+                if (judgement.modal) {
+                    modals = [...modals, judgement.modal]
+                }
+            })
             if (checkResults.every(x => x.allow)) {
                 await storeCommentAndRunTriggers(finalComment);
-                onEditingDone(finalComment);
+                if (modals?.length) {
+                    showModalsAndFinish(modals);
+                } else {
+                    onEditingDone(finalComment);
+                }
             } else {
                 setComment(finalComment);
             }
@@ -271,6 +295,7 @@ function EditComment({ comment, big = false, setComment, topLevel, onEditingDone
     const [isFocused, setIsFocused] = useState(false);
 
     return <View>
+        {shownModalComponent}
         {topLevel && <TopBarActionProvider label={action} disabled={!canPost || inProgress} onPress={onPost} />}
         <EditWidgets widgets={commentEditTopWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
         <TextField value={comment.text} onChange={text => setComment({ ...comment, text })}
@@ -400,14 +425,19 @@ export function ActionReply({ commentKey, depth }) {
     const comment = useObject('comment', commentKey);
     const parent = useObject('comment', comment.replyTo);
     const personaKey = usePersonaKey();
+<<<<<<< HEAD
 
+=======
+    const readOnly = useIsReadOnly();
+    
+>>>>>>> origin/main
     function onReply() {
         const oldReply = datastore.getSessionData(['replyToComment', commentKey]);
         datastore.setSessionData(['replyToComment', commentKey], !oldReply);
         logEventAsync(datastore, 'reply-start', { commentKey });
     }
 
-    if (comment.from == personaKey) return null;
+    if (comment.from == personaKey || readOnly) return null;
     if (depth == 1 && parent.from != personaKey) return null;
     if (depth > 1) return null;
 
@@ -418,6 +448,7 @@ export function ActionEdit({ commentKey }) {
     const datastore = useDatastore();
     const personaKey = usePersonaKey();
     const comment = useObject('comment', commentKey)
+    const readOnly = useIsReadOnly();
     function onEdit() {
         if (!comment.replyTo) {
             logEventAsync(datastore, 'edit-start-top', { commentKey });
@@ -429,7 +460,7 @@ export function ActionEdit({ commentKey }) {
         }
     }
 
-    if (comment.from != personaKey) return null;
+    if (comment.from != personaKey || readOnly) return null;
     return <SubtleButton icon={Edit} label='Edit' onPress={onEdit} />
 }
 

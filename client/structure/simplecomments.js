@@ -1,11 +1,8 @@
 import React from "react";
-import { ConversationScreen, HeaderBox, Pad, PadBox, TeaserScreen } from "../component/basics";
-import { ActionEdit, ActionReply, ActionReport, ActionUpvote, BasicComments, CommentsInput, CommentsIntro, ComposerScreen } from "../component/comment";
-import { BasicTeaser } from "../component/teaser";
+import { ConversationScreen, HeaderBox, Pad, TeaserScreen } from "../component/basics";
+import { ActionEdit, ActionReply, BasicComments, CommentsInput, CommentsIntro, ComposerScreen } from "../component/comment";
 import { UtilityText } from "../component/text";
-import { useCollection } from "../util/datastore";
 import { useConfig } from "../util/features";
-import { expandDataList } from "../util/util";
 import { Banner } from "../component/banner";
 
 export const SimpleCommentsStructure = {
@@ -42,6 +39,7 @@ export const SimpleCommentsStructure = {
         composerSubtitle: () => 'Public Comment',
         composerTopBanners: [],
         composerTopWidgets: [],
+        composerPreview: CommentsInput,
 
         topBanners: [],
         pageBottomWidgets: [],
@@ -52,17 +50,20 @@ export const SimpleCommentsStructure = {
         noCommentsTitle: 'Start the conversation',
         noCommentsMessage: 'Be the first to share your thoughts',
         noMoreCommentsMessage: 'No more responses',
+        readOnly: false,
+
+        openLinksInNewTab: false,
     }
 }
 
 function SimpleCommentsScreen() {
-    const {topBanners} = useConfig();
+    const {topBanners, composerPreview} = useConfig();
     return <ConversationScreen>
         {topBanners?.map((Banner, i) => <Banner key={i} />)}
         <HeaderBox>
             <CommentsIntro />
             <Pad />
-            <CommentsInput />
+            {React.createElement(composerPreview)}
         </HeaderBox>
         <BasicComments showInput={false} />
     </ConversationScreen>

@@ -3,16 +3,16 @@ import { Datastore, usePersonaKey } from "../util/datastore";
 import { IconUpvote, IconUpvoted } from "../component/icon";
 import { CharacterCounter, CircleCount, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
 import { colorBlack, colorLightGreen, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
-import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, FilterButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, TextButton } from "../component/button";
+import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, FilterButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, ClickableTag, TextButton } from "../component/button";
 import { Checkbox, Toggle, RadioOption, RadioGroup, FormField, AccordionField } from "../component/form";
 import { useState } from "react";
 import { RichText } from "../component/richtext";
-import { ConversationScreen, HorizBox, Narrow, Pad, PadBox } from "../component/basics";
+import { Card, ConversationScreen, FlowBox, HorizBox, HoverSelectBox, Narrow, Pad, PadBox, ShadowBox } from "../component/basics";
 import { BasicTeaser } from "../component/teaser";
 import { Banner, ClickableBanner, TopBanner } from "../component/banner";
-import { TrashCan, Pin, Chat, ChevronDown, Reply, Image as CarbonImage, Hearing, Video, FaceAdd, Edit, Bookmark, Flag, Close, ArrowLeft } from "@carbon/icons-react";
+import { TrashCan, Pin, Chat, ChevronDown, Reply, Image as CarbonImage, Hearing, Video, FaceAdd, Edit, Bookmark, Flag, Close, ArrowLeft, Demo } from "@carbon/icons-react";
 import { Modal } from "../component/modal";
-import { DemoSection, SpacedArray } from "../component/demo";
+import { CLICK, DemoSection, POPUP, SpacedArray } from "../system/demo";
 import { Image, View } from "react-native";
 import { FeatureMenuScreen } from "./featuremenu-demo";
 
@@ -55,12 +55,15 @@ export const DesignSystemDemoFeature = {
                     designUrl:'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=1278-9461&t=MC9nppcf9h2iJDKP-1',
                 },
                 {
-                    label: 'Modal', key: 'modal', screen: ModalScreen,
+                    label: 'Modal', key: 'modal', storySets: modalStorySet,
                     designUrl: 'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=6308-21252&t=MC9nppcf9h2iJDKP-1'
                 },
                 {
                     label: 'Feature Menu', key: 'featuremenu', screen: FeatureMenuScreen,
                     designUrl:'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=6311-21920&t=MC9nppcf9h2iJDKP-1'
+                },
+                { 
+                    label: 'Misc Extras', key: 'misc', screen: MiscScreen
                 }
             ]}
         ]
@@ -125,6 +128,19 @@ function TextFieldScreen() {
     </View>
 }
 
+function profilePhotoLayer({persona}) {
+    return <View key='first-letter' style={{position: 'absolute', left: 0, top: 0}}>
+        <Tag key='letter' type='tiny' label={persona.name[0]} />
+    </View>
+}
+
+function profilePhotoLayerTwo({persona}) {    
+    return <View key='second-letter' style={{position: 'absolute', right: 0, bottom: 0}}>
+        <Tag key='letter' color={colorLightGreen} type='tiny' label={persona.name[1]} />
+    </View>
+}
+
+
 function ProfileScreen() {
     const [selected, setSelected] = useState(false)
     function onPress() {console.log('press')}
@@ -143,6 +159,20 @@ function ProfileScreen() {
                     <ProfilePhoto userId='y' type="small"/>
                     <ProfilePhoto userId='z' type="tiny"/>
                 </SpacedArray>
+                <Datastore config={{profilePhotoLayers:[profilePhotoLayer]}}>
+                    <SpacedArray horiz pad={8}>
+                        <ProfilePhoto userId='a' />
+                        <ProfilePhoto userId='b' type='small' />
+                        <ProfilePhoto userId='c' type='tiny' />
+                    </SpacedArray>
+                </Datastore>
+                <Datastore config={{profilePhotoLayers:[profilePhotoLayer, profilePhotoLayerTwo]}}>
+                    <SpacedArray horiz pad={8}>
+                        <ProfilePhoto userId='a' />
+                        <ProfilePhoto userId='b' type='small' />
+                        <ProfilePhoto userId='c' type='tiny' />
+                    </SpacedArray>
+                </Datastore>
             </DemoSection>
             <DemoSection label='Facepile'>
                 <FacePile userIdList={['a','b','c','z']} type='small' />
@@ -276,7 +306,7 @@ function ButtonsAndLinksScreen() {
                     <CTAButton label='Disabled' type='primary' disabled />
                 </SpacedArray>
                 <CTAButton wide label='Wide' onPress={onPress} />
-                <CTAButton compact label='Compact' onPress={onPress} />
+                <CTAButton size='compact' label='Compact' onPress={onPress} />
             </DemoSection>
             <DemoSection label='Action Button'>
                 <SpacedArray horiz>
@@ -375,6 +405,10 @@ function TagsScreen() {
             <Tag emoji='🔥' label='Emphasized Tag' type='emphasized' color={colorPink} />
             <Tag label='Tiny Tag' type='tiny' />
         </DemoSection>
+        <DemoSection label='Clickable Tag' color={colorPink}>
+            <ClickableTag label='Standard' onPress={() => {}} />
+            <ClickableTag label='Standard With Emoji' emoji='🔥' onPress={() => {}} />
+        </DemoSection>
     </View>
 }
 
@@ -404,35 +438,41 @@ function DropdownScreen() {
         </View>
 }
 
-function ModalScreen() {
+function ModalHolder({label, children}) {
     const [shown, setShown] = useState(false);
-    const [shown2, setShown2] = useState(false);
 
-    const buttonRow = <HorizBox center>
-        <CTAButton wide type='secondary' label='Action 1' onPress={() => setShown2(false)} />
-        <Pad />
-        <CTAButton wide label='Action 2' onPress={() => setShown2(false)} />
-    </HorizBox>
+    const buttonRow = <CTAButton wide type='secondary' label='I understand' onPress={() => setShown(false)} />
 
     return <View>
-        <DemoSection label='Modal'>
-            <CTAButton label='Basic Modal' onPress={() => setShown(true)} />
-            {shown && <Modal onClose={() => setShown(false)}>
-                <PadBox horiz={20} vert={20}><UtilityText text='Content'/></PadBox>
-            </Modal>}
-            <CTAButton label='Modal with Buttons' onPress={() => setShown2(true)} />
-            {shown2 && <Modal onClose={() => setShown2(false)} buttonRow={buttonRow} >
-                <PadBox horiz={20} vert={20}><UtilityText text='Content'/></PadBox>
-            </Modal>}
-        </DemoSection>
+        <CTAButton label={label} onPress={() => setShown(true)} />
+        {shown && <Modal buttonRow={buttonRow} onClose={() => setShown(false)}>
+            {children}
+        </Modal>}
     </View>
 }
 
-function TeaserDemoScreen() {
-    return <View>
-            <BasicTeaser formatParams={{count: 22, singular: 'comment', plural: 'comments'}} />
-        </View>
-}
+function modalStorySet() {return [
+    {
+        label: 'Modal with Buttons',
+        content: <ModalHolder label='Open Modal' >
+            <PadBox horiz={20} vert={20}><UtilityText label='Content'/></PadBox>
+        </ModalHolder>,
+        stories: [
+            {label: 'Open', actions: [
+                CLICK('Open Modal')
+            ]},
+            {label: 'Open and Close with button', actions: [
+                CLICK('Open Modal'), 
+                POPUP(CLICK('I understand'))
+            ]},
+            {label: 'Open and Close with breadcrumb', actions: [
+                CLICK('Open Modal'), 
+                POPUP(CLICK('close-modal'))
+            ]},
+            
+        ]
+    }
+]}
 
 function BannerDemoScreen() {
     return <ConversationScreen>
@@ -472,4 +512,28 @@ function BannerDemoScreen() {
                 </Narrow>
             </DemoSection>
     </ConversationScreen>
+}
+
+function MiscScreen() {
+    return <View>
+        <DemoSection label='Shadow Box'>
+            <ShadowBox>
+                <PadBox horiz={20} vert={20}><UtilityText label='Shadow Box'/></PadBox>
+            </ShadowBox>
+        </DemoSection>
+        <DemoSection label='Flow Box'>
+            <FlowBox>
+                <Tag label='This is Item One'/>
+                <Tag label='This is Item Two'/>
+                <Tag label='This is Item Three'/>
+                <Tag label='This is Item Four'/>
+                <Tag label='This is Item Five'/>
+            </FlowBox>
+        </DemoSection>
+        <DemoSection label='Card'>
+            <Card>
+                <UtilityText label='I am in a card'/>
+            </Card>
+        </DemoSection>
+    </View>
 }

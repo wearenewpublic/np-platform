@@ -25,6 +25,7 @@ export function setTitle(title) {
     window.document.title = title;
 }
 
-export function WebLink({url, children}) {
-    return <a href={url} style={{textDecoration: 'none'}} target='_blank' rel='noreferrer'>{children}</a>;
+export function WebLinkBase({url, newTab, children}) {
+    const target = newTab ? '_blank' : '_parent';
+    return <a href={url} target={target} rel='noreferrer'>{children}</a>;
 }

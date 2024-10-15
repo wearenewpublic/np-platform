@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { defaultPersonaList, personaListToMap } from './testpersonas';
 import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseDataAsync, getFirebaseUser, onFbUserChanged, useFirebaseData } from './firebase';
-import { deepClone, expandDataListMap, getObjectPropertyPath } from './util';
+import { deepClone, getObjectPropertyPath } from './util';
 import { LoadingScreen } from '../component/basics';
 import { SharedData, SharedDataContext } from './shareddata';
 import { callServerApiAsync } from './servercall';
@@ -43,7 +43,10 @@ export class Datastore extends React.Component {
         this.fbDataWatchReleaser && this.fbDataWatchReleaser();
     }
     componentDidUpdate(prevProps) {
-        if (prevProps.instanceKey != this.props.instanceKey || prevProps.structureKey != this.props.structureKey) {
+        if (prevProps.instanceKey != this.props.instanceKey || 
+            prevProps.structureKey != this.props.structureKey ||
+            prevProps.readOnly != this.props.readOnly
+        ) {
             this.resetData();
             if (this.props.isLive) {
                 this.setupFirebaseWatchers();
@@ -51,16 +54,30 @@ export class Datastore extends React.Component {
         }
     }
 
-    setupFirebaseWatchers() {
+    async loadFirebaseDataOnceAsync() {
         const {siloKey, structureKey, instanceKey} = this.props;
+
+        const data = await getFirebaseDataAsync(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey]);
+        this.setData({...data?.collection, ...data?.global});
+        this.setState({loaded: true})
+    }
+
+    setupFirebaseWatchers() {
+        const {siloKey, structureKey, instanceKey, readOnly, config} = this.props;
         this.fbUserWatchReleaser && this.fbUserWatchReleaser();
         this.fbDataWatchReleaser && this.fbDataWatchReleaser();
 
-        this.fbDataWatchReleaser = firebaseWatchValue(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey], data => {
-            this.setData({...data?.collection, ...data?.global});
-            this.setState({loaded: true})
-        });
-        this.fbWatchReleaser = onFbUserChanged(async user => {
+        if (readOnly) {
+            this.loadFirebaseDataOnceAsync();
+            this.fbDataWatchReleaser = null;
+        } else {
+            this.fbDataWatchReleaser = firebaseWatchValue(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey], data => {
+                this.setData({...data?.collection, ...data?.global});
+                this.setState({loaded: true})
+            });
+        }
+
+        this.fbUserWatchReleaser = onFbUserChanged(async user => {
             this.setSessionData('personaKey', user?.uid);
             this.refreshUserDataAsync(user);
         })
@@ -118,7 +135,7 @@ export class Datastore extends React.Component {
         return this.getData()[typeName]?.[key];
     }
     async setObject(typeName, key, value) {
-        const {siloKey, structureKey, instanceKey, isLive} = this.props;
+        const {siloKey, structureKey, instanceKey, isLive, readOnly} = this.props;
         if (!key || !typeName) {
             throw new Error('Missing key or typeName', key, typeName);
         }
@@ -128,7 +145,9 @@ export class Datastore extends React.Component {
         }
         this.setData({...this.getData(), [typeName]: typeData});
 
-        if (isLive) {
+        if (readOnly) {
+            console.error('Attempt to write to read-only datastore', typeName, key, value);
+        } else if (isLive) {
             if (typeName != 'persona') {
                 this.addCurrentUser(); // don't call on persona or you get a loop
             }
@@ -481,9 +500,13 @@ export function lookupFromIndex(fields, index, filter) {
     return index[key] || [];
 }
 
-export function useModulePublicData(moduleKey, path = []) {
+export function useModulePublicData(moduleKey, path = [], options) {
     const datastore = useDatastore();
-    return useFirebaseData(['silo', datastore.getSiloKey(), 'module-public', moduleKey, ...path]);
+    if (datastore.getIsLive()) {
+        return useFirebaseData(['silo', datastore.getSiloKey(), 'module-public', moduleKey, ...path], options)
+    } else {
+        return getObjectPropertyPath(datastore.props.modulePublic, [moduleKey, ...path]);
+    };
 }
 
 export function useInstanceContext() {
@@ -513,4 +536,34 @@ export function useInstanceKey() {
 export function useStructureKey() {
     const datastore = useDatastore();
     return datastore.getStructureKey();
+}
+
+export function expandDataList(list) {
+    const date = new Date();
+    date.setHours(date.getHours() - 1);
+
+    var collection = {};
+
+    list.forEach(item => {
+        date.setMinutes(date.getMinutes() + 1);
+
+        const key = item.key || newLocalKey();
+        // ensureNextKeyGreater(key);
+        ensureNextLocalKeyGreater(key);
+        collection[key] = {
+            ...item,
+            key,
+            time: date.getTime()
+        };
+    });
+
+    return collection;
+}
+
+export function expandDataListMap(map) {
+    var newMap = {};
+    Object.keys(map).forEach(key => {
+        newMap[key] = expandDataList(map[key]);
+    });
+    return newMap;
 }

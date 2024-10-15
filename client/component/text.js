@@ -1,11 +1,13 @@
-import { Linking, StyleSheet, Text, TextInput, View } from "react-native";
-import { TranslatableText, useTranslation } from "./translation"
-import { colorBannerGreen, colorBlack, colorDisabledText, colorGreyBorder, colorGreyHover, colorGreyHoverBorder, colorRed, colorTextBlue, colorTextGrey, colorWhite } from "./color";
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import { TranslatableText, useTranslation } from "./translation";
+import { colorBannerGreen, colorBlack, colorDisabledText, colorGreyBorder, colorGreyHover, colorGreyHoverBorder, colorRed, colorWhite } from "./color";
 import { HorizBox, HoverView, Pad, PadBox } from "./basics";
 import { useEffect, useState } from "react";
 import { Edit, Checkmark } from "@carbon/icons-react";
 import { usePersonaKey } from "../util/datastore";
 import { ProfilePhoto } from "./people";
+import { WebLinkBase } from "../platform-specific/url";
+import { useConfig } from "../util/features";
 
 const fontFamilySansRegular = 'IBMPlexSans_400Regular, Arial, Helvetica, sans-serif';
 const fontFamilySansMedium = 'IBMPlexSans_500Medium, Arial, Helvetica, sans-serif';
@@ -20,6 +22,7 @@ export function Heading({text, color={color}, center, label, level=2, underline=
         2: HeadingStyle.heading2,
         3: HeadingStyle.heading3,
         4: HeadingStyle.heading4,
+        5: HeadingStyle.heading5,
     }
     return <TranslatableText text={text} label={label} formatParams={formatParams} 
         style={[
@@ -50,7 +53,13 @@ const HeadingStyle = StyleSheet.create({
         fontSize: 12,
         lineHeight: 12 * 1.25,
         fontStyle: 'italic',
-    }    
+    },
+    heading5: {
+        fontFamily: fontFamilySansRegular,
+        fontSize: 14,
+        lineHeight: 14 * 1.25,
+    },
+    
 })
 
 export function DataVizText({type, text, label, formatParams}) {
@@ -198,17 +207,19 @@ const UtilityTextStyle = StyleSheet.create({
     }
 })
 
-export function LinkText({type='small', text, url, label, formatParams}) {
-    const [hover, setHover] = useState(false);
+export function WebLink({url, children}) {
+    const { openLinksInNewTab } = useConfig();
+    return <WebLinkBase 
+        newTab={openLinksInNewTab} 
+        url={url}>
+            {children}
+    </WebLinkBase>
+}
 
-    function onPress() {
-        window.open(url, '_blank');
-    }
-
-    return <HoverView shrink setHover={setHover} onPress={onPress}>
-        <UtilityText type={type} text={text} label={label} formatParams={formatParams} 
-            /* color={colorTextBlue} */ underline={!hover} />
-    </HoverView>
+export function LinkText({type='small', testID, text, url, label, formatParams}) {
+    return <WebLink url={url} testID={testID} >
+        <UtilityText underline type={type} text={text} label={label} formatParams={formatParams} />
+    </WebLink>
 }
 
 // HACK: This is a hack to allow the test to access the onChangeText function
