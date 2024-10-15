@@ -28,9 +28,9 @@ export function useEnabledFeatures() {
     return {...defaultFeatures, ...tunnedOnFeatures};
 }
 
-export function assembleConfig({structure, activeFeatures}) {
+export function assembleConfig({structure, activeFeatures, includeDefaults=true}) {
     var config = cloneConfig(structure.defaultConfig);
-    const defaultFeatures = defaultFeatureConfig[structure.key];
+    const defaultFeatures = includeDefaults ? defaultFeatureConfig[structure.key] : {};
     const mergedActiveFeatures = {...defaultFeatures, ...activeFeatures} 
     const availableFeatures = getAvailableFeaturesForStructure(structure.key, mergedActiveFeatures);
 

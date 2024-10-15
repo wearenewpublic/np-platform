@@ -155,11 +155,17 @@ export function DemoStorySet({storySet}) {
     }
     var featureConfig = null;
     if (features) {
+        if (!storySet.structureKey) {
+            throw new Error('Structure key required for feature config');
+        }
         const structure = getStructureForKey(structureKey);
         if (!structure) {
             throw new Error('Structure not found: ' + structureKey);
         }
-        featureConfig = assembleConfig({structure, activeFeatures: keysToTrueMap(features)});
+        featureConfig = assembleConfig({
+            structure, activeFeatures: keysToTrueMap(features), 
+            includeDefaults: false
+        });
     }
 
     function onReset() {
