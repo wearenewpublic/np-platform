@@ -193,7 +193,7 @@ export function DemoStorySet({storySet}) {
                         onPress={() => playStoryActionListAsync({domRef, actions: story.actions})} />
                 </PadBox>
             )}
-            {storySet.stories && <PadBox vert={5}><IconButton icon={Reset} compact type='secondary' label='Reset' onPress={onReset} /></PadBox>}
+            <PadBox vert={5}><IconButton icon={Reset} compact type='secondary' label='Reset' onPress={onReset} /></PadBox>
         </FlowBox>
         <Pad size={10} />
         <ShadowBox>
