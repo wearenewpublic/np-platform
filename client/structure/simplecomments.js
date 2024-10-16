@@ -1,7 +1,7 @@
 import React from "react";
 import { ConversationScreen, HeaderBox, Pad, TeaserScreen } from "../component/basics";
 import { ActionEdit, ActionReply, BasicComments, CommentsInput, CommentsIntro, ComposerScreen } from "../component/comment";
-import { UtilityText } from "../component/text";
+import { Heading, UtilityText } from "../component/text";
 import { useConfig } from "../util/features";
 import { Banner } from "../component/banner";
 
@@ -32,6 +32,8 @@ export const SimpleCommentsStructure = {
         commentFilters: [],
         commentRankers: [],
 
+        headerTopLeftWidgets: [],
+
         replyAboveWidgets: [],
         replyFilters: [],
         replyBoosters: [],
@@ -56,12 +58,26 @@ export const SimpleCommentsStructure = {
     }
 }
 
+function HeaderTopWidgets() {
+    const {headerTopLeftWidgets} = useConfig();
+    if (headerTopLeftWidgets?.length > 0) {
+        return <>
+            <Pad size={12}/>
+            {headerTopLeftWidgets.map((Widget,i) => <Widget key={i}/>)}
+            <Pad size={32}/>
+        </>
+    } else {
+        return null;
+    }
+}
+
 function SimpleCommentsScreen() {
     const {topBanners, composerPreview} = useConfig();
     return <ConversationScreen>
         {topBanners?.map((Banner, i) => <Banner key={i} />)}
         <HeaderBox>
-            <CommentsIntro />
+            <HeaderTopWidgets />
+            <Heading level={1} label='Comments'/>
             <Pad />
             {React.createElement(composerPreview)}
         </HeaderBox>

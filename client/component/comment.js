@@ -453,14 +453,6 @@ export function Composer({about=null, commentKey, goBackAfterPost=false, topLeve
             onCancel={goBackAfterPost && onCancel}
             setComment={setEditedComment} onEditingDone={onEditingDone} />
     </View>
- }
-
-export function CommentsIntro() {
-    return <View>
-        <Heading level={1} label='Comments'/>
-        <Pad size={20} />
-        <RichText color={colorTextGrey} label='Join the conversation by submitting a comment. Be sure to follow our [community guidelines](https://example.com).' />
-    </View>
 }
 
 function filterComments({datastore, comments, isAdmin, commentFilters}) {
