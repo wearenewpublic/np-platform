@@ -366,12 +366,17 @@ const CommentActionsStyle = StyleSheet.create({
     }
 })
 
-
-export function ActionReply({commentKey, depth}) {
-    const datastore = useDatastore();
+export function ActionReplyExceptToSelf({commentKey, depth}) {
     const comment = useObject('comment', commentKey);
     const parent = useObject('comment', comment.replyTo);
     const personaKey = usePersonaKey();
+    if (comment.from == personaKey) return null;
+    if (depth == 1 && parent.from != personaKey) return null;
+    return <ActionReply commentKey={commentKey} depth={depth} />
+}
+
+export function ActionReply({commentKey, depth}) {
+    const datastore = useDatastore();
     const readOnly = useIsReadOnly();
     
     function onReply() {
@@ -380,9 +385,7 @@ export function ActionReply({commentKey, depth}) {
         logEventAsync(datastore, 'reply-start', {commentKey});
     }
 
-    if (comment.from == personaKey || readOnly) return null;
-    if (depth == 1 && parent.from != personaKey) return null;
-    if (depth > 1) return null;
+    if (readOnly || depth > 1) return null;
 
     return <SubtleButton icon={Reply} label='Reply' onPress={datastore.needsLogin(onReply, 'reply')} padRight />
 }
@@ -451,14 +454,6 @@ export function Composer({about=null, commentKey, goBackAfterPost=false, topLeve
         <EditComment big comment={editedComment ?? comment ?? {text: ''}} topLevel={topLevel}
             onCancel={goBackAfterPost && onCancel}
             setComment={setEditedComment} onEditingDone={onEditingDone} />
-    </View>
- }
-
-export function CommentsIntro() {
-    return <View>
-        <Heading level={1} label='Comments'/>
-        <Pad size={20} />
-        <RichText color={colorTextGrey} label='Join the conversation by submitting a comment. Be sure to follow our [community guidelines](https://example.com).' />
     </View>
 }
 
