@@ -167,6 +167,7 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
     const author = useObject('persona', replyToComment?.from);
     const [inProgress, setInProgress] = useState(false);
     const [shownModalComponent, setShownModalComponent] = useState(null);
+    const [isCommentError, setIsCommentError] = useState(false);
     const {commentReplyPlaceholder, commentInputPlaceholder, 
         commentPostBlockers, commentPostCheckers,
         commentPostTriggers,
@@ -237,6 +238,7 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
                     onEditingDone(finalComment);
                 }
             } else {
+                setIsCommentError(true);
                 setComment(finalComment);
             }
             setInProgress(false);
@@ -255,7 +257,7 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
         <TextField value={comment.text} onChange={text => setComment({...comment, text})} 
             placeholder={placeholder} autoFocus={!isMobile} big={big} testID='comment-edit'
             placeholderParams={{authorName: getFirstName(author?.name)}} 
-            onFocusChange={setIsFocused} error={!comment.inReview && comment.violations?.length > 0 }/>
+            onFocusChange={setIsFocused} error={isCommentError} />
             {(isFocused || comment.text?.length > 0) && isMobile && (
                 <PadBox top={24} >
                     <View>
