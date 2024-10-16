@@ -79,6 +79,7 @@ const ScreenStackStyle = StyleSheet.create({
 export function StructureDemo({
         siloKey='demo', structureKey, instanceKey='demo', screenKey, params={},
         features, isAdmin=true, globals, collections, sessionData, serverCall,
+        modulePublic, 
         roles=['Owner'],
         language='english', personaKey='a'
     }) {
@@ -99,7 +100,7 @@ export function StructureDemo({
     return <Datastore globals={{...globals, features}} collections={collections} sessionData={sessionData}
                 language={language} isAdmin={isAdmin} isLive={false} serverCall={serverCall}
                 siloKey={siloKey} structureKey={structureKey} instanceKey={instanceKey} personaKey={personaKey}
-                roles={roles}
+                roles={roles} modulePublic={modulePublic}
                 pushSubscreen={pushSubscreen} goBack={onGoBack} >
             <StructureDemoConfiguredScreenStack structureKey={structureKey} screenStack={screenStack}/>
         </Datastore>
