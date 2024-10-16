@@ -39,10 +39,6 @@ function topBarStorySets() {return [
                 POPUP(CLICK('Developer')),
                 POPUP(CLICK('Show Config Slots'))
             ]},
-           {label: 'Open Admin', actions: [
-                CLICK('account-menu'),
-                POPUP(CLICK('Admin'))
-            ]}
         ]
     }
 ]}

@@ -25,7 +25,16 @@ export function setTitle(title) {
     window.document.title = title;
 }
 
-export function WebLinkBase({url, newTab, children}) {
+export function WebLinkBase({url, newTab, style, setHover=()=>{}, children}) {
     const target = newTab ? '_blank' : '_parent';
-    return <a href={url} target={target} rel='noreferrer'>{children}</a>;
+    return <a href={url} target={target} style={style} rel='noreferrer'
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+    >
+        {children}
+    </a>;
+}
+
+export function getIsInSidebar() {
+    return window.self !== window.top;
 }

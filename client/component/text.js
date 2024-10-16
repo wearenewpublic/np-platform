@@ -207,20 +207,37 @@ const UtilityTextStyle = StyleSheet.create({
     }
 })
 
-export function WebLink({url, children}) {
+export function WebLink({url, style, setHover, children}) {
     const { openLinksInNewTab } = useConfig();
     return <WebLinkBase 
-        newTab={openLinksInNewTab} 
+        newTab={openLinksInNewTab} style={style}
+        setHover={setHover} 
         url={url}>
             {children}
     </WebLinkBase>
 }
 
 export function LinkText({type='small', testID, text, url, label, formatParams}) {
-    return <WebLink url={url} testID={testID} >
+    return <WebLink url={url} testID={testID}>
         <UtilityText underline type={type} text={text} label={label} formatParams={formatParams} />
     </WebLink>
 }
+
+export function WebLinkTextButton({label, text, url, type}) {
+    const s = WebLinkTextButtonStyle;
+    const [hover, setHover] = useState(false);
+    return <WebLink testID={label ?? text} url={url} style={hover ? s.hoverButton : s.button} setHover={setHover}>
+        <UtilityText label={label} text={text} type={type} />
+    </WebLink>
+}
+const WebLinkTextButtonStyle = StyleSheet.create({
+    button: {
+        textDecorationLine: 'none',
+    },
+    hoverButton: {
+        textDecorationLine: 'underline'
+    }
+})
 
 // HACK: This is a hack to allow the test to access the onChangeText function
 // In theory it should be possible to do this with dispatchEvent on the DOM
