@@ -364,12 +364,17 @@ const CommentActionsStyle = StyleSheet.create({
     }
 })
 
-
-export function ActionReply({commentKey, depth}) {
-    const datastore = useDatastore();
+export function ActionReplyExceptToSelf({commentKey, depth}) {
     const comment = useObject('comment', commentKey);
     const parent = useObject('comment', comment.replyTo);
     const personaKey = usePersonaKey();
+    if (comment.from == personaKey) return null;
+    if (depth == 1 && parent.from != personaKey) return null;
+    return <ActionReply commentKey={commentKey} depth={depth} />
+}
+
+export function ActionReply({commentKey, depth}) {
+    const datastore = useDatastore();
     const readOnly = useIsReadOnly();
     
     function onReply() {
@@ -378,9 +383,7 @@ export function ActionReply({commentKey, depth}) {
         logEventAsync(datastore, 'reply-start', {commentKey});
     }
 
-    if (comment.from == personaKey || readOnly) return null;
-    if (depth == 1 && parent.from != personaKey) return null;
-    if (depth > 1) return null;
+    if (readOnly || depth > 1) return null;
 
     return <SubtleButton icon={Reply} label='Reply' onPress={datastore.needsLogin(onReply, 'reply')} padRight />
 }
