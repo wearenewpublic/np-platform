@@ -110,6 +110,7 @@ function StorySetContent({storySet}) {
         structureKey={storySet.structureKey ?? 'testStruct'} 
         globals={storySet.globals} filebaseUser={storySet.firebaseUser}
         sessionData={storySet.sessionData} 
+        embeddedInstanceData={storySet.embeddedInstanceData}
         gotoInstance={setNavInstance}
         goBack={() => setNavInstance({parent: true})}
         onServerCall={onServerCall}

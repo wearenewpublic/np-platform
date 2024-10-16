@@ -142,7 +142,7 @@ export const defaultServerCall = {
 
 export function DemoStorySet({storySet}) {
     const { collections, content, structureKey='testStruct', instanceKey='testInstance', 
-        personaKey, config, modulePublic, roles, features,
+        personaKey, config, modulePublic, roles, features, embeddedInstanceData,
         globals, sessionData, serverCall, pad=true, firebaseUser=default_fbUser, siloKey='demo'
     } = storySet;
     const domRef = React.createRef();
@@ -179,8 +179,9 @@ export function DemoStorySet({storySet}) {
             structureKey={structureKey} instanceKey={instanceKey} personaKey={personaKey}
             collections={collections} globals={globals} firebaseUser={firebaseUser}
             sessionData={sessionData} modulePublic={modulePublic}
+            embeddedInstanceData={embeddedInstanceData}
             roles={roles} onServerCall={onServerCall}
-            gotoInstance={setNavInstance}
+            gotoInstance={setNavInstance} 
             goBack={() => setNavInstance({parent: true})}
             pushSubscreen={(screenKey,params) => setNavInstance({screenKey, params})}
             serverCall={{...defaultServerCall, ...serverCall}} >

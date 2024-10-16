@@ -271,6 +271,7 @@ export class Datastore extends React.Component {
     getIsLive() {return this.props.isLive}
     getLanguage() {return this.props.language}
     getLoaded() {return this.state.loaded}
+    getEmbeddedInstanceData() {return this.props.embeddedInstanceData}
     getMockServerCall() {return this.props.serverCall}
     pushSubscreen(screenKey, params) {
         if (this.props.pushSubscreen) {

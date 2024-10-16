@@ -15,6 +15,7 @@ import { Modal } from "../component/modal";
 import { CLICK, DemoSection, POPUP, SpacedArray } from "../system/demo";
 import { Image, View } from "react-native";
 import { FeatureMenuScreen } from "./featuremenu-demo";
+import { EmbeddedInstance } from "../util/instance";
 
 export const DesignSystemDemoFeature = {
     key: 'demo_designsystem',
@@ -63,7 +64,7 @@ export const DesignSystemDemoFeature = {
                     designUrl:'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=6311-21920&t=MC9nppcf9h2iJDKP-1'
                 },
                 { 
-                    label: 'Misc Extras', key: 'misc', screen: MiscScreen
+                    label: 'Misc Extras', key: 'misc', screen: MiscScreen,
                 }
             ]}
         ]
@@ -537,3 +538,4 @@ function MiscScreen() {
         </DemoSection>
     </View>
 }
+
