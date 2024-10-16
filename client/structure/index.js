@@ -5,6 +5,7 @@ import { SimpleCommentsStructure } from "./simplecomments";
 import { MigrationsStructure } from "../system/migrations";
 import { LoginStructure } from "./login";
 import { AdminStructure } from "./admin";
+import { ErrorStructure } from "./error";
 
 export var structures = [
     SimpleCommentsStructure,
@@ -13,7 +14,8 @@ export var structures = [
     EventLogStructure,
     MigrationsStructure,
     LoginStructure,
-    AdminStructure
+    AdminStructure,
+    ErrorStructure
 ]
 
 export function addStructures(newStructures) {
