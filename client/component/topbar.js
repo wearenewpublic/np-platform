@@ -10,7 +10,7 @@ import { ObservableProvider, ObservableValue, useObservable } from "../util/obse
 import { getFeatureBlocks, useEnabledFeatures } from "../util/features";
 import { defaultFeatureConfig } from "../feature";
 import { Catcher } from "../system/catcher";
-import { historyGetState } from "../platform-specific/url";
+import { getIsInSidebar, historyGetState } from "../platform-specific/url";
 import { useIsAdmin } from "./admin";
 import { CircleCount, UtilityText, WebLinkTextButton } from "./text";
 import { AccordionField, RadioGroup, RadioOption, Toggle } from "./form";
@@ -30,8 +30,9 @@ export function TopBar() {
         <View style={s.leftRow}>    
             {historyGetState() ? 
                 <BreadCrumb icon={ArrowLeft} iconProps={{size:32}} onPress={() => datastore.goBack()} />
-            : 
+            : getIsInSidebar() ?
                 <BreadCrumb icon={Close} iconProps={{size:32}}  onPress={closeSidebar} />
+            : null
             }
         </View>
         <Catcher>

@@ -34,3 +34,7 @@ export function WebLinkBase({url, newTab, style, setHover=()=>{}, children}) {
         {children}
     </a>;
 }
+
+export function getIsInSidebar() {
+    return window.self !== window.top;
+}
