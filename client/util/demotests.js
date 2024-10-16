@@ -94,7 +94,10 @@ function StorySetContent({storySet}) {
     var featureConfig;
     if (storySet.features) {
         const structure = getStructureForKey(storySet.structureKey);
-        featureConfig = assembleConfig({structure, activeFeatures: keysToTrueMap(storySet.features)});
+        featureConfig = assembleConfig({
+            structure, activeFeatures: keysToTrueMap(storySet.features), 
+            includeDefaults: false
+        });
     }
 
     return <Datastore config={featureConfig ?? storySet.config} collections={storySet.collections}
