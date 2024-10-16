@@ -255,7 +255,7 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
         <TextField value={comment.text} onChange={text => setComment({...comment, text})} 
             placeholder={placeholder} autoFocus={!isMobile} big={big} testID='comment-edit'
             placeholderParams={{authorName: getFirstName(author?.name)}} 
-            onFocusChange={setIsFocused}/>
+            onFocusChange={setIsFocused} error={!comment.inReview && comment.violations?.length > 0 }/>
             {(isFocused || comment.text?.length > 0) && isMobile && (
                 <PadBox top={24} >
                     <View>
