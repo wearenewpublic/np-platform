@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
-import { closeSidebar, gotoInstance } from "../util/navigate";
+import { closeSidebar, makeUrl } from "../util/navigate";
 import { firebaseSignOut } from "../util/firebase";
-import { useDatastore, useGlobalProperty, useInstanceKey, usePersonaKey, usePersonaObject, useStructureKey } from "../util/datastore";
+import { useDatastore, useGlobalProperty, useInstanceKey, usePersonaKey, usePersonaObject, useSiloKey, useStructureKey } from "../util/datastore";
 import { useState } from "react";
 import { Byline } from "./people";
 import { BreadCrumb, CTAButton, Popup, TextButton } from "./button";
@@ -12,7 +12,7 @@ import { defaultFeatureConfig } from "../feature";
 import { Catcher } from "../system/catcher";
 import { historyGetState } from "../platform-specific/url";
 import { useIsAdmin } from "./admin";
-import { CircleCount, UtilityText } from "./text";
+import { CircleCount, UtilityText, WebLinkTextButton } from "./text";
 import { AccordionField, RadioGroup, RadioOption, Toggle } from "./form";
 import { colorGreyPopupBackground } from "./color";
 import { ChevronDown, ChevronUp, Close, ArrowLeft } from '@carbon/icons-react';
@@ -213,14 +213,13 @@ function UserInfo() {
     const [shown, setShown] = useState(false);
     const isAdmin = useIsAdmin();
     const datastore = useDatastore();
+    const siloKey = useSiloKey();
 
     function popup() {
         return <View>
             <TextButton type='small' onPress={() => datastore.gotoInstance({structureKey:'profile', instanceKey: personaKey})} label='Profile' />
             {isAdmin && <PadBox top={20}>
-                <TextButton type='small' label='Admin'
-                    onPress={() => datastore.gotoInstance({structureKey: 'admin', instanceKey: 'one'})} 
-                />
+                <WebLinkTextButton url={makeUrl(['admin','one'])} label='Admin' />
             </PadBox>}  
             <Pad />
             <TextButton type='small' onPress={firebaseSignOut} label='Log out' />
