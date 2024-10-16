@@ -53,7 +53,7 @@ export function ReplyComment({commentKey, depth={depth}, isFinal=false}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
     const {replyAboveWidgets} = useConfig();
-    return <View testID={commentKey} style={depth == 1 ? s.firstLevel : s.secondLevel}>
+    return <View testID={commentKey} id={commentKey} style={depth == 1 ? s.firstLevel : s.secondLevel}>
         <Catcher>{replyAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}</Catcher>
         <Byline type='small' userId={comment.from} time={comment.time} edited={comment.edited} />
         <Pad size={20} />
