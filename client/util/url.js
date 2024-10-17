@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { historyPushState, historyReplaceState, watchPopState } from "../platform-specific/url";
+import { getIsLocalhost as baseGetIsLocalHost } from "../platform-specific/url";
 
 // TODO: Using a global variable is a hack.  We should use a context instead.
 var global_url_watcher = null;
@@ -39,8 +40,8 @@ export function replaceUrl(url) {
     }
 }
 
-export function gotoPath(path) {
-    
-
+// Re-exporting since platform-specific isn't visible to modules 
+// that import np-platform-client
+export function getIsLocalhost() {
+    return baseGetIsLocalHost();
 }
-

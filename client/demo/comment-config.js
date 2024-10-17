@@ -21,7 +21,8 @@ export const DemoFeature = {
         commentAboveWidgets: [() => <DemoWidget text='Comment Above Widget' />],
         commentAllowEmpty: true,
         // commentBodyRenderer: CommentBodyRenderer,
-        commentBodyStylers: [commentBodyStylerLove, commentBodyStylerHate, commentBodyStylerReply],
+        commentBodyStylers: [commentBodyStylerHate, commentBodyStylerReply],
+        commentStylers: [commentStylerLove],
         commentEditBottomWidgets: [CommentEditBottomWidget],
         commentEditTopWidgets: [CommentEditTopWidget],
         commentPostBlockers: [commentPostBlocker],
@@ -134,9 +135,13 @@ function ComposerTopWidget({comment, setComment}) {
     </ShadowBox></PadBox>
 }
 
-function commentBodyStylerLove({comment}) {
+function commentStylerLove({comment}) {
     if (comment.text.includes('love')) {
-        return {backgroundColor: colorBannerGreen, color: colorWhite, padding: 16, borderRadius: 8};
+        return {
+            boxShadow: '0px 0px 20px 0px rgba(0, 0, 0, 0.10)',
+            margin: 16, 
+            borderRadius: 12
+        };
     } else {return null}
 }
 function commentBodyStylerHate({comment}) {

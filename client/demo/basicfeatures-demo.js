@@ -80,19 +80,3 @@ function replyNotifsStorySets() {return [
         ]
     }
 ]}
-
-function embeddedInstanceStorySets() {return [
-    {
-        label: 'Embedded Instance',
-        extendedInstanceData: {simplecomments: {demo: {
-            collections: {comment: [
-                {key: 1, from: 'a', text: 'This is a comment in an embedded instance'},
-            ]},
-        }}},
-        content: <EmbeddedInstance structureKey='simplecomments' instanceKey='demo' />,
-        config: {
-            structureKey: 'embeddedinstance',
-            features: ['embeddedinstance']
-        }
-    }
-]}
