@@ -206,7 +206,7 @@ function MaybeCommentReply({ commentKey }) {
     </View>
 }
 
-export function EditComment({comment, big=false, setComment, topLevel, onEditingDone, onCancel, min=100, max=1000}) {
+export function EditComment({ comment, big = false, setComment, topLevel, onEditingDone, onCancel, min = 100, max = 1000 }) {
     const personaKey = usePersonaKey();
     const datastore = useDatastore();
     const replyToComment = useObject('comment', comment.replyTo);
@@ -214,7 +214,7 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
     const [inProgress, setInProgress] = useState(false);
     const [shownModalComponent, setShownModalComponent] = useState(null);
     const [isCommentError, setIsCommentError] = useState(false);
-    const {commentReplyPlaceholder, commentInputPlaceholder, 
+    const { commentReplyPlaceholder, commentInputPlaceholder,
         commentPostBlockers, commentPostCheckers,
         commentPostTriggers,
         commentEditBottomWidgets, commentEditTopWidgets,
@@ -252,7 +252,7 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
             function onClose() {
                 showModalsAndFinish(modals.slice(1));
             }
-            const modalComponent = React.createElement(modals[0], {onClose});
+            const modalComponent = React.createElement(modals[0], { onClose });
             setShownModalComponent(modalComponent);
         } else {
             setShownModalComponent(null);
@@ -302,15 +302,15 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
         <EditWidgets widgets={commentEditTopWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
         <TextField value={comment.text} onChange={text => setComment({ ...comment, text })}
             placeholder={placeholder} autoFocus={!isMobile} big={big} testID='comment-edit'
-            placeholderParams={{authorName: getFirstName(author?.name)}} 
+            placeholderParams={{ authorName: getFirstName(author?.name) }}
             onFocusChange={setIsFocused} error={isCommentError} />
-            {(isFocused || comment.text?.length > 0) && isMobile && (
-                <PadBox top={24} >
-                    <View>
-                        <CTAButton wide label={action} disabled={!canPost || inProgress} onPress={onPost} />
-                    </View>
-                </PadBox>
-            )}
+        {(isFocused || comment.text?.length > 0) && isMobile && (
+            <PadBox top={24} >
+                <View>
+                    <CTAButton wide label={action} disabled={!canPost || inProgress} onPress={onPost} />
+                </View>
+            </PadBox>
+        )}
         <Pad size={12} />
         <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
         {personaKey &&
@@ -421,7 +421,7 @@ const CommentActionsStyle = StyleSheet.create({
     }
 })
 
-export function ActionReplyExceptToSelf({commentKey, depth}) {
+export function ActionReplyExceptToSelf({ commentKey, depth }) {
     const comment = useObject('comment', commentKey);
     const parent = useObject('comment', comment.replyTo);
     const personaKey = usePersonaKey();
@@ -430,10 +430,10 @@ export function ActionReplyExceptToSelf({commentKey, depth}) {
     return <ActionReply commentKey={commentKey} depth={depth} />
 }
 
-export function ActionReply({commentKey, depth}) {
+export function ActionReply({ commentKey, depth }) {
     const datastore = useDatastore();
     const readOnly = useIsReadOnly();
-    
+
     function onReply() {
         const oldReply = datastore.getSessionData(['replyToComment', commentKey]);
         datastore.setSessionData(['replyToComment', commentKey], !oldReply);
