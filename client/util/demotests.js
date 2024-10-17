@@ -94,7 +94,10 @@ function StorySetContent({storySet}) {
     var featureConfig;
     if (storySet.features) {
         const structure = getStructureForKey(storySet.structureKey);
-        featureConfig = assembleConfig({structure, activeFeatures: keysToTrueMap(storySet.features)});
+        featureConfig = assembleConfig({
+            structure, activeFeatures: keysToTrueMap(storySet.features), 
+            includeDefaults: false
+        });
     }
 
     return <Datastore config={featureConfig ?? storySet.config} collections={storySet.collections}
@@ -107,6 +110,7 @@ function StorySetContent({storySet}) {
         structureKey={storySet.structureKey ?? 'testStruct'} 
         globals={storySet.globals} filebaseUser={storySet.firebaseUser}
         sessionData={storySet.sessionData} 
+        embeddedInstanceData={storySet.embeddedInstanceData}
         gotoInstance={setNavInstance}
         goBack={() => setNavInstance({parent: true})}
         onServerCall={onServerCall}

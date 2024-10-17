@@ -142,7 +142,7 @@ export const defaultServerCall = {
 
 export function DemoStorySet({storySet}) {
     const { collections, content, structureKey='testStruct', instanceKey='testInstance', 
-        personaKey, config, modulePublic, roles, features,
+        personaKey, config, modulePublic, roles, features, embeddedInstanceData,
         globals, sessionData, serverCall, pad=true, firebaseUser=default_fbUser, siloKey='demo'
     } = storySet;
     const domRef = React.createRef();
@@ -155,11 +155,17 @@ export function DemoStorySet({storySet}) {
     }
     var featureConfig = null;
     if (features) {
+        if (!storySet.structureKey) {
+            throw new Error('Structure key required for feature config');
+        }
         const structure = getStructureForKey(structureKey);
         if (!structure) {
             throw new Error('Structure not found: ' + structureKey);
         }
-        featureConfig = assembleConfig({structure, activeFeatures: keysToTrueMap(features)});
+        featureConfig = assembleConfig({
+            structure, activeFeatures: keysToTrueMap(features), 
+            includeDefaults: false
+        });
     }
 
     function onReset() {
@@ -173,8 +179,9 @@ export function DemoStorySet({storySet}) {
             structureKey={structureKey} instanceKey={instanceKey} personaKey={personaKey}
             collections={collections} globals={globals} firebaseUser={firebaseUser}
             sessionData={sessionData} modulePublic={modulePublic}
+            embeddedInstanceData={embeddedInstanceData}
             roles={roles} onServerCall={onServerCall}
-            gotoInstance={setNavInstance}
+            gotoInstance={setNavInstance} 
             goBack={() => setNavInstance({parent: true})}
             pushSubscreen={(screenKey,params) => setNavInstance({screenKey, params})}
             serverCall={{...defaultServerCall, ...serverCall}} >
@@ -187,7 +194,7 @@ export function DemoStorySet({storySet}) {
                         onPress={() => playStoryActionListAsync({domRef, actions: story.actions})} />
                 </PadBox>
             )}
-            {storySet.stories && <PadBox vert={5}><IconButton icon={Reset} compact type='secondary' label='Reset' onPress={onReset} /></PadBox>}
+            <PadBox vert={5}><IconButton icon={Reset} compact type='secondary' label='Reset' onPress={onReset} /></PadBox>
         </FlowBox>
         <Pad size={10} />
         <ShadowBox>

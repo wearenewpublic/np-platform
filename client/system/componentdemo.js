@@ -10,7 +10,6 @@ import { DemoStorySet } from "./demo";
 import { AccordionField } from "../component/form";
 import { Catcher } from "./catcher";
 import { sortBy, toBool } from "../util/util";
-import { OpenLinksInNewTabFeature } from "../feature/OpenLinksInNewTabFeature";
 
 export const ComponentDemoStructure = {
     key: 'componentdemo',
@@ -120,19 +119,20 @@ function DemoPageSection({search, label, screenKey, sections}) {
     return <View>
         <Heading level={1} label={label} />
         {sections.map(section => 
-            <AccordionField key={section.label} forceOpen={toBool(search)}
-                titleContent={<UtilityText strong label={section.label} />} >
-                <FlowBox>
-                    {sortBy(section.pages, 'label').map((page, j) => 
-                        page.label.toLowerCase().includes(search.toLowerCase()) &&
-                        <PadBox vert={10} horiz={10} key={page.key}>
-                            <IconButton compact type='secondary' label={page.label} onPress={() => 
-                                datastore.pushSubscreen(screenKey, {pageKey: page.key})
-                            }  />
-                        </PadBox>                    
-                    )}
-                </FlowBox>
-            </AccordionField>
+            (!search || section.pages.some(page => page.label.toLowerCase().includes(search.toLowerCase()))) &&
+                <AccordionField key={section.label} forceOpen={toBool(search)}
+                    titleContent={<UtilityText strong label={section.label} />} >
+                    <FlowBox>
+                        {sortBy(section.pages, 'label').map((page, j) => 
+                            page.label.toLowerCase().includes(search.toLowerCase()) &&
+                            <PadBox vert={10} horiz={10} key={page.key}>
+                                <IconButton compact type='secondary' label={page.label} onPress={() => 
+                                    datastore.pushSubscreen(screenKey, {pageKey: page.key})
+                                }  />
+                            </PadBox>                    
+                        )}
+                    </FlowBox>
+                </AccordionField>
         )}
         <Pad />
     </View>

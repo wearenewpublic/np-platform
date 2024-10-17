@@ -213,6 +213,7 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
     const author = useObject('persona', replyToComment?.from);
     const [inProgress, setInProgress] = useState(false);
     const [shownModalComponent, setShownModalComponent] = useState(null);
+    const [isCommentError, setIsCommentError] = useState(false);
     const {commentReplyPlaceholder, commentInputPlaceholder, 
         commentPostBlockers, commentPostCheckers,
         commentPostTriggers,
@@ -283,6 +284,7 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
                     onEditingDone(finalComment);
                 }
             } else {
+                setIsCommentError(true);
                 setComment(finalComment);
             }
             setInProgress(false);
@@ -300,15 +302,15 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
         <EditWidgets widgets={commentEditTopWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
         <TextField value={comment.text} onChange={text => setComment({ ...comment, text })}
             placeholder={placeholder} autoFocus={!isMobile} big={big} testID='comment-edit'
-            placeholderParams={{ authorName: getFirstName(author?.name) }}
-            onFocusChange={setIsFocused} />
-        {(isFocused || comment.text?.length > 0) && isMobile && (
-            <PadBox top={24} >
-                <View>
-                    <CTAButton wide label={action} disabled={!canPost || inProgress} onPress={onPost} />
-                </View>
-            </PadBox>
-        )}
+            placeholderParams={{authorName: getFirstName(author?.name)}} 
+            onFocusChange={setIsFocused} error={isCommentError} />
+            {(isFocused || comment.text?.length > 0) && isMobile && (
+                <PadBox top={24} >
+                    <View>
+                        <CTAButton wide label={action} disabled={!canPost || inProgress} onPress={onPost} />
+                    </View>
+                </PadBox>
+            )}
         <Pad size={12} />
         <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
         {personaKey &&
@@ -338,7 +340,7 @@ function EditWidgets({ widgets, comment, setComment, screenParams = {}, onCancel
 }
 
 function CommentReplies({ commentKey, depth = 1 }) {
-    const { replyFilters, replyBoosters, commentRankers, boostedRepliesWidget } = useConfig();
+    const { replyFilters, replyBoosters, commentRankers } = useConfig();
     const datastore = useDatastore();
     const isAdmin = useIsAdmin();
     var replies = useCollection('comment', { filter: { replyTo: commentKey }, sortBy: 'time', reverse: true });
@@ -419,12 +421,17 @@ const CommentActionsStyle = StyleSheet.create({
     }
 })
 
-
-export function ActionReply({ commentKey, depth }) {
-    const datastore = useDatastore();
+export function ActionReplyExceptToSelf({commentKey, depth}) {
     const comment = useObject('comment', commentKey);
     const parent = useObject('comment', comment.replyTo);
     const personaKey = usePersonaKey();
+    if (comment.from == personaKey) return null;
+    if (depth == 1 && parent.from != personaKey) return null;
+    return <ActionReply commentKey={commentKey} depth={depth} />
+}
+
+export function ActionReply({commentKey, depth}) {
+    const datastore = useDatastore();
     const readOnly = useIsReadOnly();
     
     function onReply() {
@@ -433,9 +440,7 @@ export function ActionReply({ commentKey, depth }) {
         logEventAsync(datastore, 'reply-start', { commentKey });
     }
 
-    if (comment.from == personaKey || readOnly) return null;
-    if (depth == 1 && parent.from != personaKey) return null;
-    if (depth > 1) return null;
+    if (readOnly || depth > 1) return null;
 
     return <SubtleButton icon={Reply} label='Reply' onPress={datastore.needsLogin(onReply, 'reply')} padRight />
 }
@@ -504,14 +509,6 @@ export function Composer({ about = null, commentKey, goBackAfterPost = false, to
         <EditComment big comment={editedComment ?? comment ?? { text: '' }} topLevel={topLevel}
             onCancel={goBackAfterPost && onCancel}
             setComment={setEditedComment} onEditingDone={onEditingDone} />
-    </View>
-}
-
-export function CommentsIntro() {
-    return <View>
-        <Heading level={1} label='Comments' />
-        <Pad size={20} />
-        <RichText color={colorTextGrey} label='Join the conversation by submitting a comment. Be sure to follow our [community guidelines](https://example.com).' />
     </View>
 }
 
