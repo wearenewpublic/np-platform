@@ -245,10 +245,10 @@ function FormScreen() {
                 <FormField label='Required Field' required>
                     <TextField placeholder='Text Field' value={text} setText={setText} />
                 </FormField>
-                <FormField label='Fiend with Description' descriptionLabel='Description appears below' >
+                <FormField label='Field with Description' descriptionLabel='Description appears below' >
                     <TextField placeholder='Text Field' value={text} setText={setText} />
                 </FormField>
-                <FormField label='Fiend with Error' errorLabel='This is an error' >
+                <FormField label='Field with Error' errorLabel='This is an error' >
                     <TextField error placeholder='Text Field' value='Invalid Text' />
                 </FormField>
             </DemoSection>
