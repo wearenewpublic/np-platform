@@ -161,7 +161,7 @@ function replyFilter({comment}) {
 }
 
 function replyBooster({comments}) { 
-    return comments.filter(comment => comment.text.includes('godzilla'))[0];   
+    return comments.filter(comment => comment.text.includes('godzilla'));   
 }
 
 function commentRanker({datastore, comments}) {
