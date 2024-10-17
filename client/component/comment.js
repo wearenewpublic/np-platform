@@ -23,6 +23,7 @@ export function Comment({commentKey}) {
     const editing = useSessionData(['editComment', commentKey]);
     const {commentAboveWidgets, commentBelowWidgets, commentMiddleWidgets, commentStylers, bylineRightActions} = useConfig();
     const style = getCombinedStyle({comment, stylers:commentStylers});
+    const s = BylineCommentStyle;
     return <View testID={commentKey} id={commentKey} style={style}>
         <PadBox top={20} horiz={20}>
             <Catcher>
@@ -57,7 +58,7 @@ export function Comment({commentKey}) {
     </View>
 }
 
-const CommentStyle = StyleSheet.create({
+const BylineCommentStyle = StyleSheet.create({
     bylineBar: {
         flexDirection: 'row',
         justifyContent: 'space-between',
