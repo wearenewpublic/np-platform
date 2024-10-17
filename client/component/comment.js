@@ -425,12 +425,8 @@ export function ActionReply({ commentKey, depth }) {
     const comment = useObject('comment', commentKey);
     const parent = useObject('comment', comment.replyTo);
     const personaKey = usePersonaKey();
-<<<<<<< HEAD
-
-=======
     const readOnly = useIsReadOnly();
     
->>>>>>> origin/main
     function onReply() {
         const oldReply = datastore.getSessionData(['replyToComment', commentKey]);
         datastore.setSessionData(['replyToComment', commentKey], !oldReply);
