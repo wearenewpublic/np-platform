@@ -9,9 +9,9 @@ import { TextButton } from "./button";
 import { useLanguage } from "./translation";
 import { useConfig } from "../util/features";
 
-export function ProfilePhoto({ userId, type = 'large', photo = null, faint = false, check = false, border = false }) {
+export function ProfilePhoto({ userId, type = 'large', photo = null, faint = false, check = false, border = false, anonymous = false }) {
 
-    const persona = useObject('persona', userId);
+    const persona = usePersonaObject(userId);
     const isLive = useIsLive();
     const meKey = usePersonaKey();
     const { profilePhotoLayers } = useConfig();
@@ -24,7 +24,7 @@ export function ProfilePhoto({ userId, type = 'large', photo = null, faint = fal
             if (profilePhotoLayers?.length > 0) {                
                 return <> 
                     <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} border={border} faint={faint} check={check} />
-                    {renderLayers(type, persona, profilePhotoLayers)}
+                    {renderLayers(type, persona, profilePhotoLayers, anonymous)}
                 </>
             } else {
                 return <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} border={border} faint={faint} check={check} />
@@ -38,7 +38,7 @@ export function ProfilePhoto({ userId, type = 'large', photo = null, faint = fal
 
 }
 
-function renderLayers(type, persona, profilePhotoLayers) { 
+function renderLayers(type, persona, profilePhotoLayers,anonymous) { 
 
     const size = sizeMap[type] ?? 32;
     
@@ -50,7 +50,7 @@ function renderLayers(type, persona, profilePhotoLayers) {
                 height: size,
                 backgroundColor: 'transparent'
     }}>
-        {profilePhotoLayers && profilePhotoLayers.map((item,i) => item({persona,size,type}))}
+        {profilePhotoLayers && profilePhotoLayers.map((item,i) => item({persona,size,type,anonymous}))}
     </View>
 }
 
@@ -154,8 +154,7 @@ const TagRowStyle = StyleSheet.create({
     }
 });
 
-export function Byline({ type = 'small', photoType = null, clickable = true, userId, name = null, photo = null, time, subtitleLabel, subtitleParams = {}, underline = false, edited = false }) {
-
+export function Byline({ type = 'small', photoType = null, clickable = true, userId, name = null, photo = null, time, subtitleLabel, subtitleParams = {}, underline = false, edited = false, anonymous = false}) {
     const { bylineTags } = useConfig();
     const s = BylineStyle;
     const persona = usePersonaObject(userId);
@@ -169,7 +168,7 @@ export function Byline({ type = 'small', photoType = null, clickable = true, use
     }
     const oneLine = hasTags || type == 'small';
     return <View style={s.outer}>
-        <ProfilePhoto userId={userId} photo={photo} type={hasTags ? 'large' : photoType ?? type} />
+        <ProfilePhoto userId={userId} photo={photo} anonymous={anonymous} type={hasTags ? 'large' : photoType ?? type} />
         <Pad size={spacings.xs} />
         <View style={{ flexDirection: 'column' }}>
             <View style={oneLine ? {flexDirection: 'row' } : {flexDirection: 'column'}}>
