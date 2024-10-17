@@ -18,6 +18,7 @@ import { logEventAsync, useLogEvent } from "../util/eventlog";
 import { NoCommentsHelp } from "./help";
 import { useIsAdmin } from "./admin";
 import { getIsMobileWeb } from '../platform-specific/deviceinfo';
+import { Toggle } from "./form";
 
 export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
@@ -274,10 +275,12 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
                         <HorizBox center right>
                             {onCancel && <PadBox right={20}><TextButton color={colorTextGrey} label='Cancel' onPress={onCancel} /></PadBox>}
                             <CTAButton label={action} disabled={!canPost || inProgress} type='primary' onPress={onPost} />
-                            <PadBox left={20}><CTAButton label={'anonymous'} type={(!comment?.anonymous) ? 'secondary' : 'primary'} onPress={() => {
+                            <PadBox left={20}>
+                                <Toggle label='anonymous' value={comment.anonymous} onChange={() => {
                                 comment.anonymous = !comment?.anonymous;
-                                setComment(...comment)
-                            }} /></PadBox>
+                                    setComment(...comment)
+                                }} />
+                            </PadBox>
                         </HorizBox>
                     }
                 </HorizBox>                        

@@ -160,8 +160,9 @@ export function Byline({ type = 'small', photoType = null, clickable = true, use
     const persona = usePersonaObject(userId);
     const language = useLanguage();
     const datastore = useDatastore();
-    const tags = bylineTags?.map(tagFunc => tagFunc(persona)).filter(tag => tag);
+    const tags = bylineTags?.map(tagFunc => tagFunc(persona,anonymous)).filter(tag => tag);
     const hasTags = tags?.length > 0;
+    if (anonymous) name = persona.titledWriter.organization
 
     function onProfile() {
         datastore.gotoInstance({ structureKey: 'profile', instanceKey: userId });
