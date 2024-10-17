@@ -21,8 +21,9 @@ import { getIsMobileWeb } from '../platform-specific/deviceinfo';
 export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
-    const {commentAboveWidgets, commentBelowWidgets, commentMiddleWidgets} = useConfig();
-    return <View testID={commentKey} id={commentKey}>
+    const {commentAboveWidgets, commentBelowWidgets, commentMiddleWidgets, commentStylers} = useConfig();
+    const style = getCombinedStyle({comment, stylers:commentStylers});
+    return <View testID={commentKey} id={commentKey} style={style}>
         <PadBox top={20} horiz={20}>
             <Catcher>
                 {commentAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
@@ -52,8 +53,9 @@ export function ReplyComment({commentKey, depth={depth}, isFinal=false}) {
     const s = ReplyCommentStyle;
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
-    const {replyAboveWidgets} = useConfig();
-    return <View testID={commentKey} id={commentKey} style={depth == 1 ? s.firstLevel : s.secondLevel}>
+    const {replyAboveWidgets, commentStylers} = useConfig();
+    const style = getCombinedStyle({comment, stylers:commentStylers});
+    return <View testID={commentKey} id={commentKey} style={[depth == 1 ? s.firstLevel : s.secondLevel, style]}>
         <Catcher>{replyAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}</Catcher>
         <Byline type='small' userId={comment.from} time={comment.time} edited={comment.edited} />
         <Pad size={20} />
@@ -85,7 +87,7 @@ export function CommentBody({commentKey}) {
     const [expanded, setExpanded] = useState(false);
     const datastore = useDatastore();
     const {commentTopWidgets, commentBodyStylers} = useConfig();
-    const commentBodyStyle = getCommentBodyStyle({comment, commentBodyStylers});
+    const commentBodyStyle = getCombinedStyle({comment, stylers:commentBodyStylers});
     const text = comment.text || '';
     const isLong = guessNumberOfLines(text) > 8;
 
@@ -116,9 +118,9 @@ export function CommentBody({commentKey}) {
     }
 }
 
-export function getCommentBodyStyle({comment, commentBodyStylers}) {
+export function getCombinedStyle({comment, stylers}) {
     var style = {};
-    commentBodyStylers?.forEach(styler => {
+    stylers?.forEach(styler => {
         style = {...style, ...styler({comment})};
     })
     return style;
