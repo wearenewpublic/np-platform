@@ -117,3 +117,8 @@ export function getScreenStackForUrl(url) {
     screenStack = removeInvisibleParentsFromScreenStack(screenStack);
     return {siloKey, structureKey, instanceKey, screenStack};
 }
+
+export function closeWindow() {
+    console.log('closeWindow');
+    window.close();
+}

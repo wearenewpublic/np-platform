@@ -6,7 +6,7 @@ import { deepClone, getObjectPropertyPath } from './util';
 import { LoadingScreen } from '../component/basics';
 import { SharedData, SharedDataContext } from './shareddata';
 import { callServerApiAsync } from './servercall';
-import { goBack, gotoInstance, pushSubscreen } from './navigate';
+import { closeWindow, goBack, gotoInstance, pushSubscreen } from './navigate';
 
 const DatastoreContext = React.createContext({});
 export const ConfigContext = React.createContext();
@@ -302,6 +302,13 @@ export class Datastore extends React.Component {
             this.props.goBack();
         } else {
             goBack();
+        }
+    }
+    closeWindow() {
+        if (this.props.closeWindow) {
+            this.props.closeWindow();
+        } else {
+            closeWindow();
         }
     }
     render() {

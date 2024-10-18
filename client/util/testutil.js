@@ -4,10 +4,12 @@ import { assembleConfig, assembleScreenSet } from './features';
 import { mock_setFirebaseData } from './firebase';
 import { fireEvent, screen, within, act } from '@testing-library/react';
 import { global_textinput_test_handlers } from '../component/text';
+import { default_fbUser } from './testpersonas';
 
 export function WithFeatures({dataRef, siloKey='test', structureKey='componentdemo', instanceKey='test', 
         isAdmin=false, features={}, globals, collections, sessionData, personaKey='a', 
-        goBack, pushSubscreen, children}) {
+        firebaseUser=default_fbUser,
+        goBack, pushSubscreen, closeWindow, children}) {
     const structure = getStructureForKey(structureKey);
     const config = assembleConfig({structure, activeFeatures:features});
     return <Datastore 
@@ -20,8 +22,9 @@ export function WithFeatures({dataRef, siloKey='test', structureKey='componentde
             collections={collections}
             sessionData={sessionData}
             personaKey={personaKey}
+            firebaseUser={firebaseUser}
             config={config}
-            goBack={goBack}
+            goBack={goBack} closeWindow={closeWindow}
             pushSubscreen={pushSubscreen}
             isLive={false}>
         {children}

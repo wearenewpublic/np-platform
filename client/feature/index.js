@@ -20,6 +20,7 @@ import { TopBarDemoFeature } from "../demo/topbar-demo";
 import { BasicFeaturesDemoFeature } from "../demo/basicfeatures-demo";
 import { OpenLinksInNewTabFeature } from "./OpenLinksInNewTabFeature";
 import { EmbeddedInstanceDemoFeature } from "../demo/embedded-demo";
+import { LoginDemo } from "../demo/login-demo";
 
 export function SECTION(label, features) {return {section: true, label, features}}
 export function SUBSECTION(label, features) {return {section: true, level:2, label, features}}
@@ -63,7 +64,8 @@ export var features = {
             AdminDemo,
             TopBarDemoFeature,
             BasicFeaturesDemoFeature,
-            EmbeddedInstanceDemoFeature
+            EmbeddedInstanceDemoFeature,
+            LoginDemo
         ]),
         SECTION('Configuration', [
             OpenLinksInNewTabFeature
@@ -86,7 +88,8 @@ export var defaultFeatureConfig = {
         demo_admin: true,
         demo_topbar: true,
         demo_basicfeatures: true,
-        demo_embedded: true
+        demo_embedded: true,
+        demo_login: true
     },
     simplecomments: {
         openlinksinnewtab: true       
