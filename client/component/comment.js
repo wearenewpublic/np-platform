@@ -1,3 +1,4 @@
+/* eslint-disable no-inner-declarations */
 import React, { useState } from "react";
 import { useCollection, useDatastore, useObject, usePersonaKey, useSessionData } from "../util/datastore";
 import { Byline } from "./people";
@@ -17,6 +18,7 @@ import { logEventAsync, useLogEvent } from "../util/eventlog";
 import { NoCommentsHelp } from "./help";
 import { useIsAdmin } from "./admin";
 import { getIsMobileWeb } from '../platform-specific/deviceinfo';
+import { Toggle } from "./form";
 
 export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
@@ -28,7 +30,7 @@ export function Comment({commentKey}) {
             <Catcher>
                 {commentAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
             </Catcher>
-            <Byline type='large' userId={comment.from} time={comment.time} edited={comment.edited} />
+            <Byline type='large' userId={comment.from} an time={comment.time} edited={comment.edited} genericTitle={comment?.genericTitle} />
             <Pad size={20} />
             <PadBox left={48}>
                 <Catcher>
@@ -57,7 +59,7 @@ export function ReplyComment({commentKey, depth={depth}, isFinal=false}) {
     const style = getCombinedStyle({comment, stylers:commentStylers});
     return <View testID={commentKey} id={commentKey} style={[depth == 1 ? s.firstLevel : s.secondLevel, style]}>
         <Catcher>{replyAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}</Catcher>
-        <Byline type='small' userId={comment.from} time={comment.time} edited={comment.edited} />
+        <Byline type='small' userId={comment.from} time={comment.time} edited={comment.edited} genericTitle={comment?.genericTitle}  />
         <Pad size={20} />
         <PadBox left={40}>
             <CommentBody commentKey={commentKey} />
@@ -153,7 +155,7 @@ function MaybeCommentReply({commentKey}) {
 
     return <View>
         <Pad size={20} />
-        <Byline type='small' userId={personaKey} />
+        <Byline type='small' userId={personaKey}  />
         <Pad size={20} />
         <PadBox left={24}>
             <EditComment comment={comment} onCancel={onCancel}
@@ -251,7 +253,7 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
     }
     const isMobile = getIsMobileWeb();
     const [isFocused, setIsFocused] = useState(false);
-
+    const [switchValue, setSwitchValue] = useState(comment.genericTitle);
     return <View>
         {shownModalComponent}
         {topLevel && <TopBarActionProvider label={action} disabled={!canPost || inProgress} onPress={onPost} />}
@@ -277,6 +279,14 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
                         <HorizBox center right>
                             {onCancel && <PadBox right={20}><TextButton color={colorTextGrey} label='Cancel' onPress={onCancel} /></PadBox>}
                             <CTAButton label={action} disabled={!canPost || inProgress} type='primary' onPress={onPost} />
+                            <PadBox left={20}>
+                                <Toggle label='generic title' value={switchValue} onChange={() => {
+                                    comment.genericTitle = !comment?.genericTitle;
+                                    setSwitchValue(comment.genericTitle);
+                                    var updatedComment = {genericTitle: switchValue, ...comment};
+                                    setComment(updatedComment)
+                                }} />
+                            </PadBox>
                         </HorizBox>
                     }
                 </HorizBox>                        
@@ -451,7 +461,7 @@ export function Composer({about=null, commentKey, goBackAfterPost=false, topLeve
             setComment={setEditedComment} 
             screenParams={screenParams}
             onCancel={goBackAfterPost && onCancel} />
-        <Byline type='large' userId={personaKey} subtitleLabel={subtitle} />
+        <Byline type='large' userId={personaKey} subtitleLabel={subtitle} genericTitle={comment?.genericTitle}  />
         <Pad size={24} />
         <EditComment big comment={editedComment ?? comment ?? {text: ''}} topLevel={topLevel}
             onCancel={goBackAfterPost && onCancel}
