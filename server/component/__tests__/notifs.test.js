@@ -29,10 +29,9 @@ test('sendNotifsForReplyApi', async () => {
 
     const result = await sendNotifsForReplyApi({serverstore, parentKey: '1', replyKey: '2', language: 'English'});
     expect(sendTemplatedEmailAsync).toHaveBeenCalledWith({
-        templateId: 'reply-notif', language: 'English',
-        siloKey: 'testSilo', structureKey: 'testStruct', instanceKey: 'testInstance',
+        serverstore: expect.anything(),
+        templateId: 'reply-notif', 
         toUserId: 'testuser', replyText: 'My reply',
-        toPersona: {key: 'testuser', name: 'Test User', photoUrl: 'photo-url'},
-        siloName: 'Radio Canada', replyAuthorName: 'Test User', conversationName: 'My Conversation'
+        replyAuthorName: 'Test User', conversationName: 'My Conversation'
     });
 });
