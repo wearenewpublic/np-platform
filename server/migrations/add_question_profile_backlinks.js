@@ -24,5 +24,5 @@ async function connectAllPersonasForInstance({serverstore}) {
 }
 
 
-export {AddQuestionProfileBacklinks};
+exports.AddQuestionProfileBacklinks = AddQuestionProfileBacklinks;
 

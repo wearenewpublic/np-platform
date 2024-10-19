@@ -1,4 +1,4 @@
 
-export var readFileSync = jest.fn();
-export var existsSync = jest.fn();
+exports.readFileSync = jest.fn();
+exports.existsSync = jest.fn();
 

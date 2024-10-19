@@ -1,6 +1,6 @@
-import {getMigrationList} from "../migrations";
-import {checkIsGlobalAdmin} from "../util/admin";
-import {firebaseReadAsync, createNewKey, firebaseWriteAsync, firebaseUpdateAsync} from "../util/firebaseutil";
+const { getMigrationList } = require("../migrations");
+const { checkIsGlobalAdmin } = require("../util/admin");
+const { firebaseReadAsync, createNewKey, firebaseWriteAsync, firebaseUpdateAsync } = require("../util/firebaseutil");
 
 async function getMigrationPreviewsAsync({ serverstore }) {
     console.log('getMigrationPreviewsAsync', serverstore.getUserId(), serverstore.getUserEmail());
@@ -125,12 +125,11 @@ function shallowEqual(obj1, obj2) {
     return true;
 }
 
-export var adminFunctions = {
+exports.adminFunctions = {
     getMigrationPreviews: getMigrationPreviewsAsync,
     getSingleMigration: getSingleMigrationAsync,
     getPastExecutions: getPastMigrationExecutionsAsync,
     runMigration: runMigrationAsync,
     rollBackMigration: rollBackMigrationAsync,
-};
+}
 
-export default { adminFunctions };

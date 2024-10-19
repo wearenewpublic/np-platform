@@ -8,4 +8,4 @@ function triggerOnObjectWrite(structureKey, objectType, triggerFunction) {
         trigger: triggerFunction
     }
 }
-export {triggerOnObjectWrite};
+exports.triggerOnObjectWrite = triggerOnObjectWrite;

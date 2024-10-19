@@ -1,8 +1,8 @@
-import {readFileSync, existsSync} from 'fs';
-import Mustache from 'mustache';
-import {extractAndParseJSON} from '../util/messyjson';
-import axios from 'axios';
-import path from 'path';
+const { readFileSync, existsSync } = require('fs');
+const Mustache = require('mustache');
+const { extractAndParseJSON } = require('../util/messyjson');
+const axios = require('axios');
+const path = require('path');
 
 
 var openai_key = null;
@@ -10,7 +10,7 @@ var openai_key = null;
 function setGptKey(key) {
     openai_key = key;
 }
-export {setGptKey};
+exports.setGptKey = setGptKey;
 
 async function callOpenAIAsync({ action, data }) {
     const url = 'https://api.openai.com/v1/' + action;
@@ -22,7 +22,7 @@ async function callOpenAIAsync({ action, data }) {
     });
     return response.data;
 }
-export {callOpenAIAsync};
+exports.callOpenAIAsync = callOpenAIAsync;
 
 function getPromptFilename({promptKey, model}) {
     const modelPrefix = (model == 'gpt4') ? 'gpt4/' : ''
@@ -42,7 +42,7 @@ function createGptPrompt({promptKey, params, language='English', model=null}) {
     const prompt = Mustache.render(promptTemplate, {...params, language});
     return prompt;
 }
-export {createGptPrompt};
+exports.createGptPrompt = createGptPrompt;
 
 function selectModel(model) {
     switch (model) {
@@ -70,7 +70,7 @@ async function callGptAsync({promptKey, params, language, model, json_mode=false
     return result.choices?.[0]?.message?.content;
 }
 
-export {callGptAsync};
+exports.callGptAsync = callGptAsync;
 
 
 async function getGptJsonAsync({promptKey, params, language, model}) {
@@ -78,7 +78,7 @@ async function getGptJsonAsync({promptKey, params, language, model}) {
     const json = extractAndParseJSON(result);
     return json;
 }
-export {getGptJsonAsync};
+exports.getGptJsonAsync = getGptJsonAsync;
 
 async function getEmbeddingsAsync({text}) {
     const result = await callOpenAIAsync({action: 'embeddings', data: {
@@ -91,7 +91,7 @@ async function getEmbeddingsAsync({text}) {
         throw new Error('OpenAI Embeddings error: ' + JSON.stringify(result));
     }
 }
-export {getEmbeddingsAsync};
+exports.getEmbeddingsAsync = getEmbeddingsAsync;
 
 async function getEmbeddingsArrayAsync({textArray}) {
     const expandEmptyTextArray = textArray.map(t => t || ' ');
@@ -106,12 +106,15 @@ async function getEmbeddingsArrayAsync({textArray}) {
         throw new Error('OpenAI Embeddings error: ' + JSON.stringify(result));
     }
 }
-export {getEmbeddingsArrayAsync};
+exports.getEmbeddingsArrayAsync = getEmbeddingsArrayAsync;
 
-export var publicFunctions = {
+
+
+
+exports.publicFunctions = {
     chat: callGptAsync,
     embedding: getEmbeddingsAsync,
     embeddingArray: getEmbeddingsArrayAsync
-};
+}
 
-export default {publicFunctions};
+

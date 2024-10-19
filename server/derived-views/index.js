@@ -1,14 +1,14 @@
-import {CommentsOnProfile} from "./comments-on-profile";
+const { CommentsOnProfile } = require("./comments-on-profile");
 
 var derived_views = [CommentsOnProfile]
 
 function getDerivedViews() {
     return derived_views;
 }
-export {getDerivedViews};
+exports.getDerivedViews = getDerivedViews;
 
 function addDerivedViews(newViews) {
     derived_views = [...derived_views, ...newViews];
 }
-export {addDerivedViews};
+exports.addDerivedViews = addDerivedViews;
 

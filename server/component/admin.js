@@ -1,4 +1,4 @@
-import {getOrCreateUserAsync, firebaseGetUserAsync, stringToFbKey, fbKeyToString} from "../util/firebaseutil";
+const { getOrCreateUserAsync, firebaseGetUserAsync, stringToFbKey, fbKeyToString } = require("../util/firebaseutil");
 
 function extractEmailsFromString(input) {
     const emailRegex = /[\w.-]+@[\w.-]+\.[\w]{2,}/g;
@@ -11,12 +11,12 @@ async function addAdminUsersAsync({serverstore, emails, roles}) {
         serverstore.setModulePrivate('admin', ['userRoles', stringToFbKey(email.toLowerCase())], JSON.stringify(roles));
     });
 }
-export {addAdminUsersAsync};
+exports.addAdminUsersAsync = addAdminUsersAsync;
 
 async function setAdminRolesAsync({serverstore, email, roles}) {
     serverstore.setModulePrivate('admin', ['userRoles', stringToFbKey(email.toLowerCase())], JSON.stringify(roles));
 }
-export {setAdminRolesAsync};
+exports.setAdminRolesAsync = setAdminRolesAsync;
 
 async function getAdminUsersAsync({serverstore}) {
     const userRoles = await serverstore.getModulePrivateAsync('admin', ['userRoles']);
@@ -27,21 +27,19 @@ async function getAdminUsersAsync({serverstore}) {
         return {key, roles, email: fbKeyToString(key)};
     });
 }
-export {getAdminUsersAsync};
+exports.getAdminUsersAsync = getAdminUsersAsync;
 
 async function getMyRolesAsync({serverstore, email}) {
     const userRoles = await serverstore.getModulePrivateAsync('admin', ['userRoles', stringToFbKey(email.toLowerCase())]);
     return JSON.parse(userRoles ?? '[]');
 }
 
-export var publicFunctions = {
+exports.publicFunctions = {
     getMyRoles: getMyRolesAsync
-};
+}
 
-export var adminFunctions = {
+exports.adminFunctions = {
     addAdminUsers: addAdminUsersAsync,
     setAdminRoles: setAdminRolesAsync,
     getAdminUsers: getAdminUsersAsync
-};
-
-export default {publicFunctions, adminFunctions};
+}

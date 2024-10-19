@@ -45,7 +45,7 @@ function expandPath(path) {
     }
 }
 
-function checkNoUndefinedKeysOrValues(obj) {
+function checkNoUndefinedValues(obj) {
     if (typeof obj !== 'object') {
         return;
     }
@@ -53,7 +53,7 @@ function checkNoUndefinedKeysOrValues(obj) {
         if (obj[key] === undefined) {
             throw new Error('Undefined value for key "' + key + '" in object: ' + JSON.stringify(obj));
         } else {
-            checkNoUndefinedKeysOrValues(obj[key]);
+            checkNoUndefinedValues(obj[key]);
         }
     }
 }
@@ -181,7 +181,7 @@ function checkPathsNotOverlapping(pathList) {
 }
 
 
-export {
+module.exports = {
     firebaseWriteAsync, firebaseReadAsync, firebaseUpdateAsync, stringToFbKey, fbKeyToString,
     firebaseReadShallowKeys, firebaseGetUserListAsync,
     readGlobalAsync, writeGlobalAsync, writeCollectionAsync,
@@ -191,7 +191,7 @@ export {
     getOrCreateUserAsync, createLoginToken,
 
     verifyIdTokenAsync, createNewKey, firebaseGetUserAsync, expandPath, 
-    checkPathsNotOverlapping, checkNoUndefinedKeysOrValues,
+    checkPathsNotOverlapping, checkNoUndefinedKeysOrValues: checkNoUndefinedValues,
 
     setFirebaseAdmin, getFirebaseAdmin
 };

@@ -1,6 +1,6 @@
-import {mockServerStore} from "../../util/serverstore";
-import {logData} from "../../util/testutil";
-import {setGlobalPropertyApi} from "../global";
+const { mockServerStore } = require("../../util/serverstore");
+const { logData } = require("../../util/testutil");
+const { setGlobalPropertyApi } = require("../global");
 
 describe('setGlobalPropertyApi', () => {
     test('Authorized', async () => {

@@ -1,4 +1,4 @@
-import {sendTemplatedEmailAsync} from "../util/email";
+const { sendTemplatedEmailAsync } = require("../util/email");
 
 async function sendNotifsForReplyApi({serverstore, language, parentKey, replyKey}) {
     const pParentComment = serverstore.getObjectAsync('comment', parentKey);
@@ -14,7 +14,7 @@ async function sendNotifsForReplyApi({serverstore, language, parentKey, replyKey
         throw new Error('Parent or reply comment not found:' + parentKey + ' ' + replyKey);
     }
 
-    const siloName = (await pSiloName) ?? serverstore.getSiloKey().toUpperCase();
+    const siloName = await pSiloName ?? serverstore.getSiloKey().toUpperCase();
     const replyAuthorPersona = await serverstore.getPersonaAsync(replyComment.from);
     const toFields = await serverstore.getRemoteGlobalAsync({
         structureKey: 'profile', instanceKey: parentComment?.from, key: 'fields'
@@ -31,10 +31,9 @@ async function sendNotifsForReplyApi({serverstore, language, parentKey, replyKey
         conversationName: conversationName ?? 'Unnamed Conversation'
     });
 }
-export {sendNotifsForReplyApi};
+exports.sendNotifsForReplyApi = sendNotifsForReplyApi;
 
-export var publicFunctions = {
+exports.publicFunctions = {
     sendNotifsForReply: sendNotifsForReplyApi,
-};
+}
 
-export default {publicFunctions};

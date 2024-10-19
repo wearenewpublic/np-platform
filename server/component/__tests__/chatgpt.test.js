@@ -1,18 +1,8 @@
 jest.mock('fs');
 
-import {post} from "axios";
-
-import {
-    callOpenAIAsync,
-    callGptAsync,
-    createGptPrompt,
-    getEmbeddingsAsync,
-    getEmbeddingsArrayAsync,
-    setGptKey,
-    getGptJsonAsync,
-} from "../chatgpt";
-
-import {readFileSync, existsSync} from "fs";
+const { post } = require("axios");
+const { callOpenAIAsync, callGptAsync, createGptPrompt, getEmbeddingsAsync, getEmbeddingsArrayAsync, setGptKey, getGptJsonAsync } = require("../chatgpt");
+const { readFileSync, existsSync } = require("fs");
 
 test('createGptPrompt', () => {
     readFileSync.mockReturnValue('What is your favorite {{thing}}?');

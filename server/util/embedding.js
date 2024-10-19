@@ -10,7 +10,7 @@ function sortEmbeddingsByDistance(messageKey, embedding, embeddings) {
     return distances;
 }
 
-export {sortEmbeddingsByDistance};
+exports.sortEmbeddingsByDistance = sortEmbeddingsByDistance;
 
 function getDistance(embedding1, embedding2) {
     let distance = 0;
@@ -20,4 +20,4 @@ function getDistance(embedding1, embedding2) {
     return distance;
 }
 
-export {getDistance};
+exports.getDistance = getDistance;

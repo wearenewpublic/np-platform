@@ -1,5 +1,3 @@
-import {jest} from '@jest/globals';
-
 
 var global_user = {
     uid: 'testuser',
@@ -8,39 +6,46 @@ var global_user = {
     photoURL: 'photo-url'
     // photoURL: 'https://test.org/photo.jpg'
 };
-export const verifyIdToken = jest.fn();
+const verifyIdToken = jest.fn();
+exports.verifyIdToken = verifyIdToken;
 
-export const getUserByEmail = jest.fn();
+const getUserByEmail = jest.fn();
+exports.getUserByEmail = getUserByEmail;
 
-export const createUser = jest.fn();
+const createUser = jest.fn();
+exports.createUser = createUser;
 
-export const getUser = jest.fn();
+const getUser = jest.fn();
+exports.getUser = getUser;
 
-export const createCustomToken = jest.fn();
+const createCustomToken = jest.fn();
+exports.createCustomToken = createCustomToken;
 
-export const listUsers = jest.fn();
+const listUsers = jest.fn();
+exports.listUsers = listUsers;
 
 var global_data = {};
 var global_next_key = 1;
 
-export async function clearTestData() {
+async function clearTestData() {
     global_data = {};
     global_next_key = 1;
 }
+exports.clearTestData = clearTestData
 
-export async function setTestData(data) {
+async function setTestData(data) {
     global_data = data;
 }
+exports.setTestData = setTestData;
 
-export function logData() {
+function logData() {
     console.log(JSON.stringify(global_data, null, 2));
 }
+exports.logData = logData;
 
-export function getTestData() {
-    return global_data;
-}
+exports.getTestData = () => global_data;
 
-export async function writeTestData(path, value) {
+async function writeTestData(path, value) {
     const parts = path.split('/').filter(part => part);
     var result = global_data;
     const prefix = parts.slice(0, -1);
@@ -53,8 +58,9 @@ export async function writeTestData(path, value) {
     });
     result[lastField] = value;
 }
+exports.writeTestData = writeTestData;
 
-export async function readTestData(path) {
+async function readTestData(path) {
     const parts = path.split('/').filter(part => part);
     var result = global_data;
     parts.forEach(part => {
@@ -62,6 +68,7 @@ export async function readTestData(path) {
     });
     return result;
 }
+exports.readTestData = readTestData;
 
 async function updateTestData(path, updateMap) {
     const keys = Object.keys(updateMap);
@@ -82,7 +89,7 @@ async function readFilteredTestData(path, key, value) {
     return filtered;
 }
 
-export const fakeFirebaseAdmin = {
+const fakeFirebaseAdmin = {
     auth: () => ({
         getUser: async uid => global_user, 
         verifyIdToken, getUserByEmail, createUser,
@@ -111,3 +118,4 @@ export const fakeFirebaseAdmin = {
         })
     })
 }
+exports.fakeFirebaseAdmin = fakeFirebaseAdmin;

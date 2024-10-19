@@ -1,5 +1,5 @@
-import {mockServerStore} from "../../util/serverstore";
-import {runConstructorApi} from "../constructor";
+const { mockServerStore } = require("../../util/serverstore");
+const { runConstructorApi } = require("../constructor");
 
 
 describe('runConstructorApi', () => {

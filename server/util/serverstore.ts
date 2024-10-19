@@ -1,15 +1,6 @@
-import { 
-    firebaseReadAsync, 
-    firebaseWriteAsync, 
-    firebaseUpdateAsync, 
-    expandPath, 
-    checkPathsNotOverlapping, 
-    firebaseGetUserAsync, 
-    checkNoUndefinedKeysOrValues, 
-    firebaseReadShallowKeys 
-} from "./firebaseutil";
+const { firebaseReadAsync, firebaseWriteAsync, firebaseUpdateAsync, expandPath, checkPathsNotOverlapping, firebaseGetUserAsync, checkNoUndefinedKeysOrValues, firebaseReadShallowKeys } = require("./firebaseutil");
 
-export class ServerStore {
+class ServerStore {
     siloKey: string;
     structureKey: string;
     instanceKey: string;
@@ -277,12 +268,14 @@ export class ServerStore {
 
 }
 
+exports.ServerStore = ServerStore;
 
-export function mockServerStore({
+
+function mockServerStore({
         siloKey='testSilo', structureKey='testStruct', 
         instanceKey='testInstance', userId='testuser', userEmail='admin@admin.org',
         language='English'
     } = {}) : ServerStore {
     return new ServerStore({siloKey, structureKey, instanceKey, userId, userEmail, language});
 }
-
+exports.mockServerStore = mockServerStore;

@@ -1,5 +1,5 @@
-import {mockServerStore} from "../../util/serverstore";
-import {runTriggersApi} from "../derivedviews";
+const { mockServerStore } = require("../../util/serverstore");
+const { runTriggersApi } = require("../derivedviews");
 
 test('runTriggersApi', async () => {
     const serverstore = mockServerStore({structureKey: 'simplecomments'});

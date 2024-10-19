@@ -1,18 +1,12 @@
-import Busboy from 'busboy';
-import os from 'os';
-import path from 'path';
-import fs from 'fs';
-import {verifyIdTokenAsync} from './firebaseutil';
-import {Server} from 'http';
-import {ServerStore} from './serverstore';
-import {getIsUserAdminAsync} from './admin';
-import CorsModule from 'cors';
-
-const cors = CorsModule({origin: true})
-
-// const cors = require('cors')({origin: true})
-
-
+const Busboy = require('busboy');
+const os = require('os');
+const path = require('path');
+const fs = require('fs');
+const { verifyIdTokenAsync } = require('./firebaseutil');
+const { Server } = require('http');
+const { ServerStore } = require('./serverstore');
+const { getIsUserAdminAsync } = require('./admin');
+const cors = require('cors')({origin: true})
 
 function handleApiRequest(req, res, components) {
     const contentType = req.headers['content-type'] || '';
@@ -38,10 +32,10 @@ function handleApiRequest(req, res, components) {
     }   
 }
 
-export {handleApiRequest};
+exports.handleApiRequest = handleApiRequest;
 
 
-
+ 
 function handleMultipartRequest(req, res, components) {
     const busboy = Busboy({ headers: req.headers });
     const tmpdir = os.tmpdir();
@@ -173,7 +167,7 @@ async function callApiFunctionAsync(request, fields, components) {
         return ({statusCode: 500, result: JSON.stringify({success: false, error: error.message})});
     }
 }
-export {callApiFunctionAsync};
+exports.callApiFunctionAsync = callApiFunctionAsync;
 
 function parsePath(path) {
     var parts = path.split('/').filter(x => x);
@@ -185,5 +179,5 @@ function parsePath(path) {
         apiId: parts[1],
     }
 }
-export {parsePath};
+exports.parsePath = parsePath;
 

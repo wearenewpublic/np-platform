@@ -2,10 +2,8 @@
 async function setGlobalPropertyApi({serverstore, key, value}) {
     serverstore.setGlobalProperty(key, value);
 }
-export {setGlobalPropertyApi};
-
-export var adminFunctions = {
+exports.setGlobalPropertyApi = setGlobalPropertyApi;
+    
+exports.adminFunctions = {
     setGlobalProperty: setGlobalPropertyApi
-};
-
-export default {adminFunctions};
+}

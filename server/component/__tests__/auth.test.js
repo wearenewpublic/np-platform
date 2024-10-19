@@ -1,6 +1,6 @@
-import {getUserByEmail, createCustomToken} from "../../util/testutil";
-import {authCallbackAsync} from "../auth";
-import {post, get} from "axios";
+const { getUserByEmail, createCustomToken } = require("../../util/testutil");
+const { authCallbackAsync } = require("../auth");
+const { post, get } = require("axios");
 
 
 test('authCallbackAsync', async () => {

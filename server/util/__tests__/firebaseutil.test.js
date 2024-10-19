@@ -1,31 +1,6 @@
-import {read} from "fs";
-
-import {
-    setFirebaseAdmin,
-    firebaseWriteAsync,
-    firebaseReadAsync,
-    firebaseReadWithFilterAsync,
-    firebaseUpdateAsync,
-    firebaseGetUserAsync,
-    createNewKey,
-    writeGlobalAsync,
-    readGlobalAsync,
-    stringToFbKey,
-    fbKeyToString,
-    urlToKey,
-    keyToUrl,
-    checkPathsNotOverlapping,
-    checkNoUndefinedKeysOrValues,
-    setObjectAsync,
-    readObjectAsync,
-    writeCollectionAsync,
-    expandPath,
-    getOrCreateUserAsync,
-    firebaseGetUserListAsync,
-} from "../firebaseutil";
-
-import {jest} from '@jest/globals';
-import {fakeFirebaseAdmin, clearTestData, createUser, getUserByEmail, listUsers} from "../testutil";
+const { read } = require("fs");
+const { setFirebaseAdmin, firebaseWriteAsync, firebaseReadAsync, firebaseReadWithFilterAsync, firebaseUpdateAsync, firebaseGetUserAsync, createNewKey, writeGlobalAsync, readGlobalAsync, stringToFbKey, fbKeyToString, urlToKey, keyToUrl, checkPathsNotOverlapping, checkNoUndefinedKeysOrValues, setObjectAsync, readObjectAsync, writeCollectionAsync, expandPath, getOrCreateUserAsync, firebaseGetUserListAsync } = require("../firebaseutil");
+const { fakeFirebaseAdmin, clearTestData, createUser, getUserByEmail, listUsers } = require("../testutil");
 
 
 test('firebaseWriteAsync', async () => {
@@ -90,7 +65,7 @@ test('setObjectAsync', async () => {
     await setObjectAsync({siloKey: 'cbc', structureKey: 'struct', instanceKey: 'inst', collection: 'coll', key: 'key', value: 'value'});
     const result = await readObjectAsync({siloKey: 'cbc', structureKey: 'struct', instanceKey: 'inst', collection: 'coll', key: 'key'});
     expect(result).toBe('value');
-});
+});    
 
 test('writeCollectionAsync', async () => {
     await writeCollectionAsync({siloKey: 'cbc', structureKey: 'struct', instanceKey: 'inst', collection: 'coll', items: {key1: 'value1', key2: 'value2'}});
@@ -141,7 +116,7 @@ test('checkNoUndefinedKeysOrValues', () => {
     expect(() =>
         checkNoUndefinedKeysOrValues({foo: 'bar', baz: {qux: 'quux', wibble: undefined}})
     ).toThrow();
-});
+}); 
 
 test('expandPath', () => {
     const result = expandPath(['foo', 'bar', 'baz']);

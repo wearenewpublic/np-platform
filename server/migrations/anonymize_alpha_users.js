@@ -1,6 +1,6 @@
-import {readFileSync, existsSync} from "fs";
-import {firebaseGetUserListAsync} from "../util/firebaseutil";
-import {updateProfileAsync} from "../component/profile";
+const { readFileSync, existsSync } = require("fs");
+const { firebaseGetUserListAsync } = require("../util/firebaseutil");
+const { updateProfileAsync } = require("../component/profile");
 
 // Replace the names of a list of alpha users with generated pseudonyms
 // This requires that add_question_profile_backlinks has already been run so that we have
@@ -17,7 +17,7 @@ const AnonymizeAlphaUsersMigration = {
 function removeAccents(str) {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
-
+  
 
 function getUsersToRename({userList, profileKeys, domainsToNotRename, emailsToNotRename}) {
     var usersToRename = [];
@@ -80,5 +80,5 @@ async function anonymizeAlphaUsers({serverstore, migrationLog}) {
 
 
 
-export {AnonymizeAlphaUsersMigration};
+exports.AnonymizeAlphaUsersMigration = AnonymizeAlphaUsersMigration;
 
