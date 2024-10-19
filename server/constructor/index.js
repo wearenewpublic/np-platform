@@ -1,6 +1,6 @@
-const { profileConstructorAsync } = require("./profile-constructor");
+import {profileConstructorAsync} from "./profile-constructor";
 
-function nullConstructor() {};
+function nullConstructor() {}
 
 var constructors = {   
     simplecomments: nullConstructor,
@@ -11,9 +11,9 @@ var constructors = {
 function getConstructor(structureKey) {
     return constructors[structureKey];
 }
-exports.getConstructor = getConstructor;
+export {getConstructor};
 
 function addConstructors(newConstructors) {
     constructors = {...constructors, ...newConstructors};
 }
-exports.addConstructors = addConstructors;
+export {addConstructors};

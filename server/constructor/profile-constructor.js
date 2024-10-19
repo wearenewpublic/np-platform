@@ -7,4 +7,4 @@ async function profileConstructorAsync({serverstore}) {
     serverstore.setGlobalProperty('preview', persona);
     serverstore.setGlobalProperty('fields', persona);
 }
-exports.profileConstructorAsync = profileConstructorAsync;
+export {profileConstructorAsync};

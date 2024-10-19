@@ -1,4 +1,4 @@
-const { getConstructor } = require("../constructor");
+import {getConstructor} from "../constructor";
 
 async function runConstructorApi({serverstore}) {
     const constructor = getConstructor(serverstore.getStructureKey());
@@ -9,8 +9,10 @@ async function runConstructorApi({serverstore}) {
     await constructor({serverstore});
     serverstore.setGlobalProperty('initialized', Date.now());
 }
-exports.runConstructorApi = runConstructorApi;
+export {runConstructorApi};
 
-exports.publicFunctions = {
+export var publicFunctions = {
     runConstructor: runConstructorApi
-}
+};
+
+export default {publicFunctions};

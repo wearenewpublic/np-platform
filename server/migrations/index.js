@@ -1,5 +1,5 @@
-const { AnonymizeAlphaUsersMigration } = require("./anonymize_alpha_users");
-const { AddQuestionProfileBacklinks } = require("./add_question_profile_backlinks");
+import {AnonymizeAlphaUsersMigration} from "./anonymize_alpha_users";
+import {AddQuestionProfileBacklinks} from "./add_question_profile_backlinks";
 
 var global_migration_list = [
     AnonymizeAlphaUsersMigration,
@@ -14,5 +14,5 @@ function getMigrationList() {
     return global_migration_list;
 }
 
-exports.addMigrations = addMigrations;
-exports.getMigrationList = getMigrationList;
+export {addMigrations};
+export {getMigrationList};

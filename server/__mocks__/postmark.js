@@ -26,6 +26,4 @@ function getLastEmailSent() {
 module.exports = {
     ServerClient: ServerClientMock,
     getLastEmailSent
-};
-
-
+}

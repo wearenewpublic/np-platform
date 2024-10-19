@@ -1,9 +1,9 @@
-const { readFileSync, read } = require("fs");
-const { sendEmailAsync, setPostmarkKey, sendTemplatedEmailAsync } = require("../email");
-const { getLastEmailSent } = require("../../__mocks__/postmark");
-const { mockServerStore } = require("../serverstore");
-
 jest.mock('postmark');
+
+import {readFileSync, read} from "fs";
+import {sendEmailAsync, setPostmarkKey, sendTemplatedEmailAsync} from "../email";
+import {getLastEmailSent} from "postmark";
+import {mockServerStore} from "../serverstore";
 
 test('sendEmailAsync', async () => {
     const email = {

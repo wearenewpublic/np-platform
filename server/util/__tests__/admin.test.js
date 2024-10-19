@@ -1,5 +1,5 @@
-const { mockServerStore } = require('../serverstore');
-const { getIsUserAdminAsync } = require('../admin');
+import {mockServerStore} from '../serverstore';
+import {getIsUserAdminAsync} from '../admin';
 
 test('getIsUserAdminAsync', async () => {
     const serverstore = mockServerStore({userEmail: 'rob@newpublic.org'});

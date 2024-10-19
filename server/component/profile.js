@@ -1,4 +1,4 @@
-const {getGptJsonAsync} = require('./chatgpt');
+import {getGptJsonAsync} from './chatgpt';
 
 async function updateProfileAsync({serverstore, updates, preview}) {
     if (serverstore.getUserId() != serverstore.getInstanceKey()) {
@@ -10,10 +10,10 @@ async function updateProfileAsync({serverstore, updates, preview}) {
     const pBacklinks = serverstore.getCollectionAsync('backlink');
     const pFirstLogin = serverstore.getGlobalPropertyAsync('firstLogin');
 
-    const oldPreview = await pOldPreview || {};
-    const oldModuleData = await pOldModuleData || {};
-    const backlinks = await pBacklinks || [];
-    const firstLogin = await pFirstLogin || Date.now();
+    const oldPreview = (await pOldPreview) || {};
+    const oldModuleData = (await pOldModuleData) || {};
+    const backlinks = (await pBacklinks) || [];
+    const firstLogin = (await pFirstLogin) || Date.now();
 
     serverstore.setGlobalProperty('preview', {...oldPreview, ...preview});
     serverstore.setGlobalProperty('fields', {...oldModuleData, ...updates});
@@ -37,7 +37,7 @@ async function updateProfileAsync({serverstore, updates, preview}) {
 
     return null;
 }
-exports.updateProfileAsync = updateProfileAsync;
+export {updateProfileAsync};
 
 function isSelfInBacklinks({serverstore, backlinks}) {
     return backlinks.find(backlink => 
@@ -63,7 +63,7 @@ async function linkInstanceAsync({serverstore}) {
     }); 
     return null;
 }
-exports.linkInstanceAsync = linkInstanceAsync;
+export {linkInstanceAsync};
 
 async function checkNameAsync({serverstore, name}) {
     if (name.length < 3) {
@@ -83,10 +83,12 @@ async function checkNameAsync({serverstore, name}) {
     }
     return {violates: false};
 }
-exports.checkNameAsync = checkNameAsync;
+export {checkNameAsync};
 
-exports.publicFunctions = {
+export var publicFunctions = {
     update: updateProfileAsync,
     linkInstance: linkInstanceAsync,
     checkName: checkNameAsync
-}
+};
+
+export default {publicFunctions};

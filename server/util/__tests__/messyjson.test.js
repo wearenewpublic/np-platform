@@ -1,4 +1,4 @@
-const { extractAndParseJSON } = require("../messyjson");
+import {extractAndParseJSON} from "../messyjson";
 
 test('well formed JSON', () => {
     const json = `{"foo": "bar"}`;

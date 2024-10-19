@@ -1,5 +1,5 @@
-const axios = require('axios');
-const { getOrCreateUserAsync, createLoginToken } = require("../util/firebaseutil");
+import axios from 'axios';
+import {getOrCreateUserAsync, createLoginToken} from "../util/firebaseutil";
 
 const github_client_id = 'Ov23liYVNTv1E8unqe4c'
 const oauth_callback_url = 'https://psi.newpublic.org/api/auth/callback'
@@ -12,7 +12,7 @@ var global_github_client_secret = null;
 function setGithubClientSecret(secret) {
     global_github_client_secret = secret;
 }
-exports.setGithubClientSecret = setGithubClientSecret;
+export {setGithubClientSecret};
 
 async function authCallbackAsync({code, state}) {
     const parsedState = JSON.parse(state ?? '{}');
@@ -43,7 +43,7 @@ async function authCallbackAsync({code, state}) {
     const redirect = `https://psi.newpublic.org/${siloKey}/login/one/tokenRedirect?token1=${loginToken}&email=${encodedEmail}&provider=github`;
     return {redirect: redirect};
 }
-exports.authCallbackAsync = authCallbackAsync;
+export {authCallbackAsync};
 
 function getNameFromUserInfo(userInfo) {
     if (userInfo.full_name) {
@@ -56,7 +56,7 @@ function getNameFromUserInfo(userInfo) {
         throw new Error('No name found in user info');
     }
 }
-exports.getNameFromUserInfo = getNameFromUserInfo;
+export {getNameFromUserInfo};
 
 async function getUserInfoAsync(accessToken) {
     const response = await axios.get(github_user_url, {
@@ -68,7 +68,7 @@ async function getUserInfoAsync(accessToken) {
     const userInfo = response.data;
     return userInfo;
 }
-exports.getUserInfoAsync = getUserInfoAsync;
+export {getUserInfoAsync};
 
 async function getUserPrimaryEmailAsync(accessToken) {
     const response = await axios.get(github_user_emails, {
@@ -85,8 +85,10 @@ async function getUserPrimaryEmailAsync(accessToken) {
     }
     return primaryEmail.email;
 }
-exports.getUserPrimaryEmailAsync = getUserPrimaryEmailAsync;
+export {getUserPrimaryEmailAsync};
 
-exports.publicFunctions = {
+export var publicFunctions = {
     callback: authCallbackAsync
-}
+};
+
+export default {publicFunctions};

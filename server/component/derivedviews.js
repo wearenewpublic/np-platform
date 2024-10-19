@@ -1,4 +1,4 @@
-const { getDerivedViews } = require("../derived-views");
+import {getDerivedViews} from "../derived-views";
 
 async function runTriggersApi({serverstore, type, key}) {
     const {siloKey, structureKey, instanceKey} = serverstore.getProps();
@@ -10,8 +10,10 @@ async function runTriggersApi({serverstore, type, key}) {
         view.trigger({serverstore, key, value, siloKey, structureKey, instanceKey})
     ))
 }
-exports.runTriggersApi = runTriggersApi;
+export {runTriggersApi};
 
-exports.publicFunctions = {
+export var publicFunctions = {
     runTriggers: runTriggersApi
-}
+};
+
+export default {publicFunctions}

@@ -1,8 +1,8 @@
-const { addAdminUsersAsync, getAdminUsersAsync, setAdminRolesAsync } = require('../admin');
-const { logData, getTestData, getUserByEmail } = require('../../util/testutil');
-const { mockServerStore } = require('../../util/serverstore');
-const e = require('cors');
-const { stringToFbKey } = require('../../util/firebaseutil');
+import {addAdminUsersAsync, getAdminUsersAsync, setAdminRolesAsync} from '../admin';
+import {logData, getTestData, getUserByEmail} from '../../util/testutil';
+import {mockServerStore} from '../../util/serverstore';
+import e from 'cors';
+import {stringToFbKey} from '../../util/firebaseutil';
 
 test('addAdminUsersAsync', async () => {
     const serverstore = mockServerStore();

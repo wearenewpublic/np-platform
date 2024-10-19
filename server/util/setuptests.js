@@ -1,5 +1,6 @@
-const { setFirebaseAdmin } = require("./firebaseutil");
-const { fakeFirebaseAdmin, clearTestData } = require("./testutil");
+import {setFirebaseAdmin} from "./firebaseutil";
+import {fakeFirebaseAdmin, clearTestData} from "./testutil";
+import {jest} from '@jest/globals';
 
 clearTestData();
 setFirebaseAdmin(fakeFirebaseAdmin);

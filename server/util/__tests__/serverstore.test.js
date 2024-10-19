@@ -1,5 +1,5 @@
-const { mockServerStore } = require("../serverstore");
-const { logData, getTestData } = require("../testutil");
+import {mockServerStore} from "../serverstore";
+import {logData, getTestData} from "../testutil";
 
 
 test('updateModulePublic', async () => {

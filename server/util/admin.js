@@ -1,6 +1,6 @@
-const { stringToFbKey } = require("./firebaseutil");
+import {stringToFbKey} from "./firebaseutil";
 
-async function getIsUserAdminAsync({serverstore}) {
+export async function getIsUserAdminAsync({serverstore}) {
     const userEmail = serverstore.getUserEmail();
     const emailKey = stringToFbKey(userEmail.toLowerCase());
     const myRoles = await serverstore.getModulePrivateAsync('admin', ['userRoles', emailKey]);
@@ -13,9 +13,7 @@ async function getIsUserAdminAsync({serverstore}) {
     return (myRoles?.length > 0 || isTestAdmin);
 }
 
-exports.getIsUserAdminAsync = getIsUserAdminAsync;
-
-function checkIsGlobalAdmin(serverstore) {
+export function checkIsGlobalAdmin(serverstore) {
     const userEmail = serverstore.getUserEmail();
     const emailDomain = userEmail.split('@')[1];
     if (emailDomain == 'newpublic.org' || emailDomain == 'admin.org') {
@@ -23,4 +21,3 @@ function checkIsGlobalAdmin(serverstore) {
     }
     throw new Error('Not authorized as global admin: ' + emailDomain);
 }
-exports.checkIsGlobalAdmin = checkIsGlobalAdmin;

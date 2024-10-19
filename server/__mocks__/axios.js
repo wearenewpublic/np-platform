@@ -1,3 +1,11 @@
+// import {jest} from '@jest/globals';
 
-exports.post = jest.fn();
-exports.get = jest.fn();
+// export const post = jest.fn();
+// export const get = jest.fn();
+
+// const { jest } = require('@jest/globals');
+
+module.exports = {
+    post: jest.fn(),
+    get: jest.fn(),
+};

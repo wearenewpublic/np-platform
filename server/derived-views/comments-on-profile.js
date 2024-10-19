@@ -1,6 +1,6 @@
-const { triggerOnObjectWrite } = require("./templates");
+import {triggerOnObjectWrite} from "./templates";
 
-exports.CommentsOnProfile = triggerOnObjectWrite('simplecomments', 'comment', 
+export var CommentsOnProfile = triggerOnObjectWrite('simplecomments', 'comment', 
     CommentsOnProfileAsync
 );
 

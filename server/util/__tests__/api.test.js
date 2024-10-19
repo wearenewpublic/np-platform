@@ -1,6 +1,6 @@
-const { coreComponents } = require("../../component");
-const { callApiFunctionAsync, parsePath } = require("../api");
-const { logData, verifyIdToken, getTestData } = require("../testutil");
+import {coreComponents} from "../../component";
+import {callApiFunctionAsync, parsePath} from "../api";
+import {logData, verifyIdToken, getTestData} from "../testutil";
 
 test('null', () => {
     expect(1).toBe(1);

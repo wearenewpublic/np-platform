@@ -1,8 +1,8 @@
-const { readFileSync, existsSync } = require('fs');
-const postmark = require('postmark');
-const Mustache = require('mustache');
-const path = require('path');
-const { firebaseGetUserAsync } = require('./firebaseutil');
+import {readFileSync, existsSync} from 'fs';
+import postmark from 'postmark';
+import Mustache from 'mustache';
+import path from 'path';
+import {firebaseGetUserAsync} from './firebaseutil';
 
 const domain = "https://psi.newpublic.org/";
 
@@ -11,7 +11,7 @@ var postmark_key = null;
 function setPostmarkKey(key) {
     postmark_key = key;
 }
-exports.setPostmarkKey = setPostmarkKey;
+export {setPostmarkKey};
 
 async function sendEmailAsync(emailFields) {
     if (!postmark_key) {
@@ -27,7 +27,7 @@ async function sendEmailAsync(emailFields) {
         return null;
     }
 }
-exports.sendEmailAsync = sendEmailAsync;
+export {sendEmailAsync};
 
 function readTemplate(templateId, suffix) {
 
@@ -77,4 +77,4 @@ async function sendTemplatedEmailAsync({
 
     return await sendEmailAsync(emailFields);
 }
-exports.sendTemplatedEmailAsync = sendTemplatedEmailAsync;
+export {sendTemplatedEmailAsync};

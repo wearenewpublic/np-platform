@@ -1,10 +1,10 @@
 jest.mock('../chatgpt');
 
-const { mockServerStore } = require("../../util/serverstore");
-const { logData, getTestData, clearTestData } = require("../../util/testutil");
-const { getGptJsonAsync } = require("../chatgpt");
-const { updateProfileAsync, linkInstanceAsync, checkNameAsync } = require("../profile");
-
+import {mockServerStore} from "../../util/serverstore";
+import {logData, getTestData, clearTestData} from "../../util/testutil";
+import {getGptJsonAsync} from "../chatgpt";
+import {updateProfileAsync, linkInstanceAsync, checkNameAsync} from "../profile";
+import {jest} from '@jest/globals';
 
 test('updateProfileAsync', async () => {
     const serverstore = mockServerStore({structureKey: 'profile', instanceKey: 'testuser', userId: 'testuser'});

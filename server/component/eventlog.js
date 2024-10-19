@@ -1,5 +1,13 @@
-const { checkIsGlobalAdmin } = require("../util/admin");
-const { firebaseWriteAsync, firebaseUpdateAsync, createNewKey, firebaseGetUserAsync, firebaseReadAsync, firebaseReadWithFilterAsync } = require("../util/firebaseutil");
+import {checkIsGlobalAdmin} from "../util/admin";
+
+import {
+    firebaseWriteAsync,
+    firebaseUpdateAsync,
+    createNewKey,
+    firebaseGetUserAsync,
+    firebaseReadAsync,
+    firebaseReadWithFilterAsync,
+} from "../util/firebaseutil";
 
 async function logEventApi({
         sessionKey, isNewSession, deviceInfo=null, userId, 
@@ -34,7 +42,7 @@ async function logEventApi({
 
     return {eventKey}
 }
-exports.logEventApi = logEventApi;
+export {logEventApi};
 
 async function setSessionUserApi({sessionKey, userId, eventKey}) {
     if (userId) {
@@ -47,7 +55,7 @@ async function setSessionUserApi({sessionKey, userId, eventKey}) {
         }
     }
 }
-exports.setSessionUserApi = setSessionUserApi;
+export {setSessionUserApi};
 
 // TODO: Proper way of having global admin access
 // TODO: Support silo-limited version where you only see events from that silo
@@ -67,7 +75,7 @@ async function getEventsApi({serverstore, filterSiloKey, eventType, sessionKey})
 
     return events;
 }
-exports.getEventsApi = getEventsApi;
+export {getEventsApi};
 
 async function getSessionsApi({serverstore, filterSiloKey}) {
     checkIsGlobalAdmin(serverstore);
@@ -79,23 +87,23 @@ async function getSessionsApi({serverstore, filterSiloKey}) {
     }
     return sessions;
 }
-exports.getSessionsApi = getSessionsApi;
+export {getSessionsApi};
 
 async function getSingleSessionApi({serverstore, sessionKey}) {
     checkIsGlobalAdmin(serverstore);
     return await firebaseReadAsync(['log', 'session', sessionKey]);
 }
-exports.getSingleSessionApi = getSingleSessionApi;
+export {getSingleSessionApi};
 
-
-exports.publicFunctions = {
+export var publicFunctions = {
     logEvent: logEventApi,
     setSessionUser: setSessionUserApi,
-}
+};
 
-exports.adminFunctions = {
+export var adminFunctions = {
     getEvents: getEventsApi,
     getSessions: getSessionsApi,
     getSingleSession: getSingleSessionApi
-}
+};
 
+export default {publicFunctions, adminFunctions};

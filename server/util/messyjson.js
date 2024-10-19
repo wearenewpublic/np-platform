@@ -1,4 +1,4 @@
-const JSON5 = require('json5');
+import JSON5 from 'json5';
 
 // We need this function to extract JSON from LLM responses that are not well-formed JSON
 // GPT shouldn't need this any more since they added JSON mode, but other LLMs often do.
@@ -22,7 +22,7 @@ function extractAndParseJSON(text) {
         }
     }
 }
-exports.extractAndParseJSON = extractAndParseJSON;
+export {extractAndParseJSON};
 
 // LLMs often return JSON with unescaped quotes, which is not valid JSON
 // We fix it by looking if the next tokens what you'd expect if this was 

@@ -1,9 +1,10 @@
-jest.mock('../../util/email', () => ({sendTemplatedEmailAsync: jest.fn()}));
 
-const { sendTemplatedEmailAsync } = require("../../util/email");
-const { mockServerStore } = require("../../util/serverstore");
-const { sendNotifsForReplyApi } = require("../notifs");
+import {sendTemplatedEmailAsync} from "../../util/email";
+import {mockServerStore} from "../../util/serverstore";
+import {sendNotifsForReplyApi} from "../notifs";
+import {jest} from '@jest/globals';
 
+jest.mock('../../util/email');
 
 test('noNotifIfDisabled', async () => {
     const serverstore = mockServerStore();

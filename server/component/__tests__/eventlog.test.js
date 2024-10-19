@@ -1,7 +1,14 @@
-const { readObjectAsync, firebaseReadAsync, firebaseWriteAsync } = require("../../util/firebaseutil");
-const { mockServerStore } = require("../../util/serverstore");
-const { getTestData, clearTestData } = require("../../util/testutil");
-const { logEventApi, setSessionUserApi, getEventsApi, getSessionsApi, getSingleSessionApi } = require("../eventlog");
+import {readObjectAsync, firebaseReadAsync, firebaseWriteAsync} from "../../util/firebaseutil";
+import {mockServerStore} from "../../util/serverstore";
+import {getTestData, clearTestData} from "../../util/testutil";
+
+import {
+    logEventApi,
+    setSessionUserApi,
+    getEventsApi,
+    getSessionsApi,
+    getSingleSessionApi,
+} from "../eventlog";
 
 describe('logEventApi', () => {
     test('New Session', async () => {
