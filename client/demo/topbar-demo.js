@@ -1,5 +1,8 @@
-import { TopBar } from "../component/topbar"
+import { Pad } from "../component/basics"
+import { HelpBubble } from "../component/help"
+import { TopBar, TopBarActionProvider } from "../component/topbar"
 import { CLICK, POPUP } from "../system/demo"
+import { View } from "react-native"
 
 export const TopBarDemoFeature = {
     key: 'demo_topbar',
@@ -40,5 +43,20 @@ function topBarStorySets() {return [
                 POPUP(CLICK('Show Config Slots'))
             ]},
         ]
+    },
+    {
+        label: 'Top Bar with Action',
+        config: {
+            topBarHelpBubbles: [DemoHelpBubble]
+        },
+        content: <View>
+            <TopBar />
+            <TopBarActionProvider label='Action' onPress={() => {}} /> 
+            <Pad size={40} />
+        </View>,
     }
 ]}
+
+function DemoHelpBubble() {
+    return <HelpBubble right condition={true} helpKey='below' text='The top bar can show a help bubble' />
+}

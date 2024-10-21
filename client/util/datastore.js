@@ -1,5 +1,5 @@
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { defaultPersonaList, personaListToMap } from './testpersonas';
 import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseDataAsync, getFirebaseUser, onFbUserChanged, useFirebaseData } from './firebase';
 import { deepClone, getObjectPropertyPath, setObjectPropertyPath } from './util';
@@ -672,4 +672,16 @@ export function expandDataListMap(map) {
         newMap[key] = expandDataList(map[key]);
     });
     return newMap;
+}
+
+// useStableCallback allows you to pass a callback to a child component 
+// without causing it to re-render when the callback changes
+export function useStableCallback(callback) {
+    const ref = useRef();
+
+    useEffect(() => {
+        ref.current = callback
+    }, [callback]);
+
+    return useCallback((...args) => ref.current(...args), []);
 }
