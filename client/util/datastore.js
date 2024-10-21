@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { defaultPersonaList, personaListToMap } from './testpersonas';
 import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseDataAsync, getFirebaseUser, onFbUserChanged, useFirebaseData } from './firebase';
-import { deepClone, getObjectPropertyPath } from './util';
+import { deepClone, getObjectPropertyPath, setObjectPropertyPath } from './util';
 import { LoadingScreen } from '../component/basics';
 import { SharedData, SharedDataContext } from './shareddata';
 import { callServerApiAsync } from './servercall';
@@ -103,6 +103,8 @@ export class Datastore extends React.Component {
             this.refreshUserDataAsync(getFirebaseUser());
         } else {
             this.sessionData = {personaKey, roles, ...sessionData}
+            this.userGlobalData = {...this.props.moduleUserGlobal};
+            this.userLocalData = {...this.props.moduleUserLocal};
             this.setData({
                 persona: personaListToMap(defaultPersonaList),
                 ...deepClone(globals || {}), 
@@ -247,6 +249,50 @@ export class Datastore extends React.Component {
             return getObjectPropertyPath(this.props.modulePublic, [moduleKey, ...path]);
         }
     }
+    getModuleUserGlobalAsync(modulekey, path) {
+        const personaKey = this.getPersonaKey();
+        if (!personaKey) {
+            return null;
+        } else if (this.props.isLive) {
+            return getFirebaseDataAsync(['silo', this.getSiloKey(), 'module-user', personaKey, 'global', modulekey, ...path]);
+        } else {
+            return getObjectPropertyPath(this.userGlobalData, [modulekey, ...path]);
+        }
+    }
+    setModuleUserGlobal(modulekey, path, value) {
+        const personaKey = this.getPersonaKey();
+        if (!personaKey) {
+            throw new Error('Cannot set module user global when not logged in');
+        } else if (this.props.isLive) {
+            return firebaseWriteAsync(['silo', this.getSiloKey(), 'module-user', personaKey, 'global', modulekey, ...path], value);
+        } else {
+            this.userGlobalData = setObjectPropertyPath(this.userGlobalData, [modulekey, ...path], value);
+        }
+        this.notifyWatchers();
+    }
+    getModuleUserLocalAsync(modulekey, path) {
+        const personaKey = this.getPersonaKey();
+        if (!personaKey) {
+            return null;
+        } else if (this.props.isLive) {
+            return getFirebaseDataAsync(['silo', this.getSiloKey(), 'module-user', personaKey, 
+                'local', moduleKey, this.props.structureKey, this.props.instanceKey, ...path]);
+        } else {
+            return getObjectPropertyPath(this.props.moduleUserGlobal, [modulekey, ...path]);
+        }
+    }
+    setModuleUserLocal(modulekey, path, value) {
+        const personaKey = this.getPersonaKey();
+        if (!personaKey) {
+            throw new Error('Cannot set module user local when not logged in');
+        } else if (this.props.isLive) {
+            return firebaseWriteAsync(['silo', this.getSiloKey(), 'module-user', personaKey, 'global', modulekey, ...path], value);
+        } else {
+            this.userLocalData = setObjectPropertyPath(this.userLocalData, [modulekey, ...path], value);
+        }
+        this.notifyWatchers();
+    }
+
     async callServerAsync(component, funcname, params={}) {
         if (this.props.onServerCall) {
             this.props.onServerCall({component, funcname, params});
@@ -359,6 +405,28 @@ export function useData() {
         }
     }, [datastore])
     return {dataTree, sessionData};
+}
+
+export function useUserData() {
+    const datastore = useDatastore();
+    const [userGlobalData, setUserGlobalData] = useState(datastore.userGlobalData);
+    const [userLocalData, setUserLocalData] = useState(datastore.userLocalData);
+
+    useEffect(() => {
+        setUserGlobalData(datastore.userGlobalData);
+        setUserLocalData(datastore.userLocalData);
+
+        const watchFunc = () => {
+            setUserGlobalData(datastore.userGlobalData);
+            setUserLocalData(datastore.userLocalData);
+        }
+        datastore.watch(watchFunc);
+        return () => {
+            datastore.unwatch(watchFunc);
+        }
+    }, [datastore]);
+
+    return {userGlobalData, userLocalData};
 }
 
 export function usePersonaPreview() {
@@ -516,6 +584,36 @@ export function useModulePublicData(moduleKey, path = [], options) {
         return getObjectPropertyPath(datastore.props.modulePublic, [moduleKey, ...path]);
     };
 }
+
+export function useModuleUserGlobalData(moduleKey, path = [], options) {
+    const {userGlobalData} = useUserData();
+    const datastore = useDatastore();
+    const personaKey = usePersonaKey();
+    if (!personaKey) {
+        return null;
+    } else if (datastore.getIsLive()) {
+        return useFirebaseData(['silo', datastore.getSiloKey(), 'module-user', personaKey, 'global', moduleKey, ...path], options)
+    } else {
+        return getObjectPropertyPath(userGlobalData, [moduleKey, ...path]);
+    };
+}
+
+export function useModuleUserLocalData(moduleKey, path = [], options) {
+    const {userLocalData} = useUserData();
+    const datastore = useDatastore();
+    const personaKey = usePersonaKey();
+    const structureKey = useStructureKey();
+    const instanceKey = useInstanceKey();
+    if (!personaKey) {
+        return null;
+    } else if (datastore.getIsLive()) {
+        return useFirebaseData(['silo', datastore.getSiloKey(), 'module-user', personaKey, 
+            'local', moduleKey, structureKey, instanceKey, ...path], options)
+    } else {
+        return getObjectPropertyPath(userLocalData, [moduleKey, ...path]);
+    };
+}
+
 
 export function useInstanceContext() {
     const datastore = useDatastore();
