@@ -117,7 +117,7 @@ const AnonymousFaceStyle = StyleSheet.create({
     }
 })
 
-export function FacePile({ type = 'small', userIdList }) {
+export function FacePile({ type = 'small', userIdList, commentKeyList }) {
 
     const s = FacePileStyle;
     const size = sizeMap[type] ?? 32;
@@ -125,7 +125,7 @@ export function FacePile({ type = 'small', userIdList }) {
     return <View style={s.outer}>
         {userIdList.slice(0, 3).map((userId, i) => <View key={i}
             style={{ position: 'relative', marginLeft: i == 0 ? 0 : -(size / 4) }}>
-            <ProfilePhoto userId={userId} type={type} border />
+            <ProfilePhoto userId={userId} type={type} border genericTitle={commentKeyList[i]} />
         </View>)}
     </View>
 }

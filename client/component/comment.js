@@ -310,8 +310,8 @@ function CommentReplies({commentKey, depth=1}) {
     replies = rankComments({datastore, comments: replies, commentRankers: commentRankers});
     const boostedComment = replyBoosters?.map(booster => booster({comments: replies}))[0];
     const replyUsers = replies.map(reply => reply.from);
+    const commentKeyList = replies.map(reply => reply.genericTitle);
     const expanded = useSessionData(['showReplies', commentKey]);
-
     function setExpanded(expanded) {
         datastore.setSessionData(['showReplies', commentKey], expanded);
         if (expanded) {
@@ -330,7 +330,8 @@ function CommentReplies({commentKey, depth=1}) {
         <Pad />
             <ExpandButton userList={replyUsers} label='{count} {noun}' 
                 expanded={expanded} setExpanded={setExpanded} testID='toggle-replies'
-                formatParams={{count: replies.length, singular: 'reply', plural: 'replies'}} />
+                formatParams={{ count: replies.length, singular: 'reply', plural: 'replies' }}
+                commentKeyList = {commentKeyList}/>
         <Pad />
         {expanded && <Separator />}
         {expanded && <CatchList items={replies} 
