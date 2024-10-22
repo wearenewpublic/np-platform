@@ -15,7 +15,8 @@ exports.setPostmarkKey = setPostmarkKey;
 
 async function sendEmailAsync(emailFields) {
     if (!postmark_key) {
-        throw new Error('Postmark key not set');
+        console.error('Postmark key not set. Cannot send email');
+        return null;
     }
 
     const client = new postmark.ServerClient(postmark_key);
