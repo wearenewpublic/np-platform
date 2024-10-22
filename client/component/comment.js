@@ -21,24 +21,33 @@ import { getIsMobileWeb } from '../platform-specific/deviceinfo';
 export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
-    const {commentAboveWidgets, commentBelowWidgets, commentMiddleWidgets, commentStylers} = useConfig();
+    const {commentAboveWidgets, commentBelowWidgets, commentMiddleWidgets, commentStylers, bylineRightActions} = useConfig();
     const style = getCombinedStyle({comment, stylers:commentStylers});
+    const s = BylineCommentStyle;
     return <View testID={commentKey} id={commentKey} style={style}>
         <PadBox top={20} horiz={20}>
             <Catcher>
-                {commentAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
+                {commentAboveWidgets?.map((Widget, i) => <Widget key={i} comment={comment} />)}
             </Catcher>
-            <Byline type='large' userId={comment.from} time={comment.time} edited={comment.edited} />
+            <View style={s.bylineBar}>
+                <View style={s.mainByline}>
+                    <Byline type='large' userId={comment.from} time={comment.time} edited={comment.edited} />
+                </View>
+                <View style={s.rightActions}>
+                    {bylineRightActions?.map((Action, idx) => <Action key={idx} commentKey={commentKey} />)}
+                </View>
+            </View>
+
             <Pad size={20} />
             <PadBox left={48}>
                 <Catcher>
                     <CommentBody commentKey={commentKey} />
                 </Catcher>
                 <Catcher>
-                    {commentMiddleWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
-                </Catcher>                
+                    {commentMiddleWidgets?.map((Widget, i) => <Widget key={i} comment={comment} />)}
+                </Catcher>
                 <Catcher>
-                    {commentBelowWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
+                    {commentBelowWidgets?.map((Widget, i) => <Widget key={i} comment={comment} />)}
                 </Catcher>
                 {!editing && <PadBox top={20}><Catcher><CommentActions commentKey={commentKey} /></Catcher></PadBox>}
                 <MaybeCommentReply commentKey={commentKey} />
@@ -49,25 +58,51 @@ export function Comment({commentKey}) {
     </View>
 }
 
-export function ReplyComment({commentKey, depth={depth}, isFinal=false}) {
+const BylineCommentStyle = StyleSheet.create({
+    bylineBar: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    mainByline: {
+        flexDirection: 'row',
+    },
+    rightActions: {
+        flexDirection: 'row',
+    },
+    leftAction: {
+        marginRight: 20,
+    },
+    rightAction: {
+        marginLeft: 20
+    }
+})
+
+export function ReplyComment({commentKey, depth = {depth}, isFinal = false}) {
     const s = ReplyCommentStyle;
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
-    const {replyAboveWidgets, commentStylers} = useConfig();
+    const {replyAboveWidgets, commentStylers, bylineRightActions} = useConfig();
     const style = getCombinedStyle({comment, stylers:commentStylers});
     return <View testID={commentKey} id={commentKey} style={[depth == 1 ? s.firstLevel : s.secondLevel, style]}>
         <Catcher>{replyAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}</Catcher>
-        <Byline type='small' userId={comment.from} time={comment.time} edited={comment.edited} />
+        <View style={s.bylineBar}>
+            <View style={s.mainByline}>
+                <Byline type='small' userId={comment.from} time={comment.time} edited={comment.edited} />
+            </View>
+            <View style={s.rightActions}>
+                {bylineRightActions?.map((Action, idx) => <Action key={idx} commentKey={commentKey} depth={depth} />)}
+            </View>
+        </View>
         <Pad size={20} />
         <PadBox left={40}>
             <CommentBody commentKey={commentKey} />
             <Pad size={20} />
             {!editing && <Catcher><CommentActions commentKey={commentKey} depth={depth} /></Catcher>}
             <MaybeCommentReply commentKey={commentKey} />
-            <CommentReplies commentKey={commentKey} depth={depth+1} />
+            <CommentReplies commentKey={commentKey} depth={depth + 1} />
         </PadBox>
         {!isFinal && <Separator />}
-    </View>    
+    </View >
 }
 
 const ReplyCommentStyle = StyleSheet.create({
@@ -76,7 +111,17 @@ const ReplyCommentStyle = StyleSheet.create({
     },
     secondLevel: {
         paddingTop: 10,
-    }
+    },
+    bylineBar: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    mainByline: {
+        flexDirection: 'row',
+    },
+    rightActions: {
+        flexDirection: 'row',
+    },
 })
 
 
@@ -91,7 +136,7 @@ export function CommentBody({commentKey}) {
     const text = comment.text || '';
     const isLong = guessNumberOfLines(text) > 8;
 
-    
+
     function onEditingDone(finalComment) {
         setEditedComment(null);
         datastore.setSessionData(['editComment', comment.key], false);
@@ -103,14 +148,14 @@ export function CommentBody({commentKey}) {
         datastore.setSessionData(['editComment', comment.key], false);
     }
 
-    if (editing) {
-        return <EditComment comment={editedComment ?? comment} 
-                setComment={setEditedComment} 
-                onCancel={onCancel} onEditingDone={onEditingDone} />
+    if(editing) {
+        return <EditComment comment={editedComment ?? comment}
+            setComment={setEditedComment}
+            onCancel={onCancel} onEditingDone={onEditingDone} />
     } else {
         return <View style={commentBodyStyle}>
-            {commentTopWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
-            <RichText numberOfLines={(isLong && !expanded) ? 8 : null} 
+            {commentTopWidgets?.map((Widget, i) => <Widget key={i} comment={comment} />)}
+            <RichText numberOfLines={(isLong && !expanded) ? 8 : null}
                 text={text.trim()} color={commentBodyStyle.color}
             />
             {isLong && !expanded && <PadBox top={14}><TextButton underline type='small' label='Read more' onPress={() => setExpanded(true)} /></PadBox>}
@@ -138,7 +183,7 @@ function MaybeCommentReply({commentKey}) {
     const personaKey = usePersonaKey();
     const [comment, setComment] = useState({text: '', replyTo: commentKey});
     const datastore = useDatastore();
-    if (!replyEnabled) return null;
+    if(!replyEnabled) return null;
 
     function onEditingDone(finalComment) {
         datastore.setSessionData(['replyToComment', comment.replyTo], false);
@@ -162,7 +207,7 @@ function MaybeCommentReply({commentKey}) {
     </View>
 }
 
-export function EditComment({comment, big=false, setComment, topLevel, onEditingDone, onCancel, min=100, max=1000}) {
+export function EditComment({comment, big = false, setComment, topLevel, onEditingDone, onCancel, min = 100, max = 1000}) {
     const personaKey = usePersonaKey();
     const datastore = useDatastore();
     const replyToComment = useObject('comment', comment.replyTo);
@@ -170,41 +215,41 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
     const [inProgress, setInProgress] = useState(false);
     const [shownModalComponent, setShownModalComponent] = useState(null);
     const [isCommentError, setIsCommentError] = useState(false);
-    const {commentReplyPlaceholder, commentInputPlaceholder, 
+    const {commentReplyPlaceholder, commentInputPlaceholder,
         commentPostBlockers, commentPostCheckers,
         commentPostTriggers,
         commentEditBottomWidgets, commentEditTopWidgets,
         commentAllowEmpty
-        } = useConfig();
+    } = useConfig();
 
     const isBlocked = commentPostBlockers?.some(blocker => blocker({datastore, comment}));
     const canPost = (comment.text || commentAllowEmpty) && !isBlocked;
-    const action = comment.key ? 
-          (inProgress ? 'Updating...' : 'Update') 
+    const action = comment.key ?
+        (inProgress ? 'Updating...' : 'Update')
         : (inProgress ? 'Posting...' : 'Post');
     const placeholder = comment.replyTo ? commentReplyPlaceholder : commentInputPlaceholder;
-    
+
     async function storeCommentAndRunTriggers(comment) {
         var commentKey = comment.key;
-        if (comment.key) {
+        if(comment.key) {
             logEventAsync(datastore, 'edit-finish', {commentKey, text: comment.text});
             await datastore.updateObject('comment', comment.key, {...comment, edited: Date.now()});
         } else {
             commentKey = await datastore.addObject('comment', comment);
-            if (comment.replyTo) {
+            if(comment.replyTo) {
                 logEventAsync(datastore, 'reply-finish', {commentKey, text: comment.text});
             } else {
                 logEventAsync(datastore, 'post-finish', {commentKey, text: comment.text});
             }
         }
-        if (commentPostTriggers?.length) {
+        if(commentPostTriggers?.length) {
             // Don't await the promise, since some triggers may be slow
             Promise.all(commentPostTriggers.map(trigger => trigger({datastore, comment, commentKey})));
         }
     }
 
     async function showModalsAndFinish(modals) {
-        if (modals?.length) {
+        if(modals?.length) {
             function onClose() {
                 showModalsAndFinish(modals.slice(1));
             }
@@ -217,7 +262,7 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
     }
 
     async function onPost() {
-        if (commentPostCheckers?.length) {
+        if(commentPostCheckers?.length) {
             setInProgress(true);
             const checkResults = await Promise.all(commentPostCheckers.map(checker =>
                 checker({datastore, comment})
@@ -228,13 +273,13 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
             })
             var modals = [];
             checkResults.forEach(judgement => {
-                if (judgement.modal) {
+                if(judgement.modal) {
                     modals = [...modals, judgement.modal]
                 }
             })
-            if (checkResults.every(x => x.allow)) {
+            if(checkResults.every(x => x.allow)) {
                 await storeCommentAndRunTriggers(finalComment);
-                if (modals?.length) {
+                if(modals?.length) {
                     showModalsAndFinish(modals);
                 } else {
                     onEditingDone(finalComment);
@@ -256,82 +301,91 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
         {shownModalComponent}
         {topLevel && <TopBarActionProvider label={action} disabled={!canPost || inProgress} onPress={onPost} />}
         <EditWidgets widgets={commentEditTopWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
-        <TextField value={comment.text} onChange={text => setComment({...comment, text})} 
+        <TextField value={comment.text} onChange={text => setComment({...comment, text})}
             placeholder={placeholder} autoFocus={!isMobile} big={big} testID='comment-edit'
-            placeholderParams={{authorName: getFirstName(author?.name)}} 
+            placeholderParams={{authorName: getFirstName(author?.name)}}
             onFocusChange={setIsFocused} error={isCommentError} />
-            {(isFocused || comment.text?.length > 0) && isMobile && (
-                <PadBox top={24} >
-                    <View>
-                        <CTAButton wide label={action} disabled={!canPost || inProgress} onPress={onPost} />
-                    </View>
-                </PadBox>
-            )}
+        {(isFocused || comment.text?.length > 0) && isMobile && (
+            <PadBox top={24} >
+                <View>
+                    <CTAButton wide label={action} disabled={!canPost || inProgress} onPress={onPost} />
+                </View>
+            </PadBox>
+        )}
         <Pad size={12} />
         <EditWidgets widgets={commentEditBottomWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
         {personaKey &&
             <PadBox top={20} >
                 <HorizBox center spread>
                     <Pad />
-                    {!topLevel && 
+                    {!topLevel &&
                         <HorizBox center right>
                             {onCancel && <PadBox right={20}><TextButton color={colorTextGrey} label='Cancel' onPress={onCancel} /></PadBox>}
                             <CTAButton label={action} disabled={!canPost || inProgress} type='primary' onPress={onPost} />
                         </HorizBox>
                     }
-                </HorizBox>                        
+                </HorizBox>
             </PadBox>
         }
     </View>
 }
 
-function EditWidgets({widgets, comment, setComment, screenParams={}, onCancel,}) {
+function EditWidgets({widgets, comment, setComment, screenParams = {}, onCancel, }) {
     return <View>
         {widgets?.map((Widget, idx) => <View key={idx}>
             <Catcher>
                 <Widget comment={comment} setComment={setComment} onCancel={onCancel} screenParams={screenParams} />
             </Catcher>
-        </View>)} 
+        </View>)}
     </View>
 }
 
-function CommentReplies({commentKey, depth=1}) {
+function CommentReplies({commentKey, depth = 1}) {
     const {replyFilters, replyBoosters, commentRankers} = useConfig();
     const datastore = useDatastore();
     const isAdmin = useIsAdmin();
     var replies = useCollection('comment', {filter: {replyTo: commentKey}, sortBy: 'time', reverse: true});
     replies = filterComments({datastore, comments: replies, isAdmin, commentFilters: replyFilters});
     replies = rankComments({datastore, comments: replies, commentRankers: commentRankers});
-    const boostedComment = replyBoosters?.map(booster => booster({comments: replies}))[0];
+    const boostedComments = replyBoosters?.map(booster => booster({comments: replies}))[0];
+
     const replyUsers = replies.map(reply => reply.from);
     const expanded = useSessionData(['showReplies', commentKey]);
 
     function setExpanded(expanded) {
         datastore.setSessionData(['showReplies', commentKey], expanded);
-        if (expanded) {
+        if(expanded) {
             logEventAsync(datastore, 'showReplies', {commentKey});
         }
     }
 
-    if (replies.length == 0) return <Pad />;
-    
+    if(replies.length == 0) return <Pad />;
+
     return <View>
-        {boostedComment && !expanded && <PadBox top={20}><ShadowBox>
-            <PadBox horiz={20}>
-                <ReplyComment isFinal commentKey={boostedComment.key} depth={depth} />
-            </PadBox>
-        </ShadowBox></PadBox>}
+        {boostedComments && !expanded &&
+            <CatchList items={boostedComments}
+                renderItem={(reply, isFinal) =>
+                    <PadBox top={20}>
+                        <ShadowBox>
+                            <PadBox horiz={20}>
+                                <ReplyComment commentKey={reply.key} depth={depth} isFinal={true} />
+                            </PadBox>
+                        </ShadowBox>
+                    </PadBox>
+                }
+            />
+        }
         <Pad />
-            <ExpandButton userList={replyUsers} label='{count} {noun}' 
-                expanded={expanded} setExpanded={setExpanded} testID='toggle-replies'
-                formatParams={{count: replies.length, singular: 'reply', plural: 'replies'}} />
+        <ExpandButton userList={replyUsers} label='{count} {noun}'
+            expanded={expanded} setExpanded={setExpanded} testID='toggle-replies'
+            formatParams={{count: replies.length, singular: 'reply', plural: 'replies'}} />
         <Pad />
         {expanded && <Separator />}
-        {expanded && <CatchList items={replies} 
+        {expanded && <CatchList items={replies}
             renderSeparator={() => <PadBox left={20}><Separator /></PadBox>}
-            renderItem={(reply,isFinal) =>
+            renderItem={(reply, isFinal) =>
                 <ReplyComment commentKey={reply.key} depth={depth} isFinal={isFinal} />
-            } 
+            }
         />}
     </View>
 }
@@ -372,22 +426,22 @@ export function ActionReplyExceptToSelf({commentKey, depth}) {
     const comment = useObject('comment', commentKey);
     const parent = useObject('comment', comment.replyTo);
     const personaKey = usePersonaKey();
-    if (comment.from == personaKey) return null;
-    if (depth == 1 && parent.from != personaKey) return null;
+    if(comment.from == personaKey) return null;
+    if(depth == 1 && parent.from != personaKey) return null;
     return <ActionReply commentKey={commentKey} depth={depth} />
 }
 
 export function ActionReply({commentKey, depth}) {
     const datastore = useDatastore();
     const readOnly = useIsReadOnly();
-    
+
     function onReply() {
         const oldReply = datastore.getSessionData(['replyToComment', commentKey]);
         datastore.setSessionData(['replyToComment', commentKey], !oldReply);
         logEventAsync(datastore, 'reply-start', {commentKey});
     }
 
-    if (readOnly || depth > 1) return null;
+    if(readOnly || depth > 1) return null;
 
     return <SubtleButton icon={Reply} label='Reply' onPress={datastore.needsLogin(onReply, 'reply')} padRight />
 }
@@ -398,7 +452,7 @@ export function ActionEdit({commentKey}) {
     const comment = useObject('comment', commentKey)
     const readOnly = useIsReadOnly();
     function onEdit() {
-        if (!comment.replyTo) {
+        if(!comment.replyTo) {
             logEventAsync(datastore, 'edit-start-top', {commentKey});
             datastore.pushSubscreen('composer', {commentKey});
         } else {
@@ -408,7 +462,7 @@ export function ActionEdit({commentKey}) {
         }
     }
 
-    if (comment.from != personaKey || readOnly) return null;
+    if(comment.from != personaKey || readOnly) return null;
     return <SubtleButton icon={Edit} label='Edit' onPress={onEdit} />
 }
 
@@ -422,21 +476,21 @@ export function ActionReport({commentKey}) {
         datastore.pushSubscreen('report', {commentKey});
     }
 
-    if (comment.from == personaKey) return null;
-    return <SubtleButton icon={Flag} onPress={onReport}/>
+    if(comment.from == personaKey) return null;
+    return <SubtleButton icon={Flag} onPress={onReport} />
 }
 
-export function Composer({about=null, commentKey, goBackAfterPost=false, topLevel=false, screenParams={}}) {
+export function Composer({about = null, commentKey, goBackAfterPost = false, topLevel = false, screenParams = {}}) {
     const comment = useObject('comment', commentKey);
     const [editedComment, setEditedComment] = useState(null);
     const personaKey = usePersonaKey();
     const datastore = useDatastore();
     const {composerSubtitle, composerTopWidgets} = useConfig();
-    const subtitle = composerSubtitle ? composerSubtitle({datastore, comment:(editedComment ?? comment)}) : 'Public Comment';
+    const subtitle = composerSubtitle ? composerSubtitle({datastore, comment: (editedComment ?? comment)}) : 'Public Comment';
 
     function onEditingDone(finalComment) {
         setEditedComment({text: '', about});
-        if (goBackAfterPost) {
+        if(goBackAfterPost) {
             datastore.goBack();
         }
     }
@@ -446,9 +500,9 @@ export function Composer({about=null, commentKey, goBackAfterPost=false, topLeve
     }
 
     return <View>
-        <EditWidgets widgets={composerTopWidgets} 
-            comment={editedComment ?? comment ?? {text: ''}} 
-            setComment={setEditedComment} 
+        <EditWidgets widgets={composerTopWidgets}
+            comment={editedComment ?? comment ?? {text: ''}}
+            setComment={setEditedComment}
             screenParams={screenParams}
             onCancel={goBackAfterPost && onCancel} />
         <Byline type='large' userId={personaKey} subtitleLabel={subtitle} />
@@ -460,8 +514,8 @@ export function Composer({about=null, commentKey, goBackAfterPost=false, topLeve
 }
 
 function filterComments({datastore, comments, isAdmin, commentFilters}) {
-    if (commentFilters) {
-        return comments.filter(comment => 
+    if(commentFilters) {
+        return comments.filter(comment =>
             commentFilters.every(filter => filter({datastore, isAdmin, comment}))
         )
     } else {
@@ -469,31 +523,31 @@ function filterComments({datastore, comments, isAdmin, commentFilters}) {
     }
 }
 
-export function CommentsInput({about=null}) {
+export function CommentsInput({about = null}) {
     const {commentInputPlaceholder, commentInputLoginAction} = useConfig();
     const datastore = useDatastore();
-    return <TextFieldButton placeholder={commentInputPlaceholder} 
-                onPress={datastore.needsLogin(
-                    () => datastore.pushSubscreen('composer', {about}), 
-                    commentInputLoginAction)} 
+    return <TextFieldButton placeholder={commentInputPlaceholder}
+        onPress={datastore.needsLogin(
+            () => datastore.pushSubscreen('composer', {about}),
+            commentInputLoginAction)}
     />
 }
 
 function rankComments({datastore, comments, commentRankers, chosenRanker}) {
     var ranker;
-    if (chosenRanker) {
+    if(chosenRanker) {
         ranker = commentRankers.find(ranker => ranker.name == chosenRanker);
     } else {
         ranker = commentRankers?.[0];
     }
-    if (ranker) {
+    if(ranker) {
         return ranker.ranker({datastore, comments});
     } else {
         return comments;
     }
 }
 
-export function BasicComments({about=null, showInput=true, canPost=true}) {
+export function BasicComments({about = null, showInput = true, canPost = true}) {
     const datastore = useDatastore();
     const {noMoreCommentsMessage, commentRankers, pageTopWidgets, pageShowEmptyHelp,
         pageBottomWidgets, commentFilters} = useConfig();
@@ -503,7 +557,7 @@ export function BasicComments({about=null, showInput=true, canPost=true}) {
     const rankedComments = rankComments({datastore, comments: filteredComments, commentRankers});
     return <View>
         <View>
-            {pageTopWidgets?.map((Widget,i) => 
+            {pageTopWidgets?.map((Widget, i) =>
                 <Catcher key={i}><Widget comments={comments} /></Catcher>
             )}
         </View>
@@ -517,7 +571,7 @@ export function BasicComments({about=null, showInput=true, canPost=true}) {
             <PadBox vert={40} horiz={20}><Banner color={colorLightBlueBackground}><RichText label={noMoreCommentsMessage} /></Banner></PadBox>
         }
         <View>
-            {pageBottomWidgets?.map((Widget,i) => 
+            {pageBottomWidgets?.map((Widget, i) =>
                 <Catcher key={i}><Widget comments={comments} /></Catcher>
             )}
         </View>
@@ -526,7 +580,7 @@ export function BasicComments({about=null, showInput=true, canPost=true}) {
 
 
 
-export function ComposerScreen({about, commentKey=null, intro=null, screenParams={}}) {
+export function ComposerScreen({about, commentKey = null, intro = null, screenParams = {}}) {
     const {composerTopBanners} = useConfig();
     useLogEvent('post-start', {commentKey});
     return <ConversationScreen>
@@ -535,6 +589,6 @@ export function ComposerScreen({about, commentKey=null, intro=null, screenParams
         {/* <Pad size={20} /> */}
         <PadBox horiz={20} top={20}>
             <Composer about={about} commentKey={commentKey} goBackAfterPost topLevel screenParams={screenParams} />
-        </PadBox>  
+        </PadBox>
     </ConversationScreen>
 }

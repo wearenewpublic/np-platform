@@ -16,6 +16,7 @@ export const SimpleCommentsStructure = {
     defaultConfig: {
         commentActions: [ActionReply],
         commentRightActions: [ActionEdit],
+        bylineRightActions: [],
         commentTopWidgets: [],
         commentBodyRenderer: null,
         commentBodyStylers: [],
