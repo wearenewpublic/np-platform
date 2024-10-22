@@ -21,22 +21,14 @@ import { getIsMobileWeb } from '../platform-specific/deviceinfo';
 export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
-    const {commentAboveWidgets, commentBelowWidgets, commentMiddleWidgets, commentStylers, bylineRightActions} = useConfig();
+    const {commentAboveWidgets, commentBelowWidgets, commentMiddleWidgets, commentStylers} = useConfig();
     const style = getCombinedStyle({comment, stylers:commentStylers});
-    const s = BylineCommentStyle;
     return <View testID={commentKey} id={commentKey} style={style}>
         <PadBox top={20} horiz={20}>
             <Catcher>
                 {commentAboveWidgets?.map((Widget, i) => <Widget key={i} comment={comment} />)}
             </Catcher>
-            <View style={s.bylineBar}>
-                <View style={s.mainByline}>
-                    <Byline type='large' userId={comment.from} time={comment.time} edited={comment.edited} />
-                </View>
-                <View style={s.rightActions}>
-                    {bylineRightActions?.map((Action, idx) => <Action key={idx} commentKey={commentKey} />)}
-                </View>
-            </View>
+            <Byline type='large' userId={comment.from} time={comment.time} edited={comment.edited} />
 
             <Pad size={20} />
             <PadBox left={48}>
@@ -58,41 +50,14 @@ export function Comment({commentKey}) {
     </View>
 }
 
-const BylineCommentStyle = StyleSheet.create({
-    bylineBar: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    mainByline: {
-        flexDirection: 'row',
-    },
-    rightActions: {
-        flexDirection: 'row',
-    },
-    leftAction: {
-        marginRight: 20,
-    },
-    rightAction: {
-        marginLeft: 20
-    }
-})
-
 export function ReplyComment({commentKey, depth = {depth}, isFinal = false}) {
-    const s = ReplyCommentStyle;
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
-    const {replyAboveWidgets, commentStylers, bylineRightActions} = useConfig();
+    const {replyAboveWidgets, commentStylers, } = useConfig();
     const style = getCombinedStyle({comment, stylers:commentStylers});
     return <View testID={commentKey} id={commentKey} style={[depth == 1 ? s.firstLevel : s.secondLevel, style]}>
         <Catcher>{replyAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}</Catcher>
-        <View style={s.bylineBar}>
-            <View style={s.mainByline}>
-                <Byline type='small' userId={comment.from} time={comment.time} edited={comment.edited} />
-            </View>
-            <View style={s.rightActions}>
-                {bylineRightActions?.map((Action, idx) => <Action key={idx} commentKey={commentKey} depth={depth} />)}
-            </View>
-        </View>
+        <Byline type='large' userId={comment.from} time={comment.time} edited={comment.edited} />
         <Pad size={20} />
         <PadBox left={40}>
             <CommentBody commentKey={commentKey} />
