@@ -24,7 +24,7 @@ export function TopBar() {
     const datastore = useDatastore();
     const isLogin = structureKey == 'login';
     const {topBarHelpBubbles} = useConfig();
-    return <View>
+    return <View style={s.outer}>
         <View style={s.topBox}>        
             <View style={s.leftRow}>    
                 {historyGetState() ? 
@@ -49,6 +49,9 @@ export function TopBar() {
 }
 
 const TopBarStyle = StyleSheet.create({
+    outer: {
+        zIndex: 900
+    },
     topBox: {
         flexDirection: 'row',
         alignItems: 'center',
