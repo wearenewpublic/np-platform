@@ -275,6 +275,6 @@ export function TopBarActionProvider({label, disabled, onPress}) {
         return () => {
             datastore.setSessionData('toolbarAction', null);
         }
-    }, [label, disabled]);
+    }, [label, disabled, stableOnPress]);
     return null;
 }

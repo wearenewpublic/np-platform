@@ -32,6 +32,7 @@ export class Datastore extends React.Component {
 
     componentDidMount() {
         this.resetData();
+        this.resetSessionData();
         if (this.props.isLive) {
             this.setupFirebaseWatchers();
         } else {
@@ -51,6 +52,11 @@ export class Datastore extends React.Component {
             if (this.props.isLive) {
                 this.setupFirebaseWatchers();
             }
+        } 
+        if (prevProps.structureKey != this.props.structureKey ||
+            prevProps.instanceKey != this.props.instanceKey
+        ) {
+            this.resetSessionData();
         }
     }
 
@@ -95,14 +101,22 @@ export class Datastore extends React.Component {
         }
     }
 
-    resetData() {
-        const {isLive, globals, collections, sessionData, personaKey='a', roles=[]} = this.props;
+    resetSessionData() {
+        const {isLive, sessionData, personaKey='a', roles=[]} = this.props;
         if (isLive) {
             const personaKey = getFirebaseUser()?.uid || null;
             this.sessionData = {personaKey}
+        } else {
+            this.sessionData = {personaKey, roles, ...sessionData}     
+        }
+    }
+
+
+    resetData() {
+        const {isLive, globals, collections} = this.props;
+        if (isLive) {
             this.refreshUserDataAsync(getFirebaseUser());
         } else {
-            this.sessionData = {personaKey, roles, ...sessionData}
             this.userGlobalData = {...this.props.moduleUserGlobal};
             this.userLocalData = {...this.props.moduleUserLocal};
             this.setData({
@@ -589,9 +603,7 @@ export function useModuleUserGlobalData(moduleKey, path = [], options) {
     const {userGlobalData} = useUserData();
     const datastore = useDatastore();
     const personaKey = usePersonaKey();
-    if (!personaKey) {
-        return null;
-    } else if (datastore.getIsLive()) {
+    if (datastore.getIsLive()) {
         return useFirebaseData(['silo', datastore.getSiloKey(), 'module-user', personaKey, 'global', moduleKey, ...path], options)
     } else {
         return getObjectPropertyPath(userGlobalData, [moduleKey, ...path]);
