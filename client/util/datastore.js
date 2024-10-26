@@ -28,6 +28,7 @@ export class Datastore extends React.Component {
         super(props);
         this.sharedData = new SharedData();
         this.resetData();
+        this.resetSessionData();
     }
 
     componentDidMount() {
