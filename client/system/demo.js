@@ -30,6 +30,10 @@ export function POPUP_CLOSE() {
     return {action: 'popup-close'}
 }
 
+export function CHECK_TEXT(expectedText) {
+    return { action: 'check_text', expectedText };
+}
+
 
 export function DemoSection({label, horiz=false, children, color=null}) {
     const s = DemoSectionStyle;
@@ -121,6 +125,11 @@ async function playStoryAction({domRef, action}) {
         onChangeText(action.text);
     } else if (action.action == 'popup') {
         await playStoryAction({domRef: getPopupRef(), action: action.popupAction});
+    } else if (action.action === 'check_text') {
+        const textFound = domRef.current?.textContent.includes(action.expectedText);
+        if (!textFound) {
+            throw new Error(`Expected text "${action.expectedText}" not found.`);
+        }   
     } else {
         throw new Error('Unsupported action: ' + action.action);
     }
