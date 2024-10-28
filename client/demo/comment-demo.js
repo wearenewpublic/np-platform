@@ -97,6 +97,20 @@ function commentStorySets() {return [
         ]
     },
     {
+        label: 'Logged out Comment',
+        collections, config, personaKey: null,
+        content: <Comment commentKey={5} />,
+        stories: [
+            {label: 'Login to Reply', actions: 
+                [CLICK('Reply')]
+            },
+            {label: 'Login to Upvote', actions: 
+                [CLICK('upvote')]
+            }
+
+        ]
+    },
+    {
         label: 'Composer and Comments',
         config: {
             noMoreCommentsMessage: 'No more comments',

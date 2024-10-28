@@ -1,18 +1,20 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { useState } from 'react';
-import { getFirebaseUser, signInWithGoogle, getFirebaseDataAsync, signInWithToken, signInWithTokenAsync } from '../util/firebase';
-import { goBack, gotoInstance, pushSubscreen } from '../util/navigate';
+import { signInWithGoogle, getFirebaseDataAsync, signInWithTokenAsync } from '../util/firebase';
+import { closeWindow } from '../util/navigate';
 import { LoadingScreen, Narrow, Pad, PadBox } from '../component/basics';
 import { Image, StyleSheet, View } from 'react-native';
-import { useDatastore, usePersonaKey } from '../util/datastore';
+import { useDatastore, usePersonaKey, useSiloKey } from '../util/datastore';
 import { Heading, UtilityText } from '../component/text';
 import { RichText } from '../component/richtext';
-import { colorTextGrey, colorPinkBackground, colorTealBackground, colorWhite, colorBlack, colorBlackHover } from '../component/color';
+import { colorPinkBackground, colorTealBackground, colorWhite, colorBlack, colorBlackHover } from '../component/color';
 import { CTAButton } from '../component/button';
-import { makeAssetUrl } from '../util/util';
+import { assembleUrl, makeAssetUrl } from '../util/util';
 import { logEventAsync, useLogEvent } from '../util/eventlog';
 import { FirstLoginSetup } from '../feature/ProfilePhotoAndName';
 import { useEffect } from 'react';
+import { getIsLocalhost } from '../util/url';
+import { useInstanceParams } from '../util/params';
 
 export const LoginStructure = {
     key: 'login',
@@ -20,7 +22,7 @@ export const LoginStructure = {
     screen: LoginScreen,   
     subscreens: {
         tokenRedirect: TokenRedirectScreen,
-        dummyLogin: DummyLoginScreen,
+        fragmentRedirect: FragmentRedirectScreen,
     }
 }
 
@@ -32,18 +34,6 @@ export function LoginScreen({ action }) {
 
     const [inProgress, setInProgress] = React.useState(false);
     const [needsSetup, setNeedsSetup] = React.useState(false);
-    async function handleGoogleSignIn() {
-        logEventAsync(datastore, 'login-request', { method: 'google' });
-        try {
-            const result = await signInWithGoogle();
-            logEventAsync(datastore, 'login-success', {
-                method: 'google',
-                email: result?.user?.email ?? 'unknown',
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    };
 
     async function handleUserLoggedIn(personaKey) {
         setInProgress(true);
@@ -54,7 +44,7 @@ export function LoginScreen({ action }) {
             setInProgress(false);
             setNeedsSetup(true);
         } else {
-            goBack();
+            datastore.goBack();
         }
     }
 
@@ -73,7 +63,7 @@ export function LoginScreen({ action }) {
         });
         setInProgress(false);
         logEventAsync(datastore, 'profile-setup', preview);
-        goBack();
+        datastore.goBack();
     }
 
     if (inProgress) {
@@ -81,11 +71,11 @@ export function LoginScreen({ action }) {
     } else if (needsSetup) {
         return <Narrow><Pad size={20}/><FirstLoginSetup onFieldsChosen={onFieldsChosen} /></Narrow>
     } else {
-        return <UnauthenticatedLoginScreen action={action} onPress={handleGoogleSignIn} />;
+        return <UnauthenticatedLoginScreen action={action} />;
     }
 };
 
-export function UnauthenticatedLoginScreen({action, onPress, showGithub=true}) {
+export function UnauthenticatedLoginScreen({action, showGithub=true, showGoogle=true}) {
     const s = UnauthenticatedLoginScreenStyle;
     const [bubbleHeight, setBubbleHeight] = useState(0);
     return <View style={s.outer}>
@@ -107,10 +97,11 @@ export function UnauthenticatedLoginScreen({action, onPress, showGithub=true}) {
         </View>
         <Pad size={32} />
         <View style={s.loginButtonsWrapper}>
-            <CTAButton
-                icon={<LoginProviderIcon providerName='google' />}
-                label='Continue with Google' color={colorBlack} onPress={onPress} />
+            {showGoogle && <GoogleLogin />}
             {showGithub && <GitHubLogin />}
+            {loginProviders.map(loginProvider => 
+                <SSOLogin key={loginProvider.key} loginProvider={loginProvider} />
+            )}
         </View>
         <Pad size={32} />
         <View style={s.footer}>
@@ -134,6 +125,9 @@ const UnauthenticatedLoginScreenStyle = StyleSheet.create({
         position: 'relative',
         alignItems: 'center',
     },
+    loginButtonsWrapper: {
+        alignItems: 'center',
+    },
     bubble: {
         position: 'absolute',
         maxWidth: 210,
@@ -154,6 +148,74 @@ const UnauthenticatedLoginScreenStyle = StyleSheet.create({
     }
 });
 
+var loginProviders = []
+export function registerLoginProviders(providers) {
+    loginProviders = [...loginProviders, ...providers];
+}
+
+
+function GoogleLogin() {
+    const datastore = useDatastore();
+
+    async function handleGoogleSignIn() {
+        logEventAsync(datastore, 'login-request', { method: 'google' });
+        try {
+            const result = await signInWithGoogle();
+            logEventAsync(datastore, 'login-success', {
+                method: 'google',
+                email: result?.user?.email ?? 'unknown',
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    return <PadBox><CTAButton
+        icon={<LoginProviderIcon providerIcon='google.png' />}
+        label='Continue with Google' color={colorBlack} onPress={handleGoogleSignIn} 
+    /></PadBox>
+}
+
+// TODO: Actually check the nonce on the callback
+function SSOLogin({loginProvider}) {
+    const datastore = useDatastore();
+    const siloKey = useSiloKey();
+    if (!loginProvider.silos.includes(siloKey)) {
+        return null;
+    }
+
+    function onLogin() {
+        logEventAsync(datastore, 'login-request', { method: loginProvider.key });
+
+        const codeCallbackUrl = 'https://psi.newpublic.org/api/auth/callback'
+        const fragmentRedirectUrl = 'https://psi.newpublic.org/' + siloKey + '/login/one/fragmentRedirect';
+        const redirect_uri = loginProvider.mode == 'code' ? codeCallbackUrl : fragmentRedirectUrl;
+        const nonce = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+        const loginUrl = assembleUrl(loginProvider.authUrl, { 
+            state: JSON.stringify({ 
+                siloKey: datastore.getSiloKey(), 
+                provider: loginProvider.key,
+                debug: getIsLocalhost(),
+            }),
+            nonce,
+            client_id: loginProvider.clientId,
+            redirect_uri,
+            scope: loginProvider.scope,
+            ... loginProvider.extraParams
+        });
+
+        window.open(loginUrl, 'Login with ' + loginProvider.name, 'width=600,height=600');
+    }
+
+    return <PadBox top={20}>
+        <CTAButton type='secondary' onPress={onLogin} 
+            icon={<LoginProviderIcon providerIcon={loginProvider.icon} />}
+            label={'Continue with ' + loginProvider.name}
+        />
+    </PadBox>            
+}
+
 function GitHubLogin() {
     const datastore = useDatastore();
     const siloKey = datastore.getSiloKey();
@@ -167,30 +229,27 @@ function GitHubLogin() {
         const github_auth_url = `https://github.com/login/oauth/authorize?client_id=${github_client_id}&redirect_uri=${oauth_callback_url}&state=${state}&scope=read:user%20user:email&response_type=code`;
 
         const popup = window.open(github_auth_url, 'Login with Github', 'width=600,height=600');
-
-        console.log('login with github');
     }
 
-    if (siloKey != 'demo') {
+    if (siloKey != 'demo' && siloKey != 'global') {
         return null;
     }
 
     return <PadBox top={20}>
         <CTAButton type='secondary' onPress={onPress} 
-            icon={<LoginProviderIcon providerName='github' />}
+            icon={<LoginProviderIcon providerIcon='github.png' />}
             label='Continue with GitHub' 
         />
     </PadBox>            
 }
 
-function TokenRedirectScreen({ token, provider, email }) {
+export function TokenRedirectScreen({ token, provider, email }) {
     const datastore = useDatastore();
     async function handleToken() {
-        console.log('TokenRedirectScreen', { token });
         await signInWithTokenAsync(token);
         logEventAsync(datastore, 'login-success', { provider, email });
 
-        window.close();
+        datastore.closeWindow();
     }
     useEffect(() => {
         handleToken(token);
@@ -198,27 +257,34 @@ function TokenRedirectScreen({ token, provider, email }) {
     return <UtilityText label='Logging in...' />
 }
 
-function DummyLoginScreen() {
-    useEffect(() => {
-        window.close();
-    });
-    return <UtilityText label='Dummy logging in...' />
+function getIdTokenFromFragment(fragment) {
+    const fragmentContent = fragment.startsWith('#') ? fragment.substring(1) : fragment;
+    const params = new URLSearchParams(fragmentContent);
+    return params.get('id_token');
 }
 
-function LoginProviderIcon({providerName}) {
-    return <Image source={{ uri: makeAssetUrl(`images/${providerName}.png`) }} style={{ width: 20, height: 20 }} />
-}
 
-export function needsLogin(callback, action) {
-    return () => {
-        const user = getFirebaseUser();
+// TODO: Make this actually do the work, once we've seen what it gives us
+export function FragmentRedirectScreen() {
+    const datastore = useDatastore();
+    const {debug, provider, ...params} = useInstanceParams();
+    const fragment = window.location.hash;
+    console.log('Fragment redirect', params, debug, fragment);
 
-        if (!user) {
-            // pushSubscreen('login', { action });
-            gotoInstance({structureKey: 'login', instanceKey: 'one', params: {action}});
-        } else {
-            return callback();
-        }
+    async function loginWithTokenFragment() {
+        const ssoToken = getIdTokenFromFragment(fragment);
+        const firebaseToken = await datastore.callServerAsync('auth', 'convertToken', { ssoToken, provider });
+        await signInWithTokenAsync(firebaseToken);
     }
+
+    useEffect(() => {
+        loginWithTokenFragment
+    }, [fragment])
+
+    return <UtilityText text={JSON.stringify({fragment, params, debug, provider})} />
+}
+
+function LoginProviderIcon({providerIcon}) {
+    return <Image source={{ uri: makeAssetUrl(`images/${providerIcon}`) }} style={{ width: 20, height: 20 }} />
 }
 

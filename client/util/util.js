@@ -192,3 +192,9 @@ export function keysToTrueMap(keys) {
     });
     return map;
 }
+
+export function assembleUrl(baseUrl, queryParams) {
+    const url = new URL(baseUrl);
+    Object.keys(queryParams).forEach(key => url.searchParams.append(key, queryParams[key]));
+    return url.toString();
+}

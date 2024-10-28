@@ -87,34 +87,6 @@ function profileStorySets() {return [
         instanceKey: 'b', personaKey: 'a',
         content: <ProfileModuleHolder module={ProfilePhotoAndNameFeature.config.profileModules[0]} />,
     },
-    {
-        label: 'First Login Setup',
-        content: <FirstLoginSetupTester />,
-        serverCall: {profile: {
-            checkName: ({name}) => ({violates: name == 'meanword'})
-        }},
-        stories: [
-            {label: 'Just Continue', actions: [
-                CLICK('Finish')
-            ]},
-            {label: 'Letter Photo', actions: [
-                CLICK('letter'), CLICK('Finish')
-            ]},
-            {label: 'Good Pseudonym', actions: [
-                CLICK('A pseudonym'), 
-                INPUT('pseudonym', 'malice'), CLICK('Finish')
-            ]},
-            {label: 'Bad Pseudonym', actions: [
-                CLICK('A pseudonym'), 
-                INPUT('pseudonym', 'meanword'), CLICK('Finish')
-            ]},
-
-        ]
-    },
-    {
-        label: 'Unauthenticated Login Screen',
-        content: <UnauthenticatedLoginScreen showGithub={false} />,
-    },    
 ]}
 
 function ProfileEditFeatureDemo() {

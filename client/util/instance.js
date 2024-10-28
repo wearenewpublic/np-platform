@@ -115,7 +115,7 @@ export function EmbeddedInstance({structureKey, instanceKey, features, screenKey
 export function StructureDemo({
         siloKey='demo', structureKey, instanceKey='demo', screenKey, params={},
         features, isAdmin=true, globals, collections, sessionData, serverCall,
-        modulePublic, 
+        modulePublic, moduleUserGlobal, moduleUserLocal,
         roles=['Owner'],
         language='english', personaKey='a'
     }) {
@@ -136,7 +136,7 @@ export function StructureDemo({
     return <Datastore globals={{...globals, features}} collections={collections} sessionData={sessionData}
                 language={language} isAdmin={isAdmin} isLive={false} serverCall={serverCall}
                 siloKey={siloKey} structureKey={structureKey} instanceKey={instanceKey} personaKey={personaKey}
-                roles={roles} modulePublic={modulePublic}
+                roles={roles} modulePublic={modulePublic} moduleUserGlobal={moduleUserGlobal} moduleUserLocal={moduleUserLocal}
                 pushSubscreen={pushSubscreen} goBack={onGoBack} >
             <StructureDemoConfiguredScreenStack structureKey={structureKey} screenStack={screenStack}/>
         </Datastore>

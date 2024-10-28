@@ -104,6 +104,8 @@ function StorySetContent({storySet}) {
         instanceKey={storySet.instanceKey ?? 'testInstance'} 
         siloKey={storySet.siloKey ?? 'demo'}
         modulePublic={storySet.modulePublic}
+        moduleUserGlobal={storySet.moduleUserGlobal}
+        moduleUserLocal={storySet.moduleUserLocal}
         personaKey={storySet.personaKey}
         roles={storySet.roles}
         firebaseUser={storySet.firebaseUser ?? default_fbUser} 

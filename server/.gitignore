@@ -140,6 +140,8 @@ public_out/
 
 keys.js 
 
+lib/
+
 
 # Don't store snapshots in github, since they clutter up the repo
 # Devs should make sure they run unit tests before making any changes 
