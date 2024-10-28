@@ -87,6 +87,11 @@ async function testStoryActionAsync(parent, action) {
     } else if (action.action === 'popup-close') {
         const popupContent = await parent.findByTestId('Close Popup');
         await fireEvent.click(popupContent);
+    } else if (action.action === 'check_text') {
+        const textFound = parent.getByText(action.expectedText);
+        if (!textFound) {
+            throw new Error(`Expected text "${action.expectedText}" not found.`);
+        }        
     } else {
         throw new Error('Unsupported action: ' + action.action);
     }
