@@ -24,7 +24,7 @@ export function Heading({text, color={color}, center, label, level=2, underline=
         4: HeadingStyle.heading4,
         5: HeadingStyle.heading5,
     }
-    return <TranslatableText text={text} label={label} formatParams={formatParams} 
+    return <TranslatableText text={text} aria-level={level} role='heading' label={label} formatParams={formatParams} 
         style={[
             styleMap[level], 
             underline && {textDecorationLine: 'underline'},
@@ -64,6 +64,14 @@ const HeadingStyle = StyleSheet.create({
 
 export function DataVizText({type, text, label, formatParams}) {
     const s = DataVizTextStyle;
+    var role;
+   const roleMap = {
+        heading1: 'heading',
+        heading2: 'heading',
+        number: 'paragraph',
+        label: 'paragraph',
+        labelStrong: 'strong'
+    }
     const styleMap = {
         heading1: s.heading1,
         heading2: s.heading2,
@@ -71,7 +79,7 @@ export function DataVizText({type, text, label, formatParams}) {
         label: s.label,
         labelStrong: [s.label, {fontFamily: fontFamilySansMedium}]
     }
-    return <TranslatableText text={text} label={label} formatParams={formatParams}
+    return <TranslatableText text={text} role={roleMap[type]} label={label} formatParams={formatParams}
         style={styleMap[type]} />
 }
 const DataVizTextStyle = StyleSheet.create({
@@ -132,7 +140,7 @@ export function Paragraph({numberOfLines=null, type='small', color={colorBlack},
         large: s.largeParagraph,
         small: s.smallParagraph
     }
-    return <TranslatableText numberOfLines={numberOfLines} text={text} label={label} formatParams={formatParams} 
+    return <TranslatableText numberOfLines={numberOfLines} text={text} label={label} formatParams={formatParams} role='paragraph' 
         style={[
             styleMap[type], {color}, 
             strong && {fontFamily: fontFamilySansSemiBold},
@@ -170,7 +178,7 @@ export function UtilityText({type='small', center=false, right=false, text, labe
         tiny: fontFamilySansSemiBold,
     }
     if (!text && !label) return null;
-    return <TranslatableText text={text} label={label} formatParams={formatParams}
+    return <TranslatableText text={text} label={label} role="paragraph" formatParams={formatParams}
         numberOfLines={numberOfLines} ellipsizeMode={ellipsizeMode}
         style={[
             styleMap[type], {color}, 
