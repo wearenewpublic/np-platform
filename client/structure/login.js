@@ -238,16 +238,12 @@ function getFragmentParams(fragment) {
 
 export function FragmentRedirectScreen() {
     const datastore = useDatastore();
-    // const fragment = datastore.getUrlFragment();
-    const fragment  = window.location.hash;
+    const fragment = datastore.getUrlFragment();
 
     async function loginWithTokenFragment() {
         const fragmentParams = getFragmentParams(fragment);
-        console.log('fragmentParams', fragmentParams);
         const ssoToken = fragmentParams.id_token;
-        console.log('ssoToken', ssoToken);
         const state = JSON.parse(fragmentParams.state);
-        console.log('state', state)
         const provider = state.provider;
         const {loginToken} = await datastore.callServerAsync('auth', 'convertToken', { ssoToken, provider });
         await datastore.signInWithTokenAsync(loginToken);
@@ -258,7 +254,7 @@ export function FragmentRedirectScreen() {
         loginWithTokenFragment();
     }, [fragment])
 
-    return <BannerMessage label='Broken Logging in...'/>
+    return <BannerMessage label='Logging in...'/>
 }
 
 function LoginProviderIcon({providerIcon}) {
