@@ -9,7 +9,7 @@ import { default_fbUser } from './testpersonas';
 export function WithFeatures({dataRef, siloKey='test', structureKey='componentdemo', instanceKey='test', 
         isAdmin=false, features={}, globals, collections, sessionData, personaKey='a', 
         firebaseUser=default_fbUser,
-        goBack, pushSubscreen, closeWindow, children}) {
+        goBack, pushSubscreen, closeWindow, openUrl, children}) {
     const structure = getStructureForKey(structureKey);
     const config = assembleConfig({structure, activeFeatures:features});
     return <Datastore 
@@ -24,7 +24,7 @@ export function WithFeatures({dataRef, siloKey='test', structureKey='componentde
             personaKey={personaKey}
             firebaseUser={firebaseUser}
             config={config}
-            goBack={goBack} closeWindow={closeWindow}
+            goBack={goBack} closeWindow={closeWindow} openUrl={openUrl}
             pushSubscreen={pushSubscreen}
             isLive={false}>
         {children}

@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { getOrCreateUserAsync, createLoginToken } = require("../util/firebaseutil");
+const jwt = require('jsonwebtoken');
 
 const github_client_id = 'Ov23liYVNTv1E8unqe4c'
 const oauth_callback_url = 'https://psi.newpublic.org/api/auth/callback'
@@ -87,6 +88,53 @@ async function getUserPrimaryEmailAsync(accessToken) {
 }
 exports.getUserPrimaryEmailAsync = getUserPrimaryEmailAsync;
 
+function parseJWT(token) {
+    // Split the token into its three parts
+    const [headerEncoded, payloadEncoded, signatureEncoded] = token.split('.');
+
+    // Decode each part from Base64 URL encoding
+    const header = JSON.parse(atob(headerEncoded.replace(/-/g, '+').replace(/_/g, '/')));
+    const payload = JSON.parse(atob(payloadEncoded.replace(/-/g, '+').replace(/_/g, '/')));
+    const signature = atob(signatureEncoded.replace(/-/g, '+').replace(/_/g, '/'));
+
+    return { header, payload, signature };
+}
+var global_ssoProviderKeyUrl = {};
+function addProviderKeyUrls(providerKeyUrls) {
+    global_ssoProviderKeyUrl = {...global_ssoProviderKeyUrl, ...providerKeyUrls};
+}
+exports.addProviderKeyUrls = addProviderKeyUrls;
+
+async function getKeysForProviderAsync(provider) {
+    const keyUrl = global_ssoProviderKeyUrl[provider];
+    if (!keyUrl) {
+        throw new Error('No key URL found for provider: ' + provider);
+    }
+    const response = await axios.get(keyUrl);
+    return response.data.keys;
+}
+
+async function convertTokenAsync({ssoToken, provider}) {
+    const {header, payload, signature} = parseJWT(ssoToken);
+
+    const publicKeys = await getKeysForProviderAsync(provider);
+    const key = publicKeys.find(key => key.kid === header.kid);
+    if (!key) {
+        throw new Error('No key found for kid: ' + header.kid);
+    }
+    const x5cKey = key.x5c[0];
+    const pemKey = `-----BEGIN CERTIFICATE-----\n${x5cKey}\n-----END CERTIFICATE-----`;
+    const verified = jwt.verify(ssoToken, pemKey, {algorithms: ['RS256']});
+    const userRecord = await getOrCreateUserAsync({
+        email: verified.email, name: verified.name, 
+        photoUrl: verified.picture ?? verified.avatar_url ?? undefined
+    });
+    const loginToken = await createLoginToken(userRecord.uid);
+
+    return {loginToken}
+}
+
 exports.publicFunctions = {
-    callback: authCallbackAsync
+    callback: authCallbackAsync,
+    convertToken: convertTokenAsync
 }

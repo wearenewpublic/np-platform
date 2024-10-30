@@ -25,11 +25,11 @@ function UserDataTester() {
     const datastore = useDatastore();
     const globalVar = useModuleUserGlobalData('foo', ['wibble']);
     const localVar = useModuleUserLocalData('bar', ['king', 'kong']);
-    const pulicVar = useModulePublicData('baz', ['one', 'two']);
+    const publicVar = useModulePublicData('baz', ['one', 'two']);
     return <View>
         <UtilityText text={'Global Var: ' + globalVar} />
         <UtilityText text={'Local Var: ' + localVar}  />
-        <UtilityText text={'Public Var: ' + pulicVar}  />
+        <UtilityText text={'Public Var: ' + publicVar}  />
         <Pad />
         <HorizBox spread>
             <CTAButton label='Change Global Var' onPress={() => 

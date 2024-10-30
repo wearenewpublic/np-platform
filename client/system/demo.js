@@ -152,7 +152,8 @@ export const defaultServerCall = {
 export function DemoStorySet({storySet}) {
     const { collections, content, structureKey='testStruct', instanceKey='testInstance', 
         personaKey, config, modulePublic, moduleUserGlobal, moduleUserLocal, roles, features, embeddedInstanceData,
-        globals, sessionData, serverCall, pad=true, firebaseUser=default_fbUser, siloKey='demo'
+        globals, sessionData, serverCall, pad=true, firebaseUser=default_fbUser, siloKey='demo',
+        urlFragment
     } = storySet;
     const domRef = React.createRef();
     const dataRef = React.createRef();
@@ -193,6 +194,8 @@ export function DemoStorySet({storySet}) {
             roles={roles} onServerCall={onServerCall}
             gotoInstance={setNavInstance} 
             goBack={() => setNavInstance({parent: true})}
+            openUrl={url => setNavInstance({url})} urlFragment={urlFragment}
+            closeWindow={() => setNavInstance({close: true})}
             pushSubscreen={(screenKey,params) => setNavInstance({screenKey, params})}
             serverCall={{...defaultServerCall, ...serverCall}} >
         <Heading type='small' text={storySet.label} />
@@ -226,9 +229,12 @@ export function NavResult({navInstance}) {
     return <PadBox horiz={8} vert={8}>
         <Banner>
             <UtilityText text='Navigated to:' />
+            {navInstance.close && <UtilityText strong text='Close window' />}
+            {navInstance.url && <UtilityText strong text={navInstance.url} />}
             {navInstance.parent && <UtilityText strong text='Parent screen' />}
             {navInstance.structureKey && <UtilityText strong text={navInstance.structureKey + '/' + navInstance.instanceKey} />}
             {navInstance.screenKey && <UtilityText strong text={'Subscreen: ' + navInstance.screenKey + '(' + JSON.stringify(navInstance.params) + ')'} />}
+            {navInstance.token && <UtilityText strong text={'Login token: ' + navInstance.token} />}
         </Banner>
     </PadBox>
 }

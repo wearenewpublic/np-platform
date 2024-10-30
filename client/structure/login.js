@@ -1,7 +1,6 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { useState } from 'react';
 import { signInWithGoogle, getFirebaseDataAsync, signInWithTokenAsync } from '../util/firebase';
-import { closeWindow } from '../util/navigate';
 import { LoadingScreen, Narrow, Pad, PadBox } from '../component/basics';
 import { Image, StyleSheet, View } from 'react-native';
 import { useDatastore, usePersonaKey, useSiloKey } from '../util/datastore';
@@ -9,12 +8,12 @@ import { Heading, UtilityText } from '../component/text';
 import { RichText } from '../component/richtext';
 import { colorPinkBackground, colorTealBackground, colorWhite, colorBlack, colorBlackHover } from '../component/color';
 import { CTAButton } from '../component/button';
-import { assembleUrl, makeAssetUrl } from '../util/util';
+import { assembleUrl, makeAssetUrl, makeRandomNonce } from '../util/util';
 import { logEventAsync, useLogEvent } from '../util/eventlog';
 import { FirstLoginSetup } from '../feature/ProfilePhotoAndName';
 import { useEffect } from 'react';
 import { getIsLocalhost } from '../util/url';
-import { useInstanceParams } from '../util/params';
+import { BannerMessage } from '../component/banner';
 
 export const LoginStructure = {
     key: 'login',
@@ -23,6 +22,7 @@ export const LoginStructure = {
     subscreens: {
         tokenRedirect: TokenRedirectScreen,
         fragmentRedirect: FragmentRedirectScreen,
+        fragmentredirect: <UtilityText label='BUG: Lowercase URL transform'/>,
     }
 }
 
@@ -98,7 +98,6 @@ export function UnauthenticatedLoginScreen({action, showGithub=true, showGoogle=
         <Pad size={32} />
         <View style={s.loginButtonsWrapper}>
             {showGoogle && <GoogleLogin />}
-            {showGithub && <GitHubLogin />}
             {loginProviders.map(loginProvider => 
                 <SSOLogin key={loginProvider.key} loginProvider={loginProvider} />
             )}
@@ -148,7 +147,8 @@ const UnauthenticatedLoginScreenStyle = StyleSheet.create({
     }
 });
 
-var loginProviders = []
+
+var loginProviders = [];
 export function registerLoginProviders(providers) {
     loginProviders = [...loginProviders, ...providers];
 }
@@ -177,7 +177,7 @@ function GoogleLogin() {
 }
 
 // TODO: Actually check the nonce on the callback
-function SSOLogin({loginProvider}) {
+export function SSOLogin({loginProvider}) {
     const datastore = useDatastore();
     const siloKey = useSiloKey();
     if (!loginProvider.silos.includes(siloKey)) {
@@ -190,7 +190,7 @@ function SSOLogin({loginProvider}) {
         const codeCallbackUrl = 'https://psi.newpublic.org/api/auth/callback'
         const fragmentRedirectUrl = 'https://psi.newpublic.org/' + siloKey + '/login/one/fragmentRedirect';
         const redirect_uri = loginProvider.mode == 'code' ? codeCallbackUrl : fragmentRedirectUrl;
-        const nonce = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        const nonce = makeRandomNonce();
 
         const loginUrl = assembleUrl(loginProvider.authUrl, { 
             state: JSON.stringify({ 
@@ -205,40 +205,13 @@ function SSOLogin({loginProvider}) {
             ... loginProvider.extraParams
         });
 
-        window.open(loginUrl, 'Login with ' + loginProvider.name, 'width=600,height=600');
+        datastore.openUrl(loginUrl, 'Login with ' + loginProvider.name, 'width=600,height=600');
     }
 
     return <PadBox top={20}>
         <CTAButton type='secondary' onPress={onLogin} 
             icon={<LoginProviderIcon providerIcon={loginProvider.icon} />}
             label={'Continue with ' + loginProvider.name}
-        />
-    </PadBox>            
-}
-
-function GitHubLogin() {
-    const datastore = useDatastore();
-    const siloKey = datastore.getSiloKey();
-
-    function onPress() {
-        logEventAsync(datastore, 'login-request', { method: 'github' });
-
-        const state = encodeURIComponent(JSON.stringify({ siloKey, provider: 'github' }));
-        const github_client_id = 'Ov23liYVNTv1E8unqe4c'
-        const oauth_callback_url = 'https://psi.newpublic.org/api/auth/callback'
-        const github_auth_url = `https://github.com/login/oauth/authorize?client_id=${github_client_id}&redirect_uri=${oauth_callback_url}&state=${state}&scope=read:user%20user:email&response_type=code`;
-
-        const popup = window.open(github_auth_url, 'Login with Github', 'width=600,height=600');
-    }
-
-    if (siloKey != 'demo' && siloKey != 'global') {
-        return null;
-    }
-
-    return <PadBox top={20}>
-        <CTAButton type='secondary' onPress={onPress} 
-            icon={<LoginProviderIcon providerIcon='github.png' />}
-            label='Continue with GitHub' 
         />
     </PadBox>            
 }
@@ -257,31 +230,35 @@ export function TokenRedirectScreen({ token, provider, email }) {
     return <UtilityText label='Logging in...' />
 }
 
-function getIdTokenFromFragment(fragment) {
+function getFragmentParams(fragment) {
     const fragmentContent = fragment.startsWith('#') ? fragment.substring(1) : fragment;
     const params = new URLSearchParams(fragmentContent);
-    return params.get('id_token');
+    return Object.fromEntries(params.entries());
 }
 
-
-// TODO: Make this actually do the work, once we've seen what it gives us
 export function FragmentRedirectScreen() {
     const datastore = useDatastore();
-    const {debug, provider, ...params} = useInstanceParams();
-    const fragment = window.location.hash;
-    console.log('Fragment redirect', params, debug, fragment);
+    // const fragment = datastore.getUrlFragment();
+    const fragment  = window.location.hash;
 
     async function loginWithTokenFragment() {
-        const ssoToken = getIdTokenFromFragment(fragment);
-        const firebaseToken = await datastore.callServerAsync('auth', 'convertToken', { ssoToken, provider });
-        await signInWithTokenAsync(firebaseToken);
+        const fragmentParams = getFragmentParams(fragment);
+        console.log('fragmentParams', fragmentParams);
+        const ssoToken = fragmentParams.id_token;
+        console.log('ssoToken', ssoToken);
+        const state = JSON.parse(fragmentParams.state);
+        console.log('state', state)
+        const provider = state.provider;
+        const {loginToken} = await datastore.callServerAsync('auth', 'convertToken', { ssoToken, provider });
+        await datastore.signInWithTokenAsync(loginToken);
+        datastore.closeWindow();
     }
 
     useEffect(() => {
-        loginWithTokenFragment
+        loginWithTokenFragment();
     }, [fragment])
 
-    return <UtilityText text={JSON.stringify({fragment, params, debug, provider})} />
+    return <BannerMessage label='Broken Logging in...'/>
 }
 
 function LoginProviderIcon({providerIcon}) {

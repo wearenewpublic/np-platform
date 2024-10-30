@@ -198,3 +198,11 @@ export function assembleUrl(baseUrl, queryParams) {
     Object.keys(queryParams).forEach(key => url.searchParams.append(key, queryParams[key]));
     return url.toString();
 }
+
+export function makeRandomNonce() {
+    if (process.env.NODE_ENV === 'test') {
+        return 'testnonce';
+    } else {
+        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    }
+}

@@ -72,11 +72,14 @@ function EditPhotoAndName() {
             <RadioOption radioKey='custom' label='A pseudonym' />
         </RadioGroup>
         {nameMode == 'custom' && <Catcher><PseudonymEditor /></Catcher>}
-        <Pad size={32}/>
-        <Heading level={3} label='Your profile photo'/>
-        <Pad size={12} />
-        <Catcher><ProfilePhotoEditor /></Catcher>
-    </View>
+        {fbUser.photoURL &&
+            <PadBox top={32}>
+                <Heading level={3} label='Your profile photo'/>
+                <Pad size={12} />
+                <Catcher><ProfilePhotoEditor /></Catcher>
+            </PadBox>
+        }
+</View>
 }
 
 function makeHueForString(str) {

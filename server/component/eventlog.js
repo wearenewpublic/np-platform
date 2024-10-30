@@ -14,7 +14,7 @@ async function logEventApi({
     if (userId) {
         const userInfo = await firebaseGetUserAsync(userId);
         userName = userInfo.displayName;
-        userPhoto = userInfo.photoURL;
+        userPhoto = userInfo.photoURL ?? null;
     }
 
     firebaseWriteAsync(['log', 'event', eventKey], {
@@ -40,7 +40,7 @@ async function setSessionUserApi({sessionKey, userId, eventKey}) {
     if (userId) {
         const userInfo = await firebaseGetUserAsync(userId);
         const userName = userInfo.displayName;
-        const userPhoto = userInfo.photoURL;
+        const userPhoto = userInfo.photoURL ?? null;
         await firebaseUpdateAsync(['log', 'session', sessionKey], {userId, userName, userPhoto})
         if (eventKey) {
             await firebaseUpdateAsync(['log', 'event', eventKey], {userName});

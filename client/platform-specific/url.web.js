@@ -38,3 +38,7 @@ export function WebLinkBase({url, newTab, style, setHover=()=>{}, children}) {
 export function getIsInSidebar() {
     return window.self !== window.top;
 }
+
+export function getFragment() {
+    return window.location.hash;
+}
