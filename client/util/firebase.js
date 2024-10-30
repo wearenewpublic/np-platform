@@ -106,7 +106,7 @@ export function useFirebaseData(pathList, {defaultValue=null, limit=null, oldest
             });
             return unsubscribe;
         }
-    }, [pathString, once]);
+    }, [pathString, once, limit, oldest]);
     return data;
 }
 
