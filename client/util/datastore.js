@@ -387,12 +387,12 @@ export class Datastore extends React.Component {
             return getFragment();
         }
     }
-    signInWithTokenAsync(loginToken) {
+    async signInWithTokenAsync(loginToken) {
         if (this.props.serverCall) {
             // HACK: this isn't actually a server call, but this is a convenient way to mock it
             return this.callServerAsync('local', 'signInWithToken', {loginToken})
         } else {
-            signInWithTokenAsync(loginToken);
+            await signInWithTokenAsync(loginToken);
         }
     }
     render() {

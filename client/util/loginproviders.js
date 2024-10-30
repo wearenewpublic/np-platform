@@ -24,7 +24,7 @@ export const rcIntLogin = {
     },
     mode: 'fragment',
     name: 'Radio Canada Internal',
-    silos: ['global', 'demo'],
+    silos: ['global', 'demo', 'test'],
     icon: 'rc.svg'
 }
 
@@ -37,6 +37,6 @@ export const rcLogin = {
     name: 'Radio Canada',
     key: 'rc',
     icon: 'rc.svg',
-    silos: ['global', 'demo'],
+    silos: ['global', 'demo', 'test'],
 }
 

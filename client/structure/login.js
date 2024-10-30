@@ -247,7 +247,9 @@ export function FragmentRedirectScreen() {
         const provider = state.provider;
         const {loginToken} = await datastore.callServerAsync('auth', 'convertToken', { ssoToken, provider });
         await datastore.signInWithTokenAsync(loginToken);
-        datastore.closeWindow();
+        if (state.siloKey != 'test') {
+            datastore.closeWindow();
+        }
     }
 
     useEffect(() => {

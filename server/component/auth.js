@@ -17,6 +17,7 @@ exports.setGithubClientSecret = setGithubClientSecret;
 
 async function authCallbackAsync({code, state}) {
     const parsedState = JSON.parse(state ?? '{}');
+    console.log('AuthCallback state:', code, parsedState);
     const response = await axios.post(github_access_url, {
         client_id: github_client_id,
         client_secret: global_github_client_secret,
@@ -129,7 +130,9 @@ async function convertTokenAsync({ssoToken, provider}) {
         email: verified.email, name: verified.name, 
         photoUrl: verified.picture ?? verified.avatar_url ?? undefined
     });
+    console.log('User data', verified.name, verified.email);
     const loginToken = await createLoginToken(userRecord.uid);
+    console.log('Created login token', loginToken);
 
     return {loginToken}
 }
