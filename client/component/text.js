@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { TranslatableText, useTranslation } from "./translation";
-import { colorBannerGreen, colorBlack, colorDisabledText, colorGreyBorder, colorGreyHover, colorGreyHoverBorder, colorRed, colorWhite } from "./color";
+import { colorBlack, colorDisabledText, colorGreyBorder, colorGreyHover, colorGreyHoverBorder, colorRed, colorWhite } from "./color";
 import { HorizBox, HoverView, Pad, PadBox } from "./basics";
 import { useEffect, useState } from "react";
 import { Edit, Checkmark } from "@carbon/icons-react";
@@ -347,20 +347,6 @@ const TextFieldButtonStyle = StyleSheet.create({
         borderColor: colorGreyHoverBorder
     }
 })
-
-export function TextBanner({label, text, formatParams}) {
-    const s = TextBannerStyle;
-    return <HorizBox style={s.banner}>
-        <UtilityText type='small' text={text} label={label} formatParams={formatParams} />
-    </HorizBox>
-}
-const TextBannerStyle = StyleSheet.create({
-    banner: {
-        padding: 16,
-        backgroundColor: colorBannerGreen,
-        borderRadius: 8
-    }
-});
 
 export function CharacterCounter({max, min, text}) {
     const count = text?.length ?? 0;

@@ -1,5 +1,5 @@
 import { Byline, FaceButton, FacePile, LetterFace, ProfilePhoto } from "../component/people";
-import { Datastore, usePersonaKey } from "../util/datastore";
+import { Datastore } from "../util/datastore";
 import { IconUpvote, IconUpvoted } from "../component/icon";
 import { CharacterCounter, CircleCount, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
 import { colorBlack, colorLightGreen, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
@@ -7,15 +7,13 @@ import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton
 import { Checkbox, Toggle, RadioOption, RadioGroup, FormField, AccordionField } from "../component/form";
 import { useState } from "react";
 import { RichText } from "../component/richtext";
-import { Card, ConversationScreen, FlowBox, HorizBox, HoverSelectBox, Narrow, Pad, PadBox, ShadowBox } from "../component/basics";
-import { BasicTeaser } from "../component/teaser";
-import { Banner, ClickableBanner, TopBanner } from "../component/banner";
-import { TrashCan, Pin, Chat, ChevronDown, Reply, Image as CarbonImage, Hearing, Video, FaceAdd, Edit, Bookmark, Flag, Close, ArrowLeft, Demo } from "@carbon/icons-react";
+import { Card, ConversationScreen, FlowBox, HorizBox, Narrow, Pad, PadBox, ShadowBox } from "../component/basics";
+import { Banner, BannerMessage, ClickableBanner, TopBanner } from "../component/banner";
+import { TrashCan, Pin, Chat, ChevronDown, Reply, Image as CarbonImage, Hearing, Video, FaceAdd, Edit, Bookmark, Flag, Close, ArrowLeft } from "@carbon/icons-react";
 import { Modal } from "../component/modal";
 import { CLICK, DemoSection, POPUP, SpacedArray } from "../system/demo";
 import { Image, View } from "react-native";
 import { FeatureMenuScreen } from "./featuremenu-demo";
-import { EmbeddedInstance } from "../util/instance";
 
 export const DesignSystemDemoFeature = {
     key: 'demo_designsystem',
@@ -509,8 +507,10 @@ function BannerDemoScreen() {
                     <ClickableBanner iconType='close'>
                         <RichText label='This is a **minor** problem. Click to close'/>
                     </ClickableBanner>
-
                 </Narrow>
+            </DemoSection>
+            <DemoSection label='Banner Message'>
+                <BannerMessage label='Banner Message'/>
             </DemoSection>
     </ConversationScreen>
 }

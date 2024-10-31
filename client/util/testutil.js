@@ -9,7 +9,7 @@ import { default_fbUser } from './testpersonas';
 export function WithFeatures({dataRef, siloKey='test', structureKey='componentdemo', instanceKey='test', 
         isAdmin=false, features={}, globals, collections, sessionData, personaKey='a', 
         firebaseUser=default_fbUser,
-        goBack, pushSubscreen, closeWindow, children}) {
+        goBack, pushSubscreen, closeWindow, openUrl, children}) {
     const structure = getStructureForKey(structureKey);
     const config = assembleConfig({structure, activeFeatures:features});
     return <Datastore 
@@ -24,7 +24,7 @@ export function WithFeatures({dataRef, siloKey='test', structureKey='componentde
             personaKey={personaKey}
             firebaseUser={firebaseUser}
             config={config}
-            goBack={goBack} closeWindow={closeWindow}
+            goBack={goBack} closeWindow={closeWindow} openUrl={openUrl}
             pushSubscreen={pushSubscreen}
             isLive={false}>
         {children}
@@ -90,6 +90,11 @@ async function testStoryActionAsync(parent, action) {
     } else if (action.action === 'popup-close') {
         const popupContent = await parent.findByTestId('Close Popup');
         await fireEvent.click(popupContent);
+    } else if (action.action === 'check_text') {
+        const textFound = parent.getByText(action.expectedText);
+        if (!textFound) {
+            throw new Error(`Expected text "${action.expectedText}" not found.`);
+        }        
     } else {
         throw new Error('Unsupported action: ' + action.action);
     }

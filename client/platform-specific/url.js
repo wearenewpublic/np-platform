@@ -24,3 +24,5 @@ export function WebLinkBase({url, children}) {
 }
 
 export function getIsInSidebar() {return false}
+
+export function getFragment() {return ''}

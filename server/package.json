@@ -1,10 +1,11 @@
 {
     "name": "np-platform-server",
     "description": "Back end for the New Public Platform",
-    "version": "0.14.1",
+    "version": "0.15.0",
     "license": "Apache-2.0",
     "scripts": {
         "build": "tsc",
+        "prepublishOnly": "yarn build",
         "watch": "tsc --watch",
         "lint": "eslint .",
         "test": "jest",
@@ -12,7 +13,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/wearenewpublic/np-platform"
+        "url": "git+https://github.com/wearenewpublic/np-platform.git"
     },
     "engines": {
         "node": "20"
@@ -53,6 +54,7 @@
         "form-data": "^4.0.0",
         "fs": "^0.0.1-security",
         "json5": "^2.2.3",
+        "jsonwebtoken": "^9.0.2",
         "mustache": "^4.2.0",
         "node-fetch": "^3.3.1",
         "path": "^0.12.7",

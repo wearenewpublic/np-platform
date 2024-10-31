@@ -1,12 +1,13 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { defaultPersonaList, personaListToMap } from './testpersonas';
-import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseDataAsync, getFirebaseUser, onFbUserChanged, useFirebaseData } from './firebase';
+import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseDataAsync, getFirebaseUser, onFbUserChanged, signInWithTokenAsync, useFirebaseData } from './firebase';
 import { deepClone, getObjectPropertyPath, setObjectPropertyPath } from './util';
 import { LoadingScreen } from '../component/basics';
 import { SharedData, SharedDataContext } from './shareddata';
 import { callServerApiAsync } from './servercall';
 import { closeWindow, goBack, gotoInstance, pushSubscreen } from './navigate';
+import { getFragment } from '../platform-specific/url';
 
 const DatastoreContext = React.createContext({});
 export const ConfigContext = React.createContext();
@@ -28,6 +29,7 @@ export class Datastore extends React.Component {
         super(props);
         this.sharedData = new SharedData();
         this.resetData();
+        this.resetSessionData();
     }
 
     componentDidMount() {
@@ -369,6 +371,28 @@ export class Datastore extends React.Component {
             this.props.closeWindow();
         } else {
             closeWindow();
+        }
+    }
+    openUrl(url, target, features) {
+        if (this.props.openUrl) {
+            this.props.openUrl(url, target, features);
+        } else {
+            window.open(url, target, features);
+        }
+    }
+    getUrlFragment() {
+        if (this.props.urlFragment) {
+            return this.props.urlFragment;
+        } else {
+            return getFragment();
+        }
+    }
+    async signInWithTokenAsync(loginToken) {
+        if (this.props.serverCall) {
+            // HACK: this isn't actually a server call, but this is a convenient way to mock it
+            return this.callServerAsync('local', 'signInWithToken', {loginToken})
+        } else {
+            await signInWithTokenAsync(loginToken);
         }
     }
     render() {
