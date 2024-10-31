@@ -14,6 +14,7 @@ import { EventlogDemoFeature } from "../demo/eventlog-demo";
 import { ProfileEditDemo } from "../demo/profileedit-demo";
 import { ProfilePhotoAndNameFeature } from "./ProfilePhotoAndName";
 import { AdminUsersFeature } from "./AdminUsersFeature";
+import { UserVerificationFeature } from "./UserVerificationFeature";
 import { AdminDemo } from "../demo/admin-demo";
 import { CloseConversationFeature } from "./CloseConversationFeature";
 import { TopBarDemoFeature } from "../demo/topbar-demo";
@@ -75,7 +76,8 @@ export var features = {
     ],
     admin: [
         SECTION('Admin Modules', [
-            AdminUsersFeature
+            AdminUsersFeature,
+            UserVerificationFeature
         ])
     ]
 }
@@ -101,7 +103,8 @@ export var defaultFeatureConfig = {
         profileeditname: true,
     },
     admin: {
-        adminusers: true
+        adminusers: true,
+        verifyusers: true,
     }
 }
 
@@ -121,6 +124,9 @@ export var roles = {
     Moderator: {
     },
     Editorial: {
+        can: [
+            'verifyusers/verify-users'
+        ]
     },
     Analyst: {
         can: [

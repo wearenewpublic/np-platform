@@ -5,11 +5,12 @@ import { useDatastore, useInstanceKey, usePersonaKey, usePersonaObject } from ".
 import { FaceImage, FaceSelect, LetterFace, ProfilePhoto } from "../component/people";
 import { useEditableField, useEditErrors, WithEditableFields } from "../structure/profile";
 import { RadioGroup, RadioOption } from "../component/form";
-import { colorPinkBackground, colorRedBackground, colorTextGrey } from "../component/color";
+import { colorPinkBackground, colorRedBackground, colorTextGrey, colorLightBlueBackground } from "../component/color";
 import { Banner } from "../component/banner";
 import { Catcher } from "../system/catcher";
 import React, { useState } from "react";
 import { CTAButton } from "../component/button";
+import { usePersonaPreview } from "../util/datastore";
 
 export const ProfilePhotoAndNameFeature = {
     key: 'profileeditname',
@@ -54,6 +55,7 @@ function EditPhotoAndName() {
     const datastore = useDatastore();
     const fbUser = datastore.getFirebaseUser();
     const [name, setName] = useEditableField('name', fbUser.displayName);
+    const personaPreview = usePersonaPreview();
 
     function onChangeNameMode(nameMode) {
         setNameMode(nameMode);
@@ -69,6 +71,12 @@ function EditPhotoAndName() {
         <Pad size={8} />
         <RadioGroup value={nameMode} onChange={onChangeNameMode}>
             <RadioOption radioKey='full' text={fbUser.displayName} />
+            {personaPreview.verificationStatus === 'unverified' && <View style={{backgroundColor: colorLightBlueBackground, borderRadius: 8}}>
+                <PadBox vert={16} horiz={20}>
+                    <UtilityText type='small' label='It looks like your profile name matches a celebrity or notable person. You will appear as unverified until our moderators can verify your name.' />
+                </PadBox>
+            </View>
+            }
             <RadioOption radioKey='custom' label='A pseudonym' />
         </RadioGroup>
         {nameMode == 'custom' && <Catcher><PseudonymEditor /></Catcher>}

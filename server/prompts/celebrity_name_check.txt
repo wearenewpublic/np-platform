@@ -1,0 +1,4 @@
+Is "{{name}}" commonly recongized as a celebrity, even a minor one, in any country?
+
+Please respond with a JSON object of the following form:
+{"isCelebrity": [true or false]}

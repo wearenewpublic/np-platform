@@ -79,5 +79,6 @@ export var ui_translations_german = {
     'Please Wait...': 'Bitte warten...',
     'Continue': 'Fortsetzen',
     'Finish' : 'Fertig', 
+    'It looks like your profile name matches a celebrity or notable person. You will appear as unverified until our moderators can verify your name.': 'Es sieht so aus, als ob dein Profilname ein König oder ein bekannter Mensch ist. Du wirst angezeigt, bis unsere Moderatoren deine Profilname verifizieren.',
 
 }

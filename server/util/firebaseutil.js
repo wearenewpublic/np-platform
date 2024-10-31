@@ -13,6 +13,10 @@ function verifyIdTokenAsync(token) {
     return admin.auth().verifyIdToken(token);
 }
 
+function getUserByEmailAsync(email) {
+    return admin.auth().getUserByEmail(email);
+}
+
 async function getOrCreateUserAsync({email, name, photoUrl}) {
     try {
         return await admin.auth().getUserByEmail(email);
@@ -188,7 +192,7 @@ module.exports = {
     setObjectAsync, readObjectAsync, firebaseReadWithFilterAsync,
     keyToUrl, urlToKey,
 
-    getOrCreateUserAsync, createLoginToken,
+    getUserByEmailAsync, getOrCreateUserAsync, createLoginToken,
 
     verifyIdTokenAsync, createNewKey, firebaseGetUserAsync, expandPath, 
     checkPathsNotOverlapping, checkNoUndefinedKeysOrValues: checkNoUndefinedValues,
