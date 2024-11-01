@@ -139,8 +139,12 @@ function PseudonymEditor() {
             </Banner>
         : errors.nameViolates ?
             <Banner color={colorRedBackground}>
-                <UtilityText label='This pseudonym may violate our commuinity guidelines.' />
+                <UtilityText label='This pseudonym may violate our community guidelines.' />
             </Banner>            
+        : errors.nameLooksReal ?
+            <Banner color={colorRedBackground}>
+                <UtilityText label='Pseudonyms are not allowed to look like real names.' />
+            </Banner>
         :
             <UtilityText type='small' color={colorTextGrey} 
                 label='You can change your pseudonym at most once a week'
@@ -165,7 +169,9 @@ async function checkPhotoAndNameAsync({datastore, updates}) {
             return {nameTaken: true};
         }
         const violateResult = await datastore.callServerAsync('profile', 'checkName', {name});
-        if (violateResult?.violates) {
+        if (violateResult?.looksreal) {
+            return {nameLooksReal: true};
+        } else if (violateResult?.violates) {
             return {nameViolates: true};
         }
     }

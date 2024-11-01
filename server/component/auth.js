@@ -17,7 +17,6 @@ exports.setGithubClientSecret = setGithubClientSecret;
 
 async function authCallbackAsync({code, state}) {
     const parsedState = JSON.parse(state ?? '{}');
-    console.log('AuthCallback state:', code, parsedState);
     const response = await axios.post(github_access_url, {
         client_id: github_client_id,
         client_secret: global_github_client_secret,

@@ -36,7 +36,7 @@ function profileStorySets() {return [
                 datastore.updateGlobalProperty('fields', updates);
                 datastore.updateObject('persona', 'a', preview);
             },
-            checkName: ({name}) => ({violates: name == 'meanword'})
+            checkName: ({name}) => ({violates: name == 'meanword', looksreal: name == 'joebiden'}),
         }},
         stories: [
             {label: 'Good Pseudonym', actions: [
@@ -50,6 +50,10 @@ function profileStorySets() {return [
             {label: 'Violating', actions: [
                 CLICK('Edit {tLabel}'), CLICK('A pseudonym'), 
                 INPUT('pseudonym', 'meanword'), CLICK('Save')
+            ]},
+            {label: 'Looks real', actions: [
+                CLICK('Edit {tLabel}'), CLICK('A pseudonym'), 
+                INPUT('pseudonym', 'joebiden'), CLICK('Save')
             ]},
             {label: 'Taken', actions: [
                 CLICK('Edit {tLabel}'), CLICK('A pseudonym'), 

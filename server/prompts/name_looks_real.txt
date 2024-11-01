@@ -1,0 +1,15 @@
+I'm going to give you a pseudonym that someone asked to use in an internet forum.
+
+I want you to tell me whether this pseudonym looks like the name of a real person
+with first and last name.
+
+For example "joeblogs" looks like a real name, but "amazingcarrot" doesn't 
+and "joe" doesn't (because it lacks a last name).
+
+
+I want you to reply with a JSON object of the following form: 
+
+{"resembles_full_name": [true or false]}
+
+The pseudonym is in {{language}} and is "{{name}}"
+
