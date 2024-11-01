@@ -18,7 +18,7 @@ export function HelpBubble({label, text, titleLabel, titleText, padTop=4, above=
     const datastore = useDatastore();
     const seenBefore = useModuleUserGlobalData('help', [helpKey]);
 
-    if (!condition || seenBefore || seenBefore == undefined) return null;
+    if (!condition || seenBefore || seenBefore === undefined) return null;
 
     function onClose() {
         datastore.setModuleUserGlobal('help', [helpKey], true);
