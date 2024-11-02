@@ -45,7 +45,7 @@ export function LoginScreen({ action }) {
             const isCelebrity = await datastore.callServerAsync(
                 'verify', 'getIsCelebrity', {name: fbUser.displayName});
             if (isCelebrity) {
-                await datastore.callServerAsync('verify', 'setVerficationStatusOnPersona', {email: fbUser.email})
+                await datastore.callServerAsync('verify', 'setVerficationStatus')
             };
             setInProgress(false);
             setNeedsSetup(true);

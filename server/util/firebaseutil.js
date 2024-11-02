@@ -13,8 +13,17 @@ function verifyIdTokenAsync(token) {
     return admin.auth().verifyIdToken(token);
 }
 
-function getUserByEmailAsync(email) {
-    return admin.auth().getUserByEmail(email);
+async function getUserByEmailAsync(email) {
+    try {
+        return await admin.auth().getUserByEmail(email);
+    } catch (error) {
+        if (error.code === 'auth/user-not-found') {
+            console.warn(`User with email ${email} not found.`);
+            return null;
+        } else {
+            throw error;
+        }
+    }
 }
 
 async function getOrCreateUserAsync({email, name, photoUrl}) {

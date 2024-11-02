@@ -4,30 +4,29 @@ import { IconCircleCheck } from "./icon";
 import { UtilityText } from "./text";
 import { HoverView, Pad, PadBox, spacings } from "./basics";
 import { formatDate, formatMiniDate } from "./date";
-import { colorBlack, colorDisabledBackground, colorTextGrey, colorWhite, colorPink } from "./color";
+import { colorBlack, colorDisabledBackground, colorTextGrey, colorWhite, colorPink, colorGreyHover, colorGreyFormHover } from "./color";
 import { TextButton } from "./button";
 import { useLanguage } from "./translation";
 import { useConfig } from "../util/features";
 
-export function ProfilePhoto({ userId, type = 'large', photo = null, faint = false, check = false, border = false }) {
-
+export function ProfilePhoto({ userId, type = 'large', photo = null, faint = false, border = false }) {
     const persona = useObject('persona', userId);
     const isLive = useIsLive();
     const meKey = usePersonaKey();
     const { profilePhotoLayers } = useConfig();
 
     if (meKey == userId && isLive) {
-        return <MyProfilePhoto type={type} photo={photo} faint={faint} check={check} border={border} />
+        return <MyProfilePhoto type={type} photo={photo} faint={faint} border={border} />
     } else {
         const face = persona?.face;
         if (face || photo || persona?.photoUrl) {
             if (profilePhotoLayers?.length > 0) {                
                 return <> 
-                    <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} border={border} faint={faint} check={check} />
+                    <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} border={border} faint={faint} />
                     {renderLayers(type, persona, profilePhotoLayers)}
                 </>
             } else {
-                return <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} border={border} faint={faint} check={check} />
+                return <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} border={border} faint={faint} />
             }
         } else if (persona?.hue && persona?.name) {
             return <LetterFace name={persona.name} hue={persona.hue} type={type} />
@@ -54,11 +53,11 @@ function renderLayers(type, persona, profilePhotoLayers) {
     </View>
 }
 
-export function MyProfilePhoto({type='large', photo=null, faint=false, check=false, border=false}) {
+export function MyProfilePhoto({type='large', photo=null, faint=false, border=false}) {
     const personaPreview = usePersonaPreview();
     if (personaPreview?.photoUrl) {
         return <FaceImage photoUrl={photo ?? personaPreview.photoUrl} type={type} faint={faint} 
-            border={border} check={check} />
+            border={border} />
     } else if (personaPreview?.hue && personaPreview?.name) {
         return <LetterFace name={personaPreview.name} hue={personaPreview.hue} type={type} />
     } else {
@@ -66,37 +65,79 @@ export function MyProfilePhoto({type='large', photo=null, faint=false, check=fal
     }
 }
 
-export function FaceImage({ face, photoUrl = null, type = 'small', faint = false, check = false, border = false}) {
-    
+export function UnverifiedBadge({size = 14}) {
+    const s = UnverifiedBadgeStyles;
+    return (
+        <View style={[s.container, { width: size, height: size, borderRadius: size / 2 }]}>
+            <Text style={[s.text, { fontSize: size === 24 ? 18 : 12 }]}>?</Text>
+        </View>
+    );
+}
+
+const UnverifiedBadgeStyles = StyleSheet.create({
+    container: {
+        backgroundColor: colorGreyHover,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    text: {
+        color: 'black',
+    },
+});
+
+function Badge({type, name}) {
+    const datastore = useDatastore();
+    const fbUser = datastore.getFirebaseUser();
+    const personaPreview = usePersonaPreview();
+    const verificationStatus = personaPreview?.verificationStatus ?? null;
+    const badgeSize = badgeSizeMap[type ?? 'small'];
+
+    if (fbUser?.displayName !== name) {
+        return null;
+    }
+
+    if (verificationStatus === 'verified') {
+        return <IconCircleCheck size={badgeSize} />;
+    }
+    if (verificationStatus === 'unverified') {
+        return <UnverifiedBadge size={badgeSize} />;
+    }
+    return null;
+}
+
+export function FaceImage({ face, photoUrl = null, type = 'small', faint = false, border = false, name = null }) {
     const size = sizeMap[type] ?? 32;
-    const checkPad = check ? checkPadMap[type ?? 'small'] : 0;
+    const badgePad = badgePadMap[type ?? 'small'];
 
     return <View style={{ position: 'relative', alignSelf: 'flex-start' }}>
         <Image
             style={{
                 width: size, height: size, borderRadius: size / 2,
-                opacity: faint ? 0.5 : 1, marginRight: checkPad,
+                opacity: faint ? 0.5 : 1,
                 borderWidth: border ? 2 : 0,
                 borderColor: 'white'
             }}
             source={{ uri: photoUrl ?? ('https://new-public-demo.web.app/faces/' + face) }} />
-        {check && <View style={{ position: 'absolute', right: 0, bottom: 0 }}>
-            <IconCircleCheck />
-        </View>}
+        <View style={{ position: 'absolute', right: -badgePad, bottom: 0 }}>
+            <Badge type={type} name={name} />
+        </View>
     </View>
 }
 
 const fontFamilySansMedium = 'IBMPlexSans_500Medium, Arial, Helvetica, sans-serif';
 
 export function LetterFace({ name, hue, type = 'large' }) {
-
     const s = LetterFaceStyle;
     const size = sizeMap[type] ?? 32;
     const color = 'hsl(' + hue + ', 96%, 27%)';
     const letter = name.substring(0, 1).toUpperCase();
+    const badgePad = badgePadMap[type ?? 'small'];
 
     return <View style={{ width: size, height: size, borderRadius: size / 2, backgroundColor: color, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={[{ fontSize: size / 2 }, s.letter]}>{letter}</Text>
+        <View style={{ position: 'absolute', right: -badgePad, bottom: 0 }}>
+            <Badge type={type} name={name} />
+        </View>             
     </View>
 }
 
@@ -107,8 +148,8 @@ const LetterFaceStyle = StyleSheet.create({
     }
 });
 
-export function AnonymousFace({ faint, type, border, check }) {
-    return <FaceImage face='anonymous2.jpeg' faint={faint} type={type} border={border} check={check} />
+export function AnonymousFace({ faint, type, border }) {
+    return <FaceImage face='anonymous2.jpeg' faint={faint} type={type} border={border} />
 }
 
 const AnonymousFaceStyle = StyleSheet.create({
@@ -243,8 +284,18 @@ const sizeMap = {
     tiny: 24,
 }
 
-const checkPadMap = {
+const badgePadMap = {
+    huge: 0,
+    extraLarge: 2,
     large: 2,
     small: 4,
     tiny: 8,
+}
+
+const badgeSizeMap = {
+    huge: 24,
+    extraLarge: 14,
+    large: 14,
+    small: 14,
+    tiny: 14,
 }

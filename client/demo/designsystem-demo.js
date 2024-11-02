@@ -149,9 +149,6 @@ function ProfileScreen() {
                     <ProfilePhoto userId='a' />
                     <ProfilePhoto userId='b' type="small"/>
                     <ProfilePhoto userId='c' type="tiny"/>
-                    <ProfilePhoto userId='d' check={true} />
-                    <ProfilePhoto userId='e' type="small" check/>
-                    <ProfilePhoto userId='f' type="tiny" check/>
                 </SpacedArray>
                 <SpacedArray horiz pad={8}>
                     <ProfilePhoto userId='x' />
@@ -173,6 +170,24 @@ function ProfileScreen() {
                     </SpacedArray>
                 </Datastore>
             </DemoSection>
+            <DemoSection label='Verified Profile Photo'>
+            <Datastore personaPreview={{ verificationStatus: 'verified' }}>
+                <SpacedArray horiz pad={8}>
+                    <ProfilePhoto userId='a'/>
+                    <ProfilePhoto userId='a' type="small"/>
+                    <ProfilePhoto userId='a' type="tiny"/>
+                </SpacedArray>
+            </Datastore>
+            </DemoSection>
+            <DemoSection label='Unverified Profile Photo'>
+                <Datastore personaPreview={{ verificationStatus: 'unverified' }}>
+                    <SpacedArray horiz pad={8}>
+                        <ProfilePhoto userId='b'/>
+                        <ProfilePhoto userId='b' type="small"/>
+                        <ProfilePhoto userId='b' type="tiny"/>
+                    </SpacedArray>
+                </Datastore>
+            </DemoSection>        
             <DemoSection label='Facepile'>
                 <FacePile userIdList={['a','b','c','z']} type='small' />
                 <FacePile userIdList={['x','d','e','f','g','h','i','j']} type='tiny' />

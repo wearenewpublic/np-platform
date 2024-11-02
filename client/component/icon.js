@@ -1,15 +1,15 @@
 import { colorTextBlue } from "./color"
 import { ArrowShiftDown } from '@carbon/icons-react';
 
-export function IconCircleCheck() {
-    return <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+export function IconCircleCheck({size=14}) {
+    return <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 14 14" fill="none">
         <g clipPath="url(#clip0_1102_4883)">
             <circle cx="7" cy="7" r="5" fill="#0F0F0F"/>
             <path d="M7 0C5.61553 0 4.26216 0.410543 3.11101 1.17971C1.95987 1.94888 1.06266 3.04213 0.532846 4.32122C0.00303298 5.6003 -0.13559 7.00776 0.134506 8.36563C0.404603 9.7235 1.07129 10.9708 2.05026 11.9497C3.02922 12.9287 4.2765 13.5954 5.63437 13.8655C6.99224 14.1356 8.3997 13.997 9.67879 13.4672C10.9579 12.9373 12.0511 12.0401 12.8203 10.889C13.5895 9.73785 14 8.38447 14 7C14 5.14348 13.2625 3.36301 11.9497 2.05025C10.637 0.737498 8.85652 0 7 0ZM6 9.795L3.5 7.295L4.295 6.5L6 8.205L9.705 4.5L10.503 5.293L6 9.795Z" fill="#CDE1FF"/>
         </g>
         <defs>
             <clipPath id="clip0_1102_4883">
-            <rect width="14" height="14" fill="white"/>
+            <rect width={size} height={size} fill="white"/>
             </clipPath>
         </defs>
     </svg>

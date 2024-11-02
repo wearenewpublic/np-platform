@@ -34,6 +34,10 @@ export function CHECK_TEXT(expectedText) {
     return { action: 'check_text', expectedText };
 }
 
+export function CHECK_TEXT_ABSENCE(absentText) {
+    return { action: 'check_text_absence', absentText };
+}
+
 
 export function DemoSection({label, horiz=false, children, color=null}) {
     const s = DemoSectionStyle;
@@ -113,6 +117,18 @@ async function playStoryAction({domRef, action}) {
         return await playStoryAction({domRef: {current: popup}, action: action.popupAction});
     } else if (action.action === 'popup-close') {
         return closeActivePopup();
+    } else if (action.action === 'check_text') {
+        const textFound = domRef.current?.textContent.includes(action.expectedText);
+        if (!textFound) {
+            throw new Error(`Expected text "${action.expectedText}" not found.`);
+        }
+        return;
+    } else if (action.action === 'check_text_absence') {
+        const textFound = domRef.current?.textContent.includes(action.expectedText);
+        if (textFound) {
+            throw new Error(`Expected text "${action.expectedText}" found.`);
+        }
+        return;
     }
     
     const node = findStoryActionNode({domRef, matcher: action.matcher});
@@ -125,11 +141,6 @@ async function playStoryAction({domRef, action}) {
         onChangeText(action.text);
     } else if (action.action == 'popup') {
         await playStoryAction({domRef: getPopupRef(), action: action.popupAction});
-    } else if (action.action === 'check_text') {
-        const textFound = domRef.current?.textContent.includes(action.expectedText);
-        if (!textFound) {
-            throw new Error(`Expected text "${action.expectedText}" not found.`);
-        }   
     } else {
         throw new Error('Unsupported action: ' + action.action);
     }
@@ -153,8 +164,9 @@ export function DemoStorySet({storySet}) {
     const { collections, content, structureKey='testStruct', instanceKey='testInstance', 
         personaKey, config, modulePublic, moduleUserGlobal, moduleUserLocal, roles, features, embeddedInstanceData,
         globals, sessionData, serverCall, pad=true, firebaseUser=default_fbUser, siloKey='demo',
-        urlFragment
+        urlFragment, personaPreview,
     } = storySet;
+    console.log('DemoStorySet', personaPreview);
     const domRef = React.createRef();
     const dataRef = React.createRef();
     const [key, setKey] = useState(0);
@@ -197,7 +209,8 @@ export function DemoStorySet({storySet}) {
             openUrl={url => setNavInstance({url})} urlFragment={urlFragment}
             closeWindow={() => setNavInstance({close: true})}
             pushSubscreen={(screenKey,params) => setNavInstance({screenKey, params})}
-            serverCall={{...defaultServerCall, ...serverCall}} >
+            serverCall={{...defaultServerCall, ...serverCall}} 
+            personaPreview={personaPreview}>
         <Heading type='small' text={storySet.label} />
         <Pad size={5} />
         <FlowBox>

@@ -54,8 +54,10 @@ function EditPhotoAndName() {
     const [nameMode, setNameMode] = useEditableField('nameMode', 'full');
     const datastore = useDatastore();
     const fbUser = datastore.getFirebaseUser();
+    const personaPreview = datastore.getPersonaPreview();
+    console.log('EditPhotoAndName', fbUser, personaPreview);
     const [name, setName] = useEditableField('name', fbUser.displayName);
-    const personaPreview = usePersonaPreview();
+    // const personaPreview = usePersonaPreview();
 
     function onChangeNameMode(nameMode) {
         setNameMode(nameMode);
@@ -71,7 +73,7 @@ function EditPhotoAndName() {
         <Pad size={8} />
         <RadioGroup value={nameMode} onChange={onChangeNameMode}>
             <RadioOption radioKey='full' text={fbUser.displayName} />
-            {personaPreview.verificationStatus === 'unverified' && <View style={{backgroundColor: colorLightBlueBackground, borderRadius: 8}}>
+            {nameMode === 'full' && personaPreview?.verificationStatus === 'unverified' && <View style={{backgroundColor: colorLightBlueBackground, borderRadius: 8}}>
                 <PadBox vert={16} horiz={20}>
                     <UtilityText type='small' label='It looks like your profile name matches a celebrity or notable person. You will appear as unverified until our moderators can verify your name.' />
                 </PadBox>
@@ -119,7 +121,7 @@ function ProfilePhotoEditor() {
 
     return <HorizBox>
         <FaceSelect testID='photo' selected={isPhoto} onSelect={onSelectPhoto}>
-            <FaceImage type='extraLarge' photoUrl={photoUrl ?? fbUser.photoURL} />
+            <FaceImage type='extraLarge' photoUrl={photoUrl ?? fbUser.photoURL} name={name} />
         </FaceSelect>
         <Pad size={16} />
         <FaceSelect testID='letter' selected={!isPhoto} onSelect={onSelectLetter}>
