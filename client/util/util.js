@@ -206,3 +206,7 @@ export function makeRandomNonce() {
         return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     }
 }
+
+export async function sleepMillisAsync(time=1000) {
+    await new Promise(resolve => setTimeout(resolve, time));
+}

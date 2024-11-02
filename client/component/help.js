@@ -8,12 +8,17 @@ import { makeAssetUrl } from "../util/util";
 import { useDatastore, useModuleUserGlobalData } from "../util/datastore";
 import { CloseLarge } from "@carbon/icons-react";
 
+
+export async function getWillHelpBeSeenAsync({datastore, helpKey}) {
+    return await datastore.getModuleUserGlobalAsync('help', [helpKey]);
+}
+
 export function HelpBubble({label, text, titleLabel, titleText, padTop=4, above=false, right=false, wide=false, pointer=false, helpKey, condition}) {
     const s  = HelpBubbleStyle;
     const datastore = useDatastore();
     const seenBefore = useModuleUserGlobalData('help', [helpKey]);
 
-    if (!condition || seenBefore) return null;
+    if (!condition || seenBefore || seenBefore === undefined) return null;
 
     function onClose() {
         datastore.setModuleUserGlobal('help', [helpKey], true);
@@ -29,7 +34,7 @@ export function HelpBubble({label, text, titleLabel, titleText, padTop=4, above=
             ]}>
             <View style={[
                     s.bubble, 
-                    wide ? null : {maxWidth: 250}, 
+                    wide ? null : {maxWidth: 287}, 
                     right ? {alignSelf: 'flex-end'} : null,
                 ]}>
                 <HorizBox spread>
@@ -41,7 +46,7 @@ export function HelpBubble({label, text, titleLabel, titleText, padTop=4, above=
                         {hasTitle && <Pad size={4} />}
                         <UtilityText type={hasTitle ? 'tiny' : 'small'} color={colorGreyPopupBackground} label={label} text={text} />
                     </View>
-                    <Pad size={16} />
+                    <Pad size={12} />
                     <Pressable onPress={onClose} testID={'close-' + helpKey}>
                         <CloseLarge color={colorGreyPopupBackground} />
                     </Pressable>

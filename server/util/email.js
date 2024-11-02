@@ -34,11 +34,15 @@ function readTemplate(templateId, suffix) {
 
     const topPath = path.join(path.resolve('email-template'), templateId + suffix);
     const packagePath = path.join(path.resolve(__dirname, '..'), 'email-template', templateId + suffix);
+    const packageNonLibPath = path.join(path.resolve(__dirname, '../..'), 'email-template', templateId + suffix);
+
 
     if (existsSync(topPath)) {
         return readFileSync(topPath, 'utf8').toString();
     } else if (existsSync(packagePath)) {
         return readFileSync(packagePath, 'utf8').toString();
+    } else if (existsSync(packageNonLibPath)) {
+        return readFileSync(packageNonLibPath, 'utf8').toString();
     } else {
         console.log(packagePath);
         console.log(topPath);
