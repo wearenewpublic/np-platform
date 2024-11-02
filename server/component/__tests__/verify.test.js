@@ -59,5 +59,7 @@ test('setVerificationStatusAsync', async () => {
     expect(result).toBe("verified");
 
     serverstore.commitDataAsync();
+    const personaPreviewVerificationStatus = getTestData().silo.testSilo.structure.profile.instance.user1.global.preview.verificationStatus;
+    expect(personaPreviewVerificationStatus).toBe("verified");
     expect(getTestData()).toMatchSnapshot();
 });
