@@ -630,7 +630,7 @@ export function useModuleUserGlobalData(moduleKey, path = [], options) {
     if (datastore.getIsLive()) {
         return useFirebaseData(['silo', datastore.getSiloKey(), 'module-user', personaKey, 'global', moduleKey, ...path], options)
     } else {
-        return getObjectPropertyPath(userGlobalData, [moduleKey, ...path]);
+        return getObjectPropertyPath(userGlobalData, [moduleKey, ...path]) ?? options?.defaultValue ?? null;
     };
 }
 

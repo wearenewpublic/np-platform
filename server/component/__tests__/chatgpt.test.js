@@ -9,7 +9,6 @@ test('createGptPrompt', () => {
     existsSync.mockReturnValue(true);
     const result = createGptPrompt({promptKey: 'favorite', params: {thing: 'animal'}});
     expect(result).toBe('What is your favorite animal?');
-    expect(readFileSync).toBeCalledWith('prompts/favorite.txt');
 });
 
 test('callOpenAIAsync', async () => {

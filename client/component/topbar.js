@@ -44,7 +44,9 @@ export function TopBar() {
                 </HorizBox>
             </Catcher>
         </View>
-        {topBarHelpBubbles?.map((Bubble,i) => <Bubble key={i} />)}
+        <PadBox horiz={12}>
+            {topBarHelpBubbles?.map((Bubble,i) => <Bubble key={i} />)}
+        </PadBox>
     </View>
 }
 
