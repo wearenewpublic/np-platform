@@ -55,9 +55,7 @@ function EditPhotoAndName() {
     const datastore = useDatastore();
     const fbUser = datastore.getFirebaseUser();
     const personaPreview = datastore.getPersonaPreview();
-    console.log('EditPhotoAndName', fbUser, personaPreview);
     const [name, setName] = useEditableField('name', fbUser.displayName);
-    // const personaPreview = usePersonaPreview();
 
     function onChangeNameMode(nameMode) {
         setNameMode(nameMode);

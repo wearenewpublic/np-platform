@@ -110,8 +110,6 @@ function findStoryActionNode({domRef, matcher}) {
 }
 
 async function playStoryAction({domRef, action}) {
-    console.log('playStoryAction', action, domRef);
-
     if (action.action === 'popup') {
         const popup = document.body.querySelector(['[data-testid="popup-content"]']);
         return await playStoryAction({domRef: {current: popup}, action: action.popupAction});
