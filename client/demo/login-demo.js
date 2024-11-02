@@ -39,9 +39,9 @@ function loginStorySets() {return [
             {
                 label: 'Show message for unverified name',
                 actions: [
-                    // CHECK_TEXT('It looks like your profile name matches a celebrity or notable person. You will appear as unverified until our moderators can verify your name'),
+                    CHECK_TEXT('It looks like your profile name matches a celebrity or notable person. You will appear as unverified until our moderators can verify your name'),
                     CLICK('A pseudonym'),
-                    // CHECK_TEXT_ABSENCE('It looks like your profile name matches a celebrity or notable person. You will appear as unverified until our moderators can verify your name.')
+                    CHECK_TEXT_ABSENCE('It looks like your profile name matches a celebrity or notable person. You will appear as unverified until our moderators can verify your name.')
                 ],
                 
             }
