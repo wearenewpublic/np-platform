@@ -79,7 +79,7 @@ async function callGptAsync({promptKey, params, language, model, json_mode=false
 exports.callGptAsync = callGptAsync;
 
 
-async function getGptJsonAsync({promptKey, params, language, model}) {
+async function getGptJsonAsync({promptKey, params, language='English', model='basic'}) {
     const result = await callGptAsync({promptKey, params, language, model, json_mode: true});
     const json = extractAndParseJSON(result);
     return json;
