@@ -17,7 +17,6 @@ export const DemoFeature = {
     config: {
         commentActions: [CommentAction],
         commentRightActions: [CommentRightAction],
-        bylineRightActions: [BylineRightAction],
         commentTopWidgets: [() => <DemoWidget text='Comment Top Widget' />],
         commentAboveWidgets: [() => <DemoWidget text='Comment Above Widget' />],
         commentAllowEmpty: true,
@@ -73,10 +72,6 @@ function CommentAction() {
 
 function CommentRightAction() {
     return <SubtleButton icon={Star} onPress={onPress} padLeft label='Comment Right Action' />
-}
-
-function BylineRightAction() {
-    return <SubtleButton icon={Star} onPress={onPress} padLeft label='Byline Right Action' />
 }
 
 function commentPostBlocker({datastore, comment}) {

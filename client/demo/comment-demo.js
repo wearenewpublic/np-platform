@@ -46,7 +46,6 @@ export const CommentDemoFeature = {
         commentAllowEmpty: false,
         commentActions: [ActionReply],
         commentRightActions: [ActionReport, ActionEdit],
-        bylineRightActions: [],
         commentEditBottomWidgets: [],
         commentPostBlockers: [],
         commentPostCheckers: [],
@@ -71,7 +70,6 @@ const collections = {
 const config = {
     commentActions: [ActionReply, ActionUpvote],
     commentRightActions: [ActionEdit],
-    bylineRightActions: [],
 }
 
 function commentStorySets() {return [
