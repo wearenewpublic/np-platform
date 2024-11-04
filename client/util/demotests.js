@@ -121,6 +121,7 @@ function StorySetContent({storySet}) {
         onServerCall={onServerCall}
         pushSubscreen={(screenKey,params) => setNavInstance({screenKey, params})}
         serverCall={{...defaultServerCall, ...storySet.serverCall}}
+        personaPreview={storySet.personaPreview}
     > 
         {navInstance && <NavResult navInstance={navInstance} />}
         {storySet.content}

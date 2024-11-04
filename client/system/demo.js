@@ -34,8 +34,8 @@ export function CHECK_TEXT(expectedText) {
     return { action: 'check_text', expectedText };
 }
 
-export function CHECK_TEXT_ABSENCE(absentText) {
-    return { action: 'check_text_absence', absentText };
+export function CHECK_TEXT_ABSENCE(expectedAbsentText) {
+    return { action: 'check_text_absence', expectedAbsentText };
 }
 
 
@@ -110,6 +110,8 @@ function findStoryActionNode({domRef, matcher}) {
 }
 
 async function playStoryAction({domRef, action}) {
+    console.log('playStoryAction', action, domRef);
+
     if (action.action === 'popup') {
         const popup = document.body.querySelector(['[data-testid="popup-content"]']);
         return await playStoryAction({domRef: {current: popup}, action: action.popupAction});
@@ -122,9 +124,9 @@ async function playStoryAction({domRef, action}) {
         }
         return;
     } else if (action.action === 'check_text_absence') {
-        const textFound = domRef.current?.textContent.includes(action.expectedText);
+        const textFound = domRef.current?.textContent.includes(action.expectedAbsentText);
         if (textFound) {
-            throw new Error(`Expected text "${action.expectedText}" found.`);
+            throw new Error(`Text "${action.expectedAbsentText}" found, but should be absent.`);
         }
         return;
     }
@@ -164,7 +166,6 @@ export function DemoStorySet({storySet}) {
         globals, sessionData, serverCall, pad=true, firebaseUser=default_fbUser, siloKey='demo',
         urlFragment, personaPreview,
     } = storySet;
-    console.log('DemoStorySet', personaPreview);
     const domRef = React.createRef();
     const dataRef = React.createRef();
     const [key, setKey] = useState(0);
