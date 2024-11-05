@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { useLiveUrl } from './util/url';
-import { getScreenStackForUrl, gotoInstance } from './util/navigate';
+import { getScreenStackForUrl, gotoInstance, useLiveUrl } from './util/navigate';
 import { ScreenStack, useStandardFonts } from './util/instance';
 import { setFirebaseConfig } from './util/firebase';
 import { extendRoles } from './component/admin';
