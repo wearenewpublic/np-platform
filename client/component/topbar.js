@@ -21,6 +21,7 @@ export function TopBar() {
     const instanceKey = useInstanceKey();
     const structureKey = useStructureKey();
     const toolbarAction = useSessionData('toolbarAction');
+    const toolbarSecondaryAction = useSessionData('toolbarSecondaryAction');
     const datastore = useDatastore();
     const isLogin = structureKey == 'login';
     const {topBarHelpBubbles} = useConfig();
@@ -36,8 +37,14 @@ export function TopBar() {
             </View>
             <Catcher>
                 <HorizBox center>
+                    {toolbarSecondaryAction &&
+                        <CTAButton size='compact' 
+                            icon={toolbarSecondaryAction.icon} label={toolbarSecondaryAction.label} 
+                            type={toolbarSecondaryAction.type} disabled={toolbarSecondaryAction.disabled} 
+                            onPress={toolbarSecondaryAction.onPress} />
+                    }
                     {toolbarAction ? 
-                        <PadBox right={12}><CTAButton size='compact' label={toolbarAction.label} disabled={toolbarAction.disabled} onPress={toolbarAction.onPress} /></PadBox>
+                        <PadBox horiz={12}><CTAButton size='compact' label={toolbarAction.label} disabled={toolbarAction.disabled} onPress={toolbarAction.onPress} /></PadBox>
                     : 
                         instanceKey && !isLogin && <UserInfo />
                     }
@@ -272,14 +279,16 @@ const UserInfoStyle = StyleSheet.create({
 // we either update setSessionData every time the callback changes, which 
 // risks creating dependency loops, or we don't update the button when
 // the callback changes, and the button doesn't work.
-export function TopBarActionProvider({label, disabled, onPress}) {
+export function TopBarActionProvider({label, secondary=false, type, icon, disabled, onPress}) {
     const datastore = useDatastore();
     const stableOnPress = useStableCallback(onPress);
+    const property = secondary ? 'toolbarSecondaryAction' : 'toolbarAction';
     useEffect(() => {
-        datastore.setSessionData('toolbarAction', {label, disabled, onPress: stableOnPress});
+        datastore.setSessionData(property, {label, disabled, type, icon, onPress: stableOnPress});
         return () => {
-            datastore.setSessionData('toolbarAction', null);
+            datastore.setSessionData(property, null);
         }
     }, [label, disabled, stableOnPress]);
     return null;
 }
+

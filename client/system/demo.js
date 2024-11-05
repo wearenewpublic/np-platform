@@ -7,8 +7,8 @@ import { global_textinput_test_handlers, Heading, UtilityText } from "../compone
 import React, { useState } from "react";
 import { keysToTrueMap, pauseAsync } from "../util/util";
 import { Reset } from "@carbon/icons-react";
-import { colorBlueBackground, colorGreyBorder, colorGreyPopupBackground, colorTextGrey, colorWhite } from "../component/color";
-import { default_fbUser, demoPersonaToFbUser, personaA } from "../util/testpersonas";
+import { colorGreyBorder, colorGreyPopupBackground, colorTextGrey } from "../component/color";
+import { default_fbUser } from "../util/testpersonas";
 import { Banner } from "../component/banner";
 import { closeActivePopup, getPopupRef } from "../platform-specific/popup.web";
 import { assembleConfig } from "../util/features";
@@ -180,6 +180,7 @@ export function DemoStorySet({storySet}) {
 
     function onReset() {
         dataRef.current.resetData();
+        dataRef.current.resetSessionData();
         setNavInstance(null);
         setKey(key+1);
         setCallLog([]);
