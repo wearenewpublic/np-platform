@@ -140,7 +140,7 @@ public_out/
 
 keys.js 
 
-lib/
+# lib/
 
 
 # Don't store snapshots in github, since they clutter up the repo

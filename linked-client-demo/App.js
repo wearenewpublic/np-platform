@@ -5,6 +5,8 @@ import { getScreenStackForUrl, gotoInstance } from './util/navigate';
 import { ScreenStack, useStandardFonts } from './util/instance';
 import { setFirebaseConfig } from './util/firebase';
 import { extendRoles } from './component/admin';
+import { registerLoginProviders } from './structure/login';
+import { githubLogin, rcLogin, rcIntLogin } from './util/loginproviders';
 
 const firebaseConfig = {
     apiKey: "AIzaSyDIg3OR3i51VYrUyUd_L5iIownjdSnExlc",
@@ -15,6 +17,9 @@ const firebaseConfig = {
     messagingSenderId: "768032889623",
     appId: "1:768032889623:web:634a1604eda03820ab7552"
 };
+
+
+registerLoginProviders([githubLogin, rcIntLogin])
 
 // const app = initializeApp(firebaseConfig);
 setFirebaseConfig(firebaseConfig);

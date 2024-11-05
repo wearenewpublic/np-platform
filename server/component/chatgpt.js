@@ -26,14 +26,20 @@ exports.callOpenAIAsync = callOpenAIAsync;
 
 function getPromptFilename({promptKey, model}) {
     const modelPrefix = (model == 'gpt4') ? 'gpt4/' : ''
-    if (existsSync('prompts/' + modelPrefix + promptKey + '.txt')) {
-        return 'prompts/' + modelPrefix + promptKey + '.txt';
+
+    const topPath = path.join(path.resolve('prompts'), promptKey + '.txt');
+    const packagePath = path.join(path.resolve(__dirname, '..'), 'prompts', promptKey + '.txt');
+    const packageNonLibPath = path.join(path.resolve(__dirname, '../..'), 'prompts', promptKey + '.txt');
+
+    if (existsSync(topPath)) {
+        return topPath;
+    } else if (existsSync(packagePath)) {
+        return packagePath;
+    } else if (existsSync(packageNonLibPath)) {
+        return packageNonLibPath;
+    } else {
+        throw new Error('GPT Prompt not found: ' + promptKey);
     }
-    const packageDir = path.resolve(__dirname, '..');
-    if (existsSync(packageDir + '/prompts/' + modelPrefix + promptKey + '.txt')) {
-        return packageDir + '/prompts/' + modelPrefix + promptKey + '.txt';
-    }
-    throw new Error('Prompt not found: ' + promptKey);
 }
 
 function createGptPrompt({promptKey, params, language='English', model=null}) {
@@ -73,7 +79,7 @@ async function callGptAsync({promptKey, params, language, model, json_mode=false
 exports.callGptAsync = callGptAsync;
 
 
-async function getGptJsonAsync({promptKey, params, language, model}) {
+async function getGptJsonAsync({promptKey, params, language='English', model='basic'}) {
     const result = await callGptAsync({promptKey, params, language, model, json_mode: true});
     const json = extractAndParseJSON(result);
     return json;

@@ -15,3 +15,15 @@ exports.runTriggersApi = runTriggersApi;
 exports.publicFunctions = {
     runTriggers: runTriggersApi
 }
+
+function runGlobalTriggersAsync({serverstore, globalKey, value, derivedViews = getDerivedViews()}) {
+    const {siloKey, structureKey, instanceKey} = serverstore.getProps();
+
+    const matchingViews = derivedViews.filter(dv => 
+        dv.input.structure === structureKey && dv.input.triggerGlobal === globalKey
+    );
+    return Promise.all(matchingViews.map(view =>
+        view.trigger({serverstore, globalKey, value, siloKey, structureKey, instanceKey})
+    ))
+}
+exports.runGlobalTriggersAsync = runGlobalTriggersAsync;

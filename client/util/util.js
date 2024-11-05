@@ -192,3 +192,21 @@ export function keysToTrueMap(keys) {
     });
     return map;
 }
+
+export function assembleUrl(baseUrl, queryParams) {
+    const url = new URL(baseUrl);
+    Object.keys(queryParams).forEach(key => url.searchParams.append(key, queryParams[key]));
+    return url.toString();
+}
+
+export function makeRandomNonce() {
+    if (process.env.NODE_ENV === 'test') {
+        return 'testnonce';
+    } else {
+        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    }
+}
+
+export async function sleepMillisAsync(time=1000) {
+    await new Promise(resolve => setTimeout(resolve, time));
+}

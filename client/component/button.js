@@ -161,12 +161,12 @@ const IconReplyStyle = StyleSheet.create({
     }
 });
 
-export function SubtleButton({label, text, ariaLabel, disabled, formatParams, color=colorTextGrey, strong=false, icon=null, iconProps={}, padLeft, padRight, onPress}) {
+export function SubtleButton({label, text, ariaLabel, testID, disabled, formatParams, color=colorTextGrey, strong=false, icon=null, iconProps={}, padLeft, padRight, onPress}) {
     const s = SubtleButtonStyle;
     const [hover, setHover] = useState(false);
     return <HoverView style={[s.button, padLeft && {marginLeft: 20}, padRight && {marginRight: 20}]} 
             disabled={disabled} role={!disabled ? 'button' : null}
-            ariaLabel={ariaLabel} testID={label ?? text}
+            ariaLabel={ariaLabel} testID={testID ?? label ?? text ?? ariaLabel}
             onPress={onPress} setHover={setHover}>
         {React.createElement(icon, {...iconProps, color})}
         {(label || text) && <Pad size={4} />}

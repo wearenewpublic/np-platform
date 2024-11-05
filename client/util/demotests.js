@@ -104,6 +104,8 @@ function StorySetContent({storySet}) {
         instanceKey={storySet.instanceKey ?? 'testInstance'} 
         siloKey={storySet.siloKey ?? 'demo'}
         modulePublic={storySet.modulePublic}
+        moduleUserGlobal={storySet.moduleUserGlobal}
+        moduleUserLocal={storySet.moduleUserLocal}
         personaKey={storySet.personaKey}
         roles={storySet.roles}
         firebaseUser={storySet.firebaseUser ?? default_fbUser} 
@@ -113,6 +115,9 @@ function StorySetContent({storySet}) {
         embeddedInstanceData={storySet.embeddedInstanceData}
         gotoInstance={setNavInstance}
         goBack={() => setNavInstance({parent: true})}
+        openUrl={url => setNavInstance({url})}
+        closeWindow={() => setNavInstance({close: true})}
+        urlFragment={storySet.urlFragment}
         onServerCall={onServerCall}
         pushSubscreen={(screenKey,params) => setNavInstance({screenKey, params})}
         serverCall={{...defaultServerCall, ...storySet.serverCall}}

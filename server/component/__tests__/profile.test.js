@@ -1,9 +1,10 @@
+jest.mock('../chatgpt');
+
 const { mockServerStore } = require("../../util/serverstore");
 const { logData, getTestData, clearTestData } = require("../../util/testutil");
 const { getGptJsonAsync } = require("../chatgpt");
 const { updateProfileAsync, linkInstanceAsync, checkNameAsync } = require("../profile");
 
-jest.mock('../chatgpt');
 
 test('updateProfileAsync', async () => {
     const serverstore = mockServerStore({structureKey: 'profile', instanceKey: 'testuser', userId: 'testuser'});

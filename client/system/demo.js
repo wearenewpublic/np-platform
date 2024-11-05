@@ -30,6 +30,10 @@ export function POPUP_CLOSE() {
     return {action: 'popup-close'}
 }
 
+export function CHECK_TEXT(expectedText) {
+    return { action: 'check_text', expectedText };
+}
+
 
 export function DemoSection({label, horiz=false, children, color=null}) {
     const s = DemoSectionStyle;
@@ -121,6 +125,11 @@ async function playStoryAction({domRef, action}) {
         onChangeText(action.text);
     } else if (action.action == 'popup') {
         await playStoryAction({domRef: getPopupRef(), action: action.popupAction});
+    } else if (action.action === 'check_text') {
+        const textFound = domRef.current?.textContent.includes(action.expectedText);
+        if (!textFound) {
+            throw new Error(`Expected text "${action.expectedText}" not found.`);
+        }   
     } else {
         throw new Error('Unsupported action: ' + action.action);
     }
@@ -142,8 +151,9 @@ export const defaultServerCall = {
 
 export function DemoStorySet({storySet}) {
     const { collections, content, structureKey='testStruct', instanceKey='testInstance', 
-        personaKey, config, modulePublic, roles, features, embeddedInstanceData,
-        globals, sessionData, serverCall, pad=true, firebaseUser=default_fbUser, siloKey='demo'
+        personaKey, config, modulePublic, moduleUserGlobal, moduleUserLocal, roles, features, embeddedInstanceData,
+        globals, sessionData, serverCall, pad=true, firebaseUser=default_fbUser, siloKey='demo',
+        urlFragment
     } = storySet;
     const domRef = React.createRef();
     const dataRef = React.createRef();
@@ -178,11 +188,14 @@ export function DemoStorySet({storySet}) {
     return <Datastore ref={dataRef} config={featureConfig ?? config} siloKey={siloKey}
             structureKey={structureKey} instanceKey={instanceKey} personaKey={personaKey}
             collections={collections} globals={globals} firebaseUser={firebaseUser}
-            sessionData={sessionData} modulePublic={modulePublic}
+            sessionData={sessionData} modulePublic={modulePublic} 
+            moduleUserGlobal={moduleUserGlobal} moduleUserLocal={moduleUserLocal}
             embeddedInstanceData={embeddedInstanceData}
             roles={roles} onServerCall={onServerCall}
             gotoInstance={setNavInstance} 
             goBack={() => setNavInstance({parent: true})}
+            openUrl={url => setNavInstance({url})} urlFragment={urlFragment}
+            closeWindow={() => setNavInstance({close: true})}
             pushSubscreen={(screenKey,params) => setNavInstance({screenKey, params})}
             serverCall={{...defaultServerCall, ...serverCall}} >
         <Heading type='small' text={storySet.label} />
@@ -216,9 +229,12 @@ export function NavResult({navInstance}) {
     return <PadBox horiz={8} vert={8}>
         <Banner>
             <UtilityText text='Navigated to:' />
+            {navInstance.close && <UtilityText strong text='Close window' />}
+            {navInstance.url && <UtilityText strong text={navInstance.url} />}
             {navInstance.parent && <UtilityText strong text='Parent screen' />}
             {navInstance.structureKey && <UtilityText strong text={navInstance.structureKey + '/' + navInstance.instanceKey} />}
             {navInstance.screenKey && <UtilityText strong text={'Subscreen: ' + navInstance.screenKey + '(' + JSON.stringify(navInstance.params) + ')'} />}
+            {navInstance.token && <UtilityText strong text={'Login token: ' + navInstance.token} />}
         </Banner>
     </PadBox>
 }
