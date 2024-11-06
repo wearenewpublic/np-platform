@@ -512,11 +512,11 @@ function BannerDemoScreen() {
             </DemoSection>
             <DemoSection label='Clickable Banner'>
                 <Narrow>
-                    <ClickableBanner>
+                    <ClickableBanner onPress={() => {}}>
                         <RichText label='This is a **very** important problem. You need to make sure you address it or terrible things will happen. Click the info box to learn more.'/>
                     </ClickableBanner>
                     <Pad/>
-                    <ClickableBanner iconType='close'>
+                    <ClickableBanner onPress={() => {}}>
                         <RichText label='This is a **minor** problem. Click to close'/>
                     </ClickableBanner>
                 </Narrow>
