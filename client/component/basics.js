@@ -4,6 +4,7 @@ import { colorBlueBackground, colorGreyBorder, colorPinkBackground, colorWhite }
 import { UtilityText } from "./text";
 import { setTitle } from "../platform-specific/url";
 import { Banner } from "./banner";
+import { useDatastore, useIsEmbedded } from "../util/datastore";
 
 export function Pad({size=20}) {
     return <View style={{height: size, width: size}}/>
@@ -59,7 +60,8 @@ export function TeaserScreen({children}) {
 
 export function ConversationScreen({children, pad=false}) {
     const s = ConversationScreenStyle;
-    const hasEmulateWarning = window.location.hostname == 'localhost';
+    const embedded = useIsEmbedded();
+    const hasEmulateWarning = window.location.hostname == 'localhost' && !embedded;
  
     return <ScrollView style={s.scroller}>
         <View style={s.outer}>

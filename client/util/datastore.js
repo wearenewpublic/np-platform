@@ -6,7 +6,7 @@ import { deepClone, getObjectPropertyPath, setObjectPropertyPath } from './util'
 import { LoadingScreen } from '../component/basics';
 import { SharedData, SharedDataContext } from './shareddata';
 import { callServerApiAsync } from './servercall';
-import { closeWindow, goBack, gotoInstance, pushSubscreen } from './navigate';
+import { closeWindow, goBack, gotoInstance, gotoInstanceScreen, pushSubscreen } from './navigate';
 import { getFragment } from '../platform-specific/url';
 
 const DatastoreContext = React.createContext({});
@@ -331,6 +331,7 @@ export class Datastore extends React.Component {
     getConfig() {return this.props.config ?? {}}
     getIsAdmin() {return this.props.isAdmin}
     getIsLive() {return this.props.isLive}
+    getIsEmbedded() {return this.props.isEmbedded}
     getLanguage() {return this.props.language}
     getLoaded() {return this.state.loaded}
     getEmbeddedInstanceData() {return this.props.embeddedInstanceData}
@@ -339,8 +340,8 @@ export class Datastore extends React.Component {
         if (this.props.pushSubscreen) {
             this.props.pushSubscreen(screenKey, params);
         } else {
-            pushSubscreen(screenKey, params);
-        }   
+            gotoInstanceScreen({structureKey: this.getStructureKey(), instanceKey: this.getInstanceKey(), screenKey, params});
+        }
     }
     gotoInstance({structureKey, instanceKey='one', params={}}) {
         if (this.props.gotoInstance) {
@@ -668,6 +669,11 @@ export function useSiloKey() {
 export function useIsLive() {
     const datastore = useDatastore();
     return datastore.getIsLive();
+}
+
+export function useIsEmbedded() {
+    const datastore = useDatastore();
+    return datastore.getIsEmbedded();
 }
 
 export function useInstanceKey() {

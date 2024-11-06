@@ -104,7 +104,7 @@ export function EmbeddedInstance({structureKey, instanceKey, features, screenKey
         </Datastore>
     } else {        
         return <Datastore siloKey={siloKey} structureKey={structureKey} instanceKey={instanceKey} 
-                config={config} isLive={isLive}
+                config={config} isLive={isLive} isEmbedded={true}
                 personaPreview={datastore.personaPreview}
                 language={datastore.language} readOnly={datastore.readOnly} >
             {React.createElement(screen)}
