@@ -1,5 +1,6 @@
 import { Pad } from "../component/basics"
 import { HelpBubble } from "../component/help"
+import { DeleteIcon } from "../component/icon"
 import { TopBar, TopBarActionProvider } from "../component/topbar"
 import { CLICK, POPUP } from "../system/demo"
 import { View } from "react-native"
@@ -52,6 +53,18 @@ function topBarStorySets() {return [
         content: <View>
             <TopBar />
             <TopBarActionProvider label='Action' onPress={() => {}} /> 
+            <Pad size={40} />
+        </View>,
+    },
+    {
+        label: 'Top Bar with Secondary Action',
+        config: {
+            topBarHelpBubbles: [DemoHelpBubble]
+        },
+        content: <View>
+            <TopBar />
+            <TopBarActionProvider label='Action' onPress={() => {}} /> 
+            <TopBarActionProvider secondary icon={<DeleteIcon />} type='delete' label='Secondary Action' onPress={() => {}} /> 
             <Pad size={40} />
         </View>,
     }

@@ -316,6 +316,7 @@ function ButtonsAndLinksScreen() {
                     <CTAButton label='Secondary' type='secondary' onPress={onPress} />
                     <CTAButton label='Accent' type='accent' onPress={onPress} />
                     <CTAButton icon={<TrashCan style={{fill: colorRed}} />} label='Delete' type='delete' onPress={onPress} />
+                    <CTAButton icon={<TrashCan style={{fill: colorRed}} />} testID='delete' type='delete' onPress={onPress} />
                     <CTAButton label='✨ Emoji' type='accent' onPress={onPress} />
                     <CTAButton label='Disabled' type='primary' disabled />
                 </SpacedArray>
@@ -467,7 +468,7 @@ function ModalHolder({label, children}) {
 
 function modalStorySet() {return [
     {
-        label: 'Modal with Buttons',
+        label: 'Small Modal with Buttons',
         content: <ModalHolder label='Open Modal' >
             <PadBox horiz={20} vert={20}><UtilityText label='Content'/></PadBox>
         </ModalHolder>,
@@ -485,7 +486,18 @@ function modalStorySet() {return [
             ]},
             
         ]
-    }
+    },
+    {
+        label: 'Big Modal',
+        content: <ModalHolder label='Open Modal' >
+            <Image style={{width: 1000, height: 1000}} source={{uri: 'https://psi.newpublic.org/faces/face1.jpeg'}} />
+        </ModalHolder>,
+        stories: [
+            {label: 'Open', actions: [
+                CLICK('Open Modal')
+            ]},            
+        ]
+    },
 ]}
 
 function BannerDemoScreen() {

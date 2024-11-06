@@ -1,5 +1,5 @@
-import { colorTextBlue } from "./color"
-import { ArrowShiftDown } from '@carbon/icons-react';
+import { colorRed, colorTextBlue } from "./color"
+import { ArrowShiftDown, TrashCan } from '@carbon/icons-react';
 
 export function IconCircleCheck({size=14}) {
     return <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 14 14" fill="none">
@@ -25,3 +25,6 @@ export function IconUpvoted({color=colorTextBlue}) {
     </svg>
 }
 
+export function DeleteIcon() {
+    return <TrashCan style={{fill: colorRed}} />
+}

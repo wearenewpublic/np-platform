@@ -12,7 +12,7 @@ import { assembleUrl, makeAssetUrl, makeRandomNonce } from '../util/util';
 import { logEventAsync, useLogEvent } from '../util/eventlog';
 import { FirstLoginSetup } from '../feature/ProfilePhotoAndName';
 import { useEffect } from 'react';
-import { getIsLocalhost } from '../util/url';
+import { getIsLocalhost } from '../util/util';
 import { BannerMessage } from '../component/banner';
 
 export const LoginStructure = {
