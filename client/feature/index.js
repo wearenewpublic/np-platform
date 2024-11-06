@@ -13,6 +13,7 @@ import { ProfileDemoFeature } from "../demo/profile-demo";
 import { EventlogDemoFeature } from "../demo/eventlog-demo";
 import { ProfileEditDemo } from "../demo/profileedit-demo";
 import { ProfilePhotoAndNameFeature } from "./ProfilePhotoAndName";
+import { ProfilePhotoLayersFeature } from "./ProfilePhotoAndName";
 import { AdminUsersFeature } from "./AdminUsersFeature";
 import { UserVerificationFeature } from "./UserVerificationFeature";
 import { AdminDemo } from "../demo/admin-demo";
@@ -53,7 +54,7 @@ export var features = {
             ProfileCommentsFeature
         ]),
         SECTION('General', [
-            ProfilePhotoAndNameFeature,
+            ProfilePhotoAndNameFeature
         ])
     ],
     componentdemo: [

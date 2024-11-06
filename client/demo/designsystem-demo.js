@@ -14,6 +14,7 @@ import { Modal } from "../component/modal";
 import { CLICK, DemoSection, POPUP, SpacedArray } from "../system/demo";
 import { Image, View } from "react-native";
 import { FeatureMenuScreen } from "./featuremenu-demo";
+import { VerificationBadge } from "../feature/ProfilePhotoAndName";
 
 export const DesignSystemDemoFeature = {
     key: 'demo_designsystem',
@@ -127,121 +128,91 @@ function TextFieldScreen() {
     </View>
 }
 
-function profilePhotoLayer({persona}) {
-    return <View key='first-letter' style={{position: 'absolute', left: 0, top: 0}}>
-        <Tag key='letter' type='tiny' label={persona.name[0]} />
-    </View>
-}
-
-function profilePhotoLayerTwo({persona}) {    
-    return <View key='second-letter' style={{position: 'absolute', right: 0, bottom: 0}}>
-        <Tag key='letter' color={colorLightGreen} type='tiny' label={persona.name[1]} />
-    </View>
-}
-
 
 function ProfileScreen() {
     const [selected, setSelected] = useState(false)
     function onPress() {console.log('press')}
-    return <Datastore>
-            <DemoSection label='Profile Photo'>
-                <SpacedArray horiz pad={8}>
-                    <ProfilePhoto userId='a' />
-                    <ProfilePhoto userId='b' type="small"/>
-                    <ProfilePhoto userId='c' type="tiny"/>
-                </SpacedArray>
-                <SpacedArray horiz pad={8}>
-                    <ProfilePhoto userId='x' />
-                    <ProfilePhoto userId='y' type="small"/>
-                    <ProfilePhoto userId='z' type="tiny"/>
-                </SpacedArray>
-                <Datastore config={{profilePhotoLayers:[profilePhotoLayer]}}>
-                    <SpacedArray horiz pad={8}>
-                        <ProfilePhoto userId='a' />
-                        <ProfilePhoto userId='b' type='small' />
-                        <ProfilePhoto userId='c' type='tiny' />
-                    </SpacedArray>
-                </Datastore>
-                <Datastore config={{profilePhotoLayers:[profilePhotoLayer, profilePhotoLayerTwo]}}>
-                    <SpacedArray horiz pad={8}>
-                        <ProfilePhoto userId='a' />
-                        <ProfilePhoto userId='b' type='small' />
-                        <ProfilePhoto userId='c' type='tiny' />
-                    </SpacedArray>
-                </Datastore>
-            </DemoSection>
+    return <Datastore config={{profilePhotoLayers:[VerificationBadge]}}>
+        <DemoSection label='Profile Photo'>
+            <SpacedArray horiz pad={8}>
+                <ProfilePhoto userId='a' />
+                <ProfilePhoto userId='b' type="small"/>
+                <ProfilePhoto userId='c' type="tiny"/>
+            </SpacedArray>
+            <SpacedArray horiz pad={8}>
+                <ProfilePhoto userId='x' />
+                <ProfilePhoto userId='y' type="small"/>
+                <ProfilePhoto userId='z' type="tiny"/>
+            </SpacedArray>
+        </DemoSection>
             <DemoSection label='Verified Profile Photo'>
-            <Datastore personaPreview={{ verificationStatus: 'verified' }}>
                 <SpacedArray horiz pad={8}>
-                    <ProfilePhoto userId='a'/>
-                    <ProfilePhoto userId='a' type="small"/>
-                    <ProfilePhoto userId='a' type="tiny"/>
+                    <ProfilePhoto userId='g'/>
+                    <ProfilePhoto userId='g' type="small"/>
+                    <ProfilePhoto userId='g' type="tiny"/>
                 </SpacedArray>
+            </DemoSection>
+        <DemoSection label='Unverified Profile Photo'>
+            <SpacedArray horiz pad={8}>
+                <ProfilePhoto userId='h'/>
+                <ProfilePhoto userId='h' type="small"/>
+                <ProfilePhoto userId='h' type="tiny"/>
+            </SpacedArray>
+        </DemoSection>         
+        <DemoSection label='Facepile'>
+            <FacePile userIdList={['a','b','c','z']} type='small' />
+            <FacePile userIdList={['x','d','e','f','g','h','i','j']} type='tiny' />
+        </DemoSection>
+        <DemoSection label='Byline'>
+            <Byline userId={'a'} type='large' time={Date.now()} />
+            <Byline userId={'b'} type='large' time={Date.now() - 1000 * 60 * 10} edited={Date.now()} />
+            <Byline userId={'y'} type='large' time={Date.now() - 1000 * 60 * 60 * 10} edited={Date.now()} />
+            <Byline userId={'c'} type='small' time={Date.now()} />
+            <Byline userId={'d'} type='small' />
+            <Byline userId={'e'} type='small' time={Date.now()} edited={Date.now()} />
+            <Byline userId={'f'} type='small' photoType='large' />
+            <Byline userId={'g'} type='small' photoType='large' time={Date.now()} />
+            <Byline userId='x' type='small' photoType='large' time={Date.now()} />
+            <Byline userId='z' type='small' photoType='large' time={Date.now()} />
+            <Datastore config={{bylineTags:[
+                    () => <Tag type='tiny' label='Awesome Person'/>,
+                    (persona) => persona.key == 'b' && <Tag type='tiny' label='Superhero'/>,
+                ]}}>
+                <Byline userId='a' type='large' time={Date.now()} />
+                <Pad />
+                <Byline userId='b' type='large' time={Date.now()} edited={Date.now()} />
+                <Pad />
+                <Byline userId='a' type='small' time={Date.now()} />
             </Datastore>
-            </DemoSection>
-            <DemoSection label='Unverified Profile Photo'>
-                <Datastore personaPreview={{ verificationStatus: 'unverified' }}>
-                    <SpacedArray horiz pad={8}>
-                        <ProfilePhoto userId='b'/>
-                        <ProfilePhoto userId='b' type="small"/>
-                        <ProfilePhoto userId='b' type="tiny"/>
-                    </SpacedArray>
-                </Datastore>
-            </DemoSection>        
-            <DemoSection label='Facepile'>
-                <FacePile userIdList={['a','b','c','z']} type='small' />
-                <FacePile userIdList={['x','d','e','f','g','h','i','j']} type='tiny' />
-            </DemoSection>
-            <DemoSection label='Byline'>
-                <Byline userId={'a'} type='large' time={Date.now()} />
-                <Byline userId={'b'} type='large' time={Date.now() - 1000 * 60 * 10} edited={Date.now()} />
-                <Byline userId={'y'} type='large' time={Date.now() - 1000 * 60 * 60 * 10} edited={Date.now()} />
-                <Byline userId={'c'} type='small' time={Date.now()} />
-                <Byline userId={'d'} type='small' />
-                <Byline userId={'e'} type='small' time={Date.now()} edited={Date.now()} />
-                <Byline userId={'f'} type='small' photoType='large' />
-                <Byline userId={'g'} type='small' photoType='large' time={Date.now()} />
-                <Byline userId='x' type='small' photoType='large' time={Date.now()} />
-                <Byline userId='z' type='small' photoType='large' time={Date.now()} />
-                <Datastore config={{bylineTags:[
-                        () => <Tag type='tiny' label='Awesome Person'/>,
-                        (persona) => persona.key == 'b' && <Tag type='tiny' label='Superhero'/>,
-                    ]}}>
-                    <Byline userId='a' type='large' time={Date.now()} />
-                    <Pad />
-                    <Byline userId='b' type='large' time={Date.now()} edited={Date.now()} />
-                    <Pad />
-                    <Byline userId='a' type='small' time={Date.now()} />
-                </Datastore>
 
-            </DemoSection>
-            <DemoSection label='Anonymous'>
-                <Byline name='Anonymous User' type='large' time={Date.now()} />
-                <Byline name='Anonymous User' type='large' time={Date.now() - 1000 * 60 * 10} edited={Date.now()} />
-                <Byline name='Anonymous User' type='small' time={Date.now()} />
-                <Byline name='Anonymous User' type='small' />
-                <Byline name='Anonymous User' photoType='large' type='small' time={Date.now()} />
-                <Byline name='Anonymous User' photoType='large' type='small' />
-            </DemoSection>
-            <DemoSection label='Letter face' horiz>
+        </DemoSection>
+        <DemoSection label='Anonymous'>
+            <Byline name='Anonymous User' type='large' time={Date.now()} />
+            <Byline name='Anonymous User' type='large' time={Date.now() - 1000 * 60 * 10} edited={Date.now()} />
+            <Byline name='Anonymous User' type='small' time={Date.now()} />
+            <Byline name='Anonymous User' type='small' />
+            <Byline name='Anonymous User' photoType='large' type='small' time={Date.now()} />
+            <Byline name='Anonymous User' photoType='large' type='small' />
+        </DemoSection>
+        <DemoSection label='Letter face' horiz>
+            <LetterFace name='dave' type='huge' hue={183} />
+            <LetterFace name='bill' type='huge' hue={0} />
+            <LetterFace name='jane' type='large' hue={45} />
+            <LetterFace name='sarah' type='large' hue={90} />
+            <LetterFace name='ella' type='small' hue={135} />
+            <LetterFace name='carl' type='small' hue={180} />
+            <LetterFace name='mica' type='tiny' hue={225} />
+            <LetterFace name='betty' type='tiny' hue={300} />
+        </DemoSection>
+        <DemoSection horiz label='Face Button'>
+            <FaceButton selected={selected} onPress={() => setSelected(!selected)}>
                 <LetterFace name='dave' type='huge' hue={183} />
-                <LetterFace name='bill' type='huge' hue={0} />
-                <LetterFace name='jane' type='large' hue={45} />
-                <LetterFace name='sarah' type='large' hue={90} />
-                <LetterFace name='ella' type='small' hue={135} />
-                <LetterFace name='carl' type='small' hue={180} />
-                <LetterFace name='mica' type='tiny' hue={225} />
-                <LetterFace name='betty' type='tiny' hue={300} />
-            </DemoSection>
-            <DemoSection horiz label='Face Button'>
-                <FaceButton selected={selected} onPress={() => setSelected(!selected)}>
-                    <LetterFace name='dave' type='huge' hue={183} />
-                </FaceButton>
-                <FaceButton selected={!selected} onPress={() => setSelected(!selected)}>
-                    <ProfilePhoto userId='a' type='huge' hue={183} />
-                </FaceButton>
-            </DemoSection>
-        </Datastore>
+            </FaceButton>
+            <FaceButton selected={!selected} onPress={() => setSelected(!selected)}>
+                <ProfilePhoto userId='a' type='huge' hue={183} />
+            </FaceButton>
+        </DemoSection>
+    </Datastore>
 }
 
 function FormScreen() {

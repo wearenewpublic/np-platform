@@ -47,13 +47,15 @@ export const personaF = {
 export const personaG = {
     key: 'g',
     name: 'Grace Gomes',
-    photoUrl: faceUrl('face8.jpeg')
+    photoUrl: faceUrl('face8.jpeg'),
+    verificationStatus: 'verified'
 };
 
 export const personaH = {
     key: 'h',
     name: 'Hiroshi Hasegawa',
-    photoUrl: faceUrl('face6.jpeg')
+    photoUrl: faceUrl('face6.jpeg'),
+    verificationStatus: 'unverified'
 };
 
 export const personaI = {

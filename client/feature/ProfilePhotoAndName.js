@@ -1,16 +1,16 @@
 import { HorizBox, Pad, PadBox } from "../component/basics";
 import { Heading, Paragraph, TextField, UtilityText } from "../component/text";
-import { StyleSheet, View } from "react-native";
-import { useDatastore, useInstanceKey, usePersonaKey, usePersonaObject } from "../util/datastore";
-import { FaceImage, FaceSelect, LetterFace, ProfilePhoto } from "../component/people";
+import { StyleSheet, View, Text } from "react-native";
+import { useDatastore, useInstanceKey, usePersonaKey, usePersonaObject, usePersonaPreview } from "../util/datastore";
+import { FaceImage, FaceSelect, LetterFace, ProfilePhoto, ProfileWithLayers } from "../component/people";
 import { useEditableField, useEditErrors, WithEditableFields } from "../structure/profile";
 import { RadioGroup, RadioOption } from "../component/form";
-import { colorPinkBackground, colorRedBackground, colorTextGrey, colorLightBlueBackground } from "../component/color";
+import { colorPinkBackground, colorGreyHover, colorRedBackground, colorTextGrey, colorLightBlueBackground } from "../component/color";
 import { Banner } from "../component/banner";
 import { Catcher } from "../system/catcher";
 import React, { useState } from "react";
 import { CTAButton } from "../component/button";
-import { usePersonaPreview } from "../util/datastore";
+import { IconCircleCheck } from "../component/icon";
 
 export const ProfilePhotoAndNameFeature = {
     key: 'profileeditname',
@@ -22,7 +22,8 @@ export const ProfilePhotoAndNameFeature = {
             edit: EditPhotoAndName,
             checkForErrors: checkPhotoAndNameAsync,
             makePreview: previewPhotoAndName,
-        }]
+        }],
+        profilePhotoLayers: [VerificationBadge]
     }
 }
 
@@ -36,6 +37,46 @@ export const ProfileOldStuff = {
         }]
     }
 }
+
+export function VerificationBadge({persona, size}) {
+    const datastore = useDatastore();
+    const fbUser = datastore.getFirebaseUser();
+    const verificationStatus = persona?.verificationStatus ?? null;
+    
+    if (fbUser?.displayName !== persona?.name) {
+        return null;
+    }
+
+    if (verificationStatus === 'verified') {
+        return <IconCircleCheck size={size} />;
+    }
+    if (verificationStatus === 'unverified') {
+        return <UnverifiedBadge size={size} />;
+    }
+    return null;
+}
+
+
+export function UnverifiedBadge({size = 14}) {
+    const s = UnverifiedBadgeStyles;
+    return (
+        <View style={[s.container, { width: size, height: size, borderRadius: size / 2 }]}>
+            <Text style={[s.text, { fontSize: size === 24 ? 18 : 12 }]}>?</Text>
+        </View>
+    );
+}
+
+const UnverifiedBadgeStyles = StyleSheet.create({
+    container: {
+        backgroundColor: colorGreyHover,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    text: {
+        color: 'black',
+    },
+});
+
 
 function ViewPhotoAndName() {
     const personaKey = useInstanceKey();
@@ -101,6 +142,7 @@ function makeHueForString(str) {
 
 function ProfilePhotoEditor() {
     const datastore = useDatastore();
+    const personaPreview = usePersonaPreview();
     const personaKey = usePersonaKey();
     const fbUser = datastore.getFirebaseUser();
     const [photoUrl, setPhotoUrl] = useEditableField('photoUrl', fbUser.photoURL);
@@ -119,11 +161,11 @@ function ProfilePhotoEditor() {
 
     return <HorizBox>
         <FaceSelect testID='photo' selected={isPhoto} onSelect={onSelectPhoto}>
-            <FaceImage type='extraLarge' photoUrl={photoUrl ?? fbUser.photoURL} name={name} />
+            <ProfileWithLayers faceComponent={FaceImage} persona={personaPreview} type='extraLarge' photoUrl={photoUrl ?? fbUser.photoURL} />
         </FaceSelect>
         <Pad size={16} />
         <FaceSelect testID='letter' selected={!isPhoto} onSelect={onSelectLetter}>
-            <LetterFace type='extraLarge' hue={defaultHue} name={name} />
+            <ProfileWithLayers faceComponent={LetterFace} persona={personaPreview} type='extraLarge' hue={defaultHue} name={name} />
         </FaceSelect>
     </HorizBox>
 }

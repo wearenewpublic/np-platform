@@ -46,6 +46,7 @@ const personaC = {
     key: 'h',
     name: 'Hiroshi Hasegawa',
     face: 'face6.jpeg',
+    verificationStatus: 'unverified'
   };
 
   const personaI = {

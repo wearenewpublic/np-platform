@@ -9,6 +9,7 @@ import { CTAButton, TextButton } from "../component/button";
 import { useTranslation } from "../component/translation";
 import { removeUndefinedFields } from "../util/util";
 import { logEventAsync } from "../util/eventlog";
+import { VerificationBadge } from "../feature/ProfilePhotoAndName";
 
 export const ProfileStructure = {
     key: 'profile',
@@ -17,6 +18,7 @@ export const ProfileStructure = {
     defaultConfig: {
         profileWidgets: [],
         profileModules: [],
+        profilePhotoLayers: [VerificationBadge],
     }
 }
 
