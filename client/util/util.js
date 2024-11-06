@@ -1,5 +1,5 @@
-import { getIsLocalhost } from "../platform-specific/url";
 import { fileHostDomain, localHostApiDomain } from "./config";
+import { getIsLocalhost as baseGetIsLocalHost } from "../platform-specific/url";
 
 
 export function removeKey(collection, key) {
@@ -209,4 +209,10 @@ export function makeRandomNonce() {
 
 export async function sleepMillisAsync(time=1000) {
     await new Promise(resolve => setTimeout(resolve, time));
+}
+
+// Re-exporting since platform-specific isn't visible to modules 
+// that import np-platform-client
+export function getIsLocalhost() {
+    return baseGetIsLocalHost();
 }
