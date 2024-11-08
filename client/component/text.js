@@ -231,11 +231,15 @@ export function LinkText({type='small', testID, text, url, label, formatParams})
     </WebLink>
 }
 
-export function WebLinkTextButton({label, text, url, type}) {
+export function WebLinkTextButton({label, heading, level, text, url, type}) {
     const s = WebLinkTextButtonStyle;
     const [hover, setHover] = useState(false);
     return <WebLink testID={label ?? text} url={url} style={hover ? s.hoverButton : s.button} setHover={setHover}>
-        <UtilityText label={label} text={text} type={type} />
+        {heading ? 
+            <Heading label={label} text={text} level={level} /> 
+        : 
+            <UtilityText label={label} text={text} type={type} />
+        }
     </WebLink>
 }
 const WebLinkTextButtonStyle = StyleSheet.create({
