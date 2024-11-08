@@ -230,12 +230,12 @@ export function NavResult({navInstance}) {
     return <PadBox horiz={8} vert={8}>
         <Banner>
             <UtilityText text='Navigated to:' />
-            {navInstance.close && <UtilityText strong text='Close window' />}
-            {navInstance.url && <UtilityText strong text={navInstance.url} />}
-            {navInstance.parent && <UtilityText strong text='Parent screen' />}
-            {navInstance.structureKey && <UtilityText strong text={navInstance.structureKey + '/' + navInstance.instanceKey} />}
-            {navInstance.screenKey && <UtilityText strong text={'Subscreen: ' + navInstance.screenKey + '(' + JSON.stringify(navInstance.params) + ')'} />}
-            {navInstance.token && <UtilityText strong text={'Login token: ' + navInstance.token} />}
+            {navInstance.close && <UtilityText weight='medium' text='Close window' />}
+            {navInstance.url && <UtilityText weight='medium' text={navInstance.url} />}
+            {navInstance.parent && <UtilityText weight='medium' text='Parent screen' />}
+            {navInstance.structureKey && <UtilityText weight='medium' text={navInstance.structureKey + '/' + navInstance.instanceKey} />}
+            {navInstance.screenKey && <UtilityText weight='medium' text={'Subscreen: ' + navInstance.screenKey + '(' + JSON.stringify(navInstance.params) + ')'} />}
+            {navInstance.token && <UtilityText weight='medium' text={'Login token: ' + navInstance.token} />}
         </Banner>
     </PadBox>
 }
@@ -244,7 +244,7 @@ export function ServerCallLog({callLog}) {
     const s = ServerCallLogStyle;
     return <View style={s.callList}>
         {callLog.map((call, i) => 
-            <UtilityText type='tiny' color={colorTextGrey} key={i} text={call.component + '.' + call.funcname + '(' + JSON.stringify(call.params) +')'} />
+            <UtilityText type='tiny' weight='medium' color={colorTextGrey} key={i} text={call.component + '.' + call.funcname + '(' + JSON.stringify(call.params) +')'} />
         )}
     </View>
 }

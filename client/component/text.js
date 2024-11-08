@@ -165,17 +165,17 @@ const ParagraphStyle = StyleSheet.create({
 
 
 
-export function UtilityText({type='small', center=false, right=false, text, label, formatParams, color='black', strong=false, caps=false, underline=false, numberOfLines=null, ellipsizeMode='tail'}) {
+export function UtilityText({type='small', center=false, right=false, text, label, formatParams, color='black', weight='regular', caps=false, underline=false, numberOfLines=null, ellipsizeMode='tail'}) {
     const s = UtilityTextStyle;
     const styleMap = {
         large: s.utilityLarge,
         small: s.utilitySmall,
         tiny: caps ? s.utilityTinyCaps : s.utilityTiny,
     }
-    const strongMap = {
-        large: fontFamilySansMedium,
-        small: fontFamilySansMedium,
-        tiny: fontFamilySansSemiBold,
+    const weightMap = {
+        regular: fontFamilySansRegular,
+        medium: fontFamilySansMedium,
+        strong: fontFamilySansSemiBold,
     }
     if (!text && !label) return null;
     return <TranslatableText text={text} label={label} role="paragraph" formatParams={formatParams}
@@ -183,36 +183,26 @@ export function UtilityText({type='small', center=false, right=false, text, labe
         style={[
             styleMap[type], {color}, 
             underline && {textDecorationLine: 'underline'},
-            strong && {fontFamily: strongMap[type]},
+            weight && {fontFamily: weightMap[weight]},
             center && {textAlign: 'center'},
             right && {textAlign: 'right'},
             caps && {textTransform: 'uppercase', letterSpacing: 0.5}
         ]} />
 }
 
-
-
 const UtilityTextStyle = StyleSheet.create({
     utilityLarge: {
-        fontFamily: fontFamilySansRegular,
         fontSize: 16,
         lineHeight: 16 * 1.25
     },
     utilitySmall: {
-        fontFamily: fontFamilySansRegular,
         fontSize: 14, 
         lineHeight: 14 * 1.25
     },
     utilityTiny: {
-        fontFamily: fontFamilySansMedium,
         fontSize: 12,
         lineHeight: 12 * 1.25,
     },
-    utilityTinyCaps: {
-        fontFamily: fontFamilySansRegular,
-        fontSize: 12,
-        lineHeight: 12 * 1.25,
-    }
 })
 
 export function WebLink({url, style, setHover, children}) {
@@ -364,19 +354,19 @@ export function CharacterCounter({max, min, text}) {
     const count = text?.length ?? 0;
 
     if (count == 0) {
-        return <UtilityText type='tiny' label='{min} characters min' formatParams={{min}} 
+        return <UtilityText type='tiny' weight='medium' label='{min} characters min' formatParams={{min}} 
             color={colorDisabledText} />
     } else if (count < min) {
-        return <UtilityText type='tiny' label='{count}/{min} characters min' formatParams={{count,min}} 
+        return <UtilityText type='tiny' weight='medium' label='{count}/{min} characters min' formatParams={{count,min}} 
             color={colorDisabledText} />
     } else if (count > max) {
-        return <UtilityText type='tiny' label='{count}/{max} characters max' formatParams={{count,max}} 
+        return <UtilityText type='tiny' weight='medium' label='{count}/{max} characters max' formatParams={{count,max}} 
             color={colorRed} />
     } else {
         return <HorizBox>
             <Checkmark />
             <Pad size={8} />
-            <UtilityText type='tiny' label='{count}/{max} characters max' formatParams={{count,max}} />
+            <UtilityText type='tiny' weight='medium' label='{count}/{max} characters max' formatParams={{count,max}} />
         </HorizBox>
     }
 }
@@ -389,7 +379,7 @@ export function checkValidLength({text, min, max}) {
 export function CircleCount({count}) {
     const s = CircleCountStyle;
     return <View style={s.circle}>
-        <UtilityText strong text={String(count)} />
+        <UtilityText weight='medium' text={String(count)} />
     </View>
 }
 const CircleCountStyle = StyleSheet.create({

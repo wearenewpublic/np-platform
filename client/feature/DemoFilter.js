@@ -41,6 +41,6 @@ function CatToggle({comment, setComment}) {
 
 function CatState({comment}) {
     if (comment.isCat) {
-        return <PadBox bottom={10}><UtilityText strong label='Is a cat' /></PadBox>
+        return <PadBox bottom={10}><UtilityText weight='medium' label='Is a cat' /></PadBox>
     }
 }

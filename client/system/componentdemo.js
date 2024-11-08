@@ -121,7 +121,7 @@ function DemoPageSection({search, label, screenKey, sections}) {
         {sections.map(section => 
             (!search || section.pages.some(page => page.label.toLowerCase().includes(search.toLowerCase()))) &&
                 <AccordionField key={section.label} forceOpen={toBool(search)}
-                    titleContent={<UtilityText strong label={section.label} />} >
+                    titleContent={<UtilityText weight='medium' label={section.label} />} >
                     <FlowBox>
                         {sortBy(section.pages, 'label').map((page, j) => 
                             page.label.toLowerCase().includes(search.toLowerCase()) &&
