@@ -111,7 +111,7 @@ function TextFieldScreen() {
     const [text, setText] = useState(null);
 
     return <View>
-            <DemoSection label='Text Field'>
+            <DemoSection label='Text Field CTA'>
                 <TextField value={text} placeholder='Enter some text' onChange={setText} />
                 <TextFieldButton placeholder='I am actually a button' onPress={() => {}} />
             </DemoSection>

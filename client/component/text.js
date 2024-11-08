@@ -343,7 +343,7 @@ const TextFieldButtonStyle = StyleSheet.create({
         borderColor: colorGreyBorder,
         backgroundColor: colorWhite,
         borderWidth: 1,
-        borderRadius: 4,
+        borderRadius: 32,
         paddingHorizontal: 16,
         height: 50,
         fontFamily: fontFamilySansRegular,
