@@ -29,6 +29,6 @@ export function ClosedConversationBanner() {
             <UtilityText label={closedMessage} />            
         </Banner>
         {isAdmin && <Pad size={16} />}
-        {isAdmin && <UtilityText type='tiny' label='If you re-open this conversation, you will need to reload it (Admin)' />}
+        {isAdmin && <UtilityText type='tiny' weight='medium' label='If you re-open this conversation, you will need to reload it (Admin)' />}
     </View>
 }

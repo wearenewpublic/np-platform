@@ -11,7 +11,7 @@ import { ChevronDown, ChevronUp, RadioButton, RadioButtonChecked, CheckboxChecke
 export function FormField({label, descriptionLabel, errorLabel, required, children}) {
     return <View>
         <HorizBox>
-            <UtilityText type='small' strong label={label} />
+            <UtilityText type='small' weight="medium" label={label} />
             {required && <UtilityText type='small' label='*' color={colorRed} />}
         </HorizBox>
         <Pad size={8} />
@@ -50,7 +50,7 @@ export function RadioOption({emoji, text, radioKey, label}) {
             <HorizBox center>
                 {value ? <RadioButtonChecked size={32} /> : <RadioButton size={32} style={{fill: colorGreyBorder}} />}
                 <Pad size={12} />
-                {emoji && <PadBox right={6}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
+                {emoji && <PadBox right={6}><UtilityText text={emoji} type='tiny' weight='strong' /></PadBox>}
                 <UtilityText text={text} label={label} />
             </HorizBox>
         </PadBox>
@@ -76,7 +76,7 @@ export function Checkbox({emoji, text, label, value, onChange, size=32}) {
                     {value ? <CheckboxCheckedFilled size={size} /> : <CheckboxOpen size={size} style={{fill: colorGreyBorder}} />}
                 </View>
                 <Pad size={12} />
-                {emoji && <PadBox right={6}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
+                {emoji && <PadBox right={6}><UtilityText text={emoji} type='tiny' weight='strong' /></PadBox>}
                 <UtilityText text={text} label={label} />
             </HorizBox>
         </PadBox>
@@ -130,7 +130,7 @@ export function Toggle({emoji, text, label, value, spread, onChange}) {
         <PadBox vert={8}>
             <HorizBox center spread={spread}>        
                     <HorizBox center shrink>
-                        {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' strong /></PadBox>}
+                        {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' weight='strong' /></PadBox>}
                         <UtilityText text={text} label={label} />
                     </HorizBox>
                     <Pad size={12} />

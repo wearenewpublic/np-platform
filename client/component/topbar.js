@@ -126,9 +126,9 @@ export function FeatureTreeNode({featureBlock}) {
         const enabledCount = featureBlock.features.filter(isEnabled).length;
         const titleContent = <HorizBox center spread>
             {featureBlock.level == 2 ? 
-                <UtilityText type='tiny' caps strong label={featureBlock.label} />
+                <UtilityText type='tiny' caps weight='strong' label={featureBlock.label} />
             :
-                <UtilityText strong label={featureBlock.label} />
+                <UtilityText weight='medium' label={featureBlock.label} />
             }
             <Pad size={8} />
             {enabledCount ? <CircleCount count={enabledCount} /> : null}
@@ -188,7 +188,7 @@ function ChooseOneFeature({label, featureList}) {
         setChosenFeature(value);
     }
     return <View>
-        {label && <PadBox vert={12}><UtilityText strong caps type='tiny' label={label} /></PadBox>}
+        {label && <PadBox vert={12}><UtilityText weight='strong' caps type='tiny' label={label} /></PadBox>}
         <RadioGroup value={chosenFeature} onChange={onChange}>
             {featureList.map(f =>
                 <RadioOption key={f.key} radioKey={f.key} label={f.name} />
