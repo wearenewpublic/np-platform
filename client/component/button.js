@@ -170,7 +170,7 @@ export function SubtleButton({label, text, ariaLabel, testID, disabled, formatPa
             onPress={onPress} setHover={setHover}>
         {React.createElement(icon, {...iconProps, color})}
         {(label || text) && <Pad size={4} />}
-        <UtilityText label={label} text={text} strong={strong} underline={hover} 
+        <UtilityText label={label} text={text} weight={strong ? 'medium' : 'regular'} underline={hover} 
             color={color} formatParams={formatParams} type='tiny' />
     </HoverView>
 }
