@@ -96,12 +96,8 @@ function TextScreen() {
                 <EditorialHeading type='small' italic label='Editorial Heading Small Italic' />
             </DemoSection>
             <DemoSection label='DataViz Text'>
-                <DataVizText type='heading1' label='Data Viz Large' />
-                <DataVizText type='heading2' label='Data Viz Small' />
-                <DataVizText type='number' label='Data Viz Number' />
-                <DataVizText type='label' label='Data Viz Label' />
-                <DataVizText type='labelStrong' label='Data Viz Label Strong' />
-
+                <DataVizText type='heading1' label='Data viz heading large strong' />
+                <DataVizText type='heading2' label='Data viz heading small' />
             </DemoSection>
 
         </View>

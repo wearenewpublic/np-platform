@@ -92,7 +92,6 @@ const DataVizTextStyle = StyleSheet.create({
         fontFamily: fontFamilyMonoRegular,
         fontSize: 12,
         lineHeight: 12 * 1.25,
-        fontStyle: 'italic'
     },
     number: {
         fontFamily: fontFamilyMonoSemiBold,
