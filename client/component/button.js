@@ -354,7 +354,8 @@ export function FilterButton({emoji, label, text, count, selected, onPress}) {
     return <HoverView style={[s.button, selected && s.pressed]} pressedStyle={s.pressed} hoverStyle={s.hover} 
             onPress={onPress} setPressed={setPressed} testID={label ?? text}>
         {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' weight='strong' /></PadBox>}
-        <UtilityText label={label} text={text} type='tiny' weight='medium'/>
+        <UtilityText label={label} text={text} type='tiny' weight='medium'
+            color={(pressed || selected) ? colorTextBlue : colorBlack} />
         {count ? <Pad size={8} /> : null}
         <UtilityText text={count} type='tiny' weight='medium' color={colorRed} />
     </HoverView>
