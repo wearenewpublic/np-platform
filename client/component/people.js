@@ -176,7 +176,7 @@ export function Byline({ type = 'small', photoType = null, clickable = true, use
                 {clickable ?
                     <TextButton type='small' strong text={name ?? persona?.name} underline={underline} onPress={onProfile} />
                 :
-                    <UtilityText strong text={name ?? persona?.name} underline={underline} />
+                    <UtilityText weight='medium' text={name ?? persona?.name} underline={underline} />
                 }
                 <Pad size={oneLine ? 8 : 4} />
                 {time && <UtilityText color={colorTextGrey}

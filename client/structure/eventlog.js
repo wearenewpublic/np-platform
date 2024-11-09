@@ -56,7 +56,7 @@ function EventType({eventType}) {
     const datastore = useDatastore();
     const [hover, setHover] = useState(false);
     return <HoverView setHover={setHover} onPress={() => datastore.pushSubscreen('eventlog', {eventType})}>
-        <UtilityText strong label={eventType} underline={hover} />
+        <UtilityText weight='medium' label={eventType} underline={hover} />
         <UtilityText color={colorTextGrey} label={eventTypes[eventType]} />
     </HoverView>
 }
@@ -198,7 +198,7 @@ function ExpandedEvent({event}) {
 function LinkedField({label, value, onPress}) {
     return <View>
         <HorizBox>
-            <UtilityText type='large' strong label={label + ': '} />
+            <UtilityText type='large' weight='medium' label={label + ': '} />
             {onPress && <TextButton onPress={onPress} text={value} />}
             {!onPress && <UtilityText type='large' text={value} />}
        </HorizBox>

@@ -8,3 +8,4 @@ export const gotoInstanceScreen = jest.fn();
 export const replaceInstance = jest.fn();
 export const makeUrl = jest.fn();
 export const getScreenStackForUrl = jest.fn();
+export const getGlobalParams = jest.fn();

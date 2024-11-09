@@ -92,8 +92,8 @@ function MigrationScreen({migrationKey}) {
                 <CTAButton type='secondary' text='Past Executions' onPress={() => datastore.pushSubscreen('past', {migrationKey})} />
             </HorizBox>
         }
-        {inProgress && <UtilityText strong label='Migration in progress...' />}
-        {done && <UtilityText strong label='Migration complete' />}
+        {inProgress && <UtilityText weight='medium' label='Migration in progress...' />}
+        {done && <UtilityText weight='medium' label='Migration complete' />}
         <Pad />
         {migrationLog && <MigrationLog migrationLog={migrationLog} />}
         {forwardWrites && <MigrationChanges newMap={forwardWrites} oldMap={undoWrites} />}
@@ -124,7 +124,7 @@ function PastExecutions({migrationKey}) {
                     oldMap={JSON.parse(pastExecutions[key].undoWrites)} 
                 />
                 <Pad size={8} />
-                {pastExecutions[key].rolledBack && <UtilityText strong text='Rolled back' />}
+                {pastExecutions[key].rolledBack && <UtilityText weight='medium' text='Rolled back' />}
                 {mostRecentKey == key && !pastExecutions[key].rolledBack && <CTAButton text='Roll Back Migration' onPress={() => onRollBack(key)} />}
             </AccordionField>
         )}
@@ -157,7 +157,7 @@ function MigrationChanges({newMap, oldMap}) {
             <PadBox horiz={8} vert={4}>
                 {keys.map(key =>
                     <View key={key}> 
-                        <UtilityText strong text={key} />
+                        <UtilityText weight='medium' text={key} />
                         <PadBox left={20}>
                             <UtilityText text={'New: ' + stringifySorted(newMap[key])} />
                             <UtilityText text={'Old: ' + stringifySorted(oldMap[key])} />                            

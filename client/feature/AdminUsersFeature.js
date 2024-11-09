@@ -71,7 +71,7 @@ function AdminUser({adminUser}) {
         <HorizBox spread center>
             <View>
                 <UtilityText text={adminUser.email} />
-                {toBool(inProgress) && <UtilityText type='tiny' color={colorTextGrey} label='Updating roles...' />}
+                {toBool(inProgress) && <UtilityText type='tiny' weight='medium' color={colorTextGrey} label='Updating roles...' />}
             </View>
             <RoleSelectorPopup alignRight selectedRoles={roles ?? adminUser.roles} setSelectedRoles={setSelectedRoles} />
         </HorizBox>

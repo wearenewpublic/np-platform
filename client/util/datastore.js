@@ -343,11 +343,11 @@ export class Datastore extends React.Component {
             gotoInstanceScreen({structureKey: this.getStructureKey(), instanceKey: this.getInstanceKey(), screenKey, params});
         }
     }
-    gotoInstance({structureKey, instanceKey='one', params={}}) {
+    gotoInstance({structureKey, instanceKey='one', params={}, globalParams={}}) {
         if (this.props.gotoInstance) {
-            this.props.gotoInstance({structureKey, instanceKey, params});
+            this.props.gotoInstance({structureKey, instanceKey, params, globalParams});
         } else {
-            gotoInstance({structureKey, instanceKey, params});
+            gotoInstance({structureKey, instanceKey, params, globalParams});
         }
     }
     needsLogin(callback, action) {

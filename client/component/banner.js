@@ -46,7 +46,7 @@ const BannerStyle = StyleSheet.create({
 
 export function BannerMessage({label, text, formatParams, error=false}) {
     return <Banner color={error ? colorRedBackground : colorLightBlueBackground}>
-        <UtilityText strong label={label} text={text} formatParams={formatParams} />
+        <UtilityText weight='medium' label={label} text={text} formatParams={formatParams} />
     </Banner>
 }
 

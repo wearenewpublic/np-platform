@@ -72,22 +72,22 @@ export const DesignSystemDemoFeature = {
 function TextScreen() {
     return <View>
             <DemoSection label='UI Text'>
-                <Heading label='Heading 1' level={1} />
-                <Heading label='Heading 2' level={2} />
+                <Heading label='Heading large medium' level={1} />
+                <Heading label='Heading small strong' level={2} />
                 <Paragraph type='large' label='Paragraph large' />
                 <Paragraph type='small' strong label='Paragraph small strong' />
                 <Paragraph type='small' label='Paragraph small' />
+                <UtilityText type='large' weight='medium' label='Utility large medium' />
                 <UtilityText type='large' label='Utility large' />
-                <UtilityText label='Utility small caps' caps strong />
-                <UtilityText strong label='Utility small strong' />
-                <UtilityText label='Utility small' />
-
-                <UtilityText color={colorTextGrey} label='Utility small color:TextGrey' />
-                <UtilityText underline label='Utility small Underline' />
-                
-                <UtilityText type='tiny' label='Utility tiny' />
-                <UtilityText type='tiny' strong label='Utility tiny strong' />
+                <UtilityText type='small' weight="medium" label='Utility small medium' />
+                <UtilityText type='small' label='Utility small' />
+                <UtilityText type='small' color={colorTextGrey} label='Utility small color:TextGrey' />
+                <UtilityText type='small' underline label='Utility small Underline' />
+                <UtilityText type='tiny' caps weight='medium' label='Utility tiny Caps medium' />
                 <UtilityText type='tiny' caps label='Utility tiny Caps' />
+                <UtilityText type='tiny' weight='strong' label='Utility tiny strong' />
+                <UtilityText type='tiny' weight='medium' label='Utility tiny medium' />
+                <UtilityText type='tiny' label='Utility tiny' />
             </DemoSection>
             <DemoSection label='Brand Text'>
                 <EditorialHeading label='Editorial Heading Large' />
@@ -96,12 +96,8 @@ function TextScreen() {
                 <EditorialHeading type='small' italic label='Editorial Heading Small Italic' />
             </DemoSection>
             <DemoSection label='DataViz Text'>
-                <DataVizText type='heading1' label='Data Viz Heading 1' />
-                <DataVizText type='heading2' label='Data Viz Heading 2' />
-                <DataVizText type='number' label='Data Viz Number' />
-                <DataVizText type='label' label='Data Viz Label' />
-                <DataVizText type='labelStrong' label='Data Viz Label Strong' />
-
+                <DataVizText type='heading1' label='Data viz heading large strong' />
+                <DataVizText type='heading2' label='Data viz heading small' />
             </DemoSection>
 
         </View>
@@ -269,12 +265,12 @@ function FormScreen() {
                 <UtilityText label='Selected: {value}' formatParams={{value: radioValue}} />
             </DemoSection>
             <DemoSection label='Accordion Field'>
-                <AccordionField titleContent={<UtilityText strong label='Title'/>}>
+                <AccordionField titleContent={<UtilityText weight='medium' label='Title'/>}>
                     <UtilityText label='Content' />
                 </AccordionField>
                 <AccordionField titleContent={
                         <HorizBox center>
-                            <UtilityText strong label='With Count'/>
+                            <UtilityText weight='medium' label='With Count'/>
                             <Pad size={8} />
                             <CircleCount count={3} />
                         </HorizBox>                        

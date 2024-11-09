@@ -20,13 +20,17 @@ export function goBack() {
 }
 
 function makeQueryForParams(index, params, query=new URLSearchParams()) {
-    console.log('makeQueryForParams', index, params, query);
     for (const [key, value] of Object.entries(params ?? {})) {
         if (value) {
             query.set(key + getParamSuffixForIndex(index), value);
         }
     }
     return query;
+}
+function addGlobalParamsToQuery(globalParams, query) {
+    for (const [key, value] of Object.entries(globalParams ?? {})) {
+        query.set(key + '_g', value);
+    }
 }
 
 export function pushSubscreen(screenKey, params = {}) {
@@ -35,19 +39,27 @@ export function pushSubscreen(screenKey, params = {}) {
     const parentQuery = new URLSearchParams(window.location.search);
 
     const query = makeQueryForParams(parts.length - 2, params, parentQuery);
+    addGlobalParamsToQuery(getGlobalParams(), query);
 
     gotoUrl(makeUrl(parts, query));
 }
 
-export function gotoInstance({structureKey, instanceKey, params}) {
-    console.log('gotoInstance', structureKey, instanceKey, params);
+export function getGlobalParams(url = window.location.href) {
+    return getParamsWithSuffix(new URLSearchParams(new URL(url).search), '_g');
+}
+
+export function gotoInstance({structureKey, instanceKey, params={}, globalParams={}}) {
     const query = makeQueryForParams(0, params);
+    addGlobalParamsToQuery(getGlobalParams(), query);
+    addGlobalParamsToQuery(globalParams, query);
     gotoUrl(makeUrl([structureKey, instanceKey], query));
 }
 
-export function gotoInstanceScreen({structureKey, instanceKey, screenKey, params}) {
+export function gotoInstanceScreen({structureKey, instanceKey, screenKey, params={}, globalParams={}}) {
     const parts = [structureKey, instanceKey, screenKey];
     const query = makeQueryForParams(1, params);
+    addGlobalParamsToQuery(globalParams, query);
+    addGlobalParamsToQuery(getGlobalParams(), query);
     gotoUrl(makeUrl(parts, query));
 }
 
@@ -55,7 +67,7 @@ export function replaceInstance({structureKey, instanceKey}) {
     replaceUrl(makeUrl([structureKey, instanceKey]));
 }
 
-function getParamsWithSuffix(urlParams, suffix) {
+export function getParamsWithSuffix(urlParams, suffix) {
     const result = {};
     for(let [key, value] of urlParams) {
         if (suffix) {

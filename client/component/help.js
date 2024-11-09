@@ -39,7 +39,7 @@ export function HelpBubble({label, text, titleLabel, titleText, padTop=4, above=
                 ]}>
                 <HorizBox spread>
                     <View style={{flex: 1}}>
-                        {hasTitle && <UtilityText type='small' strong 
+                        {hasTitle && <UtilityText type='small' weight="medium" 
                             label={titleLabel} text={titleText} 
                             color={colorGreyPopupBackground} 
                         />}
