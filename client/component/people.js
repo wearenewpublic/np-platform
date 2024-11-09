@@ -151,7 +151,7 @@ const TagRowStyle = StyleSheet.create({
     },
 });
 
-export function BylineMetaData({userId, time, edited=false, abbreviated=false}) {
+export function BylineMetadata({userId, time, edited=false, abbreviated=false}) {
     const { bylineTags } = useConfig();
     const language = useLanguage();
     const persona = usePersonaObject(userId);
@@ -186,10 +186,11 @@ export function Byline({ type = 'small', clickable = true, userId, name = null, 
                 <UtilityText weight='medium' text={name ?? persona?.name} underline={underline} />
             }
             <Pad size={type === 'abbreviated' ? 6 : 2} />
-            <BylineMetaData userId={userId} time={time} edited={edited} abbreviated={type == 'abbreviated'}/>
+            <BylineMetadata userId={userId} time={time} edited={edited} abbreviated={type == 'abbreviated'}/>
         </View>
     </View>
 }
+
 
 const BylineStyle = StyleSheet.create({
     outer: {
