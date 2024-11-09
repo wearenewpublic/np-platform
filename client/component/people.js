@@ -149,42 +149,44 @@ const TagRowStyle = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    tag: {
-        marginRight: 4,
-    }
 });
 
-export function Byline({ type = 'small', photoType = null, clickable = true, userId, name = null, photo = null, time, subtitleLabel, subtitleParams = {}, underline = false, edited = false }) {
-
+export function BylineMetadata({userId, time, edited=false, abbreviated=false}) {
     const { bylineTags } = useConfig();
-    const s = BylineStyle;
-    const persona = usePersonaObject(userId);
     const language = useLanguage();
-    const datastore = useDatastore();
+    const persona = usePersonaObject(userId);
     const tags = bylineTags?.map(tagFunc => tagFunc(persona)).filter(tag => tag);
     const hasTags = tags?.length > 0;
+
+    // TODO: Support more than one tag when there are designs for that
+    return <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        {hasTags && <TagRow tags={[tags[0]]} />}
+        {time && <UtilityText type='tiny' color={colorTextGrey}
+            label={(hasTags ? ' • ' : '') + '{time}' + (edited ? ' • Edited' : '')}
+            formatParams={abbreviated ? {time: formatMiniDate(time, language)} : {time: formatDate(time, language)}}
+        />}
+    </View>
+}
+
+export function Byline({ type = 'small', clickable = true, userId, name = null, photo = null, time, underline = false, edited = false }) {
+    const s = BylineStyle;
+    const persona = usePersonaObject(userId);
+    const datastore = useDatastore();
 
     function onProfile() {
         datastore.gotoInstance({ structureKey: 'profile', instanceKey: userId });
     }
-    const oneLine = hasTags || type == 'small';
     return <View style={s.outer}>
-        <ProfilePhoto userId={userId} photo={photo} type={hasTags ? 'large' : photoType ?? type} />
+        <ProfilePhoto userId={userId} photo={photo} type={type} />
         <Pad size={spacings.xs} />
-        <View style={{ flexDirection: 'column' }}>
-            <View style={oneLine ? {flexDirection: 'row' } : {flexDirection: 'column'}}>
-                {clickable ?
-                    <TextButton type='small' strong text={name ?? persona?.name} underline={underline} onPress={onProfile} />
-                :
-                    <UtilityText weight='medium' text={name ?? persona?.name} underline={underline} />
-                }
-                <Pad size={oneLine ? 8 : 4} />
-                {time && <UtilityText color={colorTextGrey}
-                    label={'{time}' + (edited ? (' • ' + (oneLine ? 'edited' : 'Edited')) : '')}
-                    formatParams={oneLine ? { time: formatMiniDate(time, language) } : { time: formatDate(time, language) } } underline={underline} />
-                }
-            </View>
-            {hasTags && <PadBox top={4}><TagRow tags={tags} /></PadBox>}
+        <View style={{ flexDirection: type === 'abbreviated' ? 'row' : 'column' }}>
+            {clickable ?
+                <TextButton type='large' strong text={name ?? persona?.name} underline={underline} onPress={onProfile} />
+            :
+                <UtilityText weight='medium' text={name ?? persona?.name} underline={underline} />
+            }
+            <Pad size={type === 'abbreviated' ? 6 : 2} />
+            <BylineMetadata userId={userId} time={time} edited={edited} abbreviated={type == 'abbreviated'}/>
         </View>
     </View>
 }
@@ -241,6 +243,7 @@ const sizeMap = {
     large: 40,
     small: 32,
     tiny: 24,
+    abbreviated: 24,
 }
 
 const checkPadMap = {
