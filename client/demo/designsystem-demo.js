@@ -173,26 +173,35 @@ function ProfileScreen() {
                 <FacePile userIdList={['a','b','c','z']} type='small' />
                 <FacePile userIdList={['x','d','e','f','g','h','i','j']} type='tiny' />
             </DemoSection>
-            <DemoSection label='Byline'>
+            <DemoSection label='Byline - Large'>
                 <Byline userId={'a'} type='large' time={Date.now()} />
                 <Byline userId={'b'} type='large' time={Date.now() - 1000 * 60 * 10} edited={Date.now()} />
                 <Byline userId={'y'} type='large' time={Date.now() - 1000 * 60 * 60 * 10} edited={Date.now()} />
-                <Byline userId={'c'} type='small' time={Date.now()} />
-                <Byline userId={'d'} type='small' />
-                <Byline userId={'e'} type='small' time={Date.now()} edited={Date.now()} />
-                <Byline userId='x' type='small' time={Date.now()} />
-                <Byline userId='z' type='small' time={Date.now()} />
-                <Byline userId='x' type='tiny' time={Date.now()} />
-                <Byline userId='z' type='tiny' time={Date.now()} />
-                <Byline userId='x' type='abbreviated' time={Date.now()} />
-                <Byline userId='z' type='abbreviated' time={Date.now()} />
                 <Datastore config={{bylineTags:[
                         () => <Tag type='tiny' label='Awesome Person'/>,
                     ]}}>
                     <Byline userId='a' type='large' time={Date.now()} />
                     <Pad />
                     <Byline userId='b' type='large' time={Date.now()} edited={Date.now()} />
-                    <Pad />
+                </Datastore>                
+            </DemoSection>
+            <DemoSection label='Byline - Small'>
+                <Byline userId={'c'} type='small' time={Date.now()} />
+                <Byline userId={'d'} type='small' />
+                <Byline userId={'e'} type='small' time={Date.now()} edited={Date.now()} />
+                <Byline userId='x' type='small' time={Date.now()} />
+                <Byline userId='z' type='small' time={Date.now()} />
+            </DemoSection>
+            <DemoSection label='Byline - Tiny'>
+                <Byline userId='x' type='tiny' time={Date.now()} />
+                <Byline userId='z' type='tiny' time={Date.now()} />
+            </DemoSection>
+            <DemoSection label='Byline - Abbreviated'>
+                <Byline userId='x' type='abbreviated' time={Date.now()} />
+                <Byline userId='z' type='abbreviated' time={Date.now()} />
+                <Datastore config={{bylineTags:[
+                        () => <Tag type='tiny' label='Awesome Person'/>,
+                    ]}}>
                     <Byline userId='b' type='abbreviated' time={Date.now() - 1000 * 60 * 60 * 10} />
                 </Datastore>
 
