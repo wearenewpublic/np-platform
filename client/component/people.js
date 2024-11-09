@@ -181,7 +181,7 @@ export function Byline({ type = 'small', clickable = true, userId, name = null, 
         <Pad size={spacings.xs} />
         <View style={{ flexDirection: type === 'abbreviated' ? 'row' : 'column' }}>
             {clickable ?
-                <TextButton type='small' strong text={name ?? persona?.name} underline={underline} onPress={onProfile} />
+                <TextButton type='large' strong text={name ?? persona?.name} underline={underline} onPress={onProfile} />
             :
                 <UtilityText weight='medium' text={name ?? persona?.name} underline={underline} />
             }
