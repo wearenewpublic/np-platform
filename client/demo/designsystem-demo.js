@@ -184,15 +184,18 @@ function ProfileScreen() {
                 <Byline userId={'g'} type='small' photoType='large' time={Date.now()} />
                 <Byline userId='x' type='small' photoType='large' time={Date.now()} />
                 <Byline userId='z' type='small' photoType='large' time={Date.now()} />
+                <Byline userId='x' type='tiny' photoType='large' time={Date.now()} />
+                <Byline userId='z' type='tiny' photoType='large' time={Date.now()} />
+                <Byline userId='x' type='abbreviated' photoType='large' time={Date.now()} />
+                <Byline userId='z' type='abbreviated' photoType='large' time={Date.now()} />
                 <Datastore config={{bylineTags:[
                         () => <Tag type='tiny' label='Awesome Person'/>,
-                        (persona) => persona.key == 'b' && <Tag type='tiny' label='Superhero'/>,
                     ]}}>
                     <Byline userId='a' type='large' time={Date.now()} />
                     <Pad />
                     <Byline userId='b' type='large' time={Date.now()} edited={Date.now()} />
                     <Pad />
-                    <Byline userId='a' type='small' time={Date.now()} />
+                    <Byline userId='b' type='abbreviated' time={Date.now() - 1000 * 60 * 60 * 10} />
                 </Datastore>
 
             </DemoSection>

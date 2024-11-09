@@ -201,7 +201,7 @@ export function TextButton({label, text, level=1, type='large', heading=false, p
                 color={color} underline={hover ^ underline} strong={strong} />
         :
             <UtilityText label={label} text={text} formatParams={formatParams} type={type} 
-                color={color} underline={hover ^ underline} strong={strong} />
+                color={color} underline={hover ^ underline} weight={strong ? 'medium' : 'regular'} />
         }
         {rightIcon && <Pad size={8} />}
         {rightIcon && React.createElement(rightIcon, {...rightIconProps, color})}
@@ -278,7 +278,7 @@ export function Tag({label, emoji, text, type='emphasized', strong=false, format
         {emoji && <PadBox right={6}><UtilityText text={emoji} type='tiny' weight='strong' /></PadBox>}
         <UtilityText color={type=='tiny' ? colorTextBlue : null} 
             label={label} text={text} formatParams={formatParams} 
-            strong={strong} type='tiny' weight='medium' />
+            type='tiny' weight={strong ? 'strong' : 'medium'} />
     </View>
 }
 const TagStyle = StyleSheet.create({
@@ -298,7 +298,7 @@ const TagStyle = StyleSheet.create({
         borderRadius: 100,
     },
     tiny: {
-        paddingHorizontal: 4,
+        paddingHorizontal: 6,
         paddingVertical: 2,
         borderRadius: 100,
         height: 20,
