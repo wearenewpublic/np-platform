@@ -88,7 +88,7 @@ const CTAButtonStyle = StyleSheet.create({
         color: colorDisabledText
     },
     largeButton: {
-        paddingHorizontal: 16,
+        paddingHorizontal: 20,
         paddingVertical: 12,
         borderRadius: 32,
         alignSelf: 'flex-start',
@@ -146,7 +146,7 @@ const IconReplyStyle = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 8,
         alignSelf: 'flex-start',
-        borderRadius: 8,
+        borderRadius: 32,
         // backgroundColor: colorGreyHover
     },
     wide: {
@@ -186,7 +186,8 @@ export function TextButton({label, text, level=1, type='large', heading=false, p
     const s = TextButtonStyle;
     const [hover, setHover] = useState(false);
     return <HoverView shrink testID={label ?? text}
-            style={[s.button, alignStart ? {alignSelf: 'flex-start'} : null]} 
+            style={[s.button, alignStart ? {alignSelf: 'flex-start'} : null]}
+            hoverStyle={s.hover} pressedStyle={s.pressed} 
             setHover={setHover} onPress={onPress} role='button'>
         {leftIcon && React.createElement(leftIcon, {...leftIconProps, color})}
         {leftIcon && <Pad size={8} />}        
@@ -211,8 +212,18 @@ const TextButtonStyle = StyleSheet.create({
     button: {
         flexDirection: 'row',
         alignItems: 'center',
+        alignSelf: 'flex-start',
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 32,
+    },
+    hover: {
+        backgroundColor: colorGreyHover,
+    },
+    pressed: {
+        backgroundColor: colorSecondaryPress,
     }
-})
+});
 
 
 export function TextLinkButton({label, text, type='large', paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, rightIcon, color=colorBlack, alignStart=false, onPress}) {
@@ -314,8 +325,7 @@ export function ReactionButton({emoji, viewOnly=false, label, text, count, selec
             hoverStyle={s.hover} disabled={viewOnly} testID={label ?? text}
             pressedStyle={s.pressed} setPressed={setPressed} role='button' onPress={onPress}>
         {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' weight='strong' /></PadBox>}
-        <UtilityText label={label} text={text} type='tiny' weight='medium'
-            color={(pressed || selected) ? colorTextBlue : colorBlack} />
+        <UtilityText label={label} text={text} type='tiny' weight='medium'/>
         {count ? <Pad size={8} /> : null}
         <UtilityText text={count} type='tiny' weight='medium' color={colorRed} />
     </HoverView>
@@ -342,7 +352,7 @@ const ReactionButtonStyle = StyleSheet.create({
         backgroundColor: colorGreyHover,
     },
     pressed: {
-        borderColor: colorTextBlue,        
+        borderColor: colorBlack,        
         backgroundColor: colorWhite
     }
 })
@@ -354,8 +364,7 @@ export function FilterButton({emoji, label, text, count, selected, onPress}) {
     return <HoverView style={[s.button, selected && s.pressed]} pressedStyle={s.pressed} hoverStyle={s.hover} 
             onPress={onPress} setPressed={setPressed} testID={label ?? text}>
         {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' weight='strong' /></PadBox>}
-        <UtilityText label={label} text={text} type='tiny' weight='medium'
-            color={(pressed || selected) ? colorTextBlue : colorBlack} />
+        <UtilityText label={label} text={text} type='tiny' weight='medium'/>
         {count ? <Pad size={8} /> : null}
         <UtilityText text={count} type='tiny' weight='medium' color={colorRed} />
     </HoverView>
@@ -375,7 +384,7 @@ const FilterButtonStyle = StyleSheet.create({
         backgroundColor: colorGreyHover,
     },
     pressed: {
-        borderColor: colorTextBlue,        
+        borderColor: colorBlack,        
         backgroundColor: colorWhite,
     }
 });

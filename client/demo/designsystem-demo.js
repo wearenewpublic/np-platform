@@ -107,7 +107,7 @@ function TextFieldScreen() {
     const [text, setText] = useState(null);
 
     return <View>
-            <DemoSection label='Text Field'>
+            <DemoSection label='Text Field CTA'>
                 <TextField value={text} placeholder='Enter some text' onChange={setText} />
                 <TextFieldButton placeholder='I am actually a button' onPress={() => {}} />
             </DemoSection>
@@ -306,8 +306,6 @@ function ButtonsAndLinksScreen() {
             </DemoSection>
             <DemoSection label='Action Button'>
                 <SpacedArray horiz>
-                    <IconButton icon={Reply} label='Respond' onPress={onPress} />
-                    <IconButton icon={Chat} label='Respond' onPress={onPress} />
                     <IconButton icon={Edit} label='Edit' onPress={onPress} />
                     <IconButton icon={Bookmark} label='Save' onPress={onPress} />
                     <IconButton icon={CarbonImage} label='Image' onPress={onPress} />
@@ -315,7 +313,6 @@ function ButtonsAndLinksScreen() {
                     <IconButton icon={Video} label='Video' onPress={onPress} />
                     <IconButton icon={FaceAdd} label='Emoji' onPress={onPress} />
                 </SpacedArray>
-                <IconButton wide icon={Chat} label='Wide Button' onPress={onPress} />
             </DemoSection>
             <DemoSection label='Subtle Button'>
                 <SpacedArray horiz>
@@ -330,20 +327,7 @@ function ButtonsAndLinksScreen() {
             </DemoSection>
             <DemoSection label='Text Button'>
                 <SpacedArray horiz>
-                    <TextButton leftIcon={Close} leftIconProps={{size:24}} label='Close' onPress={onPress} />
-                    <TextButton label='Show more comments' rightIcon={ChevronDown} rightIconProps={{size:20}} color={colorTextBlue} onPress={onPress} />
                     <TextButton label='Cancel' underline color={colorTextGrey} onPress={onPress} />
-                </SpacedArray>
-                <SpacedArray horiz>
-                    <TextButton type='small' text={'This is a question'} strong onPress={onPress} />
-                    <TextButton type='small' paragraph text={'This is a paragraph question'} strong onPress={onPress} />
-                </SpacedArray>
-                <SpacedArray horiz>
-                    <TextButton label='Editoral Large Italic' editorial type='large' italic onPress={onPress} />
-                    <TextButton label='Editoral Small Italic' editorial type='small' italic onPress={onPress} />
-                    <TextButton label='Heading 1' heading level={1} onPress={onPress} />
-                    <TextButton label='Heading 2' heading level={2} onPress={onPress} />
-
                 </SpacedArray>
             </DemoSection>
             <DemoSection horiz label='Expand Button'>
@@ -373,7 +357,7 @@ function ButtonsAndLinksScreen() {
             </DemoSection>
             <DemoSection horiz label='Filter Button'>
                 <FilterButton emoji='🔍' label='Under Review' count={1} onPress={onPress} />
-                <FilterButton label='Selected' count={22} onPress={onPress} />
+                <FilterButton label='Selected' selected count={22} onPress={onPress} />
 
             </DemoSection>
 
@@ -508,11 +492,11 @@ function BannerDemoScreen() {
             </DemoSection>
             <DemoSection label='Clickable Banner'>
                 <Narrow>
-                    <ClickableBanner>
+                    <ClickableBanner onPress={() => {}}>
                         <RichText label='This is a **very** important problem. You need to make sure you address it or terrible things will happen. Click the info box to learn more.'/>
                     </ClickableBanner>
                     <Pad/>
-                    <ClickableBanner iconType='close'>
+                    <ClickableBanner onPress={() => {}}>
                         <RichText label='This is a **minor** problem. Click to close'/>
                     </ClickableBanner>
                 </Narrow>
