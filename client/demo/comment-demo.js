@@ -51,7 +51,7 @@ export const CommentDemoFeature = {
         commentPostCheckers: [],
         commentInputPlaceholder: 'Share your thoughts...',
         commentReplyPlaceholder: 'Reply to {authorName}...',
-        commentInputLoginAction: 'comment',
+        commentInputLoginAction: '',
         noCommentsMessage: 'No responses yet. Start the conversation!',
         noMoreCommentsMessage: 'No more responses'       
     }
