@@ -8,7 +8,7 @@ import { Heading, UtilityText } from '../component/text';
 import { RichText } from '../component/richtext';
 import { colorPinkBackground, colorTealBackground, colorWhite, colorBlack, colorBlackHover } from '../component/color';
 import { CTAButton } from '../component/button';
-import { assembleUrl, makeAssetUrl, makeRandomNonce } from '../util/util';
+import { assembleUrl, boolToString, makeAssetUrl, makeRandomNonce } from '../util/util';
 import { logEventAsync, useLogEvent } from '../util/eventlog';
 import { FirstLoginSetup } from '../feature/ProfilePhotoAndName';
 import { useEffect } from 'react';
@@ -176,6 +176,19 @@ function GoogleLogin() {
     /></PadBox>
 }
 
+function makeStateChunk({siloKey, provider, debug}) {
+    return siloKey + '-' + provider + '-' + boolToString(debug);
+}
+
+function parseStateChunk(chunk) {
+    const parts = chunk.split('-');
+    return {
+        siloKey: parts[0],
+        provider: parts[1],
+        debug: parts[2] == 'true',
+    };
+}
+
 // TODO: Actually check the nonce on the callback
 export function SSOLogin({loginProvider}) {
     const datastore = useDatastore();
@@ -192,19 +205,16 @@ export function SSOLogin({loginProvider}) {
         const redirect_uri = loginProvider.mode == 'code' ? codeCallbackUrl : fragmentRedirectUrl;
         const nonce = makeRandomNonce();
 
+        const stateChunk = makeStateChunk({ siloKey, provider: loginProvider.key, debug: getIsLocalhost() });
         const loginUrl = assembleUrl(loginProvider.authUrl, { 
-            state: JSON.stringify({ 
-                siloKey: datastore.getSiloKey(), 
-                provider: loginProvider.key,
-                debug: getIsLocalhost(),
-            }),
+            state: stateChunk,
             nonce,
             client_id: loginProvider.clientId,
             redirect_uri,
             scope: loginProvider.scope,
             ... loginProvider.extraParams
         });
-
+        
         datastore.openUrl(loginUrl, 'Login with ' + loginProvider.name, 'width=600,height=600');
     }
 
@@ -243,7 +253,7 @@ export function FragmentRedirectScreen() {
     async function loginWithTokenFragment() {
         const fragmentParams = getFragmentParams(fragment);
         const ssoToken = fragmentParams.id_token;
-        const state = JSON.parse(fragmentParams.state);
+        const state = parseStateChunk(fragmentParams.state);
         const provider = state.provider;
         const {loginToken} = await datastore.callServerAsync('auth', 'convertToken', { ssoToken, provider });
         await datastore.signInWithTokenAsync(loginToken);
