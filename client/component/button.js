@@ -187,7 +187,6 @@ export function TextButton({label, text, level=1, type='large', heading=false, p
     const [hover, setHover] = useState(false);
     return <HoverView shrink testID={label ?? text}
             style={[s.button, alignStart ? {alignSelf: 'flex-start'} : null]}
-            hoverStyle={s.hover} pressedStyle={s.pressed} 
             setHover={setHover} onPress={onPress} role='button'>
         {leftIcon && React.createElement(leftIcon, {...leftIconProps, color})}
         {leftIcon && <Pad size={8} />}        
@@ -212,19 +211,8 @@ const TextButtonStyle = StyleSheet.create({
     button: {
         flexDirection: 'row',
         alignItems: 'center',
-        alignSelf: 'flex-start',
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 32,
-    },
-    hover: {
-        backgroundColor: colorGreyHover,
-    },
-    pressed: {
-        backgroundColor: colorSecondaryPress,
     }
-});
-
+})
 
 export function TextLinkButton({label, text, type='large', paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, rightIcon, color=colorBlack, alignStart=false, onPress}) {
     const [hover, setHover] = useState(false);
