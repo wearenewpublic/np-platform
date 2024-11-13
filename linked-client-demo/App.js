@@ -18,7 +18,7 @@ const firebaseConfig = {
 };
 
 
-registerLoginProviders([githubLogin, rcIntLogin])
+registerLoginProviders([githubLogin, rcIntLogin, rcLogin])
 
 // const app = initializeApp(firebaseConfig);
 setFirebaseConfig(firebaseConfig);

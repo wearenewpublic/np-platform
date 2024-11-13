@@ -36,7 +36,7 @@ function usePersonaPreviewForSilo({siloKey, once=true}) {
     return personaPreview;
 }
 
-export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKey}) {
+export function ScreenStack({url, globalParams, screenStack, siloKey, structureKey, instanceKey}) {
     const s = ScreenStackStyle;
     
     const structure = getStructureForKey(structureKey);
@@ -54,12 +54,14 @@ export function ScreenStack({url, screenStack, siloKey, structureKey, instanceKe
         console.error('ScreenStack missing keys', {structureKey, instanceKey, siloKey});
     }
 
+    console.log('ScreenStack', {url, screenStack, siloKey, structureKey, instanceKey, language, config, readOnly, personaPreview});
+
     return <View style={s.stackHolder}>
         <Datastore key={url} siloKey={siloKey} instanceKey={instanceKey} structureKey={structureKey} 
                 language={language} isLive={true} config={config} readOnly={readOnly}
                 personaPreview={personaPreview}>
             {screenStack.map((screenInstance, index) => 
-                <WithScreenStack screenStack={screenStack} index={index} key={index}>
+                <WithScreenStack url={url} screenStack={screenStack} index={index} key={index}>
                     <StackedScreen screenSet={screenSet} screenInstance={screenInstance} index={index} />
                 </WithScreenStack>
             )}
@@ -104,9 +106,9 @@ export function EmbeddedInstance({structureKey, instanceKey, features, screenKey
         </Datastore>
     } else {        
         return <Datastore siloKey={siloKey} structureKey={structureKey} instanceKey={instanceKey} 
-                config={config} isLive={isLive}
-                personaPreview={datastore.personaPreview}
-                language={datastore.language} readOnly={datastore.readOnly} >
+                config={config} isLive={isLive} isEmbedded={true}
+                personaPreview={datastore.props.personaPreview}
+                language={datastore.props.language} readOnly={datastore.props.readOnly} >
             {React.createElement(screen)}
         </Datastore>
     }

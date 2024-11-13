@@ -29,13 +29,18 @@ export const rcIntLogin = {
 }
 
 export const rcLogin = {
+    key: 'rc',
     clientId: '32c46880-ae6e-429c-a437-97bab2c26f86',
     authUrl: 'https://login.cbc.radio-canada.ca/bef1b538-1950-4283-9b27-b096cbc18070/B2C_1A_ExternalClient_FrontEnd_Login/oauth2/v2.0/authorize',
-    scope: 'User.Read',
-    extraParams: {response_type:'id_token', response_mode: 'fragment', ui_locales: 'fr'},
+    extraParams: {
+        response_type: 'id_token',
+        response_mode: 'fragment',
+        redirect_uri: 'https://psi.newpublic.org/global/login/one/fragmentRedirect',
+        scope: 'openid https://rcmnb2cprod.onmicrosoft.com/84593b65-0ef6-4a72-891c-d351ddd50aab/email https://rcmnb2cprod.onmicrosoft.com/84593b65-0ef6-4a72-891c-d351ddd50aab/profile',
+        ui_locales: 'fr'
+    },
     mode: 'fragment',
     name: 'Radio Canada',
-    key: 'rc',
     icon: 'rc.svg',
     silos: ['global', 'demo', 'test'],
 }

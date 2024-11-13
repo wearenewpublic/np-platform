@@ -15,6 +15,7 @@ test('formatDate', () => {
     expect(formatDate(new Date('2024-01-30 12:30'))).toBe('3 days ago');
     expect(formatDate(new Date('2024-01-02 12:30'))).toBe('Jan 2');
     expect(formatDate(new Date('2023-01-02 12:30'))).toBe('Jan 2, 2023');
+    expect(formatDate(new Date('not a date'))).toBe('');
 });
 
 test('formatMiniDate', () => {
@@ -27,6 +28,7 @@ test('formatMiniDate', () => {
     expect(formatMiniDate(new Date('2024-01-30 12:30'))).toBe('3d');
     expect(formatMiniDate(new Date('2024-01-02 12:30'))).toBe('31d');
     expect(formatMiniDate(new Date('2023-01-02 12:30'))).toBe('1y');
+    expect(formatDate(new Date('not a date'))).toBe('');
 });
 
 afterAll(() => {

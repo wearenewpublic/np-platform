@@ -11,6 +11,7 @@ export const colorTextBlue = '#5A1EF5';
 export const colorGreyPopupBackground = '#F7F7F7';
 export const colorTeaserBackground = '#F5F9FF';
 export const colorTealBackground = '#058287';
+export const colorSurfaceDiscovery = '#F6F0EC'
 
 export const colorBannerGreen = '#B9EBDC';
 

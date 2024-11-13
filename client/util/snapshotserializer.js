@@ -6,6 +6,7 @@ const stripNoisyAttributes = (element) => {
     if (element.nodeType === 1) {
         element.removeAttribute('class'); 
         element.removeAttribute('style'); 
+        element.removeAttribute('dir');
         element.removeAttribute('virtualkeyboardpolicy'); 
     }
     Array.from(element.childNodes).forEach(stripNoisyAttributes);
@@ -16,7 +17,7 @@ module.exports = {
     test: (val) => val && val.container, // Is this is a rendered component?
     print: (val, serialize) => {
         stripNoisyAttributes(val.container);
-        return prettyDOM(val.container);
+        return prettyDOM(val.container, 1000000);
     }
 };
 

@@ -4,7 +4,12 @@ export function formatDate(date, language = 'english') {
     const currentDate = new Date();
     const inputDate = new Date(date);
 
+    if (isNaN(inputDate.getTime())) {
+        return '';
+    }
+
     const diffInSeconds = Math.floor((currentDate - inputDate) / 1000);
+
 
     if (diffInSeconds < 60) {
         return translateLabel({label: 'Just now', language});
@@ -48,6 +53,10 @@ export function formatDate(date, language = 'english') {
 export function formatMiniDate(date, language = 'english') {
     const currentDate = new Date();
     const inputDate = new Date(date);
+
+    if (isNaN(inputDate.getTime())) {
+        return '';
+    }
 
     const diffInSeconds = Math.floor((currentDate - inputDate) / 1000);
 

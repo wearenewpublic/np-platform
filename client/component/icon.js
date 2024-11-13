@@ -1,4 +1,4 @@
-import { colorRed, colorTextBlue } from "./color"
+import { colorRed, colorTextBlue, colorTextGrey } from "./color"
 import { ArrowShiftDown, TrashCan } from '@carbon/icons-react';
 
 export function IconCircleCheck({size=14}) {
@@ -15,8 +15,8 @@ export function IconCircleCheck({size=14}) {
     </svg>
 }
 
-export function IconUpvote() {
-    return <ArrowShiftDown style={{ transform: 'rotate(180deg)' }} />
+export function IconUpvote({ color=colorTextGrey }) {
+    return <ArrowShiftDown style={{ transform: 'rotate(180deg)', fill: color }} />
 }
 
 export function IconUpvoted({color=colorTextBlue}) {

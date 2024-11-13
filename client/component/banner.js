@@ -46,11 +46,11 @@ const BannerStyle = StyleSheet.create({
 
 export function BannerMessage({label, text, formatParams, error=false}) {
     return <Banner color={error ? colorRedBackground : colorLightBlueBackground}>
-        <UtilityText strong label={label} text={text} formatParams={formatParams} />
+        <UtilityText weight='medium' label={label} text={text} formatParams={formatParams} />
     </Banner>
 }
 
-export function ClickableBanner({testID, iconType='info', onPress, color=colorPink, hoverColor=colorPinkHover, pressColor=colorPinkPress, children}) {
+export function ClickableBanner({testID, onPress, color=colorPink, hoverColor=colorPinkHover, pressColor=colorPinkPress, children}) {
     const s = ClickableBannerStyle;
     return <HoverView onPress={onPress} testID={testID}
                 style={[s.banner, {backgroundColor: color}]} 
@@ -58,9 +58,7 @@ export function ClickableBanner({testID, iconType='info', onPress, color=colorPi
                 pressedStyle={{backgroundColor: pressColor}}
             >
         <HorizBox center spread>
-            {children}             
-            {iconType == 'info' && <Information size={24} style={{fill: colorBlackHover}} />}
-            {iconType != 'info' && <Close size={24} style={{fill: colorBlackHover}} />}
+            {children}
         </HorizBox>
     </HoverView>
 }
