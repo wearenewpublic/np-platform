@@ -29,7 +29,7 @@ export const SimpleCommentsStructure = {
         commentStylers: [],
         commentInputPlaceholder: 'Share your thoughts...',
         commentReplyPlaceholder: 'Reply to {authorName}...',
-        commentInputLoginAction: 'comment',
+        commentInputLoginAction: '',
         commentFilters: [],
         commentRankers: [],
 

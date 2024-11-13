@@ -80,17 +80,17 @@ export function UnauthenticatedLoginScreen({action, showGithub=true, showGoogle=
     const [bubbleHeight, setBubbleHeight] = useState(0);
     return <View style={s.outer}>
         <Pad size={40} />        
-        <Heading level='1' center label={'Join the conversation' + (action ? ' to ' + action : '')} />
+        <Heading level='1' center label={'Join the discussion' + (action ? ' to ' + action : '')} />
         <Pad size={4}/>
         <View style={s.subHeadWrapper}>
-            <Heading level='5' center label={"Once you log in, you can use a different display name if you prefer to not reveal your real name"} />
+            <Heading level='5' center label={"Once you log in, enter a display name"} />
         </View>
         <Pad size={52} />
         <View style={s.imageWrapper}>
             <View style={[s.bubble, { top: -(bubbleHeight / 2) }]}
             onLayout={(event) => setBubbleHeight(event.nativeEvent.layout.height)}>
                 <PadBox>
-                <Heading level='3' center color={colorWhite} label={'Set your visibility after log in'} />
+                <Heading level='3' center color={colorWhite} label={'Add your display name'} />
                 </PadBox>
             </View> 
             <Image source={{ uri: makeAssetUrl("images/set_visibility_image.png") }} style={{ width: 250, height: 160 }} />
