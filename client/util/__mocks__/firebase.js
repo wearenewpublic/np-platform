@@ -2,7 +2,7 @@ import { getObjectPropertyPath, setObjectPropertyPath} from "../util";
 
 export function firebaseSignOut() {}
 export function onFbUserChanged() {}
-export function getFirebaseUser() {return 'user'}
+export function getFirebaseUser() {return {uid: 'a', displayName: 'Alice Adams', email: 'alice@adams.org'}}
 export async function getFirebaseIdTokenAsync() {return 'token'}
 export function useFirebaseUser() {return {uid: 'a', displayName: 'Alice Adams', email: 'alice@adams.org'}}
 

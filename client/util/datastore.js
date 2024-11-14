@@ -5,7 +5,7 @@ import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseData
 import { deepClone, getObjectPropertyPath, setObjectPropertyPath } from './util';
 import { LoadingScreen } from '../component/basics';
 import { SharedData, SharedDataContext } from './shareddata';
-import { callServerApiAsync } from './servercall';
+import { callServerApiAsync } from '../system/servercall';
 import { closeWindow, goBack, gotoInstance, gotoInstanceScreen, pushSubscreen } from './navigate';
 import { getFragment } from '../platform-specific/url';
 
@@ -727,3 +727,14 @@ export function useStableCallback(callback) {
 
     return useCallback((...args) => ref.current(...args), []);
 }
+
+
+export function useServerCallResult(component, funcname, params={}) {
+    const datastore = useDatastore();
+    const [result, setResult] = useState(null);
+    useEffect(() => {
+        datastore.callServerAsync(component, funcname, params).then(setResult);
+    }, [component, funcname, JSON.stringify(params)]);
+    return result;
+}
+

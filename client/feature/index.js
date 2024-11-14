@@ -137,6 +137,10 @@ export function addFeatures(newFeaturesForStructs) {
     })
 }
 
+export function UNSAFE_setFeatures(newFeatures) {
+    features = newFeatures;
+}
+
 export function addDefaultFeatures(newDefaultFeatures) {
     Object.keys(newDefaultFeatures).forEach(structureKey => {
         const newDefaults = newDefaultFeatures[structureKey];
@@ -144,4 +148,8 @@ export function addDefaultFeatures(newDefaultFeatures) {
         const mergedDefaults = {...oldDefaults, ...newDefaults};
         defaultFeatureConfig[structureKey] = mergedDefaults;
     })
+}
+
+export function UNSAFE_setDefaultFeatures(newDefaults) {
+    defaultFeatureConfig = newDefaults;
 }
