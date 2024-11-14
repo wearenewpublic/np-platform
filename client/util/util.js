@@ -123,22 +123,6 @@ export function getFirstName(name) {
     return (name || '').trim().split(' ')[0];
 }
 
-export function textToPathPath(text) {
-    return encodeURIComponent(text.replace(/ /g, '-'));
-}
-
-export function pathPartToText(text) {
-    return decodeURIComponent(text).replace(/-/g, ' ');
-}
-
-export function questionToPathPart(question) {
-    return textToPathPath(question.replace(/\?/g, ''));
-}
-
-export function pathPartToQuestion(text) {
-    return pathPartToText(text) + '?';
-}
-
 export async function pauseAsync(milliseconds) {
     await new Promise(resolve => setTimeout(resolve, milliseconds));
 }
