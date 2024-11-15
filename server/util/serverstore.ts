@@ -139,6 +139,14 @@ class ServerStore {
         ], {...value, key: this.instanceKey});
     }
 
+    removeBacklink(structureKey, instanceKey) {
+        this.doDelayedWrite([
+            'silo', this.siloKey, 'structure', structureKey, 
+            'instance', instanceKey, 'collection',
+            'backlink_' + this.structureKey, this.instanceKey
+        ], null);
+    }
+
     setGenericBacklink(structureKey, instanceKey, value={}) {
         const key = this.structureKey + '_' + this.instanceKey;
         this.doDelayedWrite([
