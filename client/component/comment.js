@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import { useCollection, useDatastore, useObject, usePersonaKey, useSessionData } from "../util/datastore";
 import { Byline } from "./people";
 import { ConversationScreen, PadBox, Pad, HorizBox, Separator, ShadowBox } from "./basics";
-import { Heading, TextField, TextFieldButton } from "./text";
+import { Heading, TextField, TextFieldButton, UtilityText } from "./text";
 import { CTAButton, ExpandButton, SubtleButton, TextButton } from "./button";
-import { Reply, Edit, Flag } from "@carbon/icons-react";
+import { Reply, Edit, Flag, TrashCan } from "@carbon/icons-react";
 import { StyleSheet, View } from "react-native";
 import { getFirstName } from "../util/util";
-import { colorLightBlueBackground, colorTextGrey } from "./color";
+import { colorLightBlueBackground, colorRed, colorTextGrey } from "./color";
 import { RichText } from "./richtext";
 import { CatchList, Catcher } from "../system/catcher";
 import { TopBarActionProvider } from "./topbar";
@@ -19,12 +19,15 @@ import { NoCommentsHelp } from "./help";
 import { useIsAdmin } from "./admin";
 import { getIsMobileWeb } from '../platform-specific/deviceinfo';
 import { Toggle } from "./form";
+import { Modal } from "./modal";
+import { DeleteIcon } from "./icon";
 
 export function Comment({commentKey}) {
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
-    const {commentAboveWidgets, commentBelowWidgets, commentMiddleWidgets} = useConfig();
-    return <View testID={commentKey} id={commentKey}>
+    const {commentAboveWidgets, commentBelowWidgets, commentMiddleWidgets, commentStylers} = useConfig();
+    const style = getCombinedStyle({comment, stylers:commentStylers});
+    return <View testID={commentKey} id={commentKey} style={style}>
         <PadBox top={20} horiz={20}>
             <Catcher>
                 {commentAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
@@ -54,8 +57,9 @@ export function ReplyComment({commentKey, depth={depth}, isFinal=false}) {
     const s = ReplyCommentStyle;
     const comment = useObject('comment', commentKey);
     const editing = useSessionData(['editComment', commentKey]);
-    const {replyAboveWidgets} = useConfig();
-    return <View testID={commentKey} style={depth == 1 ? s.firstLevel : s.secondLevel}>
+    const {replyAboveWidgets, commentStylers} = useConfig();
+    const style = getCombinedStyle({comment, stylers:commentStylers});
+    return <View testID={commentKey} id={commentKey} style={[depth == 1 ? s.firstLevel : s.secondLevel, style]}>
         <Catcher>{replyAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}</Catcher>
         <Byline type='small' userId={comment.from} time={comment.time} edited={comment.edited} genericTitle={comment?.genericTitle}  />
         <Pad size={20} />
@@ -87,7 +91,7 @@ export function CommentBody({commentKey}) {
     const [expanded, setExpanded] = useState(false);
     const datastore = useDatastore();
     const {commentTopWidgets, commentBodyStylers} = useConfig();
-    const commentBodyStyle = getCommentBodyStyle({comment, commentBodyStylers});
+    const commentBodyStyle = getCombinedStyle({comment, stylers:commentBodyStylers});
     const text = comment.text || '';
     const isLong = guessNumberOfLines(text) > 8;
 
@@ -118,9 +122,9 @@ export function CommentBody({commentKey}) {
     }
 }
 
-export function getCommentBodyStyle({comment, commentBodyStylers}) {
+export function getCombinedStyle({comment, stylers}) {
     var style = {};
-    commentBodyStylers?.forEach(styler => {
+    stylers?.forEach(styler => {
         style = {...style, ...styler({comment})};
     })
     return style;
@@ -169,6 +173,8 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
     const author = useObject('persona', replyToComment?.from);
     const [inProgress, setInProgress] = useState(false);
     const [shownModalComponent, setShownModalComponent] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false); 
+    const [isCommentError, setIsCommentError] = useState(false);
     const {commentReplyPlaceholder, commentInputPlaceholder, 
         commentPostBlockers, commentPostCheckers,
         commentPostTriggers,
@@ -239,6 +245,7 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
                     onEditingDone(finalComment);
                 }
             } else {
+                setIsCommentError(true);
                 setComment(finalComment);
             }
             setInProgress(false);
@@ -247,17 +254,29 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
             onEditingDone(comment);
         }
     }
+
+    function onDelete() {
+        datastore.updateObject('comment', comment.key, {text: '', deleted: true});
+        if (topLevel) {
+            datastore.goBack();
+        }
+    }
+
     const isMobile = getIsMobileWeb();
     const [isFocused, setIsFocused] = useState(false);
     const [switchValue, setSwitchValue] = useState(comment.genericTitle);
     return <View>
         {shownModalComponent}
+        {showDeleteModal && <DeleteModal onDelete={onDelete} onClose={() => setShowDeleteModal(false)} />}
         {topLevel && <TopBarActionProvider label={action} disabled={!canPost || inProgress} onPress={onPost} />}
+        {topLevel && comment.key && <TopBarActionProvider secondary icon={<DeleteIcon />}
+            label='Delete' type='delete' onPress={() => setShowDeleteModal(true)} 
+        />}
         <EditWidgets widgets={commentEditTopWidgets} comment={comment} setComment={setComment} onCancel={onCancel} />
         <TextField value={comment.text} onChange={text => setComment({...comment, text})} 
             placeholder={placeholder} autoFocus={!isMobile} big={big} testID='comment-edit'
             placeholderParams={{authorName: getFirstName(author?.name)}} 
-            onFocusChange={setIsFocused}/>
+            onFocusChange={setIsFocused} error={isCommentError} />
             {(isFocused || comment.text?.length > 0) && isMobile && (
                 <PadBox top={24} >
                     <View>
@@ -270,7 +289,9 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
         {personaKey &&
             <PadBox top={20} >
                 <HorizBox center spread>
-                    <Pad />
+                    {(comment.key && !topLevel) ? 
+                        <CTAButton icon={<DeleteIcon />} testID='delete' type='delete' onPress={() => setShowDeleteModal(true)} />
+                    : <Pad />}
                     {!topLevel && 
                         <HorizBox center right>
                             {onCancel && <PadBox right={20}><TextButton color={colorTextGrey} label='Cancel' onPress={onCancel} /></PadBox>}
@@ -291,6 +312,22 @@ export function EditComment({comment, big=false, setComment, topLevel, onEditing
     </View>
 }
 
+function DeleteModal({onDelete, onClose}) {
+    function onPress() {
+        onDelete();
+        onClose();
+    }
+    return <Modal onClose={onClose}>
+        <PadBox horiz={20} vert={40}>
+            <Heading level={1} label='Delete this post?' />
+            <Pad size={8} />
+            <UtilityText label="This action can't be undone"/>
+            <Pad size={32} />
+            <CTAButton wide icon={<TrashCan style={{fill: colorRed}}/>} label='Delete' type='delete' onPress={onPress} />
+        </PadBox>
+    </Modal>
+}
+
 function EditWidgets({widgets, comment, setComment, screenParams={}, onCancel,}) {
     return <View>
         {widgets?.map((Widget, idx) => <View key={idx}>
@@ -305,7 +342,7 @@ function CommentReplies({commentKey, depth=1}) {
     const {replyFilters, replyBoosters, commentRankers} = useConfig();
     const datastore = useDatastore();
     const isAdmin = useIsAdmin();
-    var replies = useCollection('comment', {filter: {replyTo: commentKey}, sortBy: 'time', reverse: true});
+    var replies = useCollection('comment', {filter: {replyTo: commentKey, deleted: null}, sortBy: 'time', reverse: true});
     replies = filterComments({datastore, comments: replies, isAdmin, commentFilters: replyFilters});
     replies = rankComments({datastore, comments: replies, commentRankers: commentRankers});
     const boostedComment = replyBoosters?.map(booster => booster({comments: replies}))[0];
@@ -375,12 +412,17 @@ const CommentActionsStyle = StyleSheet.create({
     }
 })
 
-
-export function ActionReply({commentKey, depth}) {
-    const datastore = useDatastore();
+export function ActionReplyExceptToSelf({commentKey, depth}) {
     const comment = useObject('comment', commentKey);
     const parent = useObject('comment', comment.replyTo);
     const personaKey = usePersonaKey();
+    if (comment.from == personaKey) return null;
+    if (depth == 1 && parent.from != personaKey) return null;
+    return <ActionReply commentKey={commentKey} depth={depth} />
+}
+
+export function ActionReply({commentKey, depth}) {
+    const datastore = useDatastore();
     const readOnly = useIsReadOnly();
     
     function onReply() {
@@ -389,9 +431,7 @@ export function ActionReply({commentKey, depth}) {
         logEventAsync(datastore, 'reply-start', {commentKey});
     }
 
-    if (comment.from == personaKey || readOnly) return null;
-    if (depth == 1 && parent.from != personaKey) return null;
-    if (depth > 1) return null;
+    if (readOnly || depth > 1) return null;
 
     return <SubtleButton icon={Reply} label='Reply' onPress={datastore.needsLogin(onReply, 'reply')} padRight />
 }
@@ -461,14 +501,6 @@ export function Composer({about=null, commentKey, goBackAfterPost=false, topLeve
             onCancel={goBackAfterPost && onCancel}
             setComment={setEditedComment} onEditingDone={onEditingDone} />
     </View>
- }
-
-export function CommentsIntro() {
-    return <View>
-        <Heading level={1} label='Comments'/>
-        <Pad size={20} />
-        <RichText color={colorTextGrey} label='Join the conversation by submitting a comment. Be sure to follow our [community guidelines](https://example.com).' />
-    </View>
 }
 
 function filterComments({datastore, comments, isAdmin, commentFilters}) {
@@ -508,11 +540,13 @@ function rankComments({datastore, comments, commentRankers, chosenRanker}) {
 export function BasicComments({about=null, showInput=true, canPost=true}) {
     const datastore = useDatastore();
     const {noMoreCommentsMessage, commentRankers, pageTopWidgets, pageShowEmptyHelp,
-        pageBottomWidgets, commentFilters} = useConfig();
-    const comments = useCollection('comment', {filter: {about, replyTo: null}, sortBy: 'time', reverse: true});
+        pageBottomWidgets, commentFilters, commentLimit} = useConfig();
+    const comments = useCollection('comment', {filter: {about, replyTo: null, deleted: null}, sortBy: 'time', reverse: true});
     const isAdmin = useIsAdmin();
+    const limit = commentLimit ? commentLimit() : comments.length;
     const filteredComments = filterComments({datastore, comments, isAdmin, commentFilters});
     const rankedComments = rankComments({datastore, comments: filteredComments, commentRankers});
+    const shownComments = rankedComments.slice(0, limit); 
     return <View>
         <View>
             {pageTopWidgets?.map((Widget,i) => 
@@ -522,7 +556,7 @@ export function BasicComments({about=null, showInput=true, canPost=true}) {
         {comments?.length == 0 && pageShowEmptyHelp &&
             <NoCommentsHelp />
         }
-        <CatchList items={rankedComments} renderItem={comment =>
+        <CatchList items={shownComments} renderItem={comment =>
             <Comment commentKey={comment.key} />
         } />
         {comments?.length > 0 && !pageBottomWidgets?.length > 0 &&

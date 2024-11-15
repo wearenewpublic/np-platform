@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { TopBar } from '../component/topbar';
 import { IBMPlexSans_400Regular, IBMPlexSans_500Medium, IBMPlexSans_600SemiBold } from '@expo-google-fonts/ibm-plex-sans';
 import { IBMPlexMono_400Regular, IBMPlexMono_500Medium, IBMPlexMono_600SemiBold } from '@expo-google-fonts/ibm-plex-mono';
-import { ConfigContext, Datastore, WaitForData, useGlobalProperty, useLoaded } from '../util/datastore';
+import { ConfigContext, Datastore, WaitForData, useDatastore, useGlobalProperty, useIsLive, useLoaded, useSiloKey } from '../util/datastore';
 import { useFonts } from 'expo-font';
 import { Catcher } from '../system/catcher';
 import { structures } from '../structure';
@@ -75,10 +75,47 @@ const ScreenStackStyle = StyleSheet.create({
     }
 })
 
+export function EmbeddedInstance({structureKey, instanceKey, features, screenKey}) {
+    const isLive = useIsLive();
+    const siloKey = useSiloKey();
+    const datastore = useDatastore();
+
+    const structure = getStructureForKey(structureKey);
+    if (!structure) {
+        console.error('Structure not found', {structureKey});
+    }
+
+    const readOnly = useFirebaseData(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global', 'features', 'readonly'], {once: true, defaultValue: false}) ?? true;
+    const selectedFeatures = useFirebaseData(['silo', siloKey, 'structure', structureKey, 'instance', instanceKey, 'global', 'features'], {once: readOnly}) || [];
+    const activeFeatures = {...selectedFeatures, ...features};
+    const config = assembleConfig({structure, activeFeatures});
+    const screenSet = assembleScreenSet({structure, activeFeatures});
+    const screen = getScreen({screenSet, structure, screenKey, instanceKey});
+
+    if (!isLive) {
+        const allInstanceData = datastore.getEmbeddedInstanceData();
+        const thisInstanceData = allInstanceData?.[structureKey]?.[instanceKey];
+        if (!thisInstanceData) {
+            console.error('Embedded instance data not found for test', {allInstanceData, structureKey, instanceKey});
+        }
+        const extendedInstanceData = {...datastore.props, ...thisInstanceData, config, structureKey, instanceKey, isLive};
+        return <Datastore {...extendedInstanceData}>
+            {React.createElement(screen)}
+        </Datastore>
+    } else {        
+        return <Datastore siloKey={siloKey} structureKey={structureKey} instanceKey={instanceKey} 
+                config={config} isLive={isLive} isEmbedded={true}
+                personaPreview={datastore.personaPreview}
+                language={datastore.language} readOnly={datastore.readOnly} >
+            {React.createElement(screen)}
+        </Datastore>
+    }
+}
 
 export function StructureDemo({
         siloKey='demo', structureKey, instanceKey='demo', screenKey, params={},
         features, isAdmin=true, globals, collections, sessionData, serverCall,
+        modulePublic, moduleUserGlobal, moduleUserLocal,
         roles=['Owner'],
         language='english', personaKey='a'
     }) {
@@ -99,7 +136,7 @@ export function StructureDemo({
     return <Datastore globals={{...globals, features}} collections={collections} sessionData={sessionData}
                 language={language} isAdmin={isAdmin} isLive={false} serverCall={serverCall}
                 siloKey={siloKey} structureKey={structureKey} instanceKey={instanceKey} personaKey={personaKey}
-                roles={roles}
+                roles={roles} modulePublic={modulePublic} moduleUserGlobal={moduleUserGlobal} moduleUserLocal={moduleUserLocal}
                 pushSubscreen={pushSubscreen} goBack={onGoBack} >
             <StructureDemoConfiguredScreenStack structureKey={structureKey} screenStack={screenStack}/>
         </Datastore>

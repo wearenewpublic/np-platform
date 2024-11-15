@@ -1,12 +1,13 @@
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { defaultPersonaList, personaListToMap } from './testpersonas';
-import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseDataAsync, getFirebaseUser, onFbUserChanged, useFirebaseData } from './firebase';
-import { deepClone, getObjectPropertyPath } from './util';
+import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseDataAsync, getFirebaseUser, onFbUserChanged, signInWithTokenAsync, useFirebaseData } from './firebase';
+import { deepClone, getObjectPropertyPath, setObjectPropertyPath } from './util';
 import { LoadingScreen } from '../component/basics';
 import { SharedData, SharedDataContext } from './shareddata';
 import { callServerApiAsync } from './servercall';
-import { goBack, gotoInstance, pushSubscreen } from './navigate';
+import { closeWindow, goBack, gotoInstance, gotoInstanceScreen, pushSubscreen } from './navigate';
+import { getFragment } from '../platform-specific/url';
 
 const DatastoreContext = React.createContext({});
 export const ConfigContext = React.createContext();
@@ -28,10 +29,12 @@ export class Datastore extends React.Component {
         super(props);
         this.sharedData = new SharedData();
         this.resetData();
+        this.resetSessionData();
     }
 
     componentDidMount() {
         this.resetData();
+        this.resetSessionData();
         if (this.props.isLive) {
             this.setupFirebaseWatchers();
         } else {
@@ -51,6 +54,11 @@ export class Datastore extends React.Component {
             if (this.props.isLive) {
                 this.setupFirebaseWatchers();
             }
+        } 
+        if (prevProps.structureKey != this.props.structureKey ||
+            prevProps.instanceKey != this.props.instanceKey
+        ) {
+            this.resetSessionData();
         }
     }
 
@@ -95,14 +103,24 @@ export class Datastore extends React.Component {
         }
     }
 
-    resetData() {
-        const {isLive, globals, collections, sessionData, personaKey='a', roles=[]} = this.props;
+    resetSessionData() {
+        const {isLive, sessionData, personaKey='a', roles=[]} = this.props;
         if (isLive) {
             const personaKey = getFirebaseUser()?.uid || null;
             this.sessionData = {personaKey}
+        } else {
+            this.sessionData = {personaKey, roles, ...sessionData}     
+        }
+    }
+
+
+    resetData() {
+        const {isLive, globals, collections} = this.props;
+        if (isLive) {
             this.refreshUserDataAsync(getFirebaseUser());
         } else {
-            this.sessionData = {personaKey, roles, ...sessionData}
+            this.userGlobalData = {...this.props.moduleUserGlobal};
+            this.userLocalData = {...this.props.moduleUserLocal};
             this.setData({
                 persona: personaListToMap(defaultPersonaList),
                 ...deepClone(globals || {}), 
@@ -247,6 +265,50 @@ export class Datastore extends React.Component {
             return getObjectPropertyPath(this.props.modulePublic, [moduleKey, ...path]);
         }
     }
+    getModuleUserGlobalAsync(modulekey, path) {
+        const personaKey = this.getPersonaKey();
+        if (!personaKey) {
+            return null;
+        } else if (this.props.isLive) {
+            return getFirebaseDataAsync(['silo', this.getSiloKey(), 'module-user', personaKey, 'global', modulekey, ...path]);
+        } else {
+            return getObjectPropertyPath(this.userGlobalData, [modulekey, ...path]);
+        }
+    }
+    setModuleUserGlobal(modulekey, path, value) {
+        const personaKey = this.getPersonaKey();
+        if (!personaKey) {
+            throw new Error('Cannot set module user global when not logged in');
+        } else if (this.props.isLive) {
+            return firebaseWriteAsync(['silo', this.getSiloKey(), 'module-user', personaKey, 'global', modulekey, ...path], value);
+        } else {
+            this.userGlobalData = setObjectPropertyPath(this.userGlobalData, [modulekey, ...path], value);
+        }
+        this.notifyWatchers();
+    }
+    getModuleUserLocalAsync(modulekey, path) {
+        const personaKey = this.getPersonaKey();
+        if (!personaKey) {
+            return null;
+        } else if (this.props.isLive) {
+            return getFirebaseDataAsync(['silo', this.getSiloKey(), 'module-user', personaKey, 
+                'local', moduleKey, this.props.structureKey, this.props.instanceKey, ...path]);
+        } else {
+            return getObjectPropertyPath(this.props.moduleUserGlobal, [modulekey, ...path]);
+        }
+    }
+    setModuleUserLocal(modulekey, path, value) {
+        const personaKey = this.getPersonaKey();
+        if (!personaKey) {
+            throw new Error('Cannot set module user local when not logged in');
+        } else if (this.props.isLive) {
+            return firebaseWriteAsync(['silo', this.getSiloKey(), 'module-user', personaKey, 'global', modulekey, ...path], value);
+        } else {
+            this.userLocalData = setObjectPropertyPath(this.userLocalData, [modulekey, ...path], value);
+        }
+        this.notifyWatchers();
+    }
+
     async callServerAsync(component, funcname, params={}) {
         if (this.props.onServerCall) {
             this.props.onServerCall({component, funcname, params});
@@ -269,15 +331,17 @@ export class Datastore extends React.Component {
     getConfig() {return this.props.config ?? {}}
     getIsAdmin() {return this.props.isAdmin}
     getIsLive() {return this.props.isLive}
+    getIsEmbedded() {return this.props.isEmbedded}
     getLanguage() {return this.props.language}
     getLoaded() {return this.state.loaded}
+    getEmbeddedInstanceData() {return this.props.embeddedInstanceData}
     getMockServerCall() {return this.props.serverCall}
     pushSubscreen(screenKey, params) {
         if (this.props.pushSubscreen) {
             this.props.pushSubscreen(screenKey, params);
         } else {
-            pushSubscreen(screenKey, params);
-        }   
+            gotoInstanceScreen({structureKey: this.getStructureKey(), instanceKey: this.getInstanceKey(), screenKey, params});
+        }
     }
     gotoInstance({structureKey, instanceKey='one', params={}}) {
         if (this.props.gotoInstance) {
@@ -301,6 +365,35 @@ export class Datastore extends React.Component {
             this.props.goBack();
         } else {
             goBack();
+        }
+    }
+    closeWindow() {
+        if (this.props.closeWindow) {
+            this.props.closeWindow();
+        } else {
+            closeWindow();
+        }
+    }
+    openUrl(url, target, features) {
+        if (this.props.openUrl) {
+            this.props.openUrl(url, target, features);
+        } else {
+            window.open(url, target, features);
+        }
+    }
+    getUrlFragment() {
+        if (this.props.urlFragment) {
+            return this.props.urlFragment;
+        } else {
+            return getFragment();
+        }
+    }
+    async signInWithTokenAsync(loginToken) {
+        if (this.props.serverCall) {
+            // HACK: this isn't actually a server call, but this is a convenient way to mock it
+            return this.callServerAsync('local', 'signInWithToken', {loginToken})
+        } else {
+            await signInWithTokenAsync(loginToken);
         }
     }
     render() {
@@ -351,6 +444,28 @@ export function useData() {
         }
     }, [datastore])
     return {dataTree, sessionData};
+}
+
+export function useUserData() {
+    const datastore = useDatastore();
+    const [userGlobalData, setUserGlobalData] = useState(datastore.userGlobalData);
+    const [userLocalData, setUserLocalData] = useState(datastore.userLocalData);
+
+    useEffect(() => {
+        setUserGlobalData(datastore.userGlobalData);
+        setUserLocalData(datastore.userLocalData);
+
+        const watchFunc = () => {
+            setUserGlobalData(datastore.userGlobalData);
+            setUserLocalData(datastore.userLocalData);
+        }
+        datastore.watch(watchFunc);
+        return () => {
+            datastore.unwatch(watchFunc);
+        }
+    }, [datastore]);
+
+    return {userGlobalData, userLocalData};
 }
 
 export function usePersonaPreview() {
@@ -509,6 +624,34 @@ export function useModulePublicData(moduleKey, path = [], options) {
     };
 }
 
+export function useModuleUserGlobalData(moduleKey, path = [], options) {
+    const {userGlobalData} = useUserData();
+    const datastore = useDatastore();
+    const personaKey = usePersonaKey();
+    if (datastore.getIsLive()) {
+        return useFirebaseData(['silo', datastore.getSiloKey(), 'module-user', personaKey, 'global', moduleKey, ...path], options)
+    } else {
+        return getObjectPropertyPath(userGlobalData, [moduleKey, ...path]) ?? options?.defaultValue ?? null;
+    };
+}
+
+export function useModuleUserLocalData(moduleKey, path = [], options) {
+    const {userLocalData} = useUserData();
+    const datastore = useDatastore();
+    const personaKey = usePersonaKey();
+    const structureKey = useStructureKey();
+    const instanceKey = useInstanceKey();
+    if (!personaKey) {
+        return null;
+    } else if (datastore.getIsLive()) {
+        return useFirebaseData(['silo', datastore.getSiloKey(), 'module-user', personaKey, 
+            'local', moduleKey, structureKey, instanceKey, ...path], options)
+    } else {
+        return getObjectPropertyPath(userLocalData, [moduleKey, ...path]);
+    };
+}
+
+
 export function useInstanceContext() {
     const datastore = useDatastore();
     return {
@@ -526,6 +669,11 @@ export function useSiloKey() {
 export function useIsLive() {
     const datastore = useDatastore();
     return datastore.getIsLive();
+}
+
+export function useIsEmbedded() {
+    const datastore = useDatastore();
+    return datastore.getIsEmbedded();
 }
 
 export function useInstanceKey() {
@@ -566,4 +714,16 @@ export function expandDataListMap(map) {
         newMap[key] = expandDataList(map[key]);
     });
     return newMap;
+}
+
+// useStableCallback allows you to pass a callback to a child component 
+// without causing it to re-render when the callback changes
+export function useStableCallback(callback) {
+    const ref = useRef();
+
+    useEffect(() => {
+        ref.current = callback
+    }, [callback]);
+
+    return useCallback((...args) => ref.current(...args), []);
 }

@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithCustomToken, onAuthStateChanged, connectAuthEmulator } from 'firebase/auth';
-import { connectDatabaseEmulator, getDatabase, onValue, push, get, ref, set } from "firebase/database";
+import { connectDatabaseEmulator, getDatabase, limitToFirst, limitToLast, onValue, orderByKey, push, get, query, ref, set } from "firebase/database";
 import { useEffect, useState } from 'react';
 import { getIsLocalhost } from "../platform-specific/url";
 
@@ -81,7 +81,7 @@ export function firebaseWatchValue(pathList, callback) {
 
 // This needs to cope with temporarily null path elements, so that we can
 // use it to look up properties of a user, even when the user isn't logged in yet.
-export function useFirebaseData(pathList, {defaultValue=null, limit=null, once=false}={}) {
+export function useFirebaseData(pathList, {defaultValue=null, limit=null, oldest=false, once=false}={}) {
     const [data, setData] = useState(undefined);
     const pathString = makeFirebasePath(pathList, true);
     const nullPath = pathList.some(p => p == null || p == undefined);
@@ -94,17 +94,19 @@ export function useFirebaseData(pathList, {defaultValue=null, limit=null, once=f
                 setData(data || defaultValue);
             });
         } else {
-            let query = ref(database, pathString);
-            if (limit) {
-                query = query.orderByKey().limitToLast(limit);
+            let dbRef = ref(database, pathString);
+            if (limit && oldest) {
+                dbRef = query(dbRef, orderByKey(), limitToFirst(limit));
+            } else if (limit && !oldest) {
+                dbRef = query(dbRef, orderByKey(), limitToLast(limit));
             }
 
-            const unsubscribe = onValue(query, snapshot => {
+            const unsubscribe = onValue(dbRef, snapshot => {
                 setData(snapshot.val() || defaultValue)
             });
             return unsubscribe;
         }
-    }, [pathString, once]);
+    }, [pathString, once, limit, oldest]);
     return data;
 }
 

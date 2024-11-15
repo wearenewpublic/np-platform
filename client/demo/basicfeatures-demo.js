@@ -34,7 +34,6 @@ function closeConversationStorySets() {return [
         label: 'Closed Conversation Banner',
         content: <ClosedConversationBanner />,
         config: CloseConversationFeature.defaultConfig,
-        stories: []
     }     
 ]}
 

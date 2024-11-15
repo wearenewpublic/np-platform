@@ -94,21 +94,30 @@ function StorySetContent({storySet}) {
     var featureConfig;
     if (storySet.features) {
         const structure = getStructureForKey(storySet.structureKey);
-        featureConfig = assembleConfig({structure, activeFeatures: keysToTrueMap(storySet.features)});
+        featureConfig = assembleConfig({
+            structure, activeFeatures: keysToTrueMap(storySet.features), 
+            includeDefaults: false
+        });
     }
 
     return <Datastore config={featureConfig ?? storySet.config} collections={storySet.collections}
         instanceKey={storySet.instanceKey ?? 'testInstance'} 
         siloKey={storySet.siloKey ?? 'demo'}
         modulePublic={storySet.modulePublic}
+        moduleUserGlobal={storySet.moduleUserGlobal}
+        moduleUserLocal={storySet.moduleUserLocal}
         personaKey={storySet.personaKey}
         roles={storySet.roles}
         firebaseUser={storySet.firebaseUser ?? default_fbUser} 
         structureKey={storySet.structureKey ?? 'testStruct'} 
         globals={storySet.globals} filebaseUser={storySet.firebaseUser}
         sessionData={storySet.sessionData} 
+        embeddedInstanceData={storySet.embeddedInstanceData}
         gotoInstance={setNavInstance}
         goBack={() => setNavInstance({parent: true})}
+        openUrl={url => setNavInstance({url})}
+        closeWindow={() => setNavInstance({close: true})}
+        urlFragment={storySet.urlFragment}
         onServerCall={onServerCall}
         pushSubscreen={(screenKey,params) => setNavInstance({screenKey, params})}
         serverCall={{...defaultServerCall, ...storySet.serverCall}}

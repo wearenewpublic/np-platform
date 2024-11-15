@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "Node16",
+        "moduleResolution": "Node16",
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "outDir": "lib",
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "incremental": true,
+        "allowJs": true,
+        "checkJs": false,
+        "rootDir": ".",
+        "noImplicitAny": false,
+        "types": [
+            "node",
+            "jest"
+        ]
+    },
+    "include": [
+        "**/*"
+    ],
+    "exclude": [
+        "lib",
+        "node_modules",
+        "coverage"
+    ]
+}

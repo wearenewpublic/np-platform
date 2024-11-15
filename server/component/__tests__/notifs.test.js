@@ -1,8 +1,9 @@
+jest.mock('../../util/email', () => ({sendTemplatedEmailAsync: jest.fn()}));
+
 const { sendTemplatedEmailAsync } = require("../../util/email");
 const { mockServerStore } = require("../../util/serverstore");
 const { sendNotifsForReplyApi } = require("../notifs");
 
-jest.mock('../../util/email', () => ({sendTemplatedEmailAsync: jest.fn()}));
 
 test('noNotifIfDisabled', async () => {
     const serverstore = mockServerStore();
@@ -29,10 +30,9 @@ test('sendNotifsForReplyApi', async () => {
 
     const result = await sendNotifsForReplyApi({serverstore, parentKey: '1', replyKey: '2', language: 'English'});
     expect(sendTemplatedEmailAsync).toHaveBeenCalledWith({
-        templateId: 'reply-notif', language: 'English',
-        siloKey: 'testSilo', structureKey: 'testStruct', instanceKey: 'testInstance',
+        serverstore: expect.anything(),
+        templateId: 'reply-notif', 
         toUserId: 'testuser', replyText: 'My reply',
-        toPersona: {key: 'testuser', name: 'Test User', photoUrl: 'photo-url'},
-        siloName: 'Radio Canada', replyAuthorName: 'Test User', conversationName: 'My Conversation'
+        replyAuthorName: 'Test User', conversationName: 'My Conversation'
     });
 });

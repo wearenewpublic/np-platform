@@ -1,5 +1,5 @@
 import { Byline, FaceButton, FacePile, LetterFace, ProfilePhoto } from "../component/people";
-import { Datastore, usePersonaKey } from "../util/datastore";
+import { Datastore } from "../util/datastore";
 import { IconUpvote, IconUpvoted } from "../component/icon";
 import { CharacterCounter, CircleCount, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
 import { colorBlack, colorLightGreen, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
@@ -7,10 +7,9 @@ import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton
 import { Checkbox, Toggle, RadioOption, RadioGroup, FormField, AccordionField } from "../component/form";
 import { useState } from "react";
 import { RichText } from "../component/richtext";
-import { Card, ConversationScreen, FlowBox, HorizBox, HoverSelectBox, Narrow, Pad, PadBox, ShadowBox } from "../component/basics";
-import { BasicTeaser } from "../component/teaser";
-import { Banner, ClickableBanner, TopBanner } from "../component/banner";
-import { TrashCan, Pin, Chat, ChevronDown, Reply, Image as CarbonImage, Hearing, Video, FaceAdd, Edit, Bookmark, Flag, Close, ArrowLeft, Demo } from "@carbon/icons-react";
+import { Card, ConversationScreen, FlowBox, HorizBox, Narrow, Pad, PadBox, ShadowBox } from "../component/basics";
+import { Banner, BannerMessage, ClickableBanner, TopBanner } from "../component/banner";
+import { TrashCan, Pin, Chat, ChevronDown, Reply, Image as CarbonImage, Hearing, Video, FaceAdd, Edit, Bookmark, Flag, Close, ArrowLeft } from "@carbon/icons-react";
 import { Modal } from "../component/modal";
 import { CLICK, DemoSection, POPUP, SpacedArray } from "../system/demo";
 import { Image, View } from "react-native";
@@ -63,7 +62,7 @@ export const DesignSystemDemoFeature = {
                     designUrl:'https://www.figma.com/design/MX0AcO8d0ZlCBs4e9vkl5f/PSI-Design-System?node-id=6311-21920&t=MC9nppcf9h2iJDKP-1'
                 },
                 { 
-                    label: 'Misc Extras', key: 'misc', screen: MiscScreen
+                    label: 'Misc Extras', key: 'misc', screen: MiscScreen,
                 }
             ]}
         ]
@@ -244,10 +243,10 @@ function FormScreen() {
                 <FormField label='Required Field' required>
                     <TextField placeholder='Text Field' value={text} setText={setText} />
                 </FormField>
-                <FormField label='Fiend with Description' descriptionLabel='Description appears below' >
+                <FormField label='Field with Description' descriptionLabel='Description appears below' >
                     <TextField placeholder='Text Field' value={text} setText={setText} />
                 </FormField>
-                <FormField label='Fiend with Error' errorLabel='This is an error' >
+                <FormField label='Field with Error' errorLabel='This is an error' >
                     <TextField error placeholder='Text Field' value='Invalid Text' />
                 </FormField>
             </DemoSection>
@@ -302,6 +301,7 @@ function ButtonsAndLinksScreen() {
                     <CTAButton label='Secondary' type='secondary' onPress={onPress} />
                     <CTAButton label='Accent' type='accent' onPress={onPress} />
                     <CTAButton icon={<TrashCan style={{fill: colorRed}} />} label='Delete' type='delete' onPress={onPress} />
+                    <CTAButton icon={<TrashCan style={{fill: colorRed}} />} testID='delete' type='delete' onPress={onPress} />
                     <CTAButton label='✨ Emoji' type='accent' onPress={onPress} />
                     <CTAButton label='Disabled' type='primary' disabled />
                 </SpacedArray>
@@ -453,7 +453,7 @@ function ModalHolder({label, children}) {
 
 function modalStorySet() {return [
     {
-        label: 'Modal with Buttons',
+        label: 'Small Modal with Buttons',
         content: <ModalHolder label='Open Modal' >
             <PadBox horiz={20} vert={20}><UtilityText label='Content'/></PadBox>
         </ModalHolder>,
@@ -461,12 +461,28 @@ function modalStorySet() {return [
             {label: 'Open', actions: [
                 CLICK('Open Modal')
             ]},
-            {label: 'Open and Close', actions: [
+            {label: 'Open and Close with button', actions: [
                 CLICK('Open Modal'), 
                 POPUP(CLICK('I understand'))
-            ]}
+            ]},
+            {label: 'Open and Close with breadcrumb', actions: [
+                CLICK('Open Modal'), 
+                POPUP(CLICK('close-modal'))
+            ]},
+            
         ]
-    }
+    },
+    {
+        label: 'Big Modal',
+        content: <ModalHolder label='Open Modal' >
+            <Image style={{width: 1000, height: 1000}} source={{uri: 'https://psi.newpublic.org/faces/face1.jpeg'}} />
+        </ModalHolder>,
+        stories: [
+            {label: 'Open', actions: [
+                CLICK('Open Modal')
+            ]},            
+        ]
+    },
 ]}
 
 function BannerDemoScreen() {
@@ -503,8 +519,10 @@ function BannerDemoScreen() {
                     <ClickableBanner iconType='close'>
                         <RichText label='This is a **minor** problem. Click to close'/>
                     </ClickableBanner>
-
                 </Narrow>
+            </DemoSection>
+            <DemoSection label='Banner Message'>
+                <BannerMessage label='Banner Message'/>
             </DemoSection>
     </ConversationScreen>
 }
@@ -532,3 +550,4 @@ function MiscScreen() {
         </DemoSection>
     </View>
 }
+

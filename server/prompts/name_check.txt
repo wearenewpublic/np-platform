@@ -1,13 +1,13 @@
 I'm going to give you a proposed pseudonym for a user in a reddit-like online forum that aspires to higher levels of civility. 
-I want you to tell me if the username is likely to be seen as offensive or inappropriate by other users. 
+I want you to tell me if the username is likely to cause problems in the forum. 
 
 Reasons to reject a pseudonym include:
 * Swear words
 * References to sex, drugs, illegal activity
 * Derogatory terms for groups
+* Any other reason this username would be likely to cause issues
 
 I want you to respond with a JSON object of the following form:
 {"violates": [true or false]}
 
 The pseudonym is in {{language}} and is: "{{name}}"
-

@@ -1,6 +1,6 @@
 import { ActionEdit, ActionReply, ActionReport, BasicComments, Comment, CommentsInput, Composer, ComposerScreen } from "../component/comment";
 import { ConversationScreen, Narrow, Pad, Separator } from "../component/basics";
-import { CLICK, DemoSection, INPUT } from "../system/demo";
+import { CLICK, DemoSection, INPUT, POPUP } from "../system/demo";
 import { Datastore } from "../util/datastore";
 import { ActionUpvote } from "../feature/UpvoteFeature";
 import { StructureDemo } from "../util/instance";
@@ -85,6 +85,9 @@ function commentStorySets() {return [
             {label: 'Cancel Editing Reply', actions: 
                 [CLICK('Edit'), CLICK('Cancel')]
             },
+            {label: 'Delete Reply', actions:
+                [CLICK('Edit'), CLICK('delete'), POPUP(CLICK('Delete'))]
+            },
             {label: 'Hide Replies', actions:
                 [CLICK('toggle-replies')]
             },
@@ -94,6 +97,20 @@ function commentStorySets() {return [
             {label: 'Go to Profile', actions: 
                 [CLICK('Bob Bauer')]
             }
+        ]
+    },
+    {
+        label: 'Logged out Comment',
+        collections, config, personaKey: null,
+        content: <Comment commentKey={5} />,
+        stories: [
+            {label: 'Login to Reply', actions: 
+                [CLICK('Reply')]
+            },
+            {label: 'Login to Upvote', actions: 
+                [CLICK('upvote')]
+            }
+
         ]
     },
     {

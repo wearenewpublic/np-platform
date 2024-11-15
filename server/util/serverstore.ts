@@ -1,8 +1,15 @@
 const { firebaseReadAsync, firebaseWriteAsync, firebaseUpdateAsync, expandPath, checkPathsNotOverlapping, firebaseGetUserAsync, checkNoUndefinedKeysOrValues, firebaseReadShallowKeys } = require("./firebaseutil");
 
-// TODO: Batch writes and send them all to firebase together
-
 class ServerStore {
+    siloKey: string;
+    structureKey: string;
+    instanceKey: string;
+    userId: string;
+    userEmail: string;
+    language: string;
+    delayedWrites: {};
+    parent: ServerStore | null;
+
     constructor({siloKey, structureKey, instanceKey, userId, userEmail, language}) {
         this.siloKey = siloKey;
         this.structureKey = structureKey;
@@ -33,7 +40,7 @@ class ServerStore {
         return ['silo', this.siloKey, 'structure', this.structureKey, 'instance', this.instanceKey];
     }
 
-    doDelayedWrite(path, value) {
+    doDelayedWrite(path : string[], value : any) {
         if (this.parent) {
             this.parent.doDelayedWrite(path, value);
         } else {
@@ -42,7 +49,7 @@ class ServerStore {
         }
     }
 
-    doDelayedUpdate(path, updateMap) {
+    doDelayedUpdate(path : string[], updateMap : Record<string,any>) {
         const updateKeys = Object.keys(updateMap ?? {});
         updateKeys.forEach(k => {
             this.doDelayedWrite([...path, k], updateMap[k]); 
@@ -60,33 +67,33 @@ class ServerStore {
         this.delayedWrites = {};
     }
 
-    async getGlobalPropertyAsync(key) {
+    async getGlobalPropertyAsync(key : string) {
         return await firebaseReadAsync([... this.getInstancePrefix(), 'global', key]);
     }
 
-    setGlobalProperty(key, value) {
+    setGlobalProperty(key : string, value : any) {
         this.doDelayedWrite([... this.getInstancePrefix(), 'global', key], value);
     }
 
-    async getObjectAsync(collection, key) {
+    async getObjectAsync(collection : string, key : string) {
         return await firebaseReadAsync([... this.getInstancePrefix(), 'collection', collection, key]);
     }
 
-    setObject(collection, key, value) {
+    setObject(collection : string, key : string, value : any) {
         this.doDelayedWrite([... this.getInstancePrefix(), 'collection', collection, key], 
             {...value, key});
     }
 
-    updateObject(collection, key, updateMap) {
+    updateObject(collection : string, key : string, updateMap : Record<string,any>) {
         this.doDelayedUpdate([
             ... this.getInstancePrefix(), 'collection', collection, key
             ], updateMap
         );
     }
 
-    async getCollectionAsync(collection) {
-        const itemMap = await firebaseReadAsync([... this.getInstancePrefix(), 'collection', collection]);
-        var itemList = [];
+    async getCollectionAsync(collection : string) : Promise<any[]> {
+        const itemMap : Record<string, any> = await firebaseReadAsync([... this.getInstancePrefix(), 'collection', collection]);
+        var itemList: any[] = [];
         const keys = Object.keys(itemMap ?? {});
         keys.forEach(key => {
             itemList.push({...itemMap[key], key});
@@ -94,23 +101,23 @@ class ServerStore {
         return itemList;
     }
 
-    async getModulePublicAsync(module, path) {
+    async getModulePublicAsync(module : string, path : string | string[]) {
         return await firebaseReadAsync(['silo', this.siloKey, 'module-public', module, expandPath(path)]);
     }
 
-    updateModulePublic(module, path, updateMap) {
+    updateModulePublic(module : string, path : string | string[], updateMap : Record<string,any>) {
         this.doDelayedUpdate(['silo', this.siloKey, 'module-public', module, expandPath(path)], updateMap);
     }
 
-    setModulePublic(module, path, value) { 
+    setModulePublic(module : string, path : string | string[], value : any) { 
         this.doDelayedWrite(['silo', this.siloKey, 'module-public', module, expandPath(path)], value);
     } 
 
-    async getModulePrivateAsync(module, path) {
+    async getModulePrivateAsync(module : string, path : string | string[]) {
         return await firebaseReadAsync(['silo', this.siloKey, 'module', module, expandPath(path)]);
     }
 
-    setModulePrivate(module, path, value) {
+    setModulePrivate(module : string, path : string | string[], value : any) {
         this.doDelayedWrite(['silo', this.siloKey, 'module', module, expandPath(path)], value);
     }
 
@@ -241,7 +248,7 @@ class ServerStore {
     }
 
     getRemoteStore({
-        siloKey=this.siloKey, structureKey=this.structureKey, instanceKey=this.instancekey, 
+        siloKey=this.siloKey, structureKey=this.structureKey, instanceKey=this.instanceKey, 
         userId=this.userId, userEmail=this.userEmail, language=this.language
     }) {
         const remoteStore = new ServerStore({
@@ -268,7 +275,7 @@ function mockServerStore({
         siloKey='testSilo', structureKey='testStruct', 
         instanceKey='testInstance', userId='testuser', userEmail='admin@admin.org',
         language='English'
-    } = {}) {
+    } = {}) : ServerStore {
     return new ServerStore({siloKey, structureKey, instanceKey, userId, userEmail, language});
 }
 exports.mockServerStore = mockServerStore;

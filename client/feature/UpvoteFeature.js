@@ -1,8 +1,6 @@
 import { SubtleButton } from "../component/button";
-import { colorBlack, colorDisabledText, colorTextBlue, colorTextGrey } from "../component/color";
+import { colorBlack, colorTextGrey } from "../component/color";
 import { IconUpvote, IconUpvoted } from "../component/icon";
-import { UtilityText } from "../component/text";
-import { needsLogin } from "../structure/login";
 import { useCollection, useDatastore, useObject, usePersonaKey } from "../util/datastore";
 import { useIsReadOnly } from "../util/features";
 
@@ -36,7 +34,7 @@ export function ActionUpvote({commentKey}) {
     const disabled = comment?.from == personaKey || readOnly;
 
     return <SubtleButton icon={upvoted ? IconUpvoted : IconUpvote} bold={upvoted}
-        ariaLabel='upvote'
+        ariaLabel='upvote' testID='upvote'
         color={upvoted ? colorBlack : colorTextGrey}
         disabled={disabled}
         text={count.toString()}

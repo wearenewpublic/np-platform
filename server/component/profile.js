@@ -79,8 +79,17 @@ async function checkNameAsync({serverstore, name}) {
         params: {name}
     });
     if (gptResult.violates) {
-        return {violates: true, message: 'Name violates guidelines'};
+        return {violates: true};
     }
+    const result2 = await getGptJsonAsync({
+        promptKey: 'name_looks_real', 
+        language: serverstore.getLanguage(),
+        params: {name}
+    });
+    if (result2.resembles_full_name) {
+        return {violates: true, looksreal: true};
+    }
+
     return {violates: false};
 }
 exports.checkNameAsync = checkNameAsync;

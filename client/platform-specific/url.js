@@ -22,3 +22,7 @@ export function WebLinkBase({url, children}) {
         {children}
     </Pressable>
 }
+
+export function getIsInSidebar() {return false}
+
+export function getFragment() {return ''}

@@ -1,52 +1,66 @@
 import { StyleSheet, View } from "react-native";
-import { closeSidebar, gotoInstance } from "../util/navigate";
+import { closeSidebar, makeUrl } from "../util/navigate";
 import { firebaseSignOut } from "../util/firebase";
-import { useDatastore, useGlobalProperty, useInstanceKey, usePersonaKey, usePersonaObject, useStructureKey } from "../util/datastore";
-import { useState } from "react";
+import { useDatastore, useGlobalProperty, useInstanceKey, usePersonaKey, usePersonaObject, useSessionData, useSiloKey, useStableCallback, useStructureKey } from "../util/datastore";
+import { useEffect, useState } from "react";
 import { Byline } from "./people";
 import { BreadCrumb, CTAButton, Popup, TextButton } from "./button";
 import { HorizBox, Pad, PadBox, Separator } from "./basics";
-import { ObservableProvider, ObservableValue, useObservable } from "../util/observable";
-import { getFeatureBlocks, useEnabledFeatures } from "../util/features";
+import { getFeatureBlocks, useConfig, useEnabledFeatures } from "../util/features";
 import { defaultFeatureConfig } from "../feature";
 import { Catcher } from "../system/catcher";
-import { historyGetState } from "../platform-specific/url";
+import { getIsInSidebar, historyGetState } from "../platform-specific/url";
 import { useIsAdmin } from "./admin";
-import { CircleCount, UtilityText } from "./text";
+import { CircleCount, UtilityText, WebLinkTextButton } from "./text";
 import { AccordionField, RadioGroup, RadioOption, Toggle } from "./form";
 import { colorGreyPopupBackground } from "./color";
 import { ChevronDown, ChevronUp, Close, ArrowLeft } from '@carbon/icons-react';
-
-const global_toolbarAction = new ObservableValue(null);
 
 export function TopBar() {
     const s = TopBarStyle;
     const instanceKey = useInstanceKey();
     const structureKey = useStructureKey();
-    const toolbarAction = useObservable(global_toolbarAction);
+    const toolbarAction = useSessionData('toolbarAction');
+    const toolbarSecondaryAction = useSessionData('toolbarSecondaryAction');
     const datastore = useDatastore();
     const isLogin = structureKey == 'login';
-    return <View style={s.topBox}>        
-        <View style={s.leftRow}>    
-            {historyGetState() ? 
-                <BreadCrumb icon={ArrowLeft} iconProps={{size:32}} onPress={() => datastore.goBack()} />
-            : 
-                <BreadCrumb icon={Close} iconProps={{size:32}}  onPress={closeSidebar} />
-            }
-        </View>
-        <Catcher>
-            <HorizBox center>
-                {toolbarAction ? 
-                    <PadBox right={12}><CTAButton size='compact' label={toolbarAction.label} disabled={toolbarAction.disabled} onPress={toolbarAction.onPress} /></PadBox>
-                : 
-                    instanceKey && !isLogin && <UserInfo />
+    const {topBarHelpBubbles} = useConfig();
+    return <View style={s.outer}>
+        <View style={s.topBox}>        
+            <View style={s.leftRow}>    
+                {historyGetState() ? 
+                    <BreadCrumb icon={ArrowLeft} iconProps={{size:32}} onPress={() => datastore.goBack()} />
+                : getIsInSidebar() ?
+                    <BreadCrumb icon={Close} iconProps={{size:32}}  onPress={closeSidebar} />
+                : null
                 }
-            </HorizBox>
-        </Catcher>
+            </View>
+            <Catcher>
+                <HorizBox center>
+                    {toolbarSecondaryAction &&
+                        <CTAButton size='compact' 
+                            icon={toolbarSecondaryAction.icon} label={toolbarSecondaryAction.label} 
+                            type={toolbarSecondaryAction.type} disabled={toolbarSecondaryAction.disabled} 
+                            onPress={toolbarSecondaryAction.onPress} />
+                    }
+                    {toolbarAction ? 
+                        <PadBox horiz={12}><CTAButton size='compact' label={toolbarAction.label} disabled={toolbarAction.disabled} onPress={toolbarAction.onPress} /></PadBox>
+                    : 
+                        instanceKey && !isLogin && <UserInfo />
+                    }
+                </HorizBox>
+            </Catcher>
+        </View>
+        <PadBox horiz={12}>
+            {topBarHelpBubbles?.map((Bubble,i) => <Bubble key={i} />)}
+        </PadBox>
     </View>
 }
 
 const TopBarStyle = StyleSheet.create({
+    outer: {
+        zIndex: 900
+    },
     topBox: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -213,14 +227,13 @@ function UserInfo() {
     const [shown, setShown] = useState(false);
     const isAdmin = useIsAdmin();
     const datastore = useDatastore();
+    const siloKey = useSiloKey();
 
     function popup() {
         return <View>
             <TextButton type='small' onPress={() => datastore.gotoInstance({structureKey:'profile', instanceKey: personaKey})} label='Profile' />
             {isAdmin && <PadBox top={20}>
-                <TextButton type='small' label='Admin'
-                    onPress={() => datastore.gotoInstance({structureKey: 'admin', instanceKey: 'one'})} 
-                />
+                <WebLinkTextButton url={makeUrl(['admin','one'])} label='Admin' />
             </PadBox>}  
             <Pad />
             <TextButton type='small' onPress={firebaseSignOut} label='Log out' />
@@ -262,6 +275,20 @@ const UserInfoStyle = StyleSheet.create({
 });
 
 
-export function TopBarActionProvider({label, disabled, onPress}) {
-    return <ObservableProvider observable={global_toolbarAction} value={{label, disabled, onPress}} />
+// We need to use useStableCallback because otherwise
+// we either update setSessionData every time the callback changes, which 
+// risks creating dependency loops, or we don't update the button when
+// the callback changes, and the button doesn't work.
+export function TopBarActionProvider({label, secondary=false, type, icon, disabled, onPress}) {
+    const datastore = useDatastore();
+    const stableOnPress = useStableCallback(onPress);
+    const property = secondary ? 'toolbarSecondaryAction' : 'toolbarAction';
+    useEffect(() => {
+        datastore.setSessionData(property, {label, disabled, type, icon, onPress: stableOnPress});
+        return () => {
+            datastore.setSessionData(property, null);
+        }
+    }, [label, disabled, stableOnPress]);
+    return null;
 }
+

@@ -7,8 +7,8 @@ import { global_textinput_test_handlers, Heading, UtilityText } from "../compone
 import React, { useState } from "react";
 import { keysToTrueMap, pauseAsync } from "../util/util";
 import { Reset } from "@carbon/icons-react";
-import { colorBlueBackground, colorGreyBorder, colorGreyPopupBackground, colorTextGrey, colorWhite } from "../component/color";
-import { default_fbUser, demoPersonaToFbUser, personaA } from "../util/testpersonas";
+import { colorGreyBorder, colorGreyPopupBackground, colorTextGrey } from "../component/color";
+import { default_fbUser } from "../util/testpersonas";
 import { Banner } from "../component/banner";
 import { closeActivePopup, getPopupRef } from "../platform-specific/popup.web";
 import { assembleConfig } from "../util/features";
@@ -28,6 +28,10 @@ export function POPUP(popupAction) {
 
 export function POPUP_CLOSE() {
     return {action: 'popup-close'}
+}
+
+export function CHECK_TEXT(expectedText) {
+    return { action: 'check_text', expectedText };
 }
 
 
@@ -121,6 +125,11 @@ async function playStoryAction({domRef, action}) {
         onChangeText(action.text);
     } else if (action.action == 'popup') {
         await playStoryAction({domRef: getPopupRef(), action: action.popupAction});
+    } else if (action.action === 'check_text') {
+        const textFound = domRef.current?.textContent.includes(action.expectedText);
+        if (!textFound) {
+            throw new Error(`Expected text "${action.expectedText}" not found.`);
+        }   
     } else {
         throw new Error('Unsupported action: ' + action.action);
     }
@@ -142,8 +151,9 @@ export const defaultServerCall = {
 
 export function DemoStorySet({storySet}) {
     const { collections, content, structureKey='testStruct', instanceKey='testInstance', 
-        personaKey, config, modulePublic, roles, features,
-        globals, sessionData, serverCall, pad=true, firebaseUser=default_fbUser, siloKey='demo'
+        personaKey, config, modulePublic, moduleUserGlobal, moduleUserLocal, roles, features, embeddedInstanceData,
+        globals, sessionData, serverCall, pad=true, firebaseUser=default_fbUser, siloKey='demo',
+        urlFragment
     } = storySet;
     const domRef = React.createRef();
     const dataRef = React.createRef();
@@ -155,15 +165,22 @@ export function DemoStorySet({storySet}) {
     }
     var featureConfig = null;
     if (features) {
+        if (!storySet.structureKey) {
+            throw new Error('Structure key required for feature config');
+        }
         const structure = getStructureForKey(structureKey);
         if (!structure) {
             throw new Error('Structure not found: ' + structureKey);
         }
-        featureConfig = assembleConfig({structure, activeFeatures: keysToTrueMap(features)});
+        featureConfig = assembleConfig({
+            structure, activeFeatures: keysToTrueMap(features), 
+            includeDefaults: false
+        });
     }
 
     function onReset() {
         dataRef.current.resetData();
+        dataRef.current.resetSessionData();
         setNavInstance(null);
         setKey(key+1);
         setCallLog([]);
@@ -172,10 +189,14 @@ export function DemoStorySet({storySet}) {
     return <Datastore ref={dataRef} config={featureConfig ?? config} siloKey={siloKey}
             structureKey={structureKey} instanceKey={instanceKey} personaKey={personaKey}
             collections={collections} globals={globals} firebaseUser={firebaseUser}
-            sessionData={sessionData} modulePublic={modulePublic}
+            sessionData={sessionData} modulePublic={modulePublic} 
+            moduleUserGlobal={moduleUserGlobal} moduleUserLocal={moduleUserLocal}
+            embeddedInstanceData={embeddedInstanceData}
             roles={roles} onServerCall={onServerCall}
-            gotoInstance={setNavInstance}
+            gotoInstance={setNavInstance} 
             goBack={() => setNavInstance({parent: true})}
+            openUrl={url => setNavInstance({url})} urlFragment={urlFragment}
+            closeWindow={() => setNavInstance({close: true})}
             pushSubscreen={(screenKey,params) => setNavInstance({screenKey, params})}
             serverCall={{...defaultServerCall, ...serverCall}} >
         <Heading type='small' text={storySet.label} />
@@ -187,7 +208,7 @@ export function DemoStorySet({storySet}) {
                         onPress={() => playStoryActionListAsync({domRef, actions: story.actions})} />
                 </PadBox>
             )}
-            {storySet.stories && <PadBox vert={5}><IconButton icon={Reset} compact type='secondary' label='Reset' onPress={onReset} /></PadBox>}
+            <PadBox vert={5}><IconButton icon={Reset} compact type='secondary' label='Reset' onPress={onReset} /></PadBox>
         </FlowBox>
         <Pad size={10} />
         <ShadowBox>
@@ -209,9 +230,12 @@ export function NavResult({navInstance}) {
     return <PadBox horiz={8} vert={8}>
         <Banner>
             <UtilityText text='Navigated to:' />
+            {navInstance.close && <UtilityText strong text='Close window' />}
+            {navInstance.url && <UtilityText strong text={navInstance.url} />}
             {navInstance.parent && <UtilityText strong text='Parent screen' />}
             {navInstance.structureKey && <UtilityText strong text={navInstance.structureKey + '/' + navInstance.instanceKey} />}
             {navInstance.screenKey && <UtilityText strong text={'Subscreen: ' + navInstance.screenKey + '(' + JSON.stringify(navInstance.params) + ')'} />}
+            {navInstance.token && <UtilityText strong text={'Login token: ' + navInstance.token} />}
         </Banner>
     </PadBox>
 }

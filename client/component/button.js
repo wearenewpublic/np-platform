@@ -8,7 +8,7 @@ import { PopupBase } from "../platform-specific/popup";
 import { Information, Close, ChevronDown, ChevronUp } from '@carbon/icons-react';
 
 
-export function CTAButton({label, text, formatParams, icon, type='primary', disabled, size='large', wide=false, borderless=false, onPress}) {
+export function CTAButton({label, text, testID, formatParams, icon, type='primary', disabled, size='large', wide=false, borderless=false, onPress}) {
     const s = CTAButtonStyle;
 
     const styleMap = {
@@ -26,10 +26,10 @@ export function CTAButton({label, text, formatParams, icon, type='primary', disa
         small: s.smallButton,
     };    
         
-    return <HoverView disabled={disabled} role='button' testID={label ?? text}
+    return <HoverView disabled={disabled} role='button' testID={label ?? text ?? testID}
             style={[sizeMap[size], wide && s.wide, normal, borderless && s.borderless]} hoverStyle={[s.hover, hover]} 
             pressedStyle={pressed} onPress={onPress} >
-        {icon && <PadBox right={size === 'small' ? 6 : 8}>{icon}</PadBox>}
+        {icon && <PadBox right={(label || text) ? (size === 'small' ? 6 : 8) : null}>{icon}</PadBox>}
         <UtilityText type={size === 'small' ? 'tiny' : 'large'} label={label} text={text} formatParams={formatParams} color={textColor} />
     </HoverView>
 }
@@ -161,12 +161,12 @@ const IconReplyStyle = StyleSheet.create({
     }
 });
 
-export function SubtleButton({label, text, ariaLabel, disabled, formatParams, color=colorTextGrey, strong=false, icon=null, iconProps={}, padLeft, padRight, onPress}) {
+export function SubtleButton({label, text, ariaLabel, testID, disabled, formatParams, color=colorTextGrey, strong=false, icon=null, iconProps={}, padLeft, padRight, onPress}) {
     const s = SubtleButtonStyle;
     const [hover, setHover] = useState(false);
     return <HoverView style={[s.button, padLeft && {marginLeft: 20}, padRight && {marginRight: 20}]} 
             disabled={disabled} role={!disabled ? 'button' : null}
-            ariaLabel={ariaLabel} testID={label ?? text}
+            ariaLabel={ariaLabel} testID={testID ?? label ?? text ?? ariaLabel}
             onPress={onPress} setHover={setHover}>
         {React.createElement(icon, {...iconProps, color})}
         {(label || text) && <Pad size={4} />}

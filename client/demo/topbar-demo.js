@@ -1,5 +1,9 @@
-import { TopBar } from "../component/topbar"
+import { Pad } from "../component/basics"
+import { HelpBubble } from "../component/help"
+import { DeleteIcon } from "../component/icon"
+import { TopBar, TopBarActionProvider } from "../component/topbar"
 import { CLICK, POPUP } from "../system/demo"
+import { View } from "react-native"
 
 export const TopBarDemoFeature = {
     key: 'demo_topbar',
@@ -39,10 +43,33 @@ function topBarStorySets() {return [
                 POPUP(CLICK('Developer')),
                 POPUP(CLICK('Show Config Slots'))
             ]},
-           {label: 'Open Admin', actions: [
-                CLICK('account-menu'),
-                POPUP(CLICK('Admin'))
-            ]}
         ]
+    },
+    {
+        label: 'Top Bar with Action',
+        config: {
+            topBarHelpBubbles: [DemoHelpBubble]
+        },
+        content: <View>
+            <TopBar />
+            <TopBarActionProvider label='Action' onPress={() => {}} /> 
+            <Pad size={40} />
+        </View>,
+    },
+    {
+        label: 'Top Bar with Secondary Action',
+        config: {
+            topBarHelpBubbles: [DemoHelpBubble]
+        },
+        content: <View>
+            <TopBar />
+            <TopBarActionProvider label='Action' onPress={() => {}} /> 
+            <TopBarActionProvider secondary icon={<DeleteIcon />} type='delete' label='Secondary Action' onPress={() => {}} /> 
+            <Pad size={40} />
+        </View>,
     }
 ]}
+
+function DemoHelpBubble() {
+    return <HelpBubble right condition={true} helpKey='below' text='The top bar can show a help bubble' />
+}

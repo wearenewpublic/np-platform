@@ -1,6 +1,7 @@
 const { readFileSync, read } = require("fs");
 const { sendEmailAsync, setPostmarkKey, sendTemplatedEmailAsync } = require("../email");
 const { getLastEmailSent } = require("../../__mocks__/postmark");
+const { mockServerStore } = require("../serverstore");
 
 jest.mock('postmark');
 
@@ -19,10 +20,11 @@ test('sendEmailAsync', async () => {
 
 test('sendTemplatedEmailAsync', async () => {
     setPostmarkKey('mocked-api-key');
-    const toPersona = {name: 'Test User'};
+    const toPersona = {name: 'Test User Godzilla'};
+    const serverstore = mockServerStore();
     await sendTemplatedEmailAsync({
-        templateId: 'reply-notif', language: 'English',
-        siloKey: 'testSilo', structureKey: 'testStruct', instanceKey: 'testInstance',
+        serverstore,
+        templateId: 'reply-notif', 
         toPersona, toUserId: 'testuser', replyText: 'My reply',
         siloName: 'Radio Canada', replyAuthorName: 'Test User', conversationName: 'My Conversation'
     });

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { TranslatableText, useTranslation } from "./translation";
-import { colorBannerGreen, colorBlack, colorDisabledText, colorGreyBorder, colorGreyHover, colorGreyHoverBorder, colorRed, colorWhite } from "./color";
+import { colorBlack, colorDisabledText, colorGreyBorder, colorGreyHover, colorGreyHoverBorder, colorRed, colorWhite } from "./color";
 import { HorizBox, HoverView, Pad, PadBox } from "./basics";
 import { useEffect, useState } from "react";
 import { Edit, Checkmark } from "@carbon/icons-react";
@@ -24,7 +24,7 @@ export function Heading({text, color={color}, center, label, level=2, underline=
         4: HeadingStyle.heading4,
         5: HeadingStyle.heading5,
     }
-    return <TranslatableText text={text} label={label} formatParams={formatParams} 
+    return <TranslatableText text={text} aria-level={level} role='heading' label={label} formatParams={formatParams} 
         style={[
             styleMap[level], 
             underline && {textDecorationLine: 'underline'},
@@ -64,6 +64,14 @@ const HeadingStyle = StyleSheet.create({
 
 export function DataVizText({type, text, label, formatParams}) {
     const s = DataVizTextStyle;
+    var role;
+   const roleMap = {
+        heading1: 'heading',
+        heading2: 'heading',
+        number: 'paragraph',
+        label: 'paragraph',
+        labelStrong: 'strong'
+    }
     const styleMap = {
         heading1: s.heading1,
         heading2: s.heading2,
@@ -71,7 +79,7 @@ export function DataVizText({type, text, label, formatParams}) {
         label: s.label,
         labelStrong: [s.label, {fontFamily: fontFamilySansMedium}]
     }
-    return <TranslatableText text={text} label={label} formatParams={formatParams}
+    return <TranslatableText text={text} role={roleMap[type]} label={label} formatParams={formatParams}
         style={styleMap[type]} />
 }
 const DataVizTextStyle = StyleSheet.create({
@@ -132,7 +140,7 @@ export function Paragraph({numberOfLines=null, type='small', color={colorBlack},
         large: s.largeParagraph,
         small: s.smallParagraph
     }
-    return <TranslatableText numberOfLines={numberOfLines} text={text} label={label} formatParams={formatParams} 
+    return <TranslatableText numberOfLines={numberOfLines} text={text} label={label} formatParams={formatParams} role='paragraph' 
         style={[
             styleMap[type], {color}, 
             strong && {fontFamily: fontFamilySansSemiBold},
@@ -170,7 +178,7 @@ export function UtilityText({type='small', center=false, right=false, text, labe
         tiny: fontFamilySansSemiBold,
     }
     if (!text && !label) return null;
-    return <TranslatableText text={text} label={label} formatParams={formatParams}
+    return <TranslatableText text={text} label={label} role="paragraph" formatParams={formatParams}
         numberOfLines={numberOfLines} ellipsizeMode={ellipsizeMode}
         style={[
             styleMap[type], {color}, 
@@ -207,20 +215,41 @@ const UtilityTextStyle = StyleSheet.create({
     }
 })
 
-export function WebLink({url, children}) {
+export function WebLink({url, style, setHover, children}) {
     const { openLinksInNewTab } = useConfig();
     return <WebLinkBase 
-        newTab={openLinksInNewTab} 
+        newTab={openLinksInNewTab} style={style}
+        setHover={setHover} 
         url={url}>
             {children}
     </WebLinkBase>
 }
 
 export function LinkText({type='small', testID, text, url, label, formatParams}) {
-    return <WebLink url={url} testID={testID} >
+    return <WebLink url={url} testID={testID}>
         <UtilityText underline type={type} text={text} label={label} formatParams={formatParams} />
     </WebLink>
 }
+
+export function WebLinkTextButton({label, heading, level, text, url, type}) {
+    const s = WebLinkTextButtonStyle;
+    const [hover, setHover] = useState(false);
+    return <WebLink testID={label ?? text} url={url} style={hover ? s.hoverButton : s.button} setHover={setHover}>
+        {heading ? 
+            <Heading label={label} text={text} level={level} /> 
+        : 
+            <UtilityText label={label} text={text} type={type} />
+        }
+    </WebLink>
+}
+const WebLinkTextButtonStyle = StyleSheet.create({
+    button: {
+        textDecorationLine: 'none',
+    },
+    hoverButton: {
+        textDecorationLine: 'underline'
+    }
+})
 
 // HACK: This is a hack to allow the test to access the onChangeText function
 // In theory it should be possible to do this with dispatchEvent on the DOM
@@ -330,20 +359,6 @@ const TextFieldButtonStyle = StyleSheet.create({
         borderColor: colorGreyHoverBorder
     }
 })
-
-export function TextBanner({label, text, formatParams}) {
-    const s = TextBannerStyle;
-    return <HorizBox style={s.banner}>
-        <UtilityText type='small' text={text} label={label} formatParams={formatParams} />
-    </HorizBox>
-}
-const TextBannerStyle = StyleSheet.create({
-    banner: {
-        padding: 16,
-        backgroundColor: colorBannerGreen,
-        borderRadius: 8
-    }
-});
 
 export function CharacterCounter({max, min, text}) {
     const count = text?.length ?? 0;
