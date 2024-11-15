@@ -3,27 +3,24 @@ const os = require('os');
 const path = require('path');
 const fs = require('fs');
 const { verifyIdTokenAsync } = require('./firebaseutil');
-const { Server } = require('http');
 const { ServerStore } = require('./serverstore');
 const { getIsUserAdminAsync } = require('./admin');
 const cors = require('cors')({origin: true})
 
-function handleApiRequest(req, res, components) {
+async function handleApiRequestAsync(req, res, components) {
     const contentType = req.headers['content-type'] || '';
-
-    console.log('api request', req.method, req.path, contentType);
     if (req.method == 'OPTIONS') {
         cors(req, res, () => {
             res.status(200);
         });
         return;
     } else if (req.method === 'GET') {
-        handleGetRequest(req, res, components);
+        await handleGetRequestAsync(req, res, components);
     } else if (req.method === 'POST') {  
         if (contentType.includes('multipart/form-data')) {
-            handleMultipartRequest(req, res, components);
+            await handleMultipartRequestAsync(req, res, components);
         } else if (contentType.includes('application/json')) {
-            handleJsonRequest(req, res, components);
+            await handleJsonRequestAsync(req, res, components);
         } else {
             res.status(415).send({error: 'Unsupported Content-Type: ' + contentType});
         }
@@ -32,53 +29,61 @@ function handleApiRequest(req, res, components) {
     }   
 }
 
-exports.handleApiRequest = handleApiRequest;
+exports.handleApiRequestAsync = handleApiRequestAsync;
 
 
  
-function handleMultipartRequest(req, res, components) {
+function handleMultipartRequestAsync(req, res, components) {
     const busboy = Busboy({ headers: req.headers });
     const tmpdir = os.tmpdir();
 
     let fileWrites = [];
     let fields = {};
 
-    busboy.on('field', (fieldname, val) => {
-        fields[fieldname] = val;
-    });
+    return new Promise((resolve, reject) => {
 
-    busboy.on('file', (fieldname, file, fileInfo) => {
-        const filepath = path.join(tmpdir, fileInfo.filename);
-        const writeStream = fs.createWriteStream(filepath);
-        file.pipe(writeStream);
-
-        const promise = new Promise((resolve, reject) => {
-            writeStream.on('finish', resolve);
-            writeStream.on('error', reject);
+        busboy.on('field', (fieldname, val) => {
+            fields[fieldname] = val;
         });
-        fields[fieldname] = filepath;
-        fileWrites.push(promise);
-    });
 
-    busboy.on('finish', async () => {
-        await Promise.all(fileWrites);
+        busboy.on('file', (fieldname, file, fileInfo) => {
+            const filepath = path.join(tmpdir, fileInfo.filename);
+            const writeStream = fs.createWriteStream(filepath);
+            file.pipe(writeStream);
 
-        const {statusCode, result, redirect} = await callApiFunctionAsync(req, fields, components);
-
-        if (redirect) {
-            res.redirect(302, redirect);
-        } else {
-            cors(req, res, () => {
-                res.status(statusCode);
-                res.send(result);
+            const promise = new Promise((resolve, reject) => {
+                writeStream.on('finish', resolve);
+                writeStream.on('error', reject);
             });
-        }
+            fields[fieldname] = filepath;
+            fileWrites.push(promise);
+        });
+
+        busboy.on('finish', async () => {
+            await Promise.all(fileWrites);
+
+            const {statusCode, result, redirect} = await callApiFunctionAsync(req, fields, components);
+
+            if (redirect) {
+                res.redirect(302, redirect);
+            } else {
+                cors(req, res, () => {
+                    res.status(statusCode);
+                    res.send(result);
+                });
+            }
+
+            resolve();
+        });
+
+        busboy.on('error', reject);
+
+        busboy.end(req.rawBody);
     });
-
-    busboy.end(req.rawBody);
 }
+exports.handleMultipartRequestAsync = handleMultipartRequestAsync;
 
-async function handleJsonRequest(request, response, components) {
+async function handleJsonRequestAsync(request, response, components) {
     const fields = {...request.query, ...request.body};
     const {statusCode, result} = await callApiFunctionAsync(request, fields, components);
     cors(request, response, () => {
@@ -86,11 +91,11 @@ async function handleJsonRequest(request, response, components) {
         response.send(result);
     })
 }
+exports.handleJsonRequestAsync = handleJsonRequestAsync
 
-async function handleGetRequest(request, response, components) {
+async function handleGetRequestAsync(request, response, components) {
     const fields = request.query;
     const {statusCode, result, redirect} = await callApiFunctionAsync(request, fields, components);
-    console.log('handleGetRequest', {statusCode, result, redirect});
     if (redirect) {
         console.log('Redirecting to', redirect);
         response.redirect(302, redirect);
@@ -103,7 +108,7 @@ async function handleGetRequest(request, response, components) {
 }
 
 
-async function getValidatedUser(req) {
+async function getValidatedUserAsync(req) {
     const tokenId = req.headers?.authorization && req.headers?.authorization.split('Bearer ')[1];
     if (!tokenId || tokenId == 'none') {
         return null;
@@ -125,7 +130,7 @@ async function callApiFunctionAsync(request, fields, components) {
         const component = components[componentId];
         var apiFunction = component?.publicFunctions?.[apiId];
         const adminFunction = component?.adminFunctions?.[apiId];
-        const user = await getValidatedUser(request);
+        const user = await getValidatedUserAsync(request);
         const userId = user?.uid ?? null;
         const userEmail = user?.email ?? null;
         const params = {...request.query, ...fields, userId, userEmail};

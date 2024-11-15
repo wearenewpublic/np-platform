@@ -6,6 +6,8 @@ setFirebaseAdmin(fakeFirebaseAdmin);
 
 jest.mock('axios');
 jest.mock('postmark');
+jest.mock('jsonwebtoken');
+jest.mock('cors');
 
 jest.useFakeTimers();
 jest.setSystemTime(1000);
