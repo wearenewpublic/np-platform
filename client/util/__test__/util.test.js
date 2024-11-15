@@ -1,4 +1,4 @@
-import { addKey, boolToInt, boolToString, forEachAsync, getObjectPropertyPath, isNonEmpty, removeKey, removeNullProperties, setObjectPropertyPath, stringToBool, stripSuffix } from "../util";
+import { addKey, boolToInt, boolToString, forEachAsync, generateRandomKey, getObjectPropertyPath, isNonEmpty, removeKey, removeNullProperties, setObjectPropertyPath, stringToBool, stripSuffix } from "../util";
 
 jest.mock('../firebase');
 
@@ -12,11 +12,14 @@ test('addKey', () => {
     const collection = {a: 1, b: 2, c: 3};
     const result = addKey(collection, 'd', 4);
     expect(result).toEqual({a: 1, b: 2, c: 3, d: 4});
+    const result2 = addKey(collection, 'd');
+    expect(result2).toEqual({a: 1, b: 2, c: 3, d: true});
 })
 
 test('isNonEmpty', () => {
     expect(isNonEmpty({a: 1,b: 2})).toBe(true);
     expect(isNonEmpty({})).toBe(false);
+    expect(isNonEmpty(null)).toBe(false);
 })
 
 test('removeNullProperties', () => {
@@ -71,4 +74,19 @@ test('setObjectPropertyPath', () => {
     const result2 = setObjectPropertyPath(obj, ['a','b','d'], 3);
     expect(result2).toEqual({a: {b: {c: 1, d: 3}}});
 })
+
+test('generateRandomKey', () => {
+    Object.defineProperty(window, 'crypto', {
+        value: {
+            getRandomValues: jest.fn((arr) => {
+                for (let i = 0; i < arr.length; i++) {
+                    arr[i] = i; 
+                }
+                return arr;
+            })
+        }
+    });
+    const key = generateRandomKey(10);
+    expect(key).toMatch('ABCDEFGHIJ');
+});
 

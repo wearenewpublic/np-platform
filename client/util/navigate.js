@@ -19,7 +19,7 @@ export function goBack() {
     history.back();
 }
 
-function makeQueryForParams(index, params, query=new URLSearchParams()) {
+export function makeQueryForParams(index, params, query=new URLSearchParams()) {
     for (const [key, value] of Object.entries(params ?? {})) {
         if (value) {
             query.set(key + getParamSuffixForIndex(index), value);
@@ -27,7 +27,8 @@ function makeQueryForParams(index, params, query=new URLSearchParams()) {
     }
     return query;
 }
-function addGlobalParamsToQuery(globalParams, query) {
+
+export function addGlobalParamsToQuery(globalParams, query) {
     for (const [key, value] of Object.entries(globalParams ?? {})) {
         query.set(key + '_g', value);
     }
@@ -98,7 +99,7 @@ function getParamSuffixForIndex(index) {
 }
 
 
-function removeInvisibleParentsFromScreenStack(screenStack) {
+export function removeInvisibleParentsFromScreenStack(screenStack) {
     for (var i = 0; i < screenStack.length; i++) {
         const screen = screenStack[i];
         if (screen.screenKey == 'teaser') {
@@ -139,6 +140,10 @@ export function closeWindow() {
 // TODO: Using a global variable is a hack.  We should use a context instead.
 var global_url_watcher = null;
 
+export function UNSAFE_setGlobalUrlWatcher(watcher) {
+    global_url_watcher = watcher;
+}
+
 export function useLiveUrl() {
     const [url, setUrl] = useState(window.location.href);
 
@@ -167,7 +172,6 @@ export function gotoUrl(url) {
 }
 
 export function replaceUrl(url) {
-    console.log('replaceUrl', url);
     historyReplaceState({state: {url}, url: url});
     if (global_url_watcher) {
         global_url_watcher(url);
