@@ -36,7 +36,7 @@ function usePersonaPreviewForSilo({siloKey, once=true}) {
     return personaPreview;
 }
 
-export function ScreenStack({url, globalParams, screenStack, siloKey, structureKey, instanceKey}) {
+export function ScreenStack({url, globalParams, screenStack, siloKey, structureKey, instanceKey, props}) {
     const s = ScreenStackStyle;
     
     const structure = getStructureForKey(structureKey);
@@ -54,12 +54,10 @@ export function ScreenStack({url, globalParams, screenStack, siloKey, structureK
         console.error('ScreenStack missing keys', {structureKey, instanceKey, siloKey});
     }
 
-    console.log('ScreenStack', {url, screenStack, siloKey, structureKey, instanceKey, language, config, readOnly, personaPreview});
-
     return <View style={s.stackHolder}>
         <Datastore key={url} siloKey={siloKey} instanceKey={instanceKey} structureKey={structureKey} 
                 language={language} isLive={true} config={config} readOnly={readOnly}
-                personaPreview={personaPreview}>
+                personaPreview={personaPreview} {...props} >
             {screenStack.map((screenInstance, index) => 
                 <WithScreenStack url={url} screenStack={screenStack} index={index} key={index}>
                     <StackedScreen screenSet={screenSet} screenInstance={screenInstance} index={index} />
@@ -166,7 +164,7 @@ export function StructureDemoConfiguredScreenStack({structureKey, screenStack}) 
 }
 
 
-export function StackedScreen({screenSet, screenInstance, index, features}) {
+export function StackedScreen({screenSet, screenInstance, index}) {
     const {structureKey, instanceKey, screenKey, params} = screenInstance;
     const loaded = useLoaded();
 

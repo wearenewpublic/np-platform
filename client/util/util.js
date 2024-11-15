@@ -110,15 +110,6 @@ export function makeAssetUrl(urlSuffix) {
     }
 }
 
-export function mapKeys(object, callback) {
-    let previousKey = null;
-    return Object.keys(object || {}).map(key => {
-        const result = callback(key, object[key], previousKey);
-        previousKey = key;
-        return result;
-    });
-}
-
 export function getFirstName(name) {
     return (name || '').trim().split(' ')[0];
 }

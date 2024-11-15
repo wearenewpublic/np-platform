@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
 import { getIsLocalhost } from "../platform-specific/url";
 import { appApiDomain, localHostApiDomain } from "../util/config";
-import { useDatastore } from "../util/datastore";
 import { getFirebaseIdTokenAsync } from "../util/firebase";
 
 

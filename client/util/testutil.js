@@ -45,13 +45,6 @@ export function TestInstance({dataRef, structureKey, siloKey='test', instanceKey
 
 export const WithEnv = WithFeatures;
 
-export function DumpDatastore() {
-    const datastore = useDatastore();
-    const data = datastore.getData();
-    console.log('Datastore Data:', data);
-}
-
-
 export function getMatchingObject(dataRef, type, data) {
     const objects = dataRef.current.getData()[type];
     if (!objects) {

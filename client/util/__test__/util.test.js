@@ -1,4 +1,4 @@
-import { addKey, boolToInt, boolToString, forEachAsync, generateRandomKey, getObjectPropertyPath, isNonEmpty, removeKey, removeNullProperties, setObjectPropertyPath, stringToBool, stripSuffix } from "../util";
+import { addKey, boolToInt, boolToString, forEachAsync, generateRandomKey, getObjectPropertyPath, isNonEmpty, removeKey, removeNullProperties, setObjectPropertyPath, sortBy, stringToBool, stripSuffix } from "../util";
 
 jest.mock('../firebase');
 
@@ -90,3 +90,8 @@ test('generateRandomKey', () => {
     expect(key).toMatch('ABCDEFGHIJ');
 });
 
+test('sortBy', () => {
+    const array = [{a: 1}, {a: 3}, {a: 2}];
+    const result = sortBy(array, 'a');
+    expect(result).toEqual([{a: 1}, {a: 2}, {a: 3}]);
+});
