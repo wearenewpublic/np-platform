@@ -16,11 +16,11 @@ export var ui_translations_french = {
     'Reply': 'Réponse',
     'Collapse': 'Réduire',
     'No comments yet. Start the conversation!': 'Aucun commentaire pour l\'instant. Lancez la conversation!',
-    'Share your thoughts': 'Partagez vos réflexions',
+    'Share your thoughts': 'Exprimez-vous',
     'Join the conversation by submitting a comment. Be sure to follow our [community guidelines](https://example.com).': 'Rejoignez la conversation en soumettant un commentaire. Assurez-vous de suivre nos [règles de la communauté](https://example.com).',
     'Log in': 'Se connecter',
     'Comments': 'Commentaires',
-    'Share your thoughts...': 'Partagez vos réflexions...',
+    'Share your thoughts...': 'Exprimez-vous...',
     'Continue with Google': 'Continuer avec Google',
     'By continuing, you agree to our [community guidelines](https://example.com) and [Privacy Policy](https://example.com).': 'En continuant, vous acceptez nos [règles de la communauté](https://example.com) et notre [Politique de confidentialité](https://example.com).',
     'Log in to comment': 'Connectez-vous pour commenter',
@@ -52,10 +52,14 @@ export var ui_translations_french = {
     'Read more': 'Lire la suite',
     'Once you log in, you can use a different display name if you prefer to not reveal your real name': 'Une fois que vous vous connectez, vous pouvez utiliser un autre nom d\'affichage si vous le souhaitez',
     'Set your visibility after log in': 'Sélectionnez votre visibilité',
+    "Once you log in, enter a display name": "Une fois connecté(e), saisissez un nom d'affichage.",
+    "Add your display name": "Ajouter votre nom d'affichage",
 
     // Help
     'Start the conversation': 'Lancez la conversation',
     'Be the first to share your thoughts': 'Soyez le premier à partager vos réflexions',
+    'Same question, new article?': 'Même question, nouvel article?',
+    'Update your previous response with fresh insights': 'Mettez à jour votre réponse avec votre nouvelle perspective.',
 
 
     // Feature module names
