@@ -38,7 +38,7 @@ export function CHECK_TEXT(expectedText) {
 export function DemoSection({label, horiz=false, children, color=null}) {
     const s = DemoSectionStyle;
     return <View style={{marginBottom: 32}}>
-        <Heading type='small' label={label} />
+        <Heading label={label} />
         <Pad size={8} />
         <View style={[s.box, color && {backgroundColor: color}]}>
             <Catcher>
@@ -199,7 +199,7 @@ export function DemoStorySet({storySet}) {
             closeWindow={() => setNavInstance({close: true})}
             pushSubscreen={(screenKey,params) => setNavInstance({screenKey, params})}
             serverCall={{...defaultServerCall, ...serverCall}} >
-        <Heading type='small' text={storySet.label} />
+        <Heading text={storySet.label} />
         <Pad size={5} />
         <FlowBox>
             {storySet.stories?.map(story =>

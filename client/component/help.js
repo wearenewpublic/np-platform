@@ -96,7 +96,7 @@ export function NoCommentsHelp() {
             <Image source={{uri: makeAssetUrl('images/bubbles.png') }}
                 style={{width: 58, height: 58}} />    
             <View style={s.right}>
-                <Heading level={2} label={noCommentsTitle} />
+                <Heading label={noCommentsTitle} />
                 <Pad size={4} />
                 <RichText label={noCommentsMessage} />
             </View>

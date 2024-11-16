@@ -197,8 +197,8 @@ export function TextButton({label, text, level=1, type='large', heading=false, p
             <EditorialHeading type={type} label={label} text={text} formatParams={formatParams}
                 color={color} underline={hover ^ underline} italic={italic} strong={strong} />
         : heading ?
-            <Heading label={label} text={text} formatParams={formatParams} level={level}
-                color={color} underline={hover ^ underline} strong={strong} />
+            <Heading label={label} text={text} formatParams={formatParams} type={type}
+                color={color} underline={hover ^ underline} weight={strong ? 'medium' : 'regular'} />
         :
             <UtilityText label={label} text={text} formatParams={formatParams} type={type} 
                 color={color} underline={hover ^ underline} weight={strong ? 'medium' : 'regular'} />

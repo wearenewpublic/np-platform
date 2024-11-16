@@ -72,8 +72,8 @@ export const DesignSystemDemoFeature = {
 function TextScreen() {
     return <View>
             <DemoSection label='UI Text'>
-                <Heading label='Heading large medium' level={1} />
-                <Heading label='Heading small strong' level={2} />
+                <Heading label='Heading large medium' type="large" weight="medium" />
+                <Heading label='Heading small strong' />
                 <Paragraph type='large' label='Paragraph large' />
                 <Paragraph type='small' strong label='Paragraph small strong' />
                 <Paragraph type='small' label='Paragraph small' />

@@ -14,52 +14,39 @@ const fontFamilySansMedium = 'IBMPlexSans_500Medium, Arial, Helvetica, sans-seri
 const fontFamilySansSemiBold = 'IBMPlexSans_600SemiBold, Arial, Helvetica, sans-serif';
 const fontFamilyMonoRegular = 'IBMPlexMono_400Regular, Arial, Helvetica, sans-serif';
 const fontFamilyMonoMedium = 'IBMPlexMono_500Medium, Arial, Helvetica, sans-serif';
-const fontFamilyMonoSemiBold = 'IBMPlexMono_600SemiBold, Arial, Helvetica, sans-serif'
+const fontFamilyMonoSemiBold = 'IBMPlexMono_600SemiBold, Arial, Helvetica, sans-serif';
 
-export function Heading({text, color={color}, center, label, level=2, underline=false, formatParams}) {
-    const styleMap = {
-        1: HeadingStyle.heading1,
-        2: HeadingStyle.heading2,
-        3: HeadingStyle.heading3,
-        4: HeadingStyle.heading4,
-        5: HeadingStyle.heading5,
+export function Heading({text, weight='strong', type='small', color={color}, center, label, underline=false, formatParams}) {
+    const weightMap = {
+        regular: fontFamilySansRegular,
+        medium: fontFamilySansMedium,
+        strong: fontFamilySansSemiBold,
+    } 
+    const sizeMap = {
+        large: HeadingStyle.large,
+        small: HeadingStyle.small,
     }
-    return <TranslatableText text={text} aria-level={level} role='heading' label={label} formatParams={formatParams} 
+    const ariaMap = {
+        large: '1',
+        small: '2',
+    }
+    return <TranslatableText text={text} aria-level={ariaMap[type]} role='heading' label={label} formatParams={formatParams} 
         style={[
-            styleMap[level], 
+            sizeMap[type], weightMap[weight],
             underline && {textDecorationLine: 'underline'},
             center ? {textAlign: 'center'} : null, {color}
         ]} />
 }
 
 const HeadingStyle = StyleSheet.create({
-    heading1: {
-        fontFamily: fontFamilySansMedium,
+    large: {
         fontSize: 24,
         lineHeight: 24 * 1.25
-    },
-    heading2: {
-        fontFamily: fontFamilySansSemiBold,
+    },    
+    small: {
         fontSize: 16,
         lineHeight: 16 * 1.25
-    },
-    heading3: {
-        fontFamily: fontFamilySansMedium,
-        fontSize: 14,
-        lineHeight: 14 * 1.25
-    },
-    heading4: {
-        fontFamily: fontFamilyMonoRegular,
-        fontSize: 12,
-        lineHeight: 12 * 1.25,
-        fontStyle: 'italic',
-    },
-    heading5: {
-        fontFamily: fontFamilySansRegular,
-        fontSize: 14,
-        lineHeight: 14 * 1.25,
-    },
-    
+    },    
 })
 
 export function DataVizText({type, text, label, formatParams}) {
@@ -164,7 +151,7 @@ const ParagraphStyle = StyleSheet.create({
 
 
 
-export function UtilityText({type='small', center=false, right=false, text, label, formatParams, color='black', weight='regular', caps=false, underline=false, numberOfLines=null, ellipsizeMode='tail'}) {
+export function UtilityText({type='small', center=false, right=false, text, label, formatParams, color='black', weight='regular', caps=false, underline=false, numberOfLines=null, ellipsizeMode='tail', italic=false, mono=false}) {
     const s = UtilityTextStyle;
     const styleMap = {
         large: s.utilityLarge,
@@ -176,13 +163,19 @@ export function UtilityText({type='small', center=false, right=false, text, labe
         medium: fontFamilySansMedium,
         strong: fontFamilySansSemiBold,
     }
+    const monoWeightMap = {
+        regular: fontFamilyMonoRegular,
+        medium: fontFamilyMonoMedium,
+        strong: fontFamilyMonoSemiBold,
+    }    
     if (!text && !label) return null;
     return <TranslatableText text={text} label={label} role="paragraph" formatParams={formatParams}
         numberOfLines={numberOfLines} ellipsizeMode={ellipsizeMode}
         style={[
             styleMap[type], {color}, 
+            italic && {fontStyle: 'italic'},
             underline && {textDecorationLine: 'underline'},
-            weight && {fontFamily: weightMap[weight]},
+            weight && {fontFamily: mono ? monoWeightMap[weight] : weightMap[weight]},
             center && {textAlign: 'center'},
             right && {textAlign: 'right'},
             caps && {textTransform: 'uppercase', letterSpacing: 0.5}
@@ -220,14 +213,14 @@ export function LinkText({type='small', testID, text, url, label, formatParams})
     </WebLink>
 }
 
-export function WebLinkTextButton({label, heading, level, text, url, type}) {
+export function WebLinkTextButton({label, heading, text, url, type, weight='regular'}) {
     const s = WebLinkTextButtonStyle;
     const [hover, setHover] = useState(false);
     return <WebLink testID={label ?? text} url={url} style={hover ? s.hoverButton : s.button} setHover={setHover}>
         {heading ? 
-            <Heading label={label} text={text} level={level} /> 
+            <Heading label={label} text={text} type={type} weight={weight} /> 
         : 
-            <UtilityText label={label} text={text} type={type} />
+            <UtilityText label={label} text={text} type={type} weight={weight} />
         }
     </WebLink>
 }

@@ -75,7 +75,7 @@ function ComponentPageScreen({pageKey}) {
 
     return <ConversationScreen>
         <HeaderBox backgroundColor={colorGreyPopupBackground}>
-            <Heading level={1} label={page.label} />
+            <Heading type="large" weight="medium" label={page.label} />
             <Pad size={8} />
             {designUrl && <LinkText label='Design Link' url={designUrl} />}
             {!designUrl && <UtilityText color={colorRed} label='No design link' />}
@@ -117,7 +117,7 @@ function DemoPageSection({search, label, screenKey, sections}) {
     const datastore = useDatastore();
 
     return <View>
-        <Heading level={1} label={label} />
+        <Heading type="large" weight="medium" label={label} />
         {sections.map(section => 
             (!search || section.pages.some(page => page.label.toLowerCase().includes(search.toLowerCase()))) &&
                 <AccordionField key={section.label} forceOpen={toBool(search)}

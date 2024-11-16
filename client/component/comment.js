@@ -309,7 +309,7 @@ function DeleteModal({onDelete, onClose}) {
     }
     return <Modal onClose={onClose}>
         <PadBox horiz={20} vert={40}>
-            <Heading level={1} label='Delete this post?' />
+            <Heading type="large" weight="medium" label='Delete this post?' />
             <Pad size={8} />
             <UtilityText label="This action can't be undone"/>
             <Pad size={32} />

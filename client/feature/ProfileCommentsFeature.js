@@ -25,7 +25,7 @@ function ProfileCommentsWidget() {
     const comments = useDerivedCollection('comment');
 
     return <PadBox top={20}>
-        <Heading level='1' label='Comments' />
+        <Heading type="large" weight="medium" label='Comments' />
         {comments.map(comment => <DerivedComment key={comment.key} comment={comment} />)}
     </PadBox>    
 }
