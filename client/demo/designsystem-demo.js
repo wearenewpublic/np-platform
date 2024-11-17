@@ -3,7 +3,7 @@ import { Datastore } from "../util/datastore";
 import { IconUpvote, IconUpvoted } from "../component/icon";
 import { CharacterCounter, CircleCount, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
 import { colorBlack, colorLightGreen, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
-import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, FilterButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, ClickableTag, TextButton } from "../component/button";
+import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, FilterButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, ClickThroughTag, TextButton } from "../component/button";
 import { Checkbox, Toggle, RadioOption, RadioGroup, FormField, AccordionField } from "../component/form";
 import { useState } from "react";
 import { RichText } from "../component/richtext";
@@ -385,9 +385,9 @@ function TagsScreen() {
             <Tag emoji='🔥' label='Emphasized Tag' type='emphasized' color={colorPink} />
             <Tag label='Tiny Tag' type='tiny' />
         </DemoSection>
-        <DemoSection label='Clickable Tag' color={colorPink}>
-            <ClickableTag label='Standard' onPress={() => {}} />
-            <ClickableTag label='Standard With Emoji' emoji='🔥' onPress={() => {}} />
+        <DemoSection label='Click Through Tag' color={colorPink}>
+            <ClickThroughTag label='Standard' onPress={() => {}} />
+            <ClickThroughTag label='Standard With Emoji' emoji='🔥' onPress={() => {}} />
         </DemoSection>
     </View>
 }
