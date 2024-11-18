@@ -32,20 +32,18 @@ export function Comment({commentKey}) {
             </Catcher>
             <Byline type='large' userId={comment.from} time={comment.time} edited={comment.edited} />
             <Pad size={20} />
-            <PadBox left={48}>
-                <Catcher>
-                    <CommentBody commentKey={commentKey} />
-                </Catcher>
-                <Catcher>
-                    {commentMiddleWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
-                </Catcher>                
-                <Catcher>
-                    {commentBelowWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
-                </Catcher>
-                {!editing && <PadBox top={20}><Catcher><CommentActions commentKey={commentKey} /></Catcher></PadBox>}
-                <MaybeCommentReply commentKey={commentKey} />
-                <CommentReplies commentKey={commentKey} />
-            </PadBox>
+            <Catcher>
+                <CommentBody commentKey={commentKey} />
+            </Catcher>
+            <Catcher>
+                {commentMiddleWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
+            </Catcher>                
+            <Catcher>
+                {commentBelowWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
+            </Catcher>
+            {!editing && <PadBox top={20}><Catcher><CommentActions commentKey={commentKey} /></Catcher></PadBox>}
+            <MaybeCommentReply commentKey={commentKey} />
+            <CommentReplies commentKey={commentKey} />
         </PadBox>
         <PadBox horiz={20}><Separator /></PadBox>
     </View>
@@ -113,7 +111,7 @@ export function CommentBody({commentKey}) {
         return <View style={commentBodyStyle}>
             {commentTopWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
             <RichText numberOfLines={(isLong && !expanded) ? 8 : null} 
-                text={text.trim()} color={commentBodyStyle.color}
+                text={text.trim()} color={commentBodyStyle.color} type='large'
             />
             {isLong && !expanded && <PadBox top={14}><TextButton underline type='small' label='Read more' onPress={() => setExpanded(true)} /></PadBox>}
         </View>
