@@ -30,12 +30,14 @@ export function Heading({text, weight='strong', type='small', color={color}, cen
         large: '1',
         small: '2',
     }
-    return <TranslatableText text={text} aria-level={ariaMap[type]} role='heading' label={label} formatParams={formatParams} 
+    return <TranslatableText text={text} label={label} aria-level={ariaMap[type]} role='heading' formatParams={formatParams} 
         style={[
-            sizeMap[type], weightMap[weight],
+            {fontWeight: weightMap[weight]},
+            sizeMap[type],
             underline && {textDecorationLine: 'underline'},
             center ? {textAlign: 'center'} : null, {color}
-        ]} />
+        ]}
+    />
 }
 
 const HeadingStyle = StyleSheet.create({
