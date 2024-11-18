@@ -13,6 +13,19 @@ function verifyIdTokenAsync(token) {
     return admin.auth().verifyIdToken(token);
 }
 
+async function getUserByEmailAsync(email) {
+    try {
+        return await admin.auth().getUserByEmail(email);
+    } catch (error) {
+        if (error.code === 'auth/user-not-found') {
+            console.warn(`User with email ${email} not found.`);
+            return null;
+        } else {
+            throw error;
+        }
+    }
+}
+
 async function getOrCreateUserAsync({email, name, photoUrl}) {
     try {
         return await admin.auth().getUserByEmail(email);
@@ -188,7 +201,7 @@ module.exports = {
     setObjectAsync, readObjectAsync, firebaseReadWithFilterAsync,
     keyToUrl, urlToKey,
 
-    getOrCreateUserAsync, createLoginToken,
+    getUserByEmailAsync, getOrCreateUserAsync, createLoginToken,
 
     verifyIdTokenAsync, createNewKey, firebaseGetUserAsync, expandPath, 
     checkPathsNotOverlapping, checkNoUndefinedKeysOrValues: checkNoUndefinedValues,

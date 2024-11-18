@@ -88,5 +88,6 @@ export var ui_translations_french = {
     'Continue': 'Continuer',
     'Saving...' : 'Enregistrement en cours...',
     'Finish' : 'Terminer',
+    'It looks like your profile name matches a celebrity or notable person. You will appear as unverified until our moderators can verify your name.': 'Il semblerait que votre nom de profil correspond à une ceinture étrange ou une personne notable. Vous apparaissez comme non-verifié jusqu\'à ce que nos modeleurs puissent l\'verifier.',
 
 }

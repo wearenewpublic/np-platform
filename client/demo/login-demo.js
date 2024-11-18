@@ -1,6 +1,7 @@
-import { FirstLoginSetupTester } from "../feature/ProfilePhotoAndName"
+import { Datastore } from "@carbon/icons-react"
+import { FirstLoginSetupTester, FirstLoginSetup } from "../feature/ProfilePhotoAndName"
 import { FragmentRedirectScreen, LoginScreen, SSOLogin, UnauthenticatedLoginScreen } from "../structure/login"
-import { CLICK, INPUT } from "../system/demo"
+import { CHECK_TEXT, CHECK_TEXT_ABSENCE, CLICK, INPUT } from "../system/demo"
 import { signInWithTokenAsync } from "../util/firebase"
 import { rcIntLogin } from "../util/loginproviders"
 
@@ -16,6 +17,8 @@ export const LoginDemo = {
     }
 }
 
+const verificationMessage = 'It looks like your profile name matches a celebrity or notable person. You will appear as unverified until our moderators can verify your name.'
+
 function loginStorySets() {return [
     {
         label: 'Unauthenticated Login Screen',
@@ -28,14 +31,45 @@ function loginStorySets() {return [
                 CLICK('Continue with Github')
              ]},
         ]
-    },    
+    },
+    {
+        label: 'First Login Setup - Unverified Celebrity Name',
+        content: <FirstLoginSetup onFieldsChosen={() => {}} />,
+        firebaseUser: {displayName: 'Tom Cruise', photoURL: 'https://psi.newpublic.org/faces/face9.jpeg', uid: 1},
+        personaPreview: {name:'Tom Cruise', verificationStatus: 'unverified'},
+        stories: [
+            {label: 'Show message for unverified name', actions: [
+                CHECK_TEXT(verificationMessage),
+            ]},
+            {label: "Don't show message for pseudonym", actions: [
+                CLICK('A pseudonym'),
+                CHECK_TEXT_ABSENCE(verificationMessage)
+            ]},
+        ]
+    },
+    {
+        label: 'First Login Setup - Verified Celebrity Name',
+        content: <FirstLoginSetup onFieldsChosen={() => {}} />,
+        firebaseUser: {displayName: 'Tom Cruise', photoURL: 'https://psi.newpublic.org/faces/face9.jpeg', uid: 1},
+        personaPreview: {name:'Tom Cruise', verificationStatus: 'verified'},
+        stories: [
+            {label: "Don't show message for verified name", actions: [
+                CHECK_TEXT_ABSENCE(verificationMessage)
+            ]},
+        ]
+    },      
     {
         label: 'Show profile setup if needed',
         content: <LoginScreen />,
-        serverCall: {profile: {
-            checkName: ({name}) => ({violates: name == 'meanword'}),
-            update: () => {}
-        }},
+        serverCall: {
+            profile: {
+                checkName: ({name}) => ({violates: name == 'meanword'}),
+                update: () => {}
+            },
+            verify: {
+                getIsCelebrity: () => false,
+            }
+        },
         stories: [
             {label: 'Just Continue', actions: [
                 CLICK('Finish')

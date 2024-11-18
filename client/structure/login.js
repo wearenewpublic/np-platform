@@ -40,7 +40,13 @@ export function LoginScreen({ action }) {
         const personaPreview = await getFirebaseDataAsync([
             'silo', datastore.getSiloKey(), 'structure', 'profile',
             'instance', personaKey, 'global', 'preview']);
+        const fbUser = datastore.getFirebaseUser();            
         if (!personaPreview?.name) {
+            const isCelebrity = await datastore.callServerAsync(
+                'verify', 'getIsCelebrity', {name: fbUser.displayName});
+            if (isCelebrity) {
+                await datastore.callServerAsync('verify', 'setVerficationStatus')
+            };
             setInProgress(false);
             setNeedsSetup(true);
         } else {

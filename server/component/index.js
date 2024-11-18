@@ -9,6 +9,7 @@ var coreComponents = {
     migrations: require('../migrations/migrations'),
     auth: require('./auth'),
     admin: require('./admin'),
+    verify: require('./verify'),
 }
 
 exports.coreComponents = coreComponents;

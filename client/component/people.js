@@ -1,95 +1,78 @@
 import { useDatastore, useIsLive, useObject, usePersonaKey, usePersonaObject, usePersonaPreview as usePersonaPreview } from "../util/datastore";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { IconCircleCheck } from "./icon";
 import { UtilityText } from "./text";
 import { HoverView, Pad, PadBox, spacings } from "./basics";
 import { formatDate, formatMiniDate } from "./date";
-import { colorBlack, colorDisabledBackground, colorTextGrey, colorWhite, colorPink } from "./color";
+import { colorBlack, colorDisabledBackground, colorTextGrey, colorWhite, colorPink, colorGreyFormHover } from "./color";
 import { TextButton } from "./button";
 import { useLanguage } from "./translation";
 import { useConfig } from "../util/features";
 
-export function ProfilePhoto({ userId, type = 'large', photo = null, faint = false, check = false, border = false }) {
-
+export function ProfilePhoto({ userId, type = 'large', photo = null, faint = false, border = false}) {
     const persona = useObject('persona', userId);
+    const personaPreview = usePersonaPreview();
     const isLive = useIsLive();
     const meKey = usePersonaKey();
-    const { profilePhotoLayers } = useConfig();
 
     if (meKey == userId && isLive) {
-        return <MyProfilePhoto type={type} photo={photo} faint={faint} check={check} border={border} />
+        return <ProfileWithLayers faceComponent={MyProfilePhoto} persona={personaPreview} type={type} photo={photo} faint={faint} border={border} />
     } else {
         const face = persona?.face;
-        if (face || photo || persona?.photoUrl) {
-            if (profilePhotoLayers?.length > 0) {                
-                return <> 
-                    <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} border={border} faint={faint} check={check} />
-                    {renderLayers(type, persona, profilePhotoLayers)}
-                </>
-            } else {
-                return <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} border={border} faint={faint} check={check} />
-            }
+        if (face || photo || persona?.photoUrl) {      
+            return <ProfileWithLayers faceComponent={FaceImage} face={face} persona={persona}
+                photoUrl={photo ?? persona?.photoUrl} type={type} border={border} faint={faint} />
         } else if (persona?.hue && persona?.name) {
-            return <LetterFace name={persona.name} hue={persona.hue} type={type} />
+            return <ProfileWithLayers faceComponent={LetterFace} persona={persona} name={persona.name} hue={persona.hue} type={type} />
         } else {
-            return <AnonymousFace faint={faint} type={type} border={border} />
+            return <ProfileWithLayers faceComponent={AnonymousFace} persona={persona} faint={faint} type={type} border={border} />
         }
     }
-
 }
 
-function renderLayers(type, persona, profilePhotoLayers) { 
+export function MyProfilePhoto({type='large', photo=null, faint=false, border=false}) {
+    const personaPreview = usePersonaPreview();
+    if (personaPreview?.photoUrl) {
+        return <ProfileWithLayers faceComponent={FaceImage} persona={personaPreview} photoUrl={photo ?? personaPreview.photoUrl} type={type} faint={faint} border={border} />
+    } else if (personaPreview?.hue && personaPreview?.name) {
+        return <ProfileWithLayers faceComponent={LetterFace} persona={personaPreview} name={personaPreview.name} hue={personaPreview.hue} type={type} />
+    } else {
+        return <ProfileWithLayers faceComponent={AnonymousFace} persona={personaPreview} faint={faint} type={type} border={border} />
+    }
+}
 
+export function ProfileWithLayers({faceComponent: FaceComponent, persona, type='large', ...props}) {
+    const {profilePhotoLayers} = useConfig();
     const size = sizeMap[type] ?? 32;
-    
-    return <View style={{
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                width: size,
-                height: size,
-                backgroundColor: 'transparent'
-    }}>
-        {profilePhotoLayers && profilePhotoLayers.map((item,i) => item({persona,size,type}))}
+    const badgePad = badgePadMap[type ?? 'small'];
+    const badgeSize = badgeSizeMap[type ?? 'small'];
+    return <View style={{ position: 'relative', width: size, height: size }}>
+        <FaceComponent persona={persona} type={type} {...props} />
+        <View style={{position: 'absolute', bottom: 0, right: -badgePad }}>        
+            {profilePhotoLayers && persona && profilePhotoLayers.map((LayerComponent,i) => {
+                return <LayerComponent key={i} persona={persona} badgeSize={badgeSize} />
+            })}
+        </View>
     </View>
 }
 
-export function MyProfilePhoto({type='large', photo=null, faint=false, check=false, border=false}) {
-    const personaPreview = usePersonaPreview();
-    if (personaPreview?.photoUrl) {
-        return <FaceImage photoUrl={photo ?? personaPreview.photoUrl} type={type} faint={faint} 
-            border={border} check={check} />
-    } else if (personaPreview?.hue && personaPreview?.name) {
-        return <LetterFace name={personaPreview.name} hue={personaPreview.hue} type={type} />
-    } else {
-        return <AnonymousFace faint={faint} type={type} border={border} />
-    }
-}
-
-export function FaceImage({ face, photoUrl = null, type = 'small', faint = false, check = false, border = false}) {
-    
+export function FaceImage({ face, photoUrl = null, type = 'small', faint = false, border = false, name = null }) {
     const size = sizeMap[type] ?? 32;
-    const checkPad = check ? checkPadMap[type ?? 'small'] : 0;
 
     return <View style={{ position: 'relative', alignSelf: 'flex-start' }}>
         <Image
             style={{
                 width: size, height: size, borderRadius: size / 2,
-                opacity: faint ? 0.5 : 1, marginRight: checkPad,
+                opacity: faint ? 0.5 : 1,
                 borderWidth: border ? 2 : 0,
                 borderColor: 'white'
             }}
             source={{ uri: photoUrl ?? ('https://new-public-demo.web.app/faces/' + face) }} />
-        {check && <View style={{ position: 'absolute', right: 0, bottom: 0 }}>
-            <IconCircleCheck />
-        </View>}
     </View>
 }
 
 const fontFamilySansMedium = 'IBMPlexSans_500Medium, Arial, Helvetica, sans-serif';
 
 export function LetterFace({ name, hue, type = 'large' }) {
-
     const s = LetterFaceStyle;
     const size = sizeMap[type] ?? 32;
     const color = 'hsl(' + hue + ', 96%, 27%)';
@@ -107,8 +90,8 @@ const LetterFaceStyle = StyleSheet.create({
     }
 });
 
-export function AnonymousFace({ faint, type, border, check }) {
-    return <FaceImage face='anonymous2.jpeg' faint={faint} type={type} border={border} check={check} />
+export function AnonymousFace({ faint, type, border }) {
+    return <FaceImage face='anonymous2.jpeg' faint={faint} type={type} border={border} />
 }
 
 const AnonymousFaceStyle = StyleSheet.create({
@@ -244,8 +227,18 @@ const sizeMap = {
     tiny: 24,
 }
 
-const checkPadMap = {
+const badgePadMap = {
+    huge: 0,
+    extraLarge: 2,
     large: 2,
     small: 4,
     tiny: 8,
+}
+
+const badgeSizeMap = {
+    huge: 24,
+    extraLarge: 14,
+    large: 14,
+    small: 14,
+    tiny: 14,
 }

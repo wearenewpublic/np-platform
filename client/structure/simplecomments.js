@@ -4,6 +4,7 @@ import { ActionEdit, ActionReply, BasicComments, CommentsInput, CommentsIntro, C
 import { Heading, UtilityText } from "../component/text";
 import { useConfig } from "../util/features";
 import { Banner } from "../component/banner";
+import { VerificationBadge } from "../feature/ProfilePhotoAndName";
 
 export const SimpleCommentsStructure = {
     key: 'simplecomments',
@@ -56,6 +57,7 @@ export const SimpleCommentsStructure = {
         readOnly: false,
 
         openLinksInNewTab: false,
+        profilePhotoLayers: [VerificationBadge],
     }
 }
 

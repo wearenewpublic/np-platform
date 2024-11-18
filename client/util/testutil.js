@@ -88,6 +88,11 @@ async function testStoryActionAsync(parent, action) {
         if (!textFound) {
             throw new Error(`Expected text "${action.expectedText}" not found.`);
         }        
+    } else if (action.action === 'check_text_absence') {
+        const textFound = parent.queryByText(action.expectedAbsentText);
+        if (textFound) {
+            throw new Error(`Text "${action.expectedAbsentText}" was found, but should be absent.`);
+        }        
     } else {
         throw new Error('Unsupported action: ' + action.action);
     }
