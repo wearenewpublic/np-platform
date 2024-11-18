@@ -108,7 +108,7 @@ const CTAButtonStyle = StyleSheet.create({
     },
     smallButton: {
         paddingHorizontal: 12,
-        height: 28,
+        height: 32,
         borderRadius: 32,
         alignSelf: 'flex-start',
         flexDirection: 'row',
@@ -125,7 +125,7 @@ const CTAButtonStyle = StyleSheet.create({
     }
 })
 
-export function ClickableTag({label, emoji, onPress}) {
+export function ClickThroughTag({label, emoji, onPress}) {
     return <CTAButton label={label} icon={emoji && <UtilityText text={emoji} type="small" weight='medium' />}
     type="secondary" size="small" borderless onPress={onPress} />
 }
