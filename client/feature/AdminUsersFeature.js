@@ -36,7 +36,7 @@ export function AdminUsersScreen() {
 
     return <ConversationScreen pad>
         <Pad />
-        <Heading level={1} label='Admin Users' />
+        <Heading type="large" weight="medium" label='Admin Users' />
         <Pad />
         <AdminUserList adminUsers={adminUsers} />
         <Pad />   

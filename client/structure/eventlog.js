@@ -34,7 +34,7 @@ function HomeScreen() {
     return <RestrictedScreen capability='eventlog/view'>
         <WindowTitle title='Log Dashboard' />
         <Pad />
-        <Heading level={1} label='Logs Dashboard' />
+        <Heading type="large" weight="medium" label='Logs Dashboard' />
         <Pad />
         <CTAButton label='Sessions' onPress={() => datastore.pushSubscreen('sessions')}/>
         <Pad />
@@ -46,7 +46,7 @@ export function EventTypesScreen() {
     return <RestrictedScreen capability='eventlog/view'>
         <WindowTitle title='Event Types' />
         <Pad />
-        <Heading level={1} label='Event Types' />
+        <Heading type="large" weight="medium" label='Event Types' />
         <Pad />
         {Object.keys(eventTypes).map((eventType, i) => <PadBox vert={4} key={i}><EventType eventType={eventType} /></PadBox>)}
     </RestrictedScreen>
@@ -81,7 +81,7 @@ export function SessionListScreen() {
         <WindowTitle title='Sessions' />
         <Pad />
         <HorizBox spread center>
-            <Heading level={1} label='Sessions' />
+            <Heading type="large" weight="medium" label='Sessions' />
             <CTAButton label='Refresh' onPress={onRefresh} />
         </HorizBox>
         <Pad />
@@ -137,7 +137,7 @@ export function EventLogScreen({eventType, sessionKey, siloKey}) {
         <Pad />
         {sessionKey && <PadBox bottom={20}><SessionSummary sessionKey={sessionKey} /></PadBox>}
         <HorizBox spread center>
-            <Heading level={1} label='Event Log' />
+            <Heading type="large" weight="medium" label='Event Log' />
             <CTAButton label='Refresh' onPress={onRefresh} />
         </HorizBox>
         <Pad />

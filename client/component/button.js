@@ -182,7 +182,7 @@ const SubtleButtonStyle = StyleSheet.create({
 });
 
 
-export function TextButton({label, text, level=1, type='large', heading=false, paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, leftIconProps={}, rightIcon, rightIconProps={}, color=colorBlack, alignStart=false, onPress}) {
+export function TextButton({label, text, type='large', heading=false, paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, leftIconProps={}, rightIcon, rightIconProps={}, color=colorBlack, alignStart=false, onPress}) {
     const s = TextButtonStyle;
     const [hover, setHover] = useState(false);
     return <HoverView shrink testID={label ?? text}
@@ -197,8 +197,8 @@ export function TextButton({label, text, level=1, type='large', heading=false, p
             <EditorialHeading type={type} label={label} text={text} formatParams={formatParams}
                 color={color} underline={hover ^ underline} italic={italic} strong={strong} />
         : heading ?
-            <Heading label={label} text={text} formatParams={formatParams} level={level}
-                color={color} underline={hover ^ underline} strong={strong} />
+            <Heading label={label} text={text} formatParams={formatParams} type={type}
+                color={color} underline={hover ^ underline} weight={strong ? 'medium' : 'regular'} />
         :
             <UtilityText label={label} text={text} formatParams={formatParams} type={type} 
                 color={color} underline={hover ^ underline} weight={strong ? 'medium' : 'regular'} />
