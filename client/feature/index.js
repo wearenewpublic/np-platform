@@ -8,7 +8,7 @@ import { ProfileCommentsFeature } from "./ProfileCommentsFeature";
 import { ReplyNotificationsFeature } from "./ReplyNotifsFeature";
 import { DesignSystemDemoFeature } from "../demo/designsystem-demo";
 import { CommentDemoFeature } from "../demo/comment-demo";
-import { DemoFeature, DemoSecondaryFeature } from "../demo/comment-config";
+import { DemoFeature, DemoSecondaryFeature } from "./comment-config";
 import { ProfileDemoFeature } from "../demo/profile-demo";
 import { EventlogDemoFeature } from "../demo/eventlog-demo";
 import { ProfileEditDemo } from "../demo/profileedit-demo";
