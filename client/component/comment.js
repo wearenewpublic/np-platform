@@ -111,7 +111,7 @@ export function CommentBody({commentKey}) {
         return <View style={commentBodyStyle}>
             {commentTopWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}
             <RichText numberOfLines={(isLong && !expanded) ? 8 : null} 
-                text={text.trim()} color={commentBodyStyle.color}
+                text={text.trim()} color={commentBodyStyle.color} type='large'
             />
             {isLong && !expanded && <PadBox top={14}><TextButton underline type='small' label='Read more' onPress={() => setExpanded(true)} /></PadBox>}
         </View>
