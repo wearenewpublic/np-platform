@@ -397,11 +397,11 @@ export function DropDownSelector({label, options, value, onChange=()=>{}}) {
     </PopupPanel>
 }
 
-export function PopupPanel({children, popupContent, alignRight=false, setHover}) {
+export function PopupPanel({children, popupContent, alignRight=false, testID, setHover}) {
     const s = PopupPanelStyle;
     const [shown, setShown] = useState(false);
     return <View style={{alignSelf: 'flex-start'}}> 
-        <PopupBase popupContent={popupContent} alignRight={alignRight} setHover={setHover} setShown={setShown}>
+        <PopupBase testID={testID} popupContent={popupContent} alignRight={alignRight} setHover={setHover} setShown={setShown}>
             <View style={s.button}>
                 {children}
                 <Pad size={8} />
