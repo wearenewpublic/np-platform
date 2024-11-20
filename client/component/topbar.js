@@ -29,9 +29,9 @@ export function TopBar() {
         <View style={s.topBox}>        
             <View style={s.leftRow}>    
                 {historyGetState() ? 
-                    <BreadCrumb icon={ArrowLeft} iconProps={{size:32}} onPress={() => datastore.goBack()} />
+                    <BreadCrumb testID='back' icon={ArrowLeft} iconProps={{size:32}} onPress={() => datastore.goBack()} />
                 : getIsInSidebar() ?
-                    <BreadCrumb icon={Close} iconProps={{size:32}}  onPress={closeSidebar} />
+                    <BreadCrumb testID='close' icon={Close} iconProps={{size:32}}  onPress={closeSidebar} />
                 : null
                 }
             </View>
