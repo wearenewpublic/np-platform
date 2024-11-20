@@ -522,6 +522,28 @@ function MiscScreen() {
                 <Tag label='This is Item Four'/>
                 <Tag label='This is Item Five'/>
             </FlowBox>
+            <FlowBox rowGap={10} columnGap={20}>
+                <Tag label='This is Item One'/>
+                <Tag label='This is Item Two'/>
+                <Tag label='This is Item Three'/>
+                <Tag label='This is Item Four'/>
+                <Tag label='This is Item Five'/>
+            </FlowBox>
+        </DemoSection>
+        <DemoSection label='Horiz Box'>
+            <HorizBox>
+                <Tag label='Item One'/>
+                <Tag label='Item Two next to it'/>
+            </HorizBox>
+            <HorizBox gap={10}>
+                <Tag label='Item One'/>
+                <Tag label='I have a 10px gap'/>
+            </HorizBox>
+            <HorizBox spread>
+                <Tag label='Item One'/>
+                <Tag label='In the middle' />
+                <Tag label='I am spread out'/>
+            </HorizBox>
         </DemoSection>
         <DemoSection label='Card'>
             <Card>
