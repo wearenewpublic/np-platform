@@ -230,6 +230,7 @@ function UserInfo() {
     const datastore = useDatastore();
     const siloKey = useSiloKey();
     const {showBetaTag} = useConfig();
+    console.log('showBetaTag', showBetaTag);
 
     function popup() {
         return <View>
@@ -251,7 +252,9 @@ function UserInfo() {
         return <Popup testID='account-menu' popupContent={popup} setHover={setHover} setShown={setShown} popupStyle={s.popup}>
             <PadBox vert={6} right={20}>
                 <HorizBox center>
-                    {showBetaTag && <PadBox right={12}> <BetaTag /></PadBox>}                    
+                    {showBetaTag && <PadBox right={12}> 
+                        <BetaTag /> 
+                    </PadBox>}                    
                     <Byline userId={personaKey} clickable={false} name={persona.name} underline={hover} />
                     <Pad size={8} />
                     {shown ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -260,10 +263,12 @@ function UserInfo() {
         </Popup>
     } else {        
         return <HorizBox center>
-            {showBetaTag && <PadBox right={12}> <BetaTag /></PadBox>} 
+            {showBetaTag && <PadBox right={12}> 
+                <BetaTag /> 
+            </PadBox>} 
             <CTAButton type='secondary' onPress={onLogin} size='compact' label='Log in' />
             <Pad size={20} />
-        </HorizBox>
+        </HorizBox>     
     }
 }
 
