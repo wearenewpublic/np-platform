@@ -230,7 +230,7 @@ function UserInfo() {
     const datastore = useDatastore();
     const siloKey = useSiloKey();
     const {showBetaTag} = useConfig();
-    console.log('showBetaTag', showBetaTag);
+    console.log('showBetaTag userinfo', showBetaTag);
 
     function popup() {
         return <View>

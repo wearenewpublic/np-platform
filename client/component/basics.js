@@ -91,7 +91,6 @@ const ConversationScreenStyle = StyleSheet.create({
 })
 
 export function PadBox({children, horiz, vert, top, bottom, left, right}) {
-    console.log('children', children);
     return <View style={{paddingHorizontal: horiz, paddingVertical: vert, paddingTop: top, paddingBottom: bottom, paddingLeft: left, paddingRight: right}}>
         {children}
     </View>
