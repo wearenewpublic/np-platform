@@ -86,7 +86,7 @@ function commentStorySets() {return [
                 [CLICK('Edit'), CLICK('Cancel')]
             },
             {label: 'Delete Reply', actions:
-                [CLICK('Edit'), CLICK('delete'), POPUP(CLICK('Delete'))]
+                [CLICK('Edit'), CLICK('delete'), POPUP(CLICK('confirm-delete'))]
             },
             {label: 'Hide Replies', actions:
                 [CLICK('toggle-replies')]

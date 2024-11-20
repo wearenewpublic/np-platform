@@ -311,7 +311,7 @@ function DeleteModal({onDelete, onClose}) {
             <Pad size={8} />
             <UtilityText label="This action can't be undone"/>
             <Pad size={32} />
-            <CTAButton wide icon={<TrashCan style={{fill: colorRed}}/>} label='Delete' type='delete' onPress={onPress} />
+            <CTAButton wide icon={<TrashCan style={{fill: colorRed}}/>} testID='confirm-delete' label='Delete' type='delete' onPress={onPress} />
         </PadBox>
     </Modal>
 }
@@ -503,7 +503,7 @@ function filterComments({datastore, comments, isAdmin, commentFilters}) {
 export function CommentsInput({about=null}) {
     const {commentInputPlaceholder, commentInputLoginAction} = useConfig();
     const datastore = useDatastore();
-    return <TextFieldButton placeholder={commentInputPlaceholder} 
+    return <TextFieldButton placeholder={commentInputPlaceholder} testID='comment-input'
                 onPress={datastore.needsLogin(
                     () => datastore.pushSubscreen('composer', {about}), 
                     commentInputLoginAction)} 

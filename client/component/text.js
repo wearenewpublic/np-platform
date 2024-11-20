@@ -310,11 +310,11 @@ const TextFieldStyle = StyleSheet.create({
     }
 })
 
-export function TextFieldButton({placeholder, placeholderParams, onPress}) {
+export function TextFieldButton({placeholder, testID, placeholderParams, onPress}) {
     const s = TextFieldButtonStyle;
     const tPlaceholder = useTranslation(placeholder, placeholderParams);
     const personaKey = usePersonaKey();
-    return <HoverView style={s.textFieldButton} hoverStyle={s.hover} onPress={onPress}>
+    return <HoverView style={s.textFieldButton} hoverStyle={s.hover} onPress={onPress} testID={testID}>
         <HorizBox center>
             {personaKey && <PadBox right={10}><ProfilePhoto userId={personaKey} type='small' /></PadBox>}
             <Text style={s.textFieldText}>{tPlaceholder}</Text>

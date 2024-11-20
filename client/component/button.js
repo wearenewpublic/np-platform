@@ -26,7 +26,7 @@ export function CTAButton({label, text, testID, formatParams, icon, type='primar
         small: s.smallButton,
     };    
         
-    return <HoverView disabled={disabled} role='button' testID={label ?? text ?? testID}
+    return <HoverView disabled={disabled} role='button' testID={testID ?? label ?? text}
             style={[sizeMap[size], wide && s.wide, normal, borderless && s.borderless]} hoverStyle={[s.hover, hover]} 
             pressedStyle={pressed} onPress={onPress} >
         {icon && <PadBox right={(label || text) ? (size === 'small' ? 6 : 8) : null}>{icon}</PadBox>}
