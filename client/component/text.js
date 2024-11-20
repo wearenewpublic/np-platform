@@ -32,7 +32,7 @@ export function Heading({text, weight='strong', type='small', color={color}, cen
     }
     return <TranslatableText text={text} label={label} aria-level={ariaMap[type]} role='heading' formatParams={formatParams} 
         style={[
-            {fontWeight: weightMap[weight]},
+            {fontFamily: weightMap[weight]},
             sizeMap[type],
             underline && {textDecorationLine: 'underline'},
             center ? {textAlign: 'center'} : null, {color}
