@@ -70,11 +70,19 @@ function topBarStorySets() {return [
     },
     {
         label: 'Top Bar with Beta Tag',
-        modulePublic: {'beta-status': true},
+        modulePublic: {'isBeta': true},
         content: <View>
             <TopBar />
         </View>,
-    }    
+    },
+    {
+        label: 'Top Bar with Beta Tag Not Logged In',
+        modulePublic: {'isBeta': true},
+        personaKey: null,
+        content: <View>
+            <TopBar />
+        </View>,
+    }   
 ]}
 
 function DemoHelpBubble() {

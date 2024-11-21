@@ -229,7 +229,7 @@ function UserInfo() {
     const isAdmin = useIsAdmin();
     const datastore = useDatastore();
     const siloKey = useSiloKey();
-    const showBetaTag = useModulePublicData('beta-status')
+    const showBetaTag = useModulePublicData('isBeta')
 
     function popup() {
         return <View>
