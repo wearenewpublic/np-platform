@@ -158,7 +158,7 @@ export function UtilityText({type='small', center=false, right=false, text, labe
     const styleMap = {
         large: s.utilityLarge,
         small: s.utilitySmall,
-        tiny: caps ? s.utilityTinyCaps : s.utilityTiny,
+        tiny: s.utilityTiny,
     }
     const weightMap = {
         regular: fontFamilySansRegular,
