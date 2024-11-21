@@ -306,6 +306,24 @@ const TagStyle = StyleSheet.create({
     }
 })
 
+export function BetaTag() {
+    return <View style={BetaTagStyle.container}>
+        <PadBox horiz={8} vert={2.5}>
+        <UtilityText type='tiny' caps weight='medium' label='Beta' color={colorWhite} />
+        </PadBox>
+    </View>
+}
+
+const BetaTagStyle = StyleSheet.create({
+    container: {
+        backgroundColor: colorTextBlue,
+        borderRadius: 32,
+        alignItems: 'center',
+        justifyContent: 'center',   
+        flexDirection: 'row',         
+    }
+})
+
 export function ReactionButton({emoji, viewOnly=false, label, text, count, selected, onPress}){
     const s = ReactionButtonStyle;
     const [pressed, setPressed] = useState(false);

@@ -4,7 +4,7 @@ import { firebaseSignOut } from "../util/firebase";
 import { useDatastore, useGlobalProperty, useInstanceKey, usePersonaKey, usePersonaObject, useSessionData, useSiloKey, useStableCallback, useStructureKey } from "../util/datastore";
 import { useEffect, useState } from "react";
 import { Byline } from "./people";
-import { BreadCrumb, CTAButton, Popup, TextButton } from "./button";
+import { BreadCrumb, CTAButton, Popup, TextButton, BetaTag } from "./button";
 import { HorizBox, Pad, PadBox, Separator } from "./basics";
 import { getFeatureBlocks, useConfig, useEnabledFeatures } from "../util/features";
 import { defaultFeatureConfig } from "../feature";
@@ -15,7 +15,7 @@ import { CircleCount, UtilityText, WebLinkTextButton } from "./text";
 import { AccordionField, RadioGroup, RadioOption, Toggle } from "./form";
 import { colorGreyPopupBackground } from "./color";
 import { ChevronDown, ChevronUp, Close, ArrowLeft } from '@carbon/icons-react';
-import { BetaTag } from "../feature/BetaTag"; 
+import { useModulePublicData } from "../util/datastore";
 
 export function TopBar() {
     const s = TopBarStyle;
@@ -229,8 +229,7 @@ function UserInfo() {
     const isAdmin = useIsAdmin();
     const datastore = useDatastore();
     const siloKey = useSiloKey();
-    const {showBetaTag} = useConfig();
-    console.log('showBetaTag userinfo', showBetaTag);
+    const showBetaTag = useModulePublicData('beta-status')
 
     function popup() {
         return <View>
