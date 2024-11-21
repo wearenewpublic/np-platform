@@ -3,7 +3,7 @@ import { Datastore } from "../util/datastore";
 import { IconUpvote, IconUpvoted } from "../component/icon";
 import { CharacterCounter, CircleCount, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
 import { colorBlack, colorLightGreen, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
-import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, FilterButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, ClickThroughTag, TextButton } from "../component/button";
+import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, FilterButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, ClickThroughTag, TextButton, BetaTag } from "../component/button";
 import { Checkbox, Toggle, RadioOption, RadioGroup, FormField, AccordionField } from "../component/form";
 import { useState } from "react";
 import { RichText } from "../component/richtext";
@@ -389,6 +389,9 @@ function TagsScreen() {
             <ClickThroughTag label='Standard' onPress={() => {}} />
             <ClickThroughTag label='Standard With Emoji' emoji='🔥' onPress={() => {}} />
         </DemoSection>
+        <DemoSection label='Beta Tag'>
+            <BetaTag />
+        </DemoSection>        
     </View>
 }
 

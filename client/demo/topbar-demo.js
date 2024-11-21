@@ -67,7 +67,14 @@ function topBarStorySets() {return [
             <TopBarActionProvider secondary icon={<DeleteIcon />} type='delete' label='Secondary Action' onPress={() => {}} /> 
             <Pad size={40} />
         </View>,
-    }
+    },
+    {
+        label: 'Top Bar with Beta Tag',
+        modulePublic: {'beta-status': true},
+        content: <View>
+            <TopBar />
+        </View>,
+    }    
 ]}
 
 function DemoHelpBubble() {

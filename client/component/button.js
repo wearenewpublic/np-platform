@@ -320,7 +320,8 @@ const BetaTagStyle = StyleSheet.create({
         borderRadius: 32,
         alignItems: 'center',
         justifyContent: 'center',   
-        flexDirection: 'row',         
+        flexDirection: 'row',
+        alignSelf: 'flex-start',     
     }
 })
 
