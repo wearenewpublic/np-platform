@@ -1,7 +1,7 @@
 import { Byline, FaceButton, FacePile, LetterFace, ProfilePhoto } from "../component/people";
 import { Datastore } from "../util/datastore";
 import { IconUpvote, IconUpvoted } from "../component/icon";
-import { CharacterCounter, CircleCount, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
+import { CharacterCounter, CircleCount, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText, WebLinkTextButton } from "../component/text";
 import { colorBlack, colorLightGreen, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
 import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, FilterButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, ClickThroughTag, TextButton, BetaTag } from "../component/button";
 import { Checkbox, Toggle, RadioOption, RadioGroup, FormField, AccordionField } from "../component/form";
@@ -9,7 +9,7 @@ import { useState } from "react";
 import { RichText } from "../component/richtext";
 import { Card, ConversationScreen, FlowBox, HorizBox, Narrow, Pad, PadBox, ShadowBox } from "../component/basics";
 import { Banner, BannerMessage, ClickableBanner, TopBanner } from "../component/banner";
-import { TrashCan, Pin, Chat, ChevronDown, Reply, Image as CarbonImage, Hearing, Video, FaceAdd, Edit, Bookmark, Flag, Close, ArrowLeft } from "@carbon/icons-react";
+import { TrashCan, Pin, Chat, ChevronDown, Reply, Image as CarbonImage, Hearing, Video, FaceAdd, Edit, Bookmark, Flag, Close, ArrowLeft, Demo } from "@carbon/icons-react";
 import { Modal } from "../component/modal";
 import { CLICK, DemoSection, POPUP, SpacedArray } from "../system/demo";
 import { Image, View } from "react-native";
@@ -364,6 +364,12 @@ function ButtonsAndLinksScreen() {
             <DemoSection label='Link'>
                 <RichText text={inputString} />
                 <RichText label='Text with a {param} and a [link]({url})' formatParams={{param: 'parameter', url: 'https://example.com'}} />
+            </DemoSection>
+            <DemoSection label='Web Link Text Button'>
+                <WebLinkTextButton url='https://example.com' text='Link to Example' />
+                <View style={{width: 300}}>
+                    <WebLinkTextButton numberOfLines={1} url='https://example.com' text='Link to Example that has a title that is too long to fit on one line' />
+                </View>
             </DemoSection>
             <DemoSection horiz label='Breadcrumb'>
                 <BreadCrumb icon={Close} iconProps={{size:32}} onPress={onPress} />

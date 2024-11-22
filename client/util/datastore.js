@@ -6,8 +6,9 @@ import { deepClone, getObjectPropertyPath, setObjectPropertyPath } from './util'
 import { LoadingScreen } from '../component/basics';
 import { SharedData, SharedDataContext } from './shareddata';
 import { callServerApiAsync } from '../system/servercall';
-import { closeWindow, goBack, gotoInstance, gotoInstanceScreen, pushSubscreen } from './navigate';
+import { closeWindow, getGlobalParams, goBack, gotoInstance, gotoInstanceScreen, pushSubscreen } from './navigate';
 import { getFragment } from '../platform-specific/url';
+import { Linking } from 'react-native';
 
 const DatastoreContext = React.createContext({});
 export const ConfigContext = React.createContext();
@@ -336,6 +337,13 @@ export class Datastore extends React.Component {
     getLoaded() {return this.state.loaded}
     getEmbeddedInstanceData() {return this.props.embeddedInstanceData}
     getMockServerCall() {return this.props.serverCall}
+    getGlobalParams() {
+        if(this.props.globalParams) {
+            return this.props.globalParams;
+        } else {
+            return getGlobalParams(window.location.href) ?? {};
+        }
+    }
     pushSubscreen(screenKey, params) {
         if (this.props.pushSubscreen) {
             this.props.pushSubscreen(screenKey, params);
@@ -684,6 +692,11 @@ export function useInstanceKey() {
 export function useStructureKey() {
     const datastore = useDatastore();
     return datastore.getStructureKey();
+}
+
+export function useGlobalParams() {
+    const datastore = useDatastore();
+    return datastore.getGlobalParams();
 }
 
 export function expandDataList(list) {

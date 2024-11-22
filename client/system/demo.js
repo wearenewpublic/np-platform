@@ -153,8 +153,9 @@ export function DemoStorySet({storySet}) {
     const { collections, content, structureKey='testStruct', instanceKey='testInstance', 
         personaKey, config, modulePublic, moduleUserGlobal, moduleUserLocal, roles, features, embeddedInstanceData,
         globals, sessionData, serverCall, pad=true, firebaseUser=default_fbUser, siloKey='demo',
-        urlFragment
+        urlFragment, globalParams
     } = storySet;
+    console.log('storySet', storySet);
     const domRef = React.createRef();
     const dataRef = React.createRef();
     const [key, setKey] = useState(0);
@@ -192,6 +193,7 @@ export function DemoStorySet({storySet}) {
             sessionData={sessionData} modulePublic={modulePublic} 
             moduleUserGlobal={moduleUserGlobal} moduleUserLocal={moduleUserLocal}
             embeddedInstanceData={embeddedInstanceData}
+            globalParams={globalParams}
             roles={roles} onServerCall={onServerCall}
             gotoInstance={setNavInstance} 
             goBack={() => setNavInstance({parent: true})}

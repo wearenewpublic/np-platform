@@ -1,4 +1,5 @@
 import { Linking, Pressable } from "react-native";
+import { useDatastore } from "../util/datastore";
  
 export function historyPushState() {}
 
@@ -15,8 +16,10 @@ export function getIsLocalhost() {return false}
 export function setTitle() {}
 
 export function WebLinkBase({url, children}) {
+    const datastore = useDatastore();
     function onPress() {
-        Linking.openURL(url);
+        datastore.openURL(url);
+        // Linking.openURL(url);
     }
     return <Pressable style={{flexShrink: 1}} onPress={onPress}>
         {children}
