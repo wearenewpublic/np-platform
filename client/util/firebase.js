@@ -3,6 +3,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithCustomToken, on
 import { connectDatabaseEmulator, getDatabase, limitToFirst, limitToLast, onValue, orderByKey, push, get, query, ref, set } from "firebase/database";
 import { useEffect, useState } from 'react';
 import { getIsLocalhost } from "../platform-specific/url";
+import path from 'path';
 
 var app = null;
 var auth = null;
@@ -81,7 +82,7 @@ export function firebaseWatchValue(pathList, callback) {
 
 // This needs to cope with temporarily null path elements, so that we can
 // use it to look up properties of a user, even when the user isn't logged in yet.
-export function useFirebaseData(pathList, {defaultValue=null, limit=null, oldest=false, once=false}={}) {
+export function useFirebaseData(pathList, {defaultValue=null, limit=null, oldest=false, once=false, memoized=false}={}) {
     const [data, setData] = useState(undefined);
     const pathString = makeFirebasePath(pathList, true);
     const nullPath = pathList.some(p => p == null || p == undefined);
@@ -89,7 +90,11 @@ export function useFirebaseData(pathList, {defaultValue=null, limit=null, oldest
     useEffect(() => {
         if (nullPath) return;
 
-        if (once) {
+        if (memoized) {
+            getFirebaseDataMemoizedAsync(pathList).then(data => {
+                setData(data || defaultValue);
+            });
+        } else if (once) {
             getFirebaseDataAsync(pathList).then(data => {
                 setData(data || defaultValue);
             });
@@ -110,6 +115,14 @@ export function useFirebaseData(pathList, {defaultValue=null, limit=null, oldest
     return data;
 }
 
+var global_cached_data_promises = {};
+export async function getFirebaseDataMemoizedAsync(pathList) {
+    const pathString = makeFirebasePath(pathList);
+    if (!global_cached_data_promises[pathString]) {
+        global_cached_data_promises[pathString] = getFirebaseDataAsync(pathList);
+    }
+    return await global_cached_data_promises[pathString];
+}
 
 export async function getFirebaseDataAsync(pathList) {
     const pathString = makeFirebasePath(pathList);
