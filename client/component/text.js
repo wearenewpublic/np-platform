@@ -215,23 +215,27 @@ export function LinkText({type='small', testID, text, url, label, formatParams})
     </WebLink>
 }
 
-export function WebLinkTextButton({label, heading, text, url, type, weight='regular'}) {
+export function WebLinkTextButton({label, heading, text, url, type, weight='regular', numberOfLines=null}) {
     const s = WebLinkTextButtonStyle;
     const [hover, setHover] = useState(false);
     return <WebLink testID={label ?? text} url={url} style={hover ? s.hoverButton : s.button} setHover={setHover}>
         {heading ? 
             <Heading label={label} text={text} type={type} weight={weight} /> 
         : 
-            <UtilityText label={label} text={text} type={type} weight={weight} />
+            <UtilityText label={label} text={text} type={type} weight={weight} numberOfLines={numberOfLines}/>
         }
     </WebLink>
 }
 const WebLinkTextButtonStyle = StyleSheet.create({
     button: {
         textDecorationLine: 'none',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
     },
     hoverButton: {
-        textDecorationLine: 'underline'
+        textDecorationLine: 'underline',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
     }
 })
 
