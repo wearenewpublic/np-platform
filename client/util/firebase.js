@@ -3,7 +3,6 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithCustomToken, on
 import { connectDatabaseEmulator, getDatabase, limitToFirst, limitToLast, onValue, orderByKey, push, get, query, ref, set } from "firebase/database";
 import { useEffect, useState } from 'react';
 import { getIsLocalhost } from "../platform-specific/url";
-import path from 'path';
 
 var app = null;
 var auth = null;
