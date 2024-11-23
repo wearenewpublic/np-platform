@@ -4,7 +4,7 @@ import { firebaseSignOut } from "../util/firebase";
 import { useDatastore, useGlobalProperty, useInstanceKey, usePersonaKey, usePersonaObject, useSessionData, useSiloKey, useStableCallback, useStructureKey } from "../util/datastore";
 import { useEffect, useState } from "react";
 import { Byline } from "./people";
-import { BreadCrumb, CTAButton, Popup, TextButton } from "./button";
+import { BreadCrumb, CTAButton, Popup, TextButton, BetaTag } from "./button";
 import { HorizBox, Pad, PadBox, Separator } from "./basics";
 import { getFeatureBlocks, useConfig, useEnabledFeatures } from "../util/features";
 import { defaultFeatureConfig } from "../feature";
@@ -15,6 +15,7 @@ import { CircleCount, UtilityText, WebLinkTextButton } from "./text";
 import { AccordionField, RadioGroup, RadioOption, Toggle } from "./form";
 import { colorGreyPopupBackground } from "./color";
 import { ChevronDown, ChevronUp, Close, ArrowLeft } from '@carbon/icons-react';
+import { useModulePublicData } from "../util/datastore";
 
 export function TopBar() {
     const s = TopBarStyle;
@@ -29,9 +30,9 @@ export function TopBar() {
         <View style={s.topBox}>        
             <View style={s.leftRow}>    
                 {historyGetState() ? 
-                    <BreadCrumb icon={ArrowLeft} iconProps={{size:32}} onPress={() => datastore.goBack()} />
+                    <BreadCrumb testID='back' icon={ArrowLeft} iconProps={{size:32}} onPress={() => datastore.goBack()} />
                 : getIsInSidebar() ?
-                    <BreadCrumb icon={Close} iconProps={{size:32}}  onPress={closeSidebar} />
+                    <BreadCrumb testID='close' icon={Close} iconProps={{size:32}}  onPress={closeSidebar} />
                 : null
                 }
             </View>
@@ -228,6 +229,7 @@ function UserInfo() {
     const isAdmin = useIsAdmin();
     const datastore = useDatastore();
     const siloKey = useSiloKey();
+    const showBetaTag = useModulePublicData('isBeta')
 
     function popup() {
         return <View>
@@ -249,6 +251,9 @@ function UserInfo() {
         return <Popup testID='account-menu' popupContent={popup} setHover={setHover} setShown={setShown} popupStyle={s.popup}>
             <PadBox vert={6} right={20}>
                 <HorizBox center>
+                    {showBetaTag && <PadBox right={12}> 
+                        <BetaTag /> 
+                    </PadBox>}                    
                     <Byline userId={personaKey} clickable={false} name={persona.name} underline={hover} />
                     <Pad size={8} />
                     {shown ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -256,9 +261,13 @@ function UserInfo() {
             </PadBox>
         </Popup>
     } else {        
-        return <PadBox horiz={20}>
+        return <HorizBox center>
+            {showBetaTag && <PadBox right={12}> 
+                <BetaTag /> 
+            </PadBox>} 
             <CTAButton type='secondary' onPress={onLogin} size='compact' label='Log in' />
-        </PadBox>
+            <Pad size={20} />
+        </HorizBox>     
     }
 }
 

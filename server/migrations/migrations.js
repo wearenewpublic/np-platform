@@ -1,4 +1,4 @@
-const { getMigrationList } = require("../migrations");
+const { getMigrationList } = require(".");
 const { checkIsGlobalAdmin } = require("../util/admin");
 const { firebaseReadAsync, createNewKey, firebaseWriteAsync, firebaseUpdateAsync } = require("../util/firebaseutil");
 

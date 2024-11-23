@@ -51,7 +51,7 @@ export const CommentDemoFeature = {
         commentPostCheckers: [],
         commentInputPlaceholder: 'Share your thoughts...',
         commentReplyPlaceholder: 'Reply to {authorName}...',
-        commentInputLoginAction: 'comment',
+        commentInputLoginAction: '',
         noCommentsMessage: 'No responses yet. Start the conversation!',
         noMoreCommentsMessage: 'No more responses'       
     }
@@ -86,7 +86,7 @@ function commentStorySets() {return [
                 [CLICK('Edit'), CLICK('Cancel')]
             },
             {label: 'Delete Reply', actions:
-                [CLICK('Edit'), CLICK('delete'), POPUP(CLICK('Delete'))]
+                [CLICK('Edit'), CLICK('delete'), POPUP(CLICK('confirm-delete'))]
             },
             {label: 'Hide Replies', actions:
                 [CLICK('toggle-replies')]

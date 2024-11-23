@@ -24,7 +24,7 @@ export function ClosedConversationBanner() {
     const isAdmin = useIsAdmin();
     return <View>
         <Banner color={colorPink}>
-            <Heading level={2} label={closedTitle} />
+            <Heading label={closedTitle} />
             <Pad size={16} />
             <UtilityText label={closedMessage} />            
         </Banner>

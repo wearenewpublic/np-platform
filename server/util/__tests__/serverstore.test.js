@@ -70,3 +70,20 @@ test('getPersonaAsync', async () => {
     const result2 = await serverstore.getPersonaAsync('testuser');
     expect(result2).toEqual({key: 'testuser', name: 'newname', hue: 25});
 })
+
+test('setBacklink', async () => {
+    const serverstore = mockServerStore();
+    serverstore.setBacklink('topic', 'cats', {preview: 'hello'});
+    await serverstore.commitDataAsync();
+    expect(getTestData()).toMatchSnapshot();
+});
+
+test('removeBacklink', async () => {
+    const serverstore = mockServerStore();
+    serverstore.setBacklink('topic', 'cats', {preview: 'hello'});
+    await serverstore.commitDataAsync();
+
+    serverstore.removeBacklink('topic', 'cats');
+    await serverstore.commitDataAsync();
+    expect(getTestData()).toMatchSnapshot();
+});

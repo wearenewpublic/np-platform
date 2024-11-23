@@ -96,12 +96,13 @@ export function PadBox({children, horiz, vert, top, bottom, left, right}) {
     </View>
 }
 
-export function HorizBox({children, center=false, shrink=false, right=false, spread=false}) {
+export function HorizBox({children, gap=null, center=false, shrink=false, right=false, spread=false}) {
     return <View style={{
             flexDirection: 'row', 
             alignItems: center ? 'center' : 'flex-start', 
             justifyContent: spread ? 'space-between' : right ? 'flex-end' : 'flex-start',
-            flexShrink: shrink ? 1 : 0
+            flexShrink: shrink ? 1 : 0,
+            gap
         }}>
         {children}
     </View>
@@ -213,8 +214,11 @@ const ShadowBoxStyle = StyleSheet.create({
     }
 })
 
-export function FlowBox({children, center=false}) {
-    return <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: center ? 'center' : 'flex-start'}}>
+export function FlowBox({children, center=false, rowGap=null, columnGap=null}) {
+    return <View style={{
+            flexDirection: 'row', flexWrap: 'wrap', justifyContent: center ? 'center' : 'flex-start',
+            rowGap, columnGap
+        }}>
         {children}
     </View>
 }

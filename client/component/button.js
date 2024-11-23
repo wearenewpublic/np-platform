@@ -26,7 +26,7 @@ export function CTAButton({label, text, testID, formatParams, icon, type='primar
         small: s.smallButton,
     };    
         
-    return <HoverView disabled={disabled} role='button' testID={label ?? text ?? testID}
+    return <HoverView disabled={disabled} role='button' testID={testID ?? label ?? text}
             style={[sizeMap[size], wide && s.wide, normal, borderless && s.borderless]} hoverStyle={[s.hover, hover]} 
             pressedStyle={pressed} onPress={onPress} >
         {icon && <PadBox right={(label || text) ? (size === 'small' ? 6 : 8) : null}>{icon}</PadBox>}
@@ -88,7 +88,7 @@ const CTAButtonStyle = StyleSheet.create({
         color: colorDisabledText
     },
     largeButton: {
-        paddingHorizontal: 16,
+        paddingHorizontal: 20,
         paddingVertical: 12,
         borderRadius: 32,
         alignSelf: 'flex-start',
@@ -108,7 +108,7 @@ const CTAButtonStyle = StyleSheet.create({
     },
     smallButton: {
         paddingHorizontal: 12,
-        height: 28,
+        height: 32,
         borderRadius: 32,
         alignSelf: 'flex-start',
         flexDirection: 'row',
@@ -125,8 +125,8 @@ const CTAButtonStyle = StyleSheet.create({
     }
 })
 
-export function ClickableTag({label, emoji, onPress}) {
-    return <CTAButton label={label} icon={emoji && <UtilityText text={emoji} type="tiny" weight='medium' />}
+export function ClickThroughTag({label, emoji, onPress}) {
+    return <CTAButton label={label} icon={emoji && <UtilityText text={emoji} type="small" weight='medium' />}
     type="secondary" size="small" borderless onPress={onPress} />
 }
 
@@ -146,7 +146,7 @@ const IconReplyStyle = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 8,
         alignSelf: 'flex-start',
-        borderRadius: 8,
+        borderRadius: 32,
         // backgroundColor: colorGreyHover
     },
     wide: {
@@ -161,7 +161,7 @@ const IconReplyStyle = StyleSheet.create({
     }
 });
 
-export function SubtleButton({label, text, ariaLabel, testID, disabled, formatParams, color=colorTextGrey, strong=false, icon=null, iconProps={}, padLeft, padRight, onPress}) {
+export function SubtleButton({label, text, ariaLabel, testID, disabled, formatParams, color=colorTextGrey, icon=null, iconProps={}, padLeft, padRight, onPress}) {
     const s = SubtleButtonStyle;
     const [hover, setHover] = useState(false);
     return <HoverView style={[s.button, padLeft && {marginLeft: 20}, padRight && {marginRight: 20}]} 
@@ -170,8 +170,8 @@ export function SubtleButton({label, text, ariaLabel, testID, disabled, formatPa
             onPress={onPress} setHover={setHover}>
         {React.createElement(icon, {...iconProps, color})}
         {(label || text) && <Pad size={4} />}
-        <UtilityText label={label} text={text} weight={strong ? 'medium' : 'regular'} underline={hover} 
-            color={color} formatParams={formatParams} type='tiny' />
+        <UtilityText label={label} text={text} weight={'medium'} underline={hover} 
+            color={color} formatParams={formatParams} type='small' />
     </HoverView>
 }
 const SubtleButtonStyle = StyleSheet.create({
@@ -182,11 +182,11 @@ const SubtleButtonStyle = StyleSheet.create({
 });
 
 
-export function TextButton({label, text, level=1, type='large', heading=false, paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, leftIconProps={}, rightIcon, rightIconProps={}, color=colorBlack, alignStart=false, onPress}) {
+export function TextButton({label, text, type='large', heading=false, paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, leftIconProps={}, rightIcon, rightIconProps={}, color=colorBlack, alignStart=false, onPress}) {
     const s = TextButtonStyle;
     const [hover, setHover] = useState(false);
     return <HoverView shrink testID={label ?? text}
-            style={[s.button, alignStart ? {alignSelf: 'flex-start'} : null]} 
+            style={[s.button, alignStart ? {alignSelf: 'flex-start'} : null]}
             setHover={setHover} onPress={onPress} role='button'>
         {leftIcon && React.createElement(leftIcon, {...leftIconProps, color})}
         {leftIcon && <Pad size={8} />}        
@@ -197,8 +197,8 @@ export function TextButton({label, text, level=1, type='large', heading=false, p
             <EditorialHeading type={type} label={label} text={text} formatParams={formatParams}
                 color={color} underline={hover ^ underline} italic={italic} strong={strong} />
         : heading ?
-            <Heading label={label} text={text} formatParams={formatParams} level={level}
-                color={color} underline={hover ^ underline} strong={strong} />
+            <Heading label={label} text={text} formatParams={formatParams} type={type}
+                color={color} underline={hover ^ underline} weight={strong ? 'medium' : 'regular'} />
         :
             <UtilityText label={label} text={text} formatParams={formatParams} type={type} 
                 color={color} underline={hover ^ underline} weight={strong ? 'medium' : 'regular'} />
@@ -213,7 +213,6 @@ const TextButtonStyle = StyleSheet.create({
         alignItems: 'center',
     }
 })
-
 
 export function TextLinkButton({label, text, type='large', paragraph=false, editorial=false, underline, strong, italic, formatParams, leftIcon, rightIcon, color=colorBlack, alignStart=false, onPress}) {
     const [hover, setHover] = useState(false);
@@ -238,7 +237,7 @@ export function TextLinkButton({label, text, type='large', paragraph=false, edit
 
 
 export function ExpandButton({
-        userList, photoUrlList, label, text, type='tiny', 
+        userList, photoUrlList, label, text, type='small', 
         formatParams, expanded, setExpanded=()=>{},
         testID,
     }) {
@@ -251,7 +250,7 @@ export function ExpandButton({
         {photoUrlList && <PhotoPile photoUrlList={photoUrlList} />}
         {(userList || photoUrlList) && <Pad size={4} />}
         <UtilityText label={label} text={text} formatParams={formatParams} type={type} 
-            underline={hover} strong />
+            underline={hover} weight='medium' />
         <Pad size={4} />
         {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
     </HoverView>
@@ -275,7 +274,7 @@ export function Tag({label, emoji, text, type='emphasized', strong=false, format
                 dashed && {borderStyle: 'dashed'}
             ]} 
             hoverStyle={s.hover} onPress={onPress}>
-        {emoji && <PadBox right={6}><UtilityText text={emoji} type='tiny' weight='strong' /></PadBox>}
+        {emoji && <PadBox right={6}><UtilityText text={emoji} type='small' weight='medium' /></PadBox>}
         <UtilityText color={type=='tiny' ? colorTextBlue : null} 
             label={label} text={text} formatParams={formatParams} 
             type='tiny' weight={strong ? 'strong' : 'medium'} />
@@ -307,17 +306,35 @@ const TagStyle = StyleSheet.create({
     }
 })
 
+export function BetaTag() {
+    return <View style={BetaTagStyle.container}>
+        <PadBox horiz={8} vert={2.5}>
+        <UtilityText type='tiny' caps weight='medium' label='Beta' color={colorWhite} />
+        </PadBox>
+    </View>
+}
+
+const BetaTagStyle = StyleSheet.create({
+    container: {
+        backgroundColor: colorTextBlue,
+        borderRadius: 32,
+        alignItems: 'center',
+        justifyContent: 'center',   
+        flexDirection: 'row',
+        alignSelf: 'flex-start',     
+    }
+})
+
 export function ReactionButton({emoji, viewOnly=false, label, text, count, selected, onPress}){
     const s = ReactionButtonStyle;
     const [pressed, setPressed] = useState(false);
     return <HoverView style={[s.horiz, !viewOnly && s.button, selected && s.pressed]} 
             hoverStyle={s.hover} disabled={viewOnly} testID={label ?? text}
             pressedStyle={s.pressed} setPressed={setPressed} role='button' onPress={onPress}>
-        {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' weight='strong' /></PadBox>}
-        <UtilityText label={label} text={text} type='tiny' weight='medium'
-            color={(pressed || selected) ? colorTextBlue : colorBlack} />
+        {emoji && <PadBox right={8}><UtilityText text={emoji} type='small' weight='medium' /></PadBox>}
+        <UtilityText label={label} text={text} type='small' weight='medium'/>
         {count ? <Pad size={8} /> : null}
-        <UtilityText text={count} type='tiny' weight='medium' color={colorRed} />
+        <UtilityText text={count} type='small' weight='medium' color={colorRed} />
     </HoverView>
 }
 const ReactionButtonStyle = StyleSheet.create({
@@ -342,7 +359,7 @@ const ReactionButtonStyle = StyleSheet.create({
         backgroundColor: colorGreyHover,
     },
     pressed: {
-        borderColor: colorTextBlue,        
+        borderColor: colorBlack,        
         backgroundColor: colorWhite
     }
 })
@@ -353,11 +370,10 @@ export function FilterButton({emoji, label, text, count, selected, onPress}) {
 
     return <HoverView style={[s.button, selected && s.pressed]} pressedStyle={s.pressed} hoverStyle={s.hover} 
             onPress={onPress} setPressed={setPressed} testID={label ?? text}>
-        {emoji && <PadBox right={8}><UtilityText text={emoji} type='tiny' weight='strong' /></PadBox>}
-        <UtilityText label={label} text={text} type='tiny' weight='medium'
-            color={(pressed || selected) ? colorTextBlue : colorBlack} />
+        {emoji && <PadBox right={8}><UtilityText text={emoji} type='small' weight='medium' /></PadBox>}
+        <UtilityText label={label} text={text} type='small' weight='medium'/>
         {count ? <Pad size={8} /> : null}
-        <UtilityText text={count} type='tiny' weight='medium' color={colorRed} />
+        <UtilityText text={count} type='small' weight='medium' color={colorRed} />
     </HoverView>
 }
 const FilterButtonStyle = StyleSheet.create({
@@ -375,7 +391,7 @@ const FilterButtonStyle = StyleSheet.create({
         backgroundColor: colorGreyHover,
     },
     pressed: {
-        borderColor: colorTextBlue,        
+        borderColor: colorBlack,        
         backgroundColor: colorWhite,
     }
 });
@@ -400,11 +416,11 @@ export function DropDownSelector({label, options, value, onChange=()=>{}}) {
     </PopupPanel>
 }
 
-export function PopupPanel({children, popupContent, alignRight=false, setHover}) {
+export function PopupPanel({children, popupContent, alignRight=false, testID, setHover}) {
     const s = PopupPanelStyle;
     const [shown, setShown] = useState(false);
     return <View style={{alignSelf: 'flex-start'}}> 
-        <PopupBase popupContent={popupContent} alignRight={alignRight} setHover={setHover} setShown={setShown}>
+        <PopupBase testID={testID} popupContent={popupContent} alignRight={alignRight} setHover={setHover} setShown={setShown}>
             <View style={s.button}>
                 {children}
                 <Pad size={8} />

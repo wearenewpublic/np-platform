@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
 import { getIsLocalhost } from "../platform-specific/url";
-import { appApiDomain, localHostApiDomain } from "./config";
-import { useDatastore } from "./datastore";
-import { getFirebaseIdTokenAsync } from "./firebase";
+import { appApiDomain, localHostApiDomain } from "../util/config";
+import { getFirebaseIdTokenAsync } from "../util/firebase";
 
 
 // TODO: Do user-based authentication, once we have a database
@@ -90,17 +88,6 @@ export async function callServerMultipartApiAsync({datastore, component, funcnam
         console.error('Error in fetch', component, funcname, params, error);
     }
 }
-
-
-export function useServerCallResult(component, funcname, params={}) {
-    const datastore = useDatastore();
-    const [result, setResult] = useState(null);
-    useEffect(() => {
-        datastore.callServerAsync(component, funcname, params).then(setResult);
-    }, [component, funcname, JSON.stringify(params)]);
-    return result;
-}
-
 
 function makeApiUrl(component, funcname) {
     const apiDomain = getIsLocalhost() ? localHostApiDomain : appApiDomain;

@@ -75,6 +75,17 @@ async function firebaseReadWithFilterAsync(path, key, value) {
     return snapshot.val();
 }
 
+async function firebaseReadPaginatedAsync(path, limit, startAfter) {
+    const ref = admin.database().ref(expandPath(path));
+    if (startAfter) {
+        const snapshot = await ref.orderByKey().startAfter(startAfter).limitToFirst(limit).once('value');
+        return snapshot.val();
+    } else {
+        const snapshot = await ref.orderByKey().limitToFirst(limit).once('value');
+        return snapshot.val();
+    }
+}
+
 async function firebaseUpdateAsync(path, data) {
     const ref = admin.database().ref(expandPath(path));
     return await ref.update(data);
@@ -188,7 +199,7 @@ module.exports = {
     setObjectAsync, readObjectAsync, firebaseReadWithFilterAsync,
     keyToUrl, urlToKey,
 
-    getOrCreateUserAsync, createLoginToken,
+    getOrCreateUserAsync, createLoginToken, firebaseReadPaginatedAsync,
 
     verifyIdTokenAsync, createNewKey, firebaseGetUserAsync, expandPath, 
     checkPathsNotOverlapping, checkNoUndefinedKeysOrValues: checkNoUndefinedValues,

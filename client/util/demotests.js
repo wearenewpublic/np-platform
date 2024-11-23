@@ -113,6 +113,7 @@ function StorySetContent({storySet}) {
         globals={storySet.globals} filebaseUser={storySet.firebaseUser}
         sessionData={storySet.sessionData} 
         embeddedInstanceData={storySet.embeddedInstanceData}
+        globalParams={storySet.globalParams}
         gotoInstance={setNavInstance}
         goBack={() => setNavInstance({parent: true})}
         openUrl={url => setNavInstance({url})}

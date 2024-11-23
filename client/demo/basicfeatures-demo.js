@@ -8,7 +8,7 @@ export const BasicFeaturesDemoFeature = {
     name: 'Basic Features Demo',
     config: {
         componentSections: [
-            {label: 'Conversation Features', key: 'coversation', pages: [
+            {label: 'Conversation', key: 'coversation', pages: [
                 {
                     label: 'Close Conversation',
                     key: 'closeconversation',

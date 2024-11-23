@@ -44,7 +44,7 @@ function ViewPhotoAndName() {
         <HorizBox center>
             <ProfilePhoto userId={personaKey} type='huge' />
             <Pad />      
-            <Heading level={1} text={persona.name} />            
+            <Heading type="large" weight="medium" text={persona.name} />            
         </HorizBox>
     </View>
 }
@@ -65,7 +65,7 @@ function EditPhotoAndName() {
     }
 
     return <View>
-        <Heading level={3} label='Profile name'/>
+        <UtilityText weight='medium' label='Profile name'/>
         <Pad size={8} />
         <RadioGroup value={nameMode} onChange={onChangeNameMode}>
             <RadioOption radioKey='full' text={fbUser.displayName} />
@@ -74,7 +74,7 @@ function EditPhotoAndName() {
         {nameMode == 'custom' && <Catcher><PseudonymEditor /></Catcher>}
         {fbUser.photoURL &&
             <PadBox top={32}>
-                <Heading level={3} label='Your profile photo'/>
+                <UtilityText weight='medium' label='Your profile photo'/>
                 <Pad size={12} />
                 <Catcher><ProfilePhotoEditor /></Catcher>
             </PadBox>
@@ -209,7 +209,7 @@ export function FirstLoginSetup({onFieldsChosen}) {
 
     return <View>
         <PadBox horiz={20} vert={20}>
-            <Heading level={1} label="Let's get your profile set up" />
+            <Heading type="large" weight="medium" label="Let's get your profile set up" />
             <Pad size={8} />
             <Paragraph type='large' label='How do you want to appear to others in your posts and replies?' />
             <Pad size={40} />

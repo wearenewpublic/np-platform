@@ -100,17 +100,40 @@ const fakeFirebaseAdmin = {
             set: value => writeTestData(path, value),
             once: () => ({val: () => readTestData(path)}),
             update: updateMap => updateTestData(path, updateMap),
-            // update: async value => {
-            //     const old = await readTestData(path);
-            //     const updated = {...old, ...value};
-            //     writeTestData(path, updated);
-            // },
             orderByChild: key => ({
                 equalTo: value => ({
                     once: () => ({
                         val: () => readFilteredTestData(path, key, value)
                     })
                 })
+            }),
+            orderByKey: key => ({
+                startAfter: startAfter => ({
+                    limitToFirst: limit => ({
+                        once: async () => {
+                            const items = await readTestData(path);
+                            const keys = Object.keys(items).sort();
+                            const start = keys.indexOf(startAfter) + 1;
+                            const end = start + limit;
+                            const result = {};
+                            keys.slice(start, end).forEach(key => {
+                                result[key] = items[key];
+                            });
+                            return {val: () => result};
+                        }
+                    })
+                }),
+                limitToFirst: limit => ({
+                    once: async () => {
+                        const items = await readTestData(path);
+                        const keys = Object.keys(items).sort();
+                        const result = {};
+                        keys.slice(0, limit).forEach(key => {
+                            result[key] = items[key];
+                        });
+                        return {val: () => result};
+                    }
+                }),
             }),
             push: () => ({
                 key: global_next_key++

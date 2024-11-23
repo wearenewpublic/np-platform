@@ -50,11 +50,15 @@ export var ui_translations_german = {
     'Log out': 'Abmelden',
     'Read more': 'Mehr lesen',
     'Once you log in, you can use a different display name if you prefer to not reveal your real name': 'Wenn du dich angemeldet hast, kannst du einen anderen Anzeigename verwenden, wenn du deinen echten Namen nicht angezeigt willst',
+    'Once you log in, enter a display name': 'Wenn Du Dich einloggst, kannst Du Deinen Anzeigenamen auswählen.',
+    'Add your display name': 'Anzeigename hinzufügen',
     'Set your visibility after log in': 'Setze deine Sichtbarkeit nach dem Anmelden',
 
     // Help
     'Start the conversation': 'Beginne die Unterhaltung',
     'Be the first to share your thoughts': 'Sei der Erste, der seine Gedanken teilt',
+    "Same question, new article?": "Anderer Inhalt, gleiche Frage?",
+    "Update your previous response with fresh insights": "Aktualisiere deinen bisherigen Beitrag mit neuen Erkenntnissen.",
 
     // Feature module names
     'Upvote Comments': 'Kommentare hochwählen',

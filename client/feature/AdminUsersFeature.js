@@ -4,10 +4,9 @@ import { CTAButton, Popup } from "../component/button"
 import { Checkbox, FormField } from "../component/form"
 import { Heading, TextField, UtilityText } from "../component/text"
 import { getRoles } from "../component/admin"
-import { useDatastore } from "../util/datastore"
+import { useDatastore, useServerCallResult } from "../util/datastore"
 import { View } from "react-native"
 import { toBool } from "../util/util"
-import { useServerCallResult } from "../util/servercall"
 import { colorTextGrey } from "../component/color"
 import { useHasCapability } from "../component/admin"
 import { Banner } from "../component/banner"
@@ -37,7 +36,7 @@ export function AdminUsersScreen() {
 
     return <ConversationScreen pad>
         <Pad />
-        <Heading level={1} label='Admin Users' />
+        <Heading type="large" weight="medium" label='Admin Users' />
         <Pad />
         <AdminUserList adminUsers={adminUsers} />
         <Pad />   

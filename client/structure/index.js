@@ -19,3 +19,7 @@ export var structures = [
 export function addStructures(newStructures) {
     structures = structures.concat(newStructures);
 }
+
+export function UNSAFE_setStructures(newStructures) {
+    structures = newStructures;
+}   

@@ -1,7 +1,7 @@
 import { getDeviceInfo } from "../platform-specific/deviceinfo";
 import { useDatastore } from "./datastore";
 import { firebaseNewKey, getFirebaseUser, onFbUserChanged } from "./firebase";
-import { callServerApiAsync } from "./servercall";
+import { callServerApiAsync } from "../system/servercall";
 import { useEffect, useState } from "react";
 
 const hourMillis = 60*60*1000;

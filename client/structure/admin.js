@@ -29,9 +29,9 @@ export function AdminScreen() {
 
     return <ConversationScreen pad>
         <Pad/>
-        <Heading level={1} label='Admin Dashboard' />
+        <Heading type="large" weight="medium" label='Admin Dashboard' />
         <Pad />
-        <Heading level={2} label='Quick Links' />
+        <Heading label='Quick Links' />
         <FlowBox>
             {quickLinks?.map(quickLink => <PadBox top={8} right={8} key={quickLink.label}>
                 <QuickLink quickLink={quickLink} />

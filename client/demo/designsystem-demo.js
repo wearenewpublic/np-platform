@@ -1,15 +1,15 @@
 import { Byline, FaceButton, FacePile, LetterFace, ProfilePhoto } from "../component/people";
 import { Datastore } from "../util/datastore";
 import { IconUpvote, IconUpvoted } from "../component/icon";
-import { CharacterCounter, CircleCount, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText } from "../component/text";
+import { CharacterCounter, CircleCount, DataVizText, EditorialHeading, Heading, Paragraph, TextField, TextFieldButton, UtilityText, WebLinkTextButton } from "../component/text";
 import { colorBlack, colorLightGreen, colorPink, colorRed, colorTextBlue, colorTextGrey } from "../component/color";
-import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, FilterButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, ClickableTag, TextButton } from "../component/button";
+import { BannerIconButton, BreadCrumb, CTAButton, DropDownSelector, ExpandButton, FilterButton, IconButton, PhotoPile, PopupPanel, ReactionButton, SubtleButton, Tag, ClickThroughTag, TextButton, BetaTag } from "../component/button";
 import { Checkbox, Toggle, RadioOption, RadioGroup, FormField, AccordionField } from "../component/form";
 import { useState } from "react";
 import { RichText } from "../component/richtext";
 import { Card, ConversationScreen, FlowBox, HorizBox, Narrow, Pad, PadBox, ShadowBox } from "../component/basics";
 import { Banner, BannerMessage, ClickableBanner, TopBanner } from "../component/banner";
-import { TrashCan, Pin, Chat, ChevronDown, Reply, Image as CarbonImage, Hearing, Video, FaceAdd, Edit, Bookmark, Flag, Close, ArrowLeft } from "@carbon/icons-react";
+import { TrashCan, Pin, Chat, ChevronDown, Reply, Image as CarbonImage, Hearing, Video, FaceAdd, Edit, Bookmark, Flag, Close, ArrowLeft, Demo } from "@carbon/icons-react";
 import { Modal } from "../component/modal";
 import { CLICK, DemoSection, POPUP, SpacedArray } from "../system/demo";
 import { Image, View } from "react-native";
@@ -72,8 +72,8 @@ export const DesignSystemDemoFeature = {
 function TextScreen() {
     return <View>
             <DemoSection label='UI Text'>
-                <Heading label='Heading large medium' level={1} />
-                <Heading label='Heading small strong' level={2} />
+                <Heading label='Heading large medium' type="large" weight="medium" />
+                <Heading label='Heading small strong' />
                 <Paragraph type='large' label='Paragraph large' />
                 <Paragraph type='small' strong label='Paragraph small strong' />
                 <Paragraph type='small' label='Paragraph small' />
@@ -107,7 +107,7 @@ function TextFieldScreen() {
     const [text, setText] = useState(null);
 
     return <View>
-            <DemoSection label='Text Field'>
+            <DemoSection label='Text Field CTA'>
                 <TextField value={text} placeholder='Enter some text' onChange={setText} />
                 <TextFieldButton placeholder='I am actually a button' onPress={() => {}} />
             </DemoSection>
@@ -304,8 +304,6 @@ function ButtonsAndLinksScreen() {
             </DemoSection>
             <DemoSection label='Action Button'>
                 <SpacedArray horiz>
-                    <IconButton icon={Reply} label='Respond' onPress={onPress} />
-                    <IconButton icon={Chat} label='Respond' onPress={onPress} />
                     <IconButton icon={Edit} label='Edit' onPress={onPress} />
                     <IconButton icon={Bookmark} label='Save' onPress={onPress} />
                     <IconButton icon={CarbonImage} label='Image' onPress={onPress} />
@@ -313,7 +311,6 @@ function ButtonsAndLinksScreen() {
                     <IconButton icon={Video} label='Video' onPress={onPress} />
                     <IconButton icon={FaceAdd} label='Emoji' onPress={onPress} />
                 </SpacedArray>
-                <IconButton wide icon={Chat} label='Wide Button' onPress={onPress} />
             </DemoSection>
             <DemoSection label='Subtle Button'>
                 <SpacedArray horiz>
@@ -328,20 +325,7 @@ function ButtonsAndLinksScreen() {
             </DemoSection>
             <DemoSection label='Text Button'>
                 <SpacedArray horiz>
-                    <TextButton leftIcon={Close} leftIconProps={{size:24}} label='Close' onPress={onPress} />
-                    <TextButton label='Show more comments' rightIcon={ChevronDown} rightIconProps={{size:20}} color={colorTextBlue} onPress={onPress} />
                     <TextButton label='Cancel' underline color={colorTextGrey} onPress={onPress} />
-                </SpacedArray>
-                <SpacedArray horiz>
-                    <TextButton type='small' text={'This is a question'} strong onPress={onPress} />
-                    <TextButton type='small' paragraph text={'This is a paragraph question'} strong onPress={onPress} />
-                </SpacedArray>
-                <SpacedArray horiz>
-                    <TextButton label='Editoral Large Italic' editorial type='large' italic onPress={onPress} />
-                    <TextButton label='Editoral Small Italic' editorial type='small' italic onPress={onPress} />
-                    <TextButton label='Heading 1' heading level={1} onPress={onPress} />
-                    <TextButton label='Heading 2' heading level={2} onPress={onPress} />
-
                 </SpacedArray>
             </DemoSection>
             <DemoSection horiz label='Expand Button'>
@@ -371,13 +355,19 @@ function ButtonsAndLinksScreen() {
             </DemoSection>
             <DemoSection horiz label='Filter Button'>
                 <FilterButton emoji='🔍' label='Under Review' count={1} onPress={onPress} />
-                <FilterButton label='Selected' count={22} onPress={onPress} />
+                <FilterButton label='Selected' selected count={22} onPress={onPress} />
 
             </DemoSection>
 
             <DemoSection label='Link'>
                 <RichText text={inputString} />
                 <RichText label='Text with a {param} and a [link]({url})' formatParams={{param: 'parameter', url: 'https://example.com'}} />
+            </DemoSection>
+            <DemoSection label='Web Link Text Button'>
+                <WebLinkTextButton url='https://example.com' text='Link to Example' />
+                <View style={{width: 300}}>
+                    <WebLinkTextButton numberOfLines={1} url='https://example.com' text='Link to Example that has a title that is too long to fit on one line' />
+                </View>
             </DemoSection>
             <DemoSection horiz label='Breadcrumb'>
                 <BreadCrumb icon={Close} iconProps={{size:32}} onPress={onPress} />
@@ -399,10 +389,13 @@ function TagsScreen() {
             <Tag emoji='🔥' label='Emphasized Tag' type='emphasized' color={colorPink} />
             <Tag label='Tiny Tag' type='tiny' />
         </DemoSection>
-        <DemoSection label='Clickable Tag' color={colorPink}>
-            <ClickableTag label='Standard' onPress={() => {}} />
-            <ClickableTag label='Standard With Emoji' emoji='🔥' onPress={() => {}} />
+        <DemoSection label='Click Through Tag' color={colorPink}>
+            <ClickThroughTag label='Standard' onPress={() => {}} />
+            <ClickThroughTag label='Standard With Emoji' emoji='🔥' onPress={() => {}} />
         </DemoSection>
+        <DemoSection label='Beta Tag'>
+            <BetaTag />
+        </DemoSection>        
     </View>
 }
 
@@ -506,11 +499,11 @@ function BannerDemoScreen() {
             </DemoSection>
             <DemoSection label='Clickable Banner'>
                 <Narrow>
-                    <ClickableBanner>
+                    <ClickableBanner onPress={() => {}}>
                         <RichText label='This is a **very** important problem. You need to make sure you address it or terrible things will happen. Click the info box to learn more.'/>
                     </ClickableBanner>
                     <Pad/>
-                    <ClickableBanner iconType='close'>
+                    <ClickableBanner onPress={() => {}}>
                         <RichText label='This is a **minor** problem. Click to close'/>
                     </ClickableBanner>
                 </Narrow>
@@ -536,6 +529,28 @@ function MiscScreen() {
                 <Tag label='This is Item Four'/>
                 <Tag label='This is Item Five'/>
             </FlowBox>
+            <FlowBox rowGap={10} columnGap={20}>
+                <Tag label='This is Item One'/>
+                <Tag label='This is Item Two'/>
+                <Tag label='This is Item Three'/>
+                <Tag label='This is Item Four'/>
+                <Tag label='This is Item Five'/>
+            </FlowBox>
+        </DemoSection>
+        <DemoSection label='Horiz Box'>
+            <HorizBox>
+                <Tag label='Item One'/>
+                <Tag label='Item Two next to it'/>
+            </HorizBox>
+            <HorizBox gap={10}>
+                <Tag label='Item One'/>
+                <Tag label='I have a 10px gap'/>
+            </HorizBox>
+            <HorizBox spread>
+                <Tag label='Item One'/>
+                <Tag label='In the middle' />
+                <Tag label='I am spread out'/>
+            </HorizBox>
         </DemoSection>
         <DemoSection label='Card'>
             <Card>

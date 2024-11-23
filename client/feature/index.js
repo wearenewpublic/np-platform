@@ -8,7 +8,7 @@ import { ProfileCommentsFeature } from "./ProfileCommentsFeature";
 import { ReplyNotificationsFeature } from "./ReplyNotifsFeature";
 import { DesignSystemDemoFeature } from "../demo/designsystem-demo";
 import { CommentDemoFeature } from "../demo/comment-demo";
-import { DemoFeature, DemoSecondaryFeature } from "../demo/comment-config";
+import { DemoFeature, DemoSecondaryFeature } from "./comment-config";
 import { ProfileDemoFeature } from "../demo/profile-demo";
 import { EventlogDemoFeature } from "../demo/eventlog-demo";
 import { ProfileEditDemo } from "../demo/profileedit-demo";
@@ -137,6 +137,10 @@ export function addFeatures(newFeaturesForStructs) {
     })
 }
 
+export function UNSAFE_setFeatures(newFeatures) {
+    features = newFeatures;
+}
+
 export function addDefaultFeatures(newDefaultFeatures) {
     Object.keys(newDefaultFeatures).forEach(structureKey => {
         const newDefaults = newDefaultFeatures[structureKey];
@@ -144,4 +148,8 @@ export function addDefaultFeatures(newDefaultFeatures) {
         const mergedDefaults = {...oldDefaults, ...newDefaults};
         defaultFeatureConfig[structureKey] = mergedDefaults;
     })
+}
+
+export function UNSAFE_setDefaultFeatures(newDefaults) {
+    defaultFeatureConfig = newDefaults;
 }

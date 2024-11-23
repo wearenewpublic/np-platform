@@ -99,6 +99,8 @@ function parseJWT(token) {
 
     return { header, payload, signature };
 }
+exports.parseJWT = parseJWT;
+
 var global_ssoProviderKeyUrl = {};
 function addProviderKeyUrls(providerKeyUrls) {
     global_ssoProviderKeyUrl = {...global_ssoProviderKeyUrl, ...providerKeyUrls};
@@ -113,6 +115,7 @@ async function getKeysForProviderAsync(provider) {
     const response = await axios.get(keyUrl);
     return response.data.keys;
 }
+exports.getKeysForProviderAsync = getKeysForProviderAsync;
 
 async function convertTokenAsync({ssoToken, provider}) {
     const {header, payload, signature} = parseJWT(ssoToken);
@@ -129,12 +132,10 @@ async function convertTokenAsync({ssoToken, provider}) {
         email: verified.email, name: verified.name, 
         photoUrl: verified.picture ?? verified.avatar_url ?? undefined
     });
-    console.log('User data', verified.name, verified.email);
     const loginToken = await createLoginToken(userRecord.uid);
-    console.log('Created login token', loginToken);
-
     return {loginToken}
 }
+exports.convertTokenAsync = convertTokenAsync;
 
 exports.publicFunctions = {
     callback: authCallbackAsync,

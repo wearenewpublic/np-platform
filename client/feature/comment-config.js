@@ -1,15 +1,13 @@
 import { Banner } from "../component/banner";
-import { Center, Pad, PadBox, ShadowBox } from "../component/basics";
+import { Pad, PadBox, ShadowBox } from "../component/basics";
 import { CTAButton, SubtleButton, Tag } from "../component/button";
-import { colorBannerGreen, colorBlueBackground, colorPinkBackground, colorWhite } from "../component/color";
-import { CommentBody } from "../component/comment";
+import { colorBannerGreen, colorBlueBackground, colorPinkBackground } from "../component/color";
 import { DemoPageWidget, DemoWidget } from "../system/demo";
-import { Heading, Paragraph, UtilityText } from "../component/text"
-import { FIRST, useConfig } from "../util/features"
+import { Heading, Paragraph, UtilityText } from "../component/text";
+import { FIRST, useConfig } from "../util/features";
 import { Star } from '@carbon/icons-react';
 import { useInstanceParams, useScreenParams } from "../util/params";
 import { Modal } from "../component/modal";
-import { useGlobalProperty } from "../util/datastore";
 
 export const DemoFeature = {
     name: 'Show Config Slots',

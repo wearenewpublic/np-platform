@@ -31,7 +31,7 @@ describe('Login', () => {
 
     test('Login with Action', () => {
         render(<WithEnv personaKey={null}><LoginScreen action='ask a question' /></WithEnv>);
-        screen.getByText('Join the conversation to ask a question');
+        screen.getByText('Join the discussion to ask a question');
     })
 });
 

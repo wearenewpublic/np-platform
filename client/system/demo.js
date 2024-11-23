@@ -38,7 +38,7 @@ export function CHECK_TEXT(expectedText) {
 export function DemoSection({label, horiz=false, children, color=null}) {
     const s = DemoSectionStyle;
     return <View style={{marginBottom: 32}}>
-        <Heading type='small' label={label} />
+        <Heading label={label} />
         <Pad size={8} />
         <View style={[s.box, color && {backgroundColor: color}]}>
             <Catcher>
@@ -153,8 +153,9 @@ export function DemoStorySet({storySet}) {
     const { collections, content, structureKey='testStruct', instanceKey='testInstance', 
         personaKey, config, modulePublic, moduleUserGlobal, moduleUserLocal, roles, features, embeddedInstanceData,
         globals, sessionData, serverCall, pad=true, firebaseUser=default_fbUser, siloKey='demo',
-        urlFragment
+        urlFragment, globalParams
     } = storySet;
+    console.log('storySet', storySet);
     const domRef = React.createRef();
     const dataRef = React.createRef();
     const [key, setKey] = useState(0);
@@ -192,6 +193,7 @@ export function DemoStorySet({storySet}) {
             sessionData={sessionData} modulePublic={modulePublic} 
             moduleUserGlobal={moduleUserGlobal} moduleUserLocal={moduleUserLocal}
             embeddedInstanceData={embeddedInstanceData}
+            globalParams={globalParams}
             roles={roles} onServerCall={onServerCall}
             gotoInstance={setNavInstance} 
             goBack={() => setNavInstance({parent: true})}
@@ -199,7 +201,7 @@ export function DemoStorySet({storySet}) {
             closeWindow={() => setNavInstance({close: true})}
             pushSubscreen={(screenKey,params) => setNavInstance({screenKey, params})}
             serverCall={{...defaultServerCall, ...serverCall}} >
-        <Heading type='small' text={storySet.label} />
+        <Heading text={storySet.label} />
         <Pad size={5} />
         <FlowBox>
             {storySet.stories?.map(story =>

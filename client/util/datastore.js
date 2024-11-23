@@ -5,9 +5,10 @@ import { firebaseNewKey, firebaseWatchValue, firebaseWriteAsync, getFirebaseData
 import { deepClone, getObjectPropertyPath, setObjectPropertyPath } from './util';
 import { LoadingScreen } from '../component/basics';
 import { SharedData, SharedDataContext } from './shareddata';
-import { callServerApiAsync } from './servercall';
-import { closeWindow, goBack, gotoInstance, gotoInstanceScreen, pushSubscreen } from './navigate';
+import { callServerApiAsync } from '../system/servercall';
+import { closeWindow, getGlobalParams, goBack, gotoInstance, gotoInstanceScreen, pushSubscreen } from './navigate';
 import { getFragment } from '../platform-specific/url';
+import { Linking } from 'react-native';
 
 const DatastoreContext = React.createContext({});
 export const ConfigContext = React.createContext();
@@ -336,6 +337,13 @@ export class Datastore extends React.Component {
     getLoaded() {return this.state.loaded}
     getEmbeddedInstanceData() {return this.props.embeddedInstanceData}
     getMockServerCall() {return this.props.serverCall}
+    getGlobalParams() {
+        if(this.props.globalParams) {
+            return this.props.globalParams;
+        } else {
+            return getGlobalParams(window.location.href) ?? {};
+        }
+    }
     pushSubscreen(screenKey, params) {
         if (this.props.pushSubscreen) {
             this.props.pushSubscreen(screenKey, params);
@@ -686,6 +694,11 @@ export function useStructureKey() {
     return datastore.getStructureKey();
 }
 
+export function useGlobalParams() {
+    const datastore = useDatastore();
+    return datastore.getGlobalParams();
+}
+
 export function expandDataList(list) {
     const date = new Date();
     date.setHours(date.getHours() - 1);
@@ -727,3 +740,14 @@ export function useStableCallback(callback) {
 
     return useCallback((...args) => ref.current(...args), []);
 }
+
+
+export function useServerCallResult(component, funcname, params={}) {
+    const datastore = useDatastore();
+    const [result, setResult] = useState(null);
+    useEffect(() => {
+        datastore.callServerAsync(component, funcname, params).then(setResult);
+    }, [component, funcname, JSON.stringify(params)]);
+    return result;
+}
+

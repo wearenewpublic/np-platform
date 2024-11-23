@@ -30,3 +30,12 @@ test('sendTemplatedEmailAsync', async () => {
     });
     expect(getLastEmailSent()).toMatchSnapshot();
 })
+
+test('no Key set', async () => {
+    setPostmarkKey(null);
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const result = await sendEmailAsync({});
+    expect(consoleErrorSpy).toHaveBeenCalled();
+    expect(result).toBe(null);
+});
+

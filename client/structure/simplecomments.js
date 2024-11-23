@@ -29,7 +29,7 @@ export const SimpleCommentsStructure = {
         commentStylers: [],
         commentInputPlaceholder: 'Share your thoughts...',
         commentReplyPlaceholder: 'Reply to {authorName}...',
-        commentInputLoginAction: 'comment',
+        commentInputLoginAction: '',
         commentFilters: [],
         commentRankers: [],
 
@@ -78,7 +78,7 @@ function SimpleCommentsScreen() {
         {topBanners?.map((Banner, i) => <Banner key={i} />)}
         <HeaderBox>
             <HeaderTopWidgets />
-            <Heading level={1} label='Comments'/>
+            <Heading type="large" weight="medium" label='Comments'/>
             <Pad />
             {React.createElement(composerPreview)}
         </HeaderBox>

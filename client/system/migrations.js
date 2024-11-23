@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useServerCallResult } from '../util/servercall';
-import { useDatastore } from '../util/datastore';
+import { useDatastore, useServerCallResult} from '../util/datastore';
 import { Container, ConversationScreen, HorizBox, LoadingScreen, Pad, PadBox } from '../component/basics';
 import { Catcher } from './catcher';
 import { Heading, UtilityText } from '../component/text';
