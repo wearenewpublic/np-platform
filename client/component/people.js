@@ -168,7 +168,7 @@ export function BylineMetadata({userId, time, edited=false}) {
     </View>
 }
 
-export function Byline({ type = 'small', clickable = true, userId, name = null, photo = null, time, underline = false, edited = false, showMetadata = true }) {
+export function Byline({ type = 'small', clickable = true, userId, name = null, photo = null, time, underline = false, edited = false, subtitleLabel, subtitleParams = {}, showMetadata = true }) {
     const s = BylineStyle;
     const persona = usePersonaObject(userId);
     const datastore = useDatastore();
@@ -185,7 +185,8 @@ export function Byline({ type = 'small', clickable = true, userId, name = null, 
             :
                 <UtilityText weight='medium' text={name ?? persona?.name} underline={underline} />
             }
-            {showMetadata && <View>
+            {subtitleLabel && <UtilityText color={colorTextGrey} label={subtitleLabel} formatParams={subtitleParams} underline={underline} />}
+            {!subtitleLabel && showMetadata && <View>
                 <Pad size={2} />
                 <BylineMetadata userId={userId} time={time} edited={edited} />
             </View>}

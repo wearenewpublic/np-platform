@@ -237,7 +237,7 @@ export function TextLinkButton({label, text, type='large', paragraph=false, edit
 
 
 export function ExpandButton({
-        userList, photoUrlList, label, text, type='small', 
+        userList, photoUrlList, label, text, type='tiny', 
         formatParams, expanded, setExpanded=()=>{},
         testID,
     }) {

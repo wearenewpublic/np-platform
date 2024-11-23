@@ -254,7 +254,7 @@ function UserInfo() {
                     {showBetaTag && <PadBox right={12}> 
                         <BetaTag /> 
                     </PadBox>}                    
-                    <Byline userId={personaKey} clickable={false} name={persona.name} underline={hover} />
+                    <Byline userId={personaKey} clickable={false} name={persona.name} underline={hover} showMetadata={false} />
                     <Pad size={8} />
                     {shown ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                 </HorizBox>

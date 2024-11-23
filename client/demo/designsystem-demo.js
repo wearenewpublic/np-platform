@@ -180,7 +180,7 @@ function ProfileScreen() {
                 <Datastore config={{bylineTags:[
                         () => <Tag type='tiny' label='Awesome Person'/>,
                     ]}}>
-                    <Byline userId='a' type='large' time={Date.now()} />
+                    <Byline userId='a' type='large' />
                     <Pad />
                     <Byline userId='b' type='large' time={Date.now()} edited={Date.now()} />
                 </Datastore>                
