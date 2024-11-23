@@ -1,5 +1,6 @@
 const { checkIsGlobalAdmin } = require("../util/admin");
 const { firebaseWriteAsync, firebaseUpdateAsync, createNewKey, firebaseGetUserAsync, firebaseReadAsync, firebaseReadWithFilterAsync, firebaseReadPaginatedAsync } = require("../util/firebaseutil");
+const { ServerStore } = require("../util/serverstore");
 
 async function logEventApi({
         sessionKey, isNewSession, deviceInfo=null, userId, 
@@ -155,6 +156,14 @@ async function aggregateLogsAsync({serverstore, stride=1000} = {}) {
     }
 }
 exports.aggregateLogsAsync = aggregateLogsAsync;
+
+async function aggregateLogsFromCronAsync() {
+    const serverstore = new ServerStore({siloKey: 'cron', structureKey: 'cron', instanceKey: 'cron'});
+    await aggregateLogsAsync({serverstore});
+    await serverstore.commitDataAsync();
+}
+
+exports.aggregateLogsFromCron = aggregateLogsFromCronAsync;
 
 
 exports.publicFunctions = {
