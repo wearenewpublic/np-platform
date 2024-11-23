@@ -1,7 +1,7 @@
 {
     "name": "np-platform-server",
     "description": "Back end for the New Public Platform",
-    "version": "0.17.0",
+    "version": "0.17.1",
     "license": "Apache-2.0",
     "scripts": {
         "build": "tsc",
