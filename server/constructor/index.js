@@ -1,6 +1,6 @@
 const { profileConstructorAsync } = require("./profile-constructor");
 
-function nullConstructor() {};
+function nullConstructor() {}
 
 var constructors = {   
     simplecomments: nullConstructor,
