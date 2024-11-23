@@ -187,7 +187,7 @@ function ProfileScreen() {
             </DemoSection>
             <DemoSection label='Byline - Small'>
                 <Byline userId={'c'} type='small' time={Date.now()} />
-                <Byline userId={'d'} type='small' />
+                <Byline userId={'d'} type='small' showMetadata={false} />
                 <Byline userId={'e'} type='small' time={Date.now()} edited={Date.now()} />
                 <Byline userId='x' type='small' time={Date.now()} />
                 <Byline userId='z' type='small' time={Date.now()} />
@@ -195,16 +195,6 @@ function ProfileScreen() {
             <DemoSection label='Byline - Tiny'>
                 <Byline userId='x' type='tiny' time={Date.now()} />
                 <Byline userId='z' type='tiny' time={Date.now()} />
-            </DemoSection>
-            <DemoSection label='Byline - Abbreviated'>
-                <Byline userId='x' type='abbreviated' time={Date.now()} />
-                <Byline userId='z' type='abbreviated' time={Date.now()} />
-                <Datastore config={{bylineTags:[
-                        () => <Tag type='tiny' label='Awesome Person'/>,
-                    ]}}>
-                    <Byline userId='b' type='abbreviated' time={Date.now() - 1000 * 60 * 60 * 10} />
-                </Datastore>
-
             </DemoSection>
             <DemoSection label='Anonymous'>
                 <Byline name='Anonymous User' type='large' time={Date.now()} />

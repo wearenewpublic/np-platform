@@ -151,7 +151,7 @@ const TagRowStyle = StyleSheet.create({
     },
 });
 
-export function BylineMetadata({userId, time, edited=false, abbreviated=false}) {
+export function BylineMetadata({userId, time, edited=false}) {
     const { bylineTags } = useConfig();
     const language = useLanguage();
     const persona = usePersonaObject(userId);
@@ -163,12 +163,12 @@ export function BylineMetadata({userId, time, edited=false, abbreviated=false}) 
         {hasTags && <TagRow tags={[tags[0]]} />}
         {time && <UtilityText type='tiny' color={colorTextGrey}
             label={(hasTags ? ' • ' : '') + '{time}' + (edited ? ' • Edited' : '')}
-            formatParams={abbreviated ? {time: formatMiniDate(time, language)} : {time: formatDate(time, language)}}
+            formatParams={{time: formatDate(time, language)}}
         />}
     </View>
 }
 
-export function Byline({ type = 'small', clickable = true, userId, name = null, photo = null, time, underline = false, edited = false }) {
+export function Byline({ type = 'small', clickable = true, userId, name = null, photo = null, time, underline = false, edited = false, showMetadata = true }) {
     const s = BylineStyle;
     const persona = usePersonaObject(userId);
     const datastore = useDatastore();
@@ -179,14 +179,16 @@ export function Byline({ type = 'small', clickable = true, userId, name = null, 
     return <View style={s.outer}>
         <ProfilePhoto userId={userId} photo={photo} type={type} />
         <Pad size={spacings.xs} />
-        <View style={{ flexDirection: type === 'abbreviated' ? 'row' : 'column' }}>
+        <View style={{ flexDirection: 'column' }}>
             {clickable ?
                 <TextButton type='small' strong text={name ?? persona?.name} underline={underline} onPress={onProfile} />
             :
                 <UtilityText weight='medium' text={name ?? persona?.name} underline={underline} />
             }
-            <Pad size={type === 'abbreviated' ? 6 : 2} />
-            <BylineMetadata userId={userId} time={time} edited={edited} abbreviated={type == 'abbreviated'}/>
+            {showMetadata && <View>
+                <Pad size={2} />
+                <BylineMetadata userId={userId} time={time} edited={edited} />
+            </View>}
         </View>
     </View>
 }
