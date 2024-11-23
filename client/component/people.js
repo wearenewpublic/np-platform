@@ -9,9 +9,9 @@ import { TextButton } from "./button";
 import { useLanguage } from "./translation";
 import { useConfig } from "../util/features";
 
-export function ProfilePhoto({ userId, type = 'large', photo = null, faint = false, check = false, border = false }) {
+export function ProfilePhoto({ userId, type = 'large', photo = null, faint = false, check = false, border = false, genericTitle = false }) {
 
-    const persona = useObject('persona', userId);
+    const persona = usePersonaObject(userId);
     const isLive = useIsLive();
     const meKey = usePersonaKey();
     const { profilePhotoLayers } = useConfig();
@@ -24,7 +24,7 @@ export function ProfilePhoto({ userId, type = 'large', photo = null, faint = fal
             if (profilePhotoLayers?.length > 0) {                
                 return <> 
                     <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} border={border} faint={faint} check={check} />
-                    {renderLayers(type, persona, profilePhotoLayers)}
+                    {renderLayers(type, persona, profilePhotoLayers, genericTitle)}
                 </>
             } else {
                 return <FaceImage face={face} photoUrl={photo ?? persona?.photoUrl} type={type} border={border} faint={faint} check={check} />
@@ -38,7 +38,7 @@ export function ProfilePhoto({ userId, type = 'large', photo = null, faint = fal
 
 }
 
-function renderLayers(type, persona, profilePhotoLayers) { 
+function renderLayers(type, persona, profilePhotoLayers,genericTitle) { 
 
     const size = sizeMap[type] ?? 32;
     
@@ -50,7 +50,7 @@ function renderLayers(type, persona, profilePhotoLayers) {
                 height: size,
                 backgroundColor: 'transparent'
     }}>
-        {profilePhotoLayers && profilePhotoLayers.map((item,i) => item({persona,size,type}))}
+        {profilePhotoLayers && profilePhotoLayers.map((item,i) => item({persona,size,type,genericTitle}))}
     </View>
 }
 
@@ -117,7 +117,7 @@ const AnonymousFaceStyle = StyleSheet.create({
     }
 })
 
-export function FacePile({ type = 'small', userIdList }) {
+export function FacePile({ type = 'small', userIdList, commentKeyList }) {
 
     const s = FacePileStyle;
     const size = sizeMap[type] ?? 32;
@@ -125,7 +125,7 @@ export function FacePile({ type = 'small', userIdList }) {
     return <View style={s.outer}>
         {userIdList.slice(0, 3).map((userId, i) => <View key={i}
             style={{ position: 'relative', marginLeft: i == 0 ? 0 : -(size / 4) }}>
-            <ProfilePhoto userId={userId} type={type} border />
+            <ProfilePhoto userId={userId} type={type} border genericTitle={commentKeyList[i]} />
         </View>)}
     </View>
 }
@@ -154,22 +154,22 @@ const TagRowStyle = StyleSheet.create({
     }
 });
 
-export function Byline({ type = 'small', photoType = null, clickable = true, userId, name = null, photo = null, time, subtitleLabel, subtitleParams = {}, underline = false, edited = false }) {
-
+export function Byline({ type = 'small', photoType = null, clickable = true, userId, name = null, photo = null, time, subtitleLabel, subtitleParams = {}, underline = false, edited = false, genericTitle = false}) {
     const { bylineTags } = useConfig();
     const s = BylineStyle;
     const persona = usePersonaObject(userId);
     const language = useLanguage();
     const datastore = useDatastore();
-    const tags = bylineTags?.map(tagFunc => tagFunc(persona)).filter(tag => tag);
+    const tags = bylineTags?.map(tagFunc => tagFunc(persona,genericTitle)).filter(tag => tag);
     const hasTags = tags?.length > 0;
+    if (genericTitle) name = persona.titledWriter?.organization
 
     function onProfile() {
         datastore.gotoInstance({ structureKey: 'profile', instanceKey: userId });
     }
     const oneLine = hasTags || type == 'small';
     return <View style={s.outer}>
-        <ProfilePhoto userId={userId} photo={photo} type={hasTags ? 'large' : photoType ?? type} />
+        <ProfilePhoto userId={userId} photo={photo} genericTitle={genericTitle} type={hasTags ? 'large' : photoType ?? type} />
         <Pad size={spacings.xs} />
         <View style={{ flexDirection: 'column' }}>
             <View style={oneLine ? {flexDirection: 'row' } : {flexDirection: 'column'}}>

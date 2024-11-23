@@ -239,14 +239,14 @@ export function TextLinkButton({label, text, type='large', paragraph=false, edit
 export function ExpandButton({
         userList, photoUrlList, label, text, type='small', 
         formatParams, expanded, setExpanded=()=>{},
-        testID,
+        testID, commentKey, commentKeyList
     }) {
     const s = ExpanderButtonStyle;
     const [hover, setHover] = useState(false);
 
     return <HoverView style={s.button} setHover={setHover} role='button'
             onPress={() => setExpanded(!expanded)} testID={testID ?? label ?? text}>        
-        {userList && <FacePile type={type} userIdList={userList} />}
+        {userList && <FacePile type={type} userIdList={userList} commentKeyList={commentKeyList} commentKey={commentKey} />}
         {photoUrlList && <PhotoPile photoUrlList={photoUrlList} />}
         {(userList || photoUrlList) && <Pad size={4} />}
         <UtilityText label={label} text={text} formatParams={formatParams} type={type} 
