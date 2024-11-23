@@ -1,7 +1,7 @@
 const { readObjectAsync, firebaseReadAsync, firebaseWriteAsync } = require("../../util/firebaseutil");
 const { mockServerStore } = require("../../util/serverstore");
 const { getTestData, clearTestData, logData } = require("../../util/testutil");
-const { logEventApi, setSessionUserApi, getEventsApi, getSessionsApi, getSingleSessionApi, aggregateLogsAsync } = require("../eventlog");
+const { logEventApi, setSessionUserApi, getEventsApi, getSessionsApi, getSingleSessionApi, aggregateLogsAsync, aggregateLogsFromCron } = require("../eventlog");
 
 describe('logEventApi', () => {
     test('New Session', async () => {
@@ -137,14 +137,14 @@ test('getSingleSessionApi', async () => {
 const millisecondsPerDay = 24 * 60 * 60 * 1000;
 const sixtyDaysAgo = -60 * millisecondsPerDay;
 
-test('aggregateEvents', async () => {
+test('aggregateLogs', async () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     clearTestData();
-    await firebaseWriteAsync(['log', 'event', '1'], {
+    await firebaseWriteAsync(['log', 'event', '0'], {
         eventType: 'eat', time: sixtyDaysAgo
     });
-    await firebaseWriteAsync(['log', 'event', '2'], {
+    await firebaseWriteAsync(['log', 'event', '1'], {
         eventType: 'eat', time: sixtyDaysAgo
     });
     await firebaseWriteAsync(['log', 'event', '2'], {
@@ -163,12 +163,43 @@ test('aggregateEvents', async () => {
         eventType: 'bad'
     });
 
-
     const serverstore = mockServerStore();
     await aggregateLogsAsync({serverstore, stride:4});
     await serverstore.commitDataAsync();
 
     expect(consoleErrorSpy).toHaveBeenCalled();
 
+    expect(getTestData()).toMatchSnapshot();
+});
+
+test('aggregateLogsFromCron', async () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    clearTestData();
+    await firebaseWriteAsync(['log', 'event', '0'], {
+        eventType: 'eat', time: sixtyDaysAgo
+    });
+    await firebaseWriteAsync(['log', 'event', '1'], {
+        eventType: 'eat', time: sixtyDaysAgo
+    });
+    await firebaseWriteAsync(['log', 'event', '2'], {
+        eventType: 'sleep', time: sixtyDaysAgo
+    });
+    await firebaseWriteAsync(['log', 'event', '3'], {
+        eventType: 'jump', time: 1
+    });
+    await firebaseWriteAsync(['log', 'event', '4'], {
+        eventType: 'sleep', time: sixtyDaysAgo
+    });
+    await firebaseWriteAsync(['log', 'event', '5'], {
+        eventType: 'jump', time: 1
+    });
+    await firebaseWriteAsync(['log', 'event', 'bad'], {
+        eventType: 'bad'
+    });
+
+    await aggregateLogsFromCron();
+
+    expect(consoleErrorSpy).toHaveBeenCalled();
     expect(getTestData()).toMatchSnapshot();
 });
