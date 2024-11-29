@@ -173,36 +173,34 @@ function ProfileScreen() {
                 <FacePile userIdList={['a','b','c','z']} type='small' />
                 <FacePile userIdList={['x','d','e','f','g','h','i','j']} type='tiny' />
             </DemoSection>
-            <DemoSection label='Byline'>
+            <DemoSection label='Byline - Large'>
                 <Byline userId={'a'} type='large' time={Date.now()} />
                 <Byline userId={'b'} type='large' time={Date.now() - 1000 * 60 * 10} edited={Date.now()} />
                 <Byline userId={'y'} type='large' time={Date.now() - 1000 * 60 * 60 * 10} edited={Date.now()} />
-                <Byline userId={'c'} type='small' time={Date.now()} />
-                <Byline userId={'d'} type='small' />
-                <Byline userId={'e'} type='small' time={Date.now()} edited={Date.now()} />
-                <Byline userId={'f'} type='small' photoType='large' />
-                <Byline userId={'g'} type='small' photoType='large' time={Date.now()} />
-                <Byline userId='x' type='small' photoType='large' time={Date.now()} />
-                <Byline userId='z' type='small' photoType='large' time={Date.now()} />
                 <Datastore config={{bylineTags:[
                         () => <Tag type='tiny' label='Awesome Person'/>,
-                        (persona) => persona.key == 'b' && <Tag type='tiny' label='Superhero'/>,
                     ]}}>
-                    <Byline userId='a' type='large' time={Date.now()} />
+                    <Byline userId='a' type='large' />
                     <Pad />
                     <Byline userId='b' type='large' time={Date.now()} edited={Date.now()} />
-                    <Pad />
-                    <Byline userId='a' type='small' time={Date.now()} />
-                </Datastore>
-
+                </Datastore>                
+            </DemoSection>
+            <DemoSection label='Byline - Small'>
+                <Byline userId={'c'} type='small' time={Date.now()} />
+                <Byline userId={'d'} type='small' showMetadata={false} />
+                <Byline userId={'e'} type='small' time={Date.now()} edited={Date.now()} />
+                <Byline userId='x' type='small' time={Date.now()} />
+                <Byline userId='z' type='small' time={Date.now()} />
+            </DemoSection>
+            <DemoSection label='Byline - Tiny'>
+                <Byline userId='x' type='tiny' time={Date.now()} />
+                <Byline userId='z' type='tiny' time={Date.now()} />
             </DemoSection>
             <DemoSection label='Anonymous'>
                 <Byline name='Anonymous User' type='large' time={Date.now()} />
                 <Byline name='Anonymous User' type='large' time={Date.now() - 1000 * 60 * 10} edited={Date.now()} />
                 <Byline name='Anonymous User' type='small' time={Date.now()} />
                 <Byline name='Anonymous User' type='small' />
-                <Byline name='Anonymous User' photoType='large' type='small' time={Date.now()} />
-                <Byline name='Anonymous User' photoType='large' type='small' />
             </DemoSection>
             <DemoSection label='Letter face' horiz>
                 <LetterFace name='dave' type='huge' hue={183} />

@@ -237,7 +237,7 @@ export function TextLinkButton({label, text, type='large', paragraph=false, edit
 
 
 export function ExpandButton({
-        userList, photoUrlList, label, text, type='small', 
+        userList, photoUrlList, label, text, type='tiny', 
         formatParams, expanded, setExpanded=()=>{},
         testID,
     }) {
@@ -277,7 +277,7 @@ export function Tag({label, emoji, text, type='emphasized', strong=false, format
         {emoji && <PadBox right={6}><UtilityText text={emoji} type='small' weight='medium' /></PadBox>}
         <UtilityText color={type=='tiny' ? colorTextBlue : null} 
             label={label} text={text} formatParams={formatParams} 
-            type='small' weight='medium' />
+            type='tiny' weight={strong ? 'strong' : 'medium'} />
     </View>
 }
 const TagStyle = StyleSheet.create({

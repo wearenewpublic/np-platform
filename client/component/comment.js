@@ -57,7 +57,7 @@ export function ReplyComment({commentKey, depth={depth}, isFinal=false}) {
     const style = getCombinedStyle({comment, stylers:commentStylers});
     return <View testID={commentKey} id={commentKey} style={[depth == 1 ? s.firstLevel : s.secondLevel, style]}>
         <Catcher>{replyAboveWidgets?.map((Widget,i) => <Widget key={i} comment={comment}/>)}</Catcher>
-        <Byline type='small' userId={comment.from} time={comment.time} edited={comment.edited} />
+        <Byline type={depth == 1 ? 'small' : 'tiny'} userId={comment.from} time={comment.time} edited={comment.edited} />
         <Pad size={20} />
         <PadBox left={40}>
             <CommentBody commentKey={commentKey} />
@@ -153,7 +153,7 @@ function MaybeCommentReply({commentKey}) {
 
     return <View>
         <Pad size={20} />
-        <Byline type='small' userId={personaKey} />
+        <Byline type='small' userId={personaKey} showMetadata={false} />
         <Pad size={20} />
         <PadBox left={24}>
             <EditComment comment={comment} onCancel={onCancel}
