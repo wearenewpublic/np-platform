@@ -169,7 +169,7 @@ export function Byline({ type = 'small', photoType = null, clickable = true, use
     }
     const oneLine = hasTags || type == 'small';
     return <View style={s.outer}>
-        <ProfilePhoto userId={userId} photo={photo} type={hasTags ? 'large' : photoType ?? type} />
+        <ProfilePhoto aria-hidden={true} userId={userId} photo={photo} type={hasTags ? 'large' : photoType ?? type} />
         <Pad size={spacings.xs} />
         <View style={{ flexDirection: 'column' }}>
             <View style={oneLine ? {flexDirection: 'row' } : {flexDirection: 'column'}}>
